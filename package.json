@@ -1,0 +1,19 @@
+{
+  "name": "uni_phone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "adcell": "^1.0.6",
+    "js-base64": "^2.5.2",
+    "moment": "^2.27.0",
+    "uni-simple-router": "^1.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
