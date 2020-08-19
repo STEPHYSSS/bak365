@@ -116,7 +116,9 @@
 		},
 		methods: {
 			takein(){
-				this.$Router.push("/pages/shoppingMall/list/goodsList");
+				// this.$Router.push("/pages/shoppingMall/list/goodsList");
+				// 自取页面
+				this.$Router.push("/pages/shoppingMall/menu_naixue/menu/menu");
 			},
 			takeout(){},
 			integrals(){},

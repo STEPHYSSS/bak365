@@ -145,6 +145,12 @@ const other = [
 		meta: {
 			title: '绑定卡',
 		}
+	},{//仿奈雪 商品列表
+		path: '/pages/shoppingMall/menu_naixue/menu/menu',
+		name: 'menuGoodsList',
+		meta: {
+			title: '商品列表',
+		}
 	}
 ]
 export default other

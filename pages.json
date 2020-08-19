@@ -7,7 +7,7 @@
 	},{
 		"path": "pages/shoppingMall/index",
 		"style": {
-			"navigationBarTitleText": "商城"
+			"navigationBarTitleText": "商城0"
 		}
 	}, {
 		"path": "pages/error/index",
@@ -155,7 +155,11 @@
 		"style": {
 			"navigationBarTitleText": "足迹"
 		}
-	}],
+	}    ,{
+            "path" : "pages/shoppingMall/menu_naixue/menu/menu",
+            "style" : {"navigationBarTitleText": "自取"}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "商城",
@@ -169,6 +173,9 @@
 				// "pagePath": "pages/shoppingMall/index"
 				"pagePath":"pages/shoppingMall/login"
 			},
+			// {
+			// 	"pagePath": "pages/shoppingMall/index"				
+			// },
 			{
 				"pagePath": "pages/shoppingMall/shoppingCart/index"
 			},

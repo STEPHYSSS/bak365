@@ -16,7 +16,7 @@
 				})
 				uni.setTabBarItem({
 					index: 0,
-					text: '商城',
+					text: '首页',
 					iconPath: 'static/img/shangcheng1.png',
 					selectedIconPath: 'static/img/select-shangcheng1.png'
 				})
