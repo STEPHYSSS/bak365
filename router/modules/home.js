@@ -7,14 +7,14 @@ const home = [{
 			title: '首页',
 		}
 	},
-	// {
-	// 	path: '/pages/shoppingMall/index',	
-	// 	aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
-	// 	name: 'shoppingMallHome',
-	// 	meta: {
-	// 		title: '商城',
-	// 	}
-	// },
+	{
+		path: '/pages/shoppingMall/index',	
+		// aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
+		name: 'shoppingMallHome',
+		meta: {
+			title: '商城',
+		}
+	},
 	{
 		path: '/pages/error/index',
 		name: 'error',

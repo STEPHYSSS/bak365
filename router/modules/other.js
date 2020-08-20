@@ -151,6 +151,12 @@ const other = [
 		meta: {
 			title: '商品列表',
 		}
+	},{ //个人中心-我的地址
+		path: '/pages/myAddress/myAddress',
+		name: 'myAddress',
+		meta: {
+			title: '我的地址',
+		}
 	}
 ]
 export default other

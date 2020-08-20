@@ -34,7 +34,7 @@
 							<view class="menu" :id="`menu-${item.id}`" :class="{'current': item.id === currentCateId}" v-for="(item, index) in goods"
 							 :key="index" @tap="handleMenuTap(item.id)">
 								<text>{{ item.name }}</text>
-								<!-- <view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view> -->
+								<view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
 							</view>
 						</view>
 					</scroll-view>
@@ -66,7 +66,7 @@
 													<view class="price_and_action">
 														<text class="price">￥{{ good.price }}</text>
 														<view class="btn-group" v-if="good.use_property">
-															<button class="btn property_btn" hover-class="none"
+															<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none"
 															 size="mini" @tap="showGoodDetailModal(item, good)">
 																选规格
 															</button>
@@ -75,13 +75,13 @@
 														<view class="btn-group" v-else>
 															<button type="default" v-show="goodCartNum(good.id)" plain class="btn reduce_btn"
 															 size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
-																<view class="iconfont iconsami-select"></view>
+																<!-- <view class="iconfont icon-icon-test"></view> -->
+																-
 															</button>
 															<!-- 用来展示数量的 -->
 															<view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
-															<button type="primary" class="btn add_btn" size="min" hover-class="none" 
-																@tap="handleAddToCart(item, good, 1)">
-																<view class="iconfont iconadd-select"></view>
+															<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none" 
+																@tap="handleAddToCart(item, good, 1)">+
 															</button>
 														</view>
 													</view>
@@ -98,12 +98,12 @@
 				<!-- 购物车栏 begin -->
 				<view class="cart-box" v-if="cart.length > 0">
 					<view class="mark">
-						<image src="/static/images/menu/cart.png" class="cart-img" ></image>
+						<image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
 						<view class="tag">{{ getCartGoodsNumber }}</view>
 					</view>
 					<view class="flexBtn">
-						<view class="price">￥55</view>
-						<button type="primary" class="pay-btn" :disabled="disabledPay">
+						<view class="price">￥{{getCartGoodsPrice}}</view>
+						<button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">
 							{{ disabledPay ? `差${spread}元起送` : '去结算' }}
 						</button>
 					</view>
@@ -112,14 +112,15 @@
 			</view>
 			<!-- 商品详情模态框 begin -->
 			<modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" 
-					width="90%" custom padding="0rpx" radius="12rpx">
+					width="90%"  custom padding="0rpx" radius="12rpx">
 				<view class="cover">
 					<image v-if="good.images" :src="good.images" class="image"></image>
-					<view class="btn-group">
-						<!-- <image src="/static/images/menu/share-good.png"></image> -->
+					<view class="btn-group2">
+						<image src="/static/images/menu/share-good.png"></image>
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
 					</view>
 				</view>
+				
 				<scroll-view class="detail" scroll-y>
 					<view class="wrapper">
 						<view class="basic">
@@ -133,7 +134,8 @@
 									<view class="desc" v-if="item.desc">({{ item.desc }})</view>
 								</view>
 								<view class="values">
-									<view class="value" v-for="(value, key) in item.values" :key="key" >
+									<view class="value" v-for="(value, key) in item.values" :key="key" :class="{'default': value.is_default}" 
+								@tap="changePropertyDefault(index, key)">
 										{{ value.value }}
 									</view>
 								</view>
@@ -141,11 +143,80 @@
 						</view>
 					</view>
 				</scroll-view>
-				<view class="add-to-cart-btn">
+				<view class="action">
+					<view class="left">
+						<view class="price">￥{{ good.price }}</view>
+						<view class="props" v-if="getGoodSelectedProps(good)">
+							{{ getGoodSelectedProps(good) }}
+						</view>
+					</view>
+					<view class="btn-group">
+						<button type="default" plain class="btn" size="mini" hover-class="none" 
+							@tap="handlePropertyReduce">
+							-
+						</button>
+						<view class="number">{{ good.number }}</view>
+						<button type="primary" class="btn" size="min" hover-class="none" 
+							@tap="handlePropertyAdd">
+							+
+						</button>
+					</view>
+				</view>
+				<view class="add-to-cart-btn" @tap="handleAddToCartInModal">
 					<view>加入购物车</view>
 				</view>
 			</modal>
-			<!-- 商品详情模态框 end -->
+			<!-- 结束 -->
+			<popup-layer direction="top" :show-pop="cartPopupVisible" class="cart-popup">
+				<template slot="content">
+					<view class="top">
+						<text @tap="handleCartClear">清空</text>
+					</view>
+					<scroll-view class="cart-list" scroll-y>
+						<view class="wrapper">
+							<view class="item" v-for="(item, index) in cart" :key="index">
+								<view class="left">
+									<view class="name">{{ item.name }}</view>
+									<view class="props">{{ item.props_text }}</view>
+								</view>
+								<view class="center">
+									<text>￥{{ item.price }}</text>
+								</view>
+								<view class="right">
+									<button type="default" plain size="mini" class="btn" hover-class="none"
+										@tap="handleCartItemReduce(index)">
+										-
+										<!-- <view class="iconfont iconsami-select"></view> -->
+									</button>
+									<view class="number">{{ item.number }}</view>
+									<button type="primary" class="btn" size="min" hover-class="none"
+										@tap="handleCartItemAdd(index)">
+										<!-- <view class="iconfont iconadd-select"></view> -->
+										+
+									</button>
+								</view>
+							</view>
+							<view class="item" v-if="orderType == 'takeout' && store.packing_fee">
+								<view class="left">
+									<view class="name">包装费</view>
+								</view>
+								<view class="center">
+									<text>￥{{ parseFloat(store.packing_fee) }}</text>
+								</view>
+								<view class="right invisible">
+									<button type="default" plain size="mini" class="btn" hover-class="none">
+										<view class="iconfont iconsami-select"></view>
+									</button>
+									<view class="number">1</view>
+									<button type="primary" class="btn" style="background-color: #ADB838" size="min" hover-class="none">
+										<view class="iconfont iconadd-select"></view>
+									</button>
+								</view>
+							</view>
+						</view>
+					</scroll-view>
+				</template>
+			</popup-layer>
 		</view>
 	</view>
 </template>
@@ -153,6 +224,7 @@
 <script>
 	import goods from '../../../../api/goods.js'
 	import modal from '@/components/modal/modal'
+	import popupLayer from '@/components/popup-layer/popup-layer'
 	export default {
 		data() {
 			return {
@@ -166,7 +238,7 @@
 				good: {}, //当前饮品
 				category: {}, //当前饮品所在分类
 				cart: [], //购物车
-				cartPopupVisible: false,
+				cartPopupVisible: false,//已选择商品弹窗
 				goodsLunbo: [{
 						image: 'https://img-shop.qmimg.cn/s23107/2020/04/27/4ebdb582a5185358c4.jpg?imageView2/2/w/600/h/600'
 					},
@@ -183,6 +255,7 @@
 						image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600'
 					}
 				],
+				currentArea: {},//当前选择的地址
 			}
 		},
 		async onLoad() {
@@ -205,15 +278,42 @@
 			getCartGoodsNumber() { //计算购物车总数
 				return this.cart.reduce((acc, cur) => acc + cur.number, 0)
 			},
+			getCartGoodsPrice() {	//计算购物车总价
+				return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0)
+			},
+			disabledPay() { //是否达到起送价
+				return this.orderType == 'takeout' && (this.getCartGoodsPrice < this.store.min_price) ? true : false
+			},
+			spread() { //差多少元起送
+				if(this.orderType != 'takeout') return
+				return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2))
+			},
+			
+			menuCartNum() {
+				return (id) => this.cart.reduce((acc, cur) => {
+					if (cur.cate_id === id) {
+						return acc += cur.number
+					}
+					return acc
+				}, 0)
+			},
 		},
 		methods: {
 			async init() { //页面初始化
 				this.loading = true
 				this.goods = goods
 				this.loading = false
+				
+					if(!this.location.longitude){
+						uni.showToast({
+						    title: '地址获取失败',
+						    duration: 2000
+						});
+						throw "地址获取失败";
+					}
 			},
 			handleMenuTap(id) { //点击菜单项事件
-				console.log(id)
+				// console.log(id)
 				if(!this.sizeCalcState) {
 					this.calcSize()
 				}
@@ -253,8 +353,13 @@
 				})
 				this.sizeCalcState = true
 			},
-			clickLeft() {
-
+			clickLeft() {// 头部返回
+				this.$Router.push('/pages/shoppingMall/login')
+			},
+			changePropertyDefault(index, key) { //改变默认属性值
+				this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
+				this.good.property[index].values[key].is_default = 1
+				this.good.number = 1
 			},
 			// 点击图片或者选择规格时弹窗
 			showGoodDetailModal(item, good) {
@@ -262,17 +367,10 @@
 				this.category = JSON.parse(JSON.stringify(item))
 				this.goodDetailModalVisible = true
 			},
-			closeGoodDetailModal() { //关闭饮品详情模态框
-				this.goodDetailModalVisible = false
-				this.category = {}
-				this.good = {}
-			},
-			handleReduceFromCart(item, good) {
-				const index = this.cart.findIndex(item => item.id === good.id)
-				this.cart[index].number -= 1
-				if(this.cart[index].number <= 0) {
-					this.cart.splice(index, 1)
-				}
+			handleAddToCartInModal(){
+				const product = Object.assign({}, this.good, {props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
+				this.handleAddToCart(this.category, product, this.good.number)
+				this.closeGoodDetailModal()
 			},
 			handleAddToCart(cate, good, num) {	//添加到购物车
 				const index = this.cart.findIndex(item => {
@@ -298,14 +396,80 @@
 					})
 				}
 			},
-			menuCartNum() {
-				return (id) => this.cart.reduce((acc, cur) => {
-					if (cur.cate_id === id) {
-						return acc += cur.number
-					}
-					return acc
-				}, 0)
+			getGoodSelectedProps(good, type = 'text') {	//计算当前饮品所选属性
+				if(good.use_property) {
+					let props = []
+					good.property.forEach(({values}) => {
+						values.forEach(value => {
+							if(value.is_default) {
+								props.push(type === 'text' ? value.value : value.id)
+							}
+						})
+					})
+					return type === 'text' ? props.join('，') : props
+				}
+				return ''
 			},
+			closeGoodDetailModal() { //关闭饮品详情模态框
+				this.goodDetailModalVisible = false
+				this.category = {}
+				this.good = {}
+			},
+			handleReduceFromCart(item, good) {
+				const index = this.cart.findIndex(item => item.id === good.id)
+				this.cart[index].number -= 1
+				if(this.cart[index].number <= 0) {
+					this.cart.splice(index, 1)
+				}
+			},
+			handlePropertyAdd() {
+				this.good.number += 1
+			},
+			handlePropertyReduce() {
+				if(this.good.number === 1) return
+				this.good.number -= 1
+			},
+			openCartPopup() {	//打开/关闭购物车列表popup
+				this.cartPopupVisible = !this.cartPopupVisible
+			},
+			handleCartClear() {	//清空购物车
+				uni.showModal({
+					title: '提示',
+					content: '确定清空购物车么',
+					success: ({confirm}) =>  {
+						if(confirm) {
+							this.cartPopupVisible = false
+							this.cart = []
+						}
+					}
+				})
+			},
+			handleCartItemAdd(index) {
+				this.cart[index].number += 1
+			},
+			handleCartItemReduce(index) {//购物车里面的加减
+				if(this.cart[index].number === 1) {
+					this.cart.splice(index, 1)
+				} else {
+					this.cart[index].number -= 1
+				}
+				if(!this.cart.length) {
+					this.cartPopupVisible = false
+				}
+			},
+			toPay(){//去结算
+				// if(!this.isLogin){
+				// 	uni.navigateTo({url: '/pages/login/login'})
+				// 	return
+				// }
+				uni.showLoading({title: '加载中'})
+				uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
+				
+				uni.navigateTo({
+					url: '/pages/shoppingMall/order/confirmOrder'
+				})
+				uni.hideLoading()
+			}
 		}
 	}
 </script>
@@ -330,6 +494,7 @@
 		display: flex;
 		flex-direction: column;
 	}
+	
 	.good-detail-modal{
 		width: 100%;
 		height: 100%;
@@ -342,8 +507,172 @@
 				width: 130px;
 				height: 130px;
 			}
+			.btn-group2{
+				position: absolute;
+				right: 10rpx;
+				top: 30rpx;
+				image{
+					width: 35px;
+					height: 35px;
+				}
+			}
+			
 		}
 	}
+	
+	.detail {
+		width: 100%;
+		min-height: 1vh;
+		max-height: calc(90vh - 320rpx - 80rpx - 120rpx);
+	
+		.wrapper {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			
+			.basic {
+				padding: 0 20rpx 30rpx;
+				display: flex;
+				flex-direction: column;
+				.name {
+					font-size: 14px;
+					color: #000000;
+					margin-bottom: 10rpx;
+				}
+				.tips {
+					font-size: 14px;
+					color: #000000;
+				}
+			}
+			
+			.properties {
+				width: 100%;
+				border-top: 2rpx solid #919293;
+				padding: 10rpx 30rpx 0;
+				display: flex;
+				flex-direction: column;
+				
+				.property {
+					width: 100%;
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 30rpx;
+					padding-bottom: -16rpx;
+					
+					.title {
+						width: 100%;
+						display: flex;
+						justify-content: flex-start;
+						align-items: center;
+						margin-bottom: 20rpx;
+						
+						.name {
+							font-size: 26rpx;
+							color: #000000;
+							margin-right: 20rpx;
+						}
+						
+						.desc {
+							flex: 1;
+							font-size: 14px;
+							color: #0077AA;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+					}
+					
+					.values {
+						width: 100%;
+						display: flex;
+						flex-wrap: wrap;
+						
+						.value {
+							border-radius: 8rpx;
+							background-color: #F5F5F5;
+							padding: 16rpx 30rpx;
+							font-size: 26rpx;
+							color: #919293;
+							margin-right: 16rpx;
+							margin-bottom: 16rpx;
+							
+							&.default {
+								background-color:#ADB838;
+								color: #FFFFFF;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.action {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		background-color: #F5F5F5;
+		height: 120rpx;
+		padding: 0 26rpx;
+	
+		.left {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			margin-right: 20rpx;
+			overflow: hidden;
+			
+			.price {
+				font-size: 14px;
+				color: #000000;
+			}
+	
+			.props {
+				color: #919293;
+				font-size: 24rpx;
+				width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
+		.btn-group {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+	
+			.number {
+				font-size: 14px;
+				width: 44rpx;
+				height: 44rpx;
+				line-height: 44rpx;
+				text-align: center;
+			}
+	
+			.btn {
+				padding: 0;
+				font-size: 14px;
+				width: 44rpx;
+				height: 44rpx;
+				line-height: 44rpx;
+				border-radius: 100%;
+				border: 0;
+				background-color: #ADB838;
+			}
+		}
+	}
+	
+	.add-to-cart-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #ADB838;
+		color: #FFFFFF;
+		font-size: 14px;
+		height: 80rpx;
+		border-radius: 0 0 12rpx 12rpx;
+	}
+	
 	.header {
 		width: 100%;
 		display: flex;
@@ -410,6 +739,7 @@
 				margin-left: 10px;
 			}
 		}
+		
 	}
 
 	.coupon {
@@ -457,7 +787,7 @@
 					justify-content: flex-start;
 					padding: 30rpx 20rpx;
 					font-size: 26rpx;
-					// color: $text-color-assist;
+					color: #919293;
 					position: relative;
 
 					&:nth-last-child(1) {
@@ -466,7 +796,7 @@
 
 					&.current {
 						background-color: #ffffff;
-						// color: $text-color-base;
+						color: #919293;
 					}
 
 					.dot {
@@ -475,7 +805,7 @@
 						height: 34rpx;
 						line-height: 34rpx;
 						font-size: 22rpx;
-						// background-color: $color-primary;
+						background-color: #ADB838;
 						color: #ffffff;
 						top: 16rpx;
 						right: 10rpx;
@@ -612,8 +942,8 @@
 										.dot {
 											position: absolute;
 											background-color: #ffffff;
-											border: 1px solid #0077DD;
-											color: #00B389;
+											border: 1px solid #ADB838;
+											color: #ADB838;
 											font-size: 14px;
 											width: 36rpx;
 											height: 36rpx;
@@ -642,9 +972,11 @@
 			max-height: 90vh;
 		}
 	}
+	
 	.cart-box{
+		z-index: 9999;
 		position: absolute;
-		bottom: 25px;
+		bottom: 50px;
 		left: 15px;
 		right: 15px;
 		height: 48px;
@@ -700,6 +1032,98 @@
 					    font-size: 14px;
 						background-color: #ADB838;
 					}
+		}
+	}
+	
+	.cart-popup {
+		.top {
+			background-color: #E8EACF;
+			    color: #ADB838;
+			    padding: 5px 15px;
+			    font-size: 12px;
+			    text-align: right;
+		}
+		.cart-list {
+			background-color: #FFFFFF;
+			width: 100%;
+			overflow: hidden;
+			min-height: 1vh;
+			max-height: 60vh;
+			
+			.wrapper {
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				padding: 0 30rpx;
+				margin-bottom: 156rpx;
+				
+				.item {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					padding: 30rpx 0;
+					position: relative;
+					
+					&::after {
+						content: ' ';
+						position: absolute;
+						bottom: 0;
+						left: 0;
+						width: 100%;
+						background-color: #919293;
+						height: 2rpx;
+						transform: scaleY(.6);
+					}
+					
+					.left {
+						flex: 1;
+						display: flex;
+						flex-direction: column;
+						overflow: hidden;
+						margin-right: 30rpx;
+						
+						.name {
+							font-size: 14px;
+							color: #5A5B5C;
+						}
+						.props {
+							color: #919293;
+							font-size: 24rpx;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+					}
+					
+					.center {
+						margin-right: 120rpx;
+						font-size: 14px;
+					}
+					
+					.right {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						
+						.btn {
+							width: 46rpx;
+							height: 46rpx;
+							border-radius: 100%;
+							padding: 0;
+							text-align: center;
+							line-height: 40rpx;
+							
+						}
+						.number {
+							font-size: 14px;
+							width: 46rpx;
+							height: 46rpx;
+							text-align: center;
+							line-height: 46rpx;
+						}
+					}
+				}
+			}
 		}
 	}
 </style>

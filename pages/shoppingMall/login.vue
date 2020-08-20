@@ -49,6 +49,7 @@
 			<view class="centerBox">
 				<view class="left">
 					<view>
+						<!-- 点击这个地方可以跳转到商城页面 待做 -->
 						<view>
 							<image src="../../static/images/index/csc.png" class="mark-img"></image>
 							<view style="margin-left: 6px;display: inline-block;">奈雪的茶商城</view>

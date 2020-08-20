@@ -32,7 +32,12 @@
 					iconPath: 'static/img/home.png',
 					selectedIconPath: 'static/img/select-home1.png'
 				})
-				
+				uni.setTabBarItem({
+					index: 3,
+					text: '自定义模块',
+					iconPath: 'static/img/home.png',
+					selectedIconPath: 'static/img/select-home1.png'
+				})
 				getApp().globalData.mainColor = mainColor
 				Cookie.set('mainColor', mainColor)
 			}

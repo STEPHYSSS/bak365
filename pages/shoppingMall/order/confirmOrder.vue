@@ -124,6 +124,7 @@
 						<span class="cancel" @click="$refs.showAreaList.close()">取消</span>
 						<span>选择地址</span>
 					</div>
+					<!-- 从这里开始 -->
 					<radio-group class="bottom-area" ref="checkboxAreaRef" @change="changeGroup">
 						<div v-for="(item,index) in areaList" :key="index" class="bottom-area__box" @click="changeArea(item,index)">
 							<radio :value="item.SID" class="checkbox-my" :checked="showAreaList == item.SID"></radio>

@@ -109,7 +109,7 @@
 			},
 			clickLeft(){
 				this.$Router.pushTab({
-					path: "/pages/shoppingMall/login"
+					path: "/pages/shoppingMall/index"
 				});
 			},
 			async addCart(item) {

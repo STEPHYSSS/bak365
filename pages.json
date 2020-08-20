@@ -159,6 +159,10 @@
             "path" : "pages/shoppingMall/menu_naixue/menu/menu",
             "style" : {"navigationBarTitleText": "自取"}
         }
+        ,{
+            "path" : "pages/myAddress/myAddress",
+            "style" : {"navigationBarTitleText": "我的地址"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -173,14 +177,14 @@
 				// "pagePath": "pages/shoppingMall/index"
 				"pagePath":"pages/shoppingMall/login"
 			},
-			// {
-			// 	"pagePath": "pages/shoppingMall/index"				
-			// },
 			{
 				"pagePath": "pages/shoppingMall/shoppingCart/index"
 			},
 			{
 				"pagePath": "pages/home"
+			},
+			{
+				"pagePath": "pages/shoppingMall/index"				
 			}
 		]
 	}
