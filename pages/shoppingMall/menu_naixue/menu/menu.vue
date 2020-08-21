@@ -303,14 +303,6 @@
 				this.loading = true
 				this.goods = goods
 				this.loading = false
-				
-					if(!this.location.longitude){
-						uni.showToast({
-						    title: '地址获取失败',
-						    duration: 2000
-						});
-						throw "地址获取失败";
-					}
 			},
 			handleMenuTap(id) { //点击菜单项事件
 				// console.log(id)

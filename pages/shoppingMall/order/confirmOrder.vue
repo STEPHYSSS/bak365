@@ -91,6 +91,7 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
+				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
 						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
@@ -950,10 +951,22 @@
 			background-color: #fff;
 			align-items: center;
 			padding: 26rpx 24rpx;
-
+			margin: 10px 0;
+			
+			.payStyle{
+				background: rgb(255, 255, 255);
+				font-size: 14px;
+				color: rgb(90, 91, 92);
+				padding: 13px 0px;
+			}
+			
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
+				.uni-radio .uni-radio-input{
+					width: 16px;
+					height: 16px;
+				}
 			}
 
 			.custom-title {

@@ -41,7 +41,8 @@
 					</view>
 				</view>
 				<view class="qrcode_section" @tap="memberCode">
-					<image src="/static/images/index/qrcode.png"></image>
+					<!-- <image src="/static/images/index/qrcode.png"></image> -->
+					<div class="iconfont icon-huiyuanmaicons"></div>
 					<text>会员码</text>
 				</view>
 			</view>
@@ -121,7 +122,12 @@
 				// 自取页面
 				this.$Router.push("/pages/shoppingMall/menu_naixue/menu/menu");
 			},
-			takeout(){},
+			takeout(){
+				this.$Router.push({
+					path: "/pages/myAddress/myAddress",
+					query:{flag:'login'}
+				});
+			},
 			integrals(){},
 			memberCode(){},
 		}

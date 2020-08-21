@@ -163,6 +163,10 @@
             "path" : "pages/myAddress/myAddress",
             "style" : {"navigationBarTitleText": "我的地址"}
         }
+        ,{
+            "path" : "pages/myAddress/add",
+            "style" : {"navigationBarTitleText": "新增地址"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -135,6 +135,7 @@
 			integralMall() {
 				this.$Router.push("/pages/integralMall/index");
 			},
+			// 秒杀活动
 			seckill() {
 				this.$Router.push("/pages/shoppingMall/seckill/index");
 			},
