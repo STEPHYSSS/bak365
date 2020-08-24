@@ -10,7 +10,7 @@
 			<template v-else>
 				<uni-swipe-action>
 					<uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(item.id)" v-for="(item, index) in areaList" :key="index">
-						<view class="address" @tap="chooseAddress(address)">
+						<view class="address" @tap="chooseAddress(item)">
 							<view class="left flex-fill overflow-hidden mr-20">
 								<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
 								{{item.Name}}
@@ -27,10 +27,10 @@
 			<button type="primary" size="default" @tap="add">新增地址</button>
 		</view>
 		<!-- 新增地址 uni-popup -->
-		<uni-popup ref="addEditArea" v-model="addEditArea" position="bottom" class="confirm-area-popup">
+		<!-- <uni-popup ref="addEditArea" v-model="addEditArea" position="bottom" class="confirm-area-popup">
 			<a-receive-address v-if="addEditArea" @clickGo="clickGo" :radioModes="radioModes" :areaInfo="areaInfo" @saveArea="saveAreaSet"
 			 :currentDeliveryType="currentDeliveryType"></a-receive-address>
-		</uni-popup>
+		</uni-popup> -->
 	</view>
 </template>
 
@@ -78,10 +78,15 @@
 				);
 				this.areaList =  Data.AddressList;
 			},
+			// 
+			chooseAddress(item){
+				console.log(item)
+				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
+			},
 			add() {
-				// uni.navigateTo({
-				// 	url: '/pages/myAddress/add'
-				// })
+				uni.navigateTo({
+					url: '/pages/myAddress/add'
+				})
 			},
 			edit(id) {
 				uni.navigateTo({

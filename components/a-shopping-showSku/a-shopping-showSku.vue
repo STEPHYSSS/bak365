@@ -228,6 +228,7 @@
 							paramsArr[0].PromotionItemSID = this.currentNorms.SID;
 						}
 						let currentItem = [paramsArr[0]];
+						console.log(currentItem,'------')
 						if (currentItem.length > 0) {
 							this.$store.commit("SET_CURRENT_CARD", currentItem);
 							this.$Router.push("/pages/shoppingMall/order/confirmOrder");

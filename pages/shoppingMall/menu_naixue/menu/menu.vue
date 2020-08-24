@@ -1,4 +1,4 @@
-<template>
+	<template>
 	<!-- 仿奈雪自取点单页面 -->
 	<view>
 		<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" title="奈雪" :shadow="false" :fixed="true" left-icon="back"></uni-nav-bar>
@@ -51,9 +51,9 @@
 							<!-- 轮播图结束 -->
 							<view class="list">
 								<!-- category begin -->
-								<view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.SID}`">
+								<!-- <view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.SID}`"> -->
 									<view class="title">
-										<text>{{ item.Name }}</text>
+										<text>{{ currentType.Name }}</text>
 									</view>
 									<view class="items">
 										<!-- 商品 begin -->
@@ -77,12 +77,12 @@
 													</view>
 													<view class="btn-group" v-else>
 														<button type="default" v-show="goodCartNum(good.SID)" plain class="btn reduce_btn" size="mini"
-														 hover-class="none" @tap="handleReduceFromCart(item, good)">
+														 hover-class="none" @tap="handleReduceFromCart( good)">
 															-
 														</button>
 														<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
 														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
-														 @tap="handleAddToCart(item, good, 1)">+
+														 @tap="handleAddToCart(good, 1)">+
 														</button>
 													</view>
 												</view>
@@ -90,7 +90,7 @@
 										</view>
 										<!-- 商品 end -->
 									</view>
-								</view>
+								<!-- </view> -->
 								<!-- category end -->
 							</view>
 						</view>
@@ -128,6 +128,7 @@
 							<view class="name">{{ ProdInfo.Name }}</view>
 							<view class="tips">{{ ProdInfo.Tip }}</view>
 						</view>
+						<view class="properties"></view>
 						<!-- <view class="properties" v-if="good.use_property">
 							<view class="property" v-for="(item, index) in good.property" :key="index">
 								<view class="title">
@@ -226,6 +227,7 @@
 	export default {
 		data() {
 			return {
+				currentType: {},
 				orderType: 'takein',
 				goods: [],
 				menuScrollIntoView: '',
@@ -264,6 +266,7 @@
 		async onLoad() {
 			await this.getCouponList();
 			await this.getList();
+			this.currentType = this.goods[0];
 		},
 		components: {
 			goods,
@@ -279,10 +282,11 @@
 				}, 0)
 			},
 			getCartGoodsNumber() { //计算购物车总数
-				return this.cart.reduce((acc, cur) => acc + cur.number, 0)
+				return this.cart.length;
 			},
 			getCartGoodsPrice() { //计算购物车总价
-				return this.cart.reduce((acc, cur) => acc + cur.number * cur.SalePrice, 0)
+				console.log(this.cart);
+				return this.cart.reduce((acc, cur) => +cur.SalePrice + acc, 0)
 			},
 			disabledPay() { //是否达到起送价
 				return this.orderType == 'takeout' && (this.getCartGoodsPrice < this.store.min_price) ? true : false
@@ -334,6 +338,7 @@
 			},
 
 			handleMenuTap(id, index) { //点击菜单项事件
+				this.currentType = this.goods[index];
 				this.zanshiID = id;
 				if (!this.sizeCalcState) {
 					this.calcSize()
@@ -341,7 +346,7 @@
 				this.currentCateId = id;
 				this.$nextTick(() => this.cateScrollTop = this.goods.find(item => item.SID == id).top);
 				// 
-				this.getList(this.goods.id);
+				this.getList(id);
 			},
 			
 			handleGoodsScroll({
@@ -398,7 +403,7 @@
 					this.goodDetailModalVisible = true
 					this.skuDataInfo = Data;
 					this.ProdInfo = this.skuDataInfo.ProdInfo;
-					console.log(this.skuDataInfo,'88888')
+					console.log(this.skuDataInfo);
 				} catch (e) {
 					console.log(e);
 				}
@@ -406,11 +411,11 @@
 			
 			
 			// 
-			changePropertyDefault(index, key) { //改变默认属性值
-				this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
-				this.good.property[index].values[key].is_default = 1
-				this.good.number = 1
-			},
+			// changePropertyDefault(index, key) { //改变默认属性值
+			// 	this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
+			// 	this.good.property[index].values[key].is_default = 1
+			// 	this.good.number = 1
+			// },
 			// 点击图片或者选择规格时弹窗
 			showGoodDetailModal(item, good) {
 				this.good = JSON.parse(JSON.stringify({ ...good,
@@ -424,10 +429,12 @@
 					props_text: this.getGoodSelectedProps(this.good),
 					props: this.getGoodSelectedProps(this.good, 'id')
 				})
-				this.handleAddToCart(this.category, product, this.good.number)
+				this.cart.push(this.ProdInfo);
+				console.log(this.cart);
+				// this.handleAddToCart(this.category, product, this.good.number)
 				this.closeGoodDetailModal()
 			},
-			handleAddToCart(cate, good, num) { //添加到购物车
+			handleAddToCart(good, num) { //添加到购物车
 				const index = this.cart.findIndex(item => {
 					if (good.TastName) {
 						return (item.SID === good.SID) && (item.Describe === good.Describe)
@@ -440,16 +447,17 @@
 				} else {
 					this.cart.push({
 						SID: good.SID,
-						cate_id: cate.SID,
+						ProdSID: this.currentType.SID,
 						Name: good.Name,
 						SalePrice: good.SalePrice,
 						number: num,
 						Img: good.Img,
 						TastName: good.TastName,
 						Describe: good.Describe,
-						DeliveryType:'2,1'
+						DeliveryType:'2,1',
+						ProdNo:good.ProdNo
+						
 					})
-					console.log(this.cart)
 				}
 			},
 			getGoodSelectedProps(good, type = 'text') { //计算当前饮品所选属性
@@ -527,7 +535,7 @@
 				})
 				// uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
 				let currentItem = JSON.parse(JSON.stringify(this.cart));
-				console.log(currentItem)
+				console.log(currentItem);
 				this.$store.commit("SET_CURRENT_CARD", currentItem);
 				this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				uni.hideLoading()

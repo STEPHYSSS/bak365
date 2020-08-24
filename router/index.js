@@ -42,7 +42,8 @@ router.beforeEach((to, from, next) => {
 				Cookie.set('mainStyle', 'theme2')
 
 				let GetQuery = GetQueryString('BusinNo')
-				let newBusinNo = GetQuery ? GetQuery : Cookie.get('BusinNo')
+				// let newBusinNo = GetQuery ? GetQuery : Cookie.get('BusinNo')
+				let newBusinNo = '1'
 				let UserMACPhone = Cookie.get('UserMACPhone')
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
