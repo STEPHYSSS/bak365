@@ -146,7 +146,7 @@
 					currentItem.forEach(D => {
 						D.PartsList = JSON.stringify(D.PartsList);
 					});
-					// console.log(currentItem,9999)
+					console.log(currentItem,9999)
 					// return;
 					this.$store.commit("SET_CURRENT_CARD", currentItem);
 					this.$Router.push("/pages/shoppingMall/order/confirmOrder");

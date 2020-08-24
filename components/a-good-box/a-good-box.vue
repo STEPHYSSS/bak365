@@ -11,8 +11,8 @@
 				</span>
 			</div>
 		</div>
-		<!-- <div class="oneBoxTitle">{{seckill?itemData.PromName:itemData.Name}}</div> -->
-		<div class="oneBoxTitle">{{seckill?itemData.Name:itemData.Name}}</div>
+		<div class="oneBoxTitle">{{seckill?itemData.PromName:itemData.Name}}</div>
+
 		<div v-if="startIS" class="progress-style">
 			<progress :percent="setProgress()" activeColor="#fe5252" active stroke-width="5" />
 		</div>

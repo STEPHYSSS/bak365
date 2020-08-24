@@ -51,7 +51,6 @@
 				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>
 				<div style="flex:1">剩余库存：{{ Number(goods.StoreQty)-Number(goods.SaleCnt) |setMoney}}</div>
 				<!--                <div v-if="!isCouponPage">规格：</div>-->
-				<div class="iconfont icon-fenxiang" @click="share">分享</div>
 			</div>
 		</div>
 
@@ -105,7 +104,7 @@
 		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill" :isBrowse="isBrowse"></a-shopping-showSku>
 	</div>
 </template>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+
 <script>
 	// import "@/config/jquery.base64.js";
 	import {
@@ -115,13 +114,12 @@
 		Base64
 	} from 'js-base64';
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-	import Mixins from '@/pages/shoppingMall/mixins.js'
+
 	export default {
 		name: "couponPage",
 		components: {
 			adCell
 		},
-		mixins: [Mixins],
 		props: {
 			goods: {
 				type: Object,
@@ -254,179 +252,127 @@
 			}
 		},
 		methods: {
-			// 分享
-			async share() {
-				try {
-					let {
-						Data
-					} = await vipCard({
-						Action: 'LeaderSpread',
-						ProdSID: this.goods.SID,
-						SpreadLink: window.location.href,
-						Name: this.goods.Name,
-						Img: this.goods.Img
-
-					}, 'UProdOpera')
-					this.getWxConfig();
-
-				} catch (e) {}
+			clickShop() {
+				if (this.isBrowse) {
+					return;
+				}
+				this.$Router.push({
+					path: "/pages/shoppingMall/index"
+				});
 			},
-			async getWxConfig() {
+			userEvaluation(row) {
+				if (this.isBrowse) {
+					return;
+				}
+				let num = row.CommentCnt;
+				// 用户评价
+				if (num && Number(num) > 0) {
+					this.$Router.push({
+						path: "/pages/shoppingMall/evaluation/goodEvaluationList",
+						query: {
+							id: row.SID
+						}
+					});
+				}
+			},
+			addCart(val) {
+				if (val.content.text === '立即抢购') {
+					this.orderNow()
+				} else {
+					// 点击购物车，出现弹框
+					this.show = true;
+					this.isAddCart = true;
+				}
+			},
+			jumpCart() {
+				if (this.isBrowse) {
+					return;
+				}
+				this.$Router.pushTab({
+					path: "/pages/shoppingMall/shoppingCart/index"
+				});
+			},
+			orderNow() {
+				if (this.isCouponPage || this.isIntegral == "true") {
+					// 优惠券购买，直接 调取微信支付
+					let currentItem = [{
+						ProdSID: this.goods.SID,
+						ProdNo: this.goods.ProdNo,
+						BuyCnt: 1
+					}];
+					let bool = this.isIntegral ? {
+						isIntegral: "1"
+					} : {};
+					this.$store.commit("SET_CURRENT_CARD", currentItem);
+					this.$Router.push({
+						path: "/pages/shoppingMall/order/confirmOrder",
+						query: bool
+					});
+				} else {
+					this.show = true;
+					this.isAddCart = false;
+				}
+			},
+			hideShow() {
+				this.show = false;
+			},
+			finishTimer() {
+				setTimeout(() => {
+					this.getTimeout();
+				}, 1000)
+			},
+			async tradeList() {
 				try {
 					let {
 						Data
 					} = await vipCard({
-						Action: "GetJSSDK"
-					}, "UProdOpera");
-					wx.config({
-						debug: false,
-						appId: Data.SDK.appId,
-						timestamp: Data.SDK.timestamp,
-						nonceStr: Data.SDK.nonceStr,
-						signature: Data.SDK.signature,
-						jsApiList: ["updateAppMessageShareData"]
-					});
-					wx.error(function(res) {
-						console.log(res);
-					});
-					wwx.ready(function() { //需在用户可能点击分享按钮前就先调用
-						wx.updateAppMessageShareData({
-							title: '', // 分享标题
-							desc: '', // 分享描述
-							link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-							imgUrl: '', // 分享图标
-							success: function() {
-								// 设置成功
-							}
-						})
-					});
+						Action: 'GetNewDeal',
+						ProdSID: this.goods.SID
+					}, 'UProdOpera')
+					this.userList = Data.CommentList
+					this.getTimeout()
+				} catch (e) {
 
-				} catch (e) {}},
-				clickShop() {
-						if (this.isBrowse) {
-							return;
-						}
-						this.$Router.push({
-							path: "/pages/shoppingMall/index"
-						});
-					},
-					userEvaluation(row) {
-						if (this.isBrowse) {
-							return;
-						}
-						let num = row.CommentCnt;
-						// 用户评价
-						if (num && Number(num) > 0) {
-							this.$Router.push({
-								path: "/pages/shoppingMall/evaluation/goodEvaluationList",
-								query: {
-									id: row.SID
-								}
-							});
-						}
-					},
-					addCart(val) {
-						if (val.content.text === '立即抢购') {
-							this.orderNow()
-						} else {
-							// 点击购物车，出现弹框
-							this.show = true;
-							this.isAddCart = true;
-						}
-					},
-					jumpCart() {
-						if (this.isBrowse) {
-							return;
-						}
-						this.$Router.pushTab({
-							path: "/pages/shoppingMall/shoppingCart/index"
-						});
-					},
-					orderNow() {
-						if (this.isCouponPage || this.isIntegral == "true") {
-							// 优惠券购买，直接 调取微信支付
-							let currentItem = [{
-								ProdSID: this.goods.SID,
-								ProdNo: this.goods.ProdNo,
-								BuyCnt: 1
-							}];
-							let bool = this.isIntegral ? {
-								isIntegral: "1"
-							} : {};
-							this.$store.commit("SET_CURRENT_CARD", currentItem);
-							this.$Router.push({
-								path: "/pages/shoppingMall/order/confirmOrder",
-								query: bool
-							});
-						} else {
-							this.show = true;
-							this.isAddCart = false;
-						}
-					},
-					hideShow() {
-						this.show = false;
-					},
-					finishTimer() {
-						setTimeout(() => {
-							this.getTimeout();
-						}, 1000)
-					},
-					async tradeList() {
-							try {
-								let {
-									Data
-								} = await vipCard({
-									Action: 'GetNewDeal',
-									ProdSID: this.goods.SID
-								}, 'UProdOpera')
-								this.userList = Data.CommentList
-								this.getTimeout()
-							} catch (e) {
+				}
+			},
+			getTimeout(current) {
+				let currentT = new Date().getTime()
+				let End = new Date(this.goods.EndDate.replace(/-/g, '/')).getTime()
+				let Start = new Date(this.goods.StartDate.replace(/-/g, '/')).getTime()
+				// let Start = new Date('2020-05-18 14:55:00').getTime()
+				// let End = new Date('2020-05-18 14:55:50').getTime()
+				// false 活动未开始 true 活动开始了 end为活动结束
+				this.startIS = Start - currentT >= 0 ? false : End - currentT > 0 ? true : 'end'
+				let activeTimeMy = this.startIS ? End - currentT : Start - currentT
+				let myTime = activeTimeMy
+				this.activeTimeMy = {
+					day: parseInt(myTime / (1000 * 60 * 60 * 24)),
+					hours: parseInt((myTime % (1000 * 60 * 60 * 24)) / (60 * 60 * 1000)),
+					minute: parseInt((myTime % (1000 * 60 * 60)) / (60 * 1000)),
+					second: parseInt((myTime % (1000 * 60)) / 1000)
+				}
 
-							}
-						},
-						getTimeout(current) {
-							let currentT = new Date().getTime()
-							let End = new Date(this.goods.EndDate.replace(/-/g, '/')).getTime()
-							let Start = new Date(this.goods.StartDate.replace(/-/g, '/')).getTime()
-							// let Start = new Date('2020-05-18 14:55:00').getTime()
-							// let End = new Date('2020-05-18 14:55:50').getTime()
-							// false 活动未开始 true 活动开始了 end为活动结束
-							this.startIS = Start - currentT >= 0 ? false : End - currentT > 0 ? true : 'end'
-							let activeTimeMy = this.startIS ? End - currentT : Start - currentT
-							let myTime = activeTimeMy
-							this.activeTimeMy = {
-								day: parseInt(myTime / (1000 * 60 * 60 * 24)),
-								hours: parseInt((myTime % (1000 * 60 * 60 * 24)) / (60 * 60 * 1000)),
-								minute: parseInt((myTime % (1000 * 60 * 60)) / (60 * 1000)),
-								second: parseInt((myTime % (1000 * 60)) / 1000)
-							}
-
-							if (this.seckill) {
-								this.buttonGroup[0].disabled =
-									(this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
-							}
-						},
-			}
-		};
-
-		function setfix(val, _this) {
-			let str = "";
-			if (!val) {
-				return ''
-			}
-			str = val.replace(/src="/g, `src="${_this.$VUE_APP_PREFIX}`);
-			return str;
+				if (this.seckill) {
+					this.buttonGroup[0].disabled =
+						(this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
+				}
+			},
 		}
+	};
+
+	function setfix(val, _this) {
+		let str = "";
+		if (!val) {
+			return ''
+		}
+		str = val.replace(/src="/g, `src="${_this.$VUE_APP_PREFIX}`);
+		return str;
+	}
 </script>
 
 <style lang="less">
 	.goodCoupon {
 		margin-bottom: 55px;
-
-		.icon-fenxiang {
-			color: #3388ffe3;
-		}
 
 		.goods-action {
 			position: fixed;

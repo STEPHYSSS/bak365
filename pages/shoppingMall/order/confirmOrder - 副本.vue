@@ -91,7 +91,6 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
-				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
 						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
@@ -125,7 +124,6 @@
 						<span class="cancel" @click="$refs.showAreaList.close()">取消</span>
 						<span>选择地址</span>
 					</div>
-					<!-- 从这里开始 -->
 					<radio-group class="bottom-area" ref="checkboxAreaRef" @change="changeGroup">
 						<div v-for="(item,index) in areaList" :key="index" class="bottom-area__box" @click="changeArea(item,index)">
 							<radio :value="item.SID" class="checkbox-my" :checked="showAreaList == item.SID"></radio>
@@ -283,6 +281,7 @@
 			}
 			// 获取授权地址
 			await this.getWxConfig();
+
 			let item = this.$store.state.currentCard || [];
 			item.forEach(D => {
 				if (D.SID) {
@@ -322,6 +321,7 @@
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
+
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
@@ -343,7 +343,8 @@
 							this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-							console.log(Data,77765655)
+
+							// console.log(Data,77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
@@ -950,22 +951,10 @@
 			background-color: #fff;
 			align-items: center;
 			padding: 26rpx 24rpx;
-			margin: 10px 0;
-			
-			.payStyle{
-				background: rgb(255, 255, 255);
-				font-size: 14px;
-				color: rgb(90, 91, 92);
-				padding: 13px 0px;
-			}
-			
+
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
-				.uni-radio .uni-radio-input{
-					width: 16px;
-					height: 16px;
-				}
 			}
 
 			.custom-title {

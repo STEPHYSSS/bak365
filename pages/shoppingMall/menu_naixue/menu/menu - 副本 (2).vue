@@ -17,7 +17,7 @@
 							<view class="dinein">
 								<text>自取</text>
 							</view>
-							<view class="takeout" @click="$Router.push('/pages/myAddress/myAddress')">
+							<view class="takeout">
 								<text>外卖</text>
 							</view>
 						</view>
@@ -58,36 +58,32 @@
 									<view class="items">
 										<!-- 商品 begin -->
 										<view class="good" v-for="(good, key) in goods_list" :key="key">
-											<!-- <image :src="good.Img" class="image" @tap="showGoodDetailModal(item, good)"></image> -->
-											<view class="right">
-												<text class="name">{{ good.Name }}</text>
-												<text class="tips">{{ good.Describe }}</text>
-												<view class="price_and_action">
-													<text class="price">￥{{ good.SalePrice }}</text>
-													<view class="btn-group" v-if="good.TastName">
-														<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
-														 @tap="addCart(good)">
-															选规格
-														</button>
-														<!-- <button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
-														 @tap="showGoodDetailModal(item, good)">
-															选规格
-														</button> -->
-														<view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
-													</view>
-													<view class="btn-group" v-else>
-														<button type="default" v-show="goodCartNum(good.SID)" plain class="btn reduce_btn" size="mini"
-														 hover-class="none" @tap="handleReduceFromCart(item, good)">
-															-
-														</button>
-														<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
-														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
-														 @tap="handleAddToCart(item, good, 1)">+
-														</button>
+												<image :src="good.Img" class="image" @tap="showGoodDetailModal(item, good)"></image>
+												<view class="right">
+													<text class="name">{{ good.Name }}</text>
+													<text class="tips">{{ good.Describe }}</text>
+													<view class="price_and_action">
+														<text class="price">￥{{ good.SalePrice }}</text>
+														<view class="btn-group" v-if="good.TastName">
+															<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none"
+															 size="mini" @tap="showGoodDetailModal(item, good)">
+																选规格
+															</button>
+															<view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+														</view>
+														<view class="btn-group" v-else>
+															<button type="default" v-show="goodCartNum(good.SID)" plain class="btn reduce_btn"
+															 size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">																
+																-
+															</button>
+															<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+															<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none" 
+																@tap="handleAddToCart(item, good, 1)">+
+															</button>
+														</view>
 													</view>
 												</view>
-											</view>
-										</view>
+											</view> 
 										<!-- 商品 end -->
 									</view>
 								</view>
@@ -112,23 +108,23 @@
 				<!-- 购物车栏 end -->
 			</view>
 			<!-- 商品详情模态框 begin -->
-			<modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" width="90%" custom padding="0rpx"
-			 radius="12rpx">
+			<modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" 
+					width="90%"  custom padding="0rpx" radius="12rpx">
 				<view class="cover">
-					<image  :src="good.Img" class="image"></image>
+					<image v-if="good.images" :src="good.images" class="image"></image>
 					<view class="btn-group2">
 						<image src="/static/images/menu/share-good.png"></image>
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
 					</view>
 				</view>
-
+				
 				<scroll-view class="detail" scroll-y>
 					<view class="wrapper">
 						<view class="basic">
-							<view class="name">{{ ProdInfo.Name }}</view>
-							<view class="tips">{{ ProdInfo.Tip }}</view>
+							<view class="name">{{ good.name }}</view>
+							<view class="tips">{{ good.content }}</view>
 						</view>
-						<!-- <view class="properties" v-if="good.use_property">
+						<view class="properties" v-if="good.use_property">
 							<view class="property" v-for="(item, index) in good.property" :key="index">
 								<view class="title">
 									<text class="name">{{ item.name }}</text>
@@ -141,22 +137,24 @@
 									</view>
 								</view>
 							</view>
-						</view> -->
+						</view>
 					</view>
 				</scroll-view>
 				<view class="action">
 					<view class="left">
-						<view class="price">￥{{ ProdInfo.SalePrice }}</view>
-						<view class="props" >
-							{{ getGoodSelectedProps(ProdInfo) }}
+						<view class="price">￥{{ good.price }}</view>
+						<view class="props" v-if="getGoodSelectedProps(good)">
+							{{ getGoodSelectedProps(good) }}
 						</view>
 					</view>
 					<view class="btn-group">
-						<button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
+						<button type="default" plain class="btn" size="mini" hover-class="none" 
+							@tap="handlePropertyReduce">
 							-
 						</button>
 						<view class="number">{{ good.number }}</view>
-						<button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
+						<button type="primary" class="btn" size="min" hover-class="none" 
+							@tap="handlePropertyAdd">
 							+
 						</button>
 					</view>
@@ -175,18 +173,22 @@
 						<view class="wrapper">
 							<view class="item" v-for="(item, index) in cart" :key="index">
 								<view class="left">
-									<view class="name">{{ item.Name }}</view>
+									<view class="name">{{ item.name }}</view>
 									<view class="props">{{ item.props_text }}</view>
 								</view>
 								<view class="center">
-									<text>￥{{ item.SalePrice }}</text>
+									<text>￥{{ item.price }}</text>
 								</view>
 								<view class="right">
-									<button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index)">
+									<button type="default" plain size="mini" class="btn" hover-class="none"
+										@tap="handleCartItemReduce(index)">
 										-
+										<!-- <view class="iconfont iconsami-select"></view> -->
 									</button>
 									<view class="number">{{ item.number }}</view>
-									<button type="primary" class="btn" size="min" hover-class="none" @tap="handleCartItemAdd(index)">
+									<button type="primary" class="btn" size="min" hover-class="none"
+										@tap="handleCartItemAdd(index)">
+										<!-- <view class="iconfont iconadd-select"></view> -->
 										+
 									</button>
 								</view>
@@ -220,9 +222,7 @@
 	import goods from '../../../../api/goods.js'
 	import modal from '@/components/modal/modal'
 	import popupLayer from '@/components/popup-layer/popup-layer'
-	import {
-		vipCard
-	} from '@/api/http.js';
+	import { vipCard } from '@/api/http.js';
 	export default {
 		data() {
 			return {
@@ -236,8 +236,8 @@
 				good: {}, //当前饮品
 				category: {}, //当前饮品所在分类
 				cart: [], //购物车
-				cartPopupVisible: false, //已选择商品弹窗
-				goods_list: [], //商品列表
+				cartPopupVisible: false,//已选择商品弹窗
+				goods_list:[],//商品列表
 				goodsLunbo: [{
 						image: 'https://img-shop.qmimg.cn/s23107/2020/04/27/4ebdb582a5185358c4.jpg?imageView2/2/w/600/h/600'
 					},
@@ -254,11 +254,8 @@
 						image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600'
 					}
 				],
-				currentArea: {}, //当前选择的地址
-				zanshiID: '',
-				skuDataInfo: {},//商品弹窗
-				ProdInfo:{}
-				
+				currentArea: {},//当前选择的地址
+				zanshiID:''
 			}
 		},
 		async onLoad() {
@@ -269,31 +266,32 @@
 			goods,
 			modal,
 		},
-		computed: {
-			goodCartNum() { //计算单个饮品添加到购物车的数量
+		computed:{
+			goodCartNum() {	//计算单个饮品添加到购物车的数量
 				return (SID) => this.cart.reduce((acc, cur) => {
-					if (cur.SID === SID) {
-						return acc += cur.number
-					}
-					return acc
-				}, 0)
+						if(cur.SID === SID) {
+							return acc += cur.number
+						}
+						return acc
+					}, 0)
 			},
 			getCartGoodsNumber() { //计算购物车总数
 				return this.cart.reduce((acc, cur) => acc + cur.number, 0)
 			},
-			getCartGoodsPrice() { //计算购物车总价
-				return this.cart.reduce((acc, cur) => acc + cur.number * cur.SalePrice, 0)
+			getCartGoodsPrice() {	//计算购物车总价
+				return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0)
 			},
 			disabledPay() { //是否达到起送价
 				return this.orderType == 'takeout' && (this.getCartGoodsPrice < this.store.min_price) ? true : false
 			},
 			spread() { //差多少元起送
-				if (this.orderType != 'takeout') return
+				if(this.orderType != 'takeout') return
 				return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2))
 			},
-
+			
 			menuCartNum() {
 				return (SID) => this.cart.reduce((acc, cur) => {
+					console.log(cur.cate_id)
 					if (cur.cate_id === SID) {
 						return acc += cur.number
 					}
@@ -325,17 +323,17 @@
 						},
 						"UProdOpera"
 					);
-
+			
 					this.goods_list = Data.Prod_InfoList;
 					this.loading = false;
 				} catch (e) {
 					this.loading = false;
 				}
 			},
-
-			handleMenuTap(id, index) { //点击菜单项事件
+			
+			handleMenuTap(id,index) { //点击菜单项事件
 				this.zanshiID = id;
-				if (!this.sizeCalcState) {
+				if(!this.sizeCalcState) {
 					this.calcSize()
 				}
 				this.currentCateId = id;
@@ -344,31 +342,27 @@
 				this.getList(this.goods.id);
 			},
 			
-			handleGoodsScroll({
-				detail
-			}) { //商品列表滚动事件
-				if (!this.sizeCalcState) {
+			handleGoodsScroll({detail}) {	//商品列表滚动事件
+				if(!this.sizeCalcState) {
 					this.calcSize()
 				}
-				const {
-					scrollTop
-				} = detail
-				let tabs = this.goods.filter(item => item.top <= scrollTop).reverse()
-				if (tabs.length > 0) {
+				const {scrollTop} = detail
+				let tabs = this.goods.filter(item=> item.top <= scrollTop).reverse()
+				if(tabs.length > 0){
 					this.currentCateId = tabs[0].id
 				}
 			},
 			// 计算滚动
 			calcSize() {
 				let h = 10
-
+				
 				let view = uni.createSelectorQuery().select('#ads')
 				view.fields({
 					size: true
 				}, data => {
 					h += Math.floor(data.height)
 				}).exec()
-
+				
 				this.goods.forEach(item => {
 					let view = uni.createSelectorQuery().select(`#cate-${item.SID}`)
 					view.fields({
@@ -381,31 +375,9 @@
 				})
 				this.sizeCalcState = true
 			},
-			clickLeft() { // 头部返回
+			clickLeft() {// 头部返回
 				this.$Router.push('/pages/shoppingMall/login')
 			},
-			// 
-			async addCart(item) {
-				try {
-					let obj = {
-						Action: "GetProdInfo"
-					};
-					Object.assign(obj, item);
-			
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
-					this.goodDetailModalVisible = true
-					this.skuDataInfo = Data;
-					this.ProdInfo = this.skuDataInfo.ProdInfo;
-					console.log(this.skuDataInfo,'88888')
-				} catch (e) {
-					console.log(e);
-				}
-			},
-			
-			
-			// 
 			changePropertyDefault(index, key) { //改变默认属性值
 				this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
 				this.good.property[index].values[key].is_default = 1
@@ -413,53 +385,46 @@
 			},
 			// 点击图片或者选择规格时弹窗
 			showGoodDetailModal(item, good) {
-				this.good = JSON.parse(JSON.stringify({ ...good,
-					number: 1
-				}))
+				this.good = JSON.parse(JSON.stringify({...good, number: 1}))
 				this.category = JSON.parse(JSON.stringify(item))
 				this.goodDetailModalVisible = true
 			},
-			handleAddToCartInModal() {
-				const product = Object.assign({}, this.good, {
-					props_text: this.getGoodSelectedProps(this.good),
-					props: this.getGoodSelectedProps(this.good, 'id')
-				})
+			handleAddToCartInModal(){
+				const product = Object.assign({}, this.good, {props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
 				this.handleAddToCart(this.category, product, this.good.number)
 				this.closeGoodDetailModal()
 			},
-			handleAddToCart(cate, good, num) { //添加到购物车
+			handleAddToCart(cate, good, num) {	//添加到购物车
 				const index = this.cart.findIndex(item => {
-					if (good.TastName) {
-						return (item.SID === good.SID) && (item.Describe === good.Describe)
+					if(good.TastName) {
+						return (item.SID === good.SID ) && (item.Describe === good.Describe)
 					} else {
-						return item.SID === good.SID
+						return item.SID === good.SID 
 					}
 				})
-				if (index > -1) {
+				if(index > -1) {
 					this.cart[index].number += num
 				} else {
 					this.cart.push({
-						SID: good.SID,
+						SID : good.SID ,
 						cate_id: cate.SID,
-						Name: good.Name,
-						SalePrice: good.SalePrice,
+						name: good.Name,
+						price: good.SalePrice,
 						number: num,
-						Img: good.Img,
-						TastName: good.TastName,
-						Describe: good.Describe,
-						DeliveryType:'2,1'
+						image: good.Img,
+						use_property: good.TastName,
+						props_text: good.Describe,
+						props: good.props
 					})
 					console.log(this.cart)
 				}
 			},
-			getGoodSelectedProps(good, type = 'text') { //计算当前饮品所选属性
-				if (good.use_property) {
+			getGoodSelectedProps(good, type = 'text') {	//计算当前饮品所选属性
+				if(good.use_property) {
 					let props = []
-					good.property.forEach(({
-						values
-					}) => {
+					good.property.forEach(({values}) => {
 						values.forEach(value => {
-							if (value.is_default) {
+							if(value.is_default) {
 								props.push(type === 'text' ? value.value : value.id)
 							}
 						})
@@ -476,7 +441,7 @@
 			handleReduceFromCart(item, good) {
 				const index = this.cart.findIndex(item => item.id === good.id)
 				this.cart[index].number -= 1
-				if (this.cart[index].number <= 0) {
+				if(this.cart[index].number <= 0) {
 					this.cart.splice(index, 1)
 				}
 			},
@@ -484,20 +449,18 @@
 				this.good.number += 1
 			},
 			handlePropertyReduce() {
-				if (this.good.number === 1) return
+				if(this.good.number === 1) return
 				this.good.number -= 1
 			},
-			openCartPopup() { //打开/关闭购物车列表popup
+			openCartPopup() {	//打开/关闭购物车列表popup
 				this.cartPopupVisible = !this.cartPopupVisible
 			},
-			handleCartClear() { //清空购物车
+			handleCartClear() {	//清空购物车
 				uni.showModal({
 					title: '提示',
 					content: '确定清空购物车么',
-					success: ({
-						confirm
-					}) => {
-						if (confirm) {
+					success: ({confirm}) =>  {
+						if(confirm) {
 							this.cartPopupVisible = false
 							this.cart = []
 						}
@@ -507,29 +470,27 @@
 			handleCartItemAdd(index) {
 				this.cart[index].number += 1
 			},
-			handleCartItemReduce(index) { //购物车里面的加减
-				if (this.cart[index].number === 1) {
+			handleCartItemReduce(index) {//购物车里面的加减
+				if(this.cart[index].number === 1) {
 					this.cart.splice(index, 1)
 				} else {
 					this.cart[index].number -= 1
 				}
-				if (!this.cart.length) {
+				if(!this.cart.length) {
 					this.cartPopupVisible = false
 				}
 			},
-			toPay() { //去结算
+			toPay(){//去结算
 				// if(!this.isLogin){
 				// 	uni.navigateTo({url: '/pages/login/login'})
 				// 	return
-				// }				
-				uni.showLoading({
-					title: '加载中'
+				// }
+				uni.showLoading({title: '加载中'})
+				uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
+				
+				uni.navigateTo({
+					url: '/pages/shoppingMall/order/confirmOrder'
 				})
-				// uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
-				let currentItem = JSON.parse(JSON.stringify(this.cart));
-				console.log(currentItem)
-				this.$store.commit("SET_CURRENT_CARD", currentItem);
-				this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				uni.hideLoading()
 			}
 		}
@@ -556,91 +517,84 @@
 		display: flex;
 		flex-direction: column;
 	}
-
-	.good-detail-modal {
+	
+	.good-detail-modal{
 		width: 100%;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
 		position: relative;
-
-		.cover {
+		.cover{
 			text-align: center;
-			margin-top: 10px;
-			.image {
+			.image{
 				width: 130px;
 				height: 130px;
-				border: 1px solid #CCCCCC;
 			}
-
-			.btn-group2 {
+			.btn-group2{
 				position: absolute;
 				right: 10rpx;
-				top: 20rpx;
-
-				image {
+				top: 30rpx;
+				image{
 					width: 35px;
 					height: 35px;
 				}
 			}
-
+			
 		}
 	}
-
+	
 	.detail {
 		width: 100%;
 		min-height: 1vh;
 		max-height: calc(90vh - 320rpx - 80rpx - 120rpx);
-
+	
 		.wrapper {
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
-
+			
 			.basic {
 				padding: 0 20rpx 30rpx;
 				display: flex;
 				flex-direction: column;
-
 				.name {
 					font-size: 14px;
 					color: #000000;
 					margin-bottom: 10rpx;
 				}
-
 				.tips {
 					font-size: 14px;
 					color: #000000;
 				}
 			}
-
+			
 			.properties {
 				width: 100%;
 				border-top: 2rpx solid #919293;
 				padding: 10rpx 30rpx 0;
 				display: flex;
 				flex-direction: column;
-
+				
 				.property {
 					width: 100%;
 					display: flex;
 					flex-direction: column;
 					margin-bottom: 30rpx;
 					padding-bottom: -16rpx;
-
+					
 					.title {
 						width: 100%;
 						display: flex;
 						justify-content: flex-start;
 						align-items: center;
 						margin-bottom: 20rpx;
-
+						
 						.name {
 							font-size: 26rpx;
 							color: #000000;
 							margin-right: 20rpx;
 						}
-
+						
 						.desc {
 							flex: 1;
 							font-size: 14px;
@@ -650,12 +604,12 @@
 							white-space: nowrap;
 						}
 					}
-
+					
 					.values {
 						width: 100%;
 						display: flex;
 						flex-wrap: wrap;
-
+						
 						.value {
 							border-radius: 8rpx;
 							background-color: #F5F5F5;
@@ -664,9 +618,9 @@
 							color: #919293;
 							margin-right: 16rpx;
 							margin-bottom: 16rpx;
-
+							
 							&.default {
-								background-color: #ADB838;
+								background-color:#ADB838;
 								color: #FFFFFF;
 							}
 						}
@@ -675,7 +629,6 @@
 			}
 		}
 	}
-
 	.action {
 		display: flex;
 		align-items: center;
@@ -683,7 +636,7 @@
 		background-color: #F5F5F5;
 		height: 120rpx;
 		padding: 0 26rpx;
-
+	
 		.left {
 			flex: 1;
 			display: flex;
@@ -691,12 +644,12 @@
 			justify-content: center;
 			margin-right: 20rpx;
 			overflow: hidden;
-
+			
 			.price {
 				font-size: 14px;
 				color: #000000;
 			}
-
+	
 			.props {
 				color: #919293;
 				font-size: 24rpx;
@@ -706,12 +659,11 @@
 				white-space: nowrap;
 			}
 		}
-
 		.btn-group {
 			display: flex;
 			align-items: center;
 			justify-content: space-around;
-
+	
 			.number {
 				font-size: 14px;
 				width: 44rpx;
@@ -719,7 +671,7 @@
 				line-height: 44rpx;
 				text-align: center;
 			}
-
+	
 			.btn {
 				padding: 0;
 				font-size: 14px;
@@ -732,7 +684,7 @@
 			}
 		}
 	}
-
+	
 	.add-to-cart-btn {
 		display: flex;
 		justify-content: center;
@@ -743,7 +695,7 @@
 		height: 80rpx;
 		border-radius: 0 0 12rpx 12rpx;
 	}
-
+	
 	.header {
 		width: 100%;
 		display: flex;
@@ -753,7 +705,6 @@
 		background-color: #ffffff;
 		height: 140rpx;
 		box-sizing: border-box;
-
 		.dot {
 			position: absolute;
 			width: 34rpx;
@@ -767,7 +718,6 @@
 			border-radius: 100%;
 			text-align: center;
 		}
-
 		.nav_left {
 			display: flex;
 			flex-direction: column;
@@ -812,7 +762,7 @@
 				margin-left: 10px;
 			}
 		}
-
+		
 	}
 
 	.coupon {
@@ -850,7 +800,6 @@
 			width: 200rpx;
 			height: 100%;
 			overflow: hidden;
-
 			.wrapper {
 				width: 100%;
 				height: 100%;
@@ -1042,13 +991,12 @@
 				}
 			}
 		}
-
 		.modal-box {
 			max-height: 90vh;
 		}
 	}
-
-	.cart-box {
+	
+	.cart-box{
 		z-index: 9999;
 		position: absolute;
 		bottom: 50px;
@@ -1059,93 +1007,86 @@
 		display: flex;
 		background-color: #FFFFFF;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-		.mark {
+		.mark{
 			flex: 1;
 			padding-left: 23px;
 			margin-right: 15px;
 			position: relative;
-
-			.cart-img {
+			.cart-img{
 				width: 48px;
-				height: 48px;
-				position: relative;
-				margin-top: -12px;
+				    height: 48px;
+				    position: relative;
+				    margin-top: -12px;
 			}
-
-			.tag {
-				background-color: #FAB714;
-				text-align: center;
-				font-size: 12px;
-				position: absolute;
-				left: 55px;
-				top: -14px;
-				border-radius: 100%;
-				padding: 2px;
-				width: 20px;
-				height: 20px;
-				opacity: .9;
+			.tag{
+				 background-color: #FAB714;
+				     text-align: center;
+				     font-size: 12px;
+				     position: absolute;
+				     left: 55px;
+				     top: -14px;
+				     border-radius: 100%;
+				     padding: 2px;
+				     width: 20px;
+				     height: 20px;
+				     opacity: .9;
 			}
 		}
-
-		.flexBtn {
+		.flexBtn{
 			display: flex;
-
-			.price {
-				flex: 1;
-				font-size: 18px;
-				color: #5A5B5C;
-				width: 170px;
-				line-height: 50px;
-			}
-
-			button {
-				height: 100%;
-				padding: 0 15px;
-				color: #FFFFFF;
-				border-radius: 0 25px 25px 0;
-				display: -webkit-box;
-				display: -webkit-flex;
-				display: flex;
-				-webkit-box-align: center;
-				-webkit-align-items: center;
-				align-items: center;
-				font-size: 14px;
-				background-color: #ADB838;
-			}
+			.price{
+				    flex: 1;
+					font-size: 18px;
+				    color: #5A5B5C;
+					width: 170px;
+					line-height: 50px;
+				}
+				button{
+					    height: 100%;
+					    padding: 0 15px;
+					    color: #FFFFFF;
+					    border-radius: 0 25px 25px 0;
+					    display: -webkit-box;
+					    display: -webkit-flex;
+					    display: flex;
+					    -webkit-box-align: center;
+					    -webkit-align-items: center;
+					    align-items: center;
+					    font-size: 14px;
+						background-color: #ADB838;
+					}
 		}
 	}
-
+	
 	.cart-popup {
 		.top {
 			background-color: #E8EACF;
-			color: #ADB838;
-			padding: 5px 15px;
-			font-size: 12px;
-			text-align: right;
+			    color: #ADB838;
+			    padding: 5px 15px;
+			    font-size: 12px;
+			    text-align: right;
 		}
-
 		.cart-list {
 			background-color: #FFFFFF;
 			width: 100%;
 			overflow: hidden;
 			min-height: 1vh;
 			max-height: 60vh;
-
+			
 			.wrapper {
 				height: 100%;
 				display: flex;
 				flex-direction: column;
 				padding: 0 30rpx;
 				margin-bottom: 156rpx;
-
+				
 				.item {
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
 					padding: 30rpx 0;
 					position: relative;
-
+					
 					&::after {
 						content: ' ';
 						position: absolute;
@@ -1156,19 +1097,18 @@
 						height: 2rpx;
 						transform: scaleY(.6);
 					}
-
+					
 					.left {
 						flex: 1;
 						display: flex;
 						flex-direction: column;
 						overflow: hidden;
 						margin-right: 30rpx;
-
+						
 						.name {
 							font-size: 14px;
 							color: #5A5B5C;
 						}
-
 						.props {
 							color: #919293;
 							font-size: 24rpx;
@@ -1177,17 +1117,17 @@
 							white-space: nowrap;
 						}
 					}
-
+					
 					.center {
 						margin-right: 120rpx;
 						font-size: 14px;
 					}
-
+					
 					.right {
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
-
+						
 						.btn {
 							width: 46rpx;
 							height: 46rpx;
@@ -1195,9 +1135,8 @@
 							padding: 0;
 							text-align: center;
 							line-height: 40rpx;
-
+							
 						}
-
 						.number {
 							font-size: 14px;
 							width: 46rpx;

@@ -30,6 +30,7 @@ const store = new Vuex.Store({
 			Cookies.set('currentStoreInfo', data)
 		},
 		['SET_CURRENT_CARD'](state, data) {
+			console.log(state,data,'shagnp')
 			state.currentCard = data
 			Cookies.set('currentCard', data)
 		},

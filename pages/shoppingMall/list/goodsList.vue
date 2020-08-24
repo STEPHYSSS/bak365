@@ -113,6 +113,7 @@
 				});
 			},
 			async addCart(item) {
+				console.log(item)
 				try {
 					let obj = {
 						Action: "GetProdInfo"
