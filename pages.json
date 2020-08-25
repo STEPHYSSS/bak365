@@ -157,7 +157,7 @@
 		}
 	}    ,{
             "path" : "pages/shoppingMall/menu_naixue/menu/menu",
-            "style" : {"navigationBarTitleText": "自取"}
+            "style" : {"navigationBarTitleText": "点餐"}
         }
         ,{
             "path" : "pages/myAddress/myAddress",
@@ -182,14 +182,19 @@
 				"pagePath":"pages/shoppingMall/login"
 			},
 			{
-				"pagePath": "pages/shoppingMall/shoppingCart/index"
+				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu",
+				"iconPath": "static/images/tabBar/drink.png",
+				"selectedIconPath": "static/images/tabBar/drink_selected.png"				
 			},
+			// {
+			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
+			// },
 			{
 				"pagePath": "pages/home"
-			},
-			{
-				"pagePath": "pages/shoppingMall/index"				
-			}
+			}	
+			// {
+			// 	"pagePath": "pages/shoppingMall/index"				
+			// }
 		]
 	}
 }

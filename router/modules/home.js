@@ -16,6 +16,13 @@ const home = [{
 		}
 	},
 	{
+		path: '/pages/shoppingMall/menu_naixue/menu/menu',
+		name: 'menu',
+		meta: {
+			title: '点餐',
+		}
+	},
+	{
 		path: '/pages/error/index',
 		name: 'error',
 		meta: {
@@ -27,13 +34,15 @@ const home = [{
 		meta: {
 			title: '会员中心',
 		}
-	}, {
+	},
+	{
 		path: '/pages/shoppingMall/shoppingCart/index',
 		name: 'shoppingCart',
 		meta: {
 			title: '购物车',
 		}
-	}, {
+	},
+	{
 		path: '/Grant',
 		name: 'Grant',
 		meta: {
