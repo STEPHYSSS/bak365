@@ -39,7 +39,8 @@
 			</div>
 		</div>
 		<div style="margin-top:50px;padding:0 20px;">
-			<button type="main" size="large" @click="saveArea" :disabled="disabledLoad">保存地址</button>
+			<button type="main" size="large" @click="saveArea" style="    background-color: #8d8bdb;
+    color: #fff;" :disabled="disabledLoad">保存地址</button>
 		</div>
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
@@ -84,11 +85,16 @@
 				areaList: areaLists,
 				disabledLoad: false,
 				specificAreaHead: false,
-				cityPickerValueDefault: [0, 0, 1]
+				cityPickerValueDefault: [0, 0, 1],
+				edotAddress:this.$Route.query.areaInfo
 			};
 		},
 		created() {
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
+			
+			if(this.$Route.query.areaInfo){
+				this.areaInfo = this.edotAddress;
+			}
 			if (JSON.stringify(this.areaInfo) !== "{}") {
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
 				this.form.Defaults = this.form.Defaults === "1" ? true : false;
@@ -137,7 +143,8 @@
 					this.specificAreaHead = false
 					this.$refs.specificArea.close()
 				} else {
-					this.$emit("clickGo");
+					// this.$emit("clickGo");
+					this.$Router.push({path:'/pages/myAddress/myAddress'})
 				}
 			},
 			radioChangeSex(val) {
@@ -208,7 +215,8 @@
 					let {
 						Data
 					} = await vipCard(obj, "UMemberOpera");
-					this.$emit("saveArea");
+					// this.$emit("saveArea");
+					this.$Router.push({path:'/pages/myAddress/myAddress'})
 					this.disabledLoad = false;
 				} catch (e) {
 					this.disabledLoad = false;
@@ -234,6 +242,7 @@
 <style scoped lang="less">
 	/deep/.uni-popup__wrapper-box {
 		width: 100%;
+		height: 100%;
 	}
 
 	.setWidth {

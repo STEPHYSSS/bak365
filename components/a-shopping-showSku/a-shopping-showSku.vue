@@ -140,6 +140,7 @@
 		computed: {},
 		methods: {
 			async onClickButton(bool) {
+				console.log(bool,'212')
 				if (this.isBrowse) {
 					return;
 				}

@@ -51,7 +51,7 @@
 	import {
 		vipCard
 	} from '@/api/http.js';
-	import Mixins from "./mixins";
+	import Mixins from "./mixins.js";
 	import Cookie from '@/config/cookie-my/index.js';
 	import msDropdownMenu from "@/components/ms-dropdown/dropdown-menu.vue"
 	import msDropdownItem from "@/components/ms-dropdown/dropdown-item.vue"

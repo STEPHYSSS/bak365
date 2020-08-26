@@ -17,7 +17,7 @@
 								<span v-if="item.Sex">{{item.Sex | setSex}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
 								<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
 							</view>
-							<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item.id)"></image>
+							<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
@@ -79,19 +79,26 @@
 				this.areaList =  Data.AddressList;
 			},
 			// 
-			chooseAddress(item){
-				console.log(item)
-				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
+			chooseAddress(item){				
+				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:item.Address}})
 			},
 			add() {
 				uni.navigateTo({
 					url: '/pages/myAddress/add'
 				})
 			},
-			edit(id) {
-				uni.navigateTo({
-					url: '/pages/address/add?id=' + id
-				})
+			edit(val) {
+				// uni.navigateTo({
+				// 	url: '/pages/address/add?id=' + id
+				// })
+				console.log(val)
+				this.$Router.push({path:'/pages/myAddress/add',query:{
+					areaInfo:val
+				}})
+				// this.areaInfo = val;
+				
+				// this.$refs.addEditArea.open()
+				// this.addEditArea = true;
 			},
 			handleSwipeClick(id) {
 				uni.showModal({

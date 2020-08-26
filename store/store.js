@@ -13,7 +13,7 @@ import dataConfig from '@/config/index'
 Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
-		status: 0, // 0外卖  1自取
+		orderType: 'takein', // 0外卖  1自取
 		// 加入购物车商品信息
 		currentCard: Cookies.get('currentCard') || [],
 		// 当前定位的位置
@@ -24,8 +24,8 @@ const store = new Vuex.Store({
 	mutations: {
 		// :class = this.$store.state.status ? 'ziquClass' : 'waimaiClass'
 		// this.$store.commit(0);
-		['nnnn'](state, data) {
-			state.status = data
+		['SET_ORDER_TYPE'](state, type) {
+			state.orderType = type
 		},
 		['SET_CURRENT_LOCATION'](state, data) {
 			state.currentLocation = data
