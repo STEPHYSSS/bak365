@@ -16,6 +16,7 @@
 					到店自取
 				</div>
 			</div>
+			<!-- 展示地址的位置 -->
 			<div @click="radioChange" v-if="!$Route.query.isIntegral">
 				<div class="order-area">
 					<div class="order-area-icon">
@@ -45,11 +46,11 @@
 
 			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />
 
-			<adCell @click="clickDataTime" :text="radioModes === 1?'选择自取时间':'选择收货时间'" showArrow="false" v-if="prodList[0].DeliveryType&&!(prodList[0].DeliveryType.indexOf('3')>-1&&radioModes === 2)">
+			<!-- <adCell @click="clickDataTime" :text="radioModes === 1?'选择自取时间':'选择收货时间'" showArrow="false" v-if="prodList[0].DeliveryType&&!(prodList[0].DeliveryType.indexOf('3')>-1&&radioModes === 2)">
 				<view class="customView">
 					{{UserTime}}
 				</view>
-			</adCell>
+			</adCell> -->
 
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
 				<view>{{UserDiscount}}</view>
@@ -91,6 +92,7 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
+				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
 						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
@@ -124,6 +126,7 @@
 						<span class="cancel" @click="$refs.showAreaList.close()">取消</span>
 						<span>选择地址</span>
 					</div>
+					<!-- 从这里开始 -->
 					<radio-group class="bottom-area" ref="checkboxAreaRef" @change="changeGroup">
 						<div v-for="(item,index) in areaList" :key="index" class="bottom-area__box" @click="changeArea(item,index)">
 							<radio :value="item.SID" class="checkbox-my" :checked="showAreaList == item.SID"></radio>
@@ -150,8 +153,8 @@
 			<a-receive-address v-if="addEditArea" @clickGo="clickGo" :radioModes="radioModes" :areaInfo="areaInfo" @saveArea="saveAreaSet"
 			 :currentDeliveryType="currentDeliveryType"></a-receive-address>
 		</uni-popup>
-
-		<uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
+		<!-- 选择时间 -->
+		<!-- <uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
 			<div class="confirm-selectTime-popup">
 				<div class="leftNavsidebar">
 					<view :class="['homepageLeftFixed']" style="width:130px">
@@ -171,7 +174,7 @@
 					</div>
 				</radio-group>
 			</div>
-		</uni-popup>
+		</uni-popup> -->
 		<uni-popup ref="discountProgram" type="bottom">
 			<radio-group @change="setDiscountClick">
 				<ad-cell text="暂不使用" @click="DiscountClick('undefined')" showArrow="false" >
@@ -281,7 +284,6 @@
 			}
 			// 获取授权地址
 			await this.getWxConfig();
-
 			let item = this.$store.state.currentCard || [];
 			item.forEach(D => {
 				if (D.SID) {
@@ -321,7 +323,6 @@
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
-
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
@@ -343,53 +344,52 @@
 							this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-
-							// console.log(Data,77765655)
+							console.log(Data,77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
 
-							this.currentItem.forEach(D => {
-								if (typeof D.PartsNo !== "string") {
-									D.PartsNo.forEach((data, index) => {
-										D.arr = [];
-										D.arr.push(data.ProdNo);
-									});
-									D.PartsNo = D.arr ? D.arr.join(",") : "";
-									delete D.arr;
-								}
-								if (D.PartsList) {
-									D.PartsList = JSON.stringify(D.PartsList);
-								}
-							});
+							// this.currentItem.forEach(D => {
+							// 	if (typeof D.PartsNo !== "string") {
+							// 		D.PartsNo.forEach((data, index) => {
+							// 			D.arr = [];
+							// 			D.arr.push(data.ProdNo);
+							// 		});
+							// 		D.PartsNo = D.arr ? D.arr.join(",") : "";
+							// 		delete D.arr;
+							// 	}
+							// 	if (D.PartsList) {
+							// 		D.PartsList = JSON.stringify(D.PartsList);
+							// 	}
+							// });
 
-							// console.log(this.currentItem,'this.currentItem')
-							this.currentItem = JSON.stringify(this.currentItem);
-							//提前预约时间
-							let advanceTime = 0;
-							if (this.prodList.length > 0) {
-								this.prodList.forEach((D, index) => {
-									if (D.DeliveryType && D.DeliveryType !== "") {
-										D.DeliveryType = D.DeliveryType.split(",");
-									}
-									if (D.FinHour > advanceTime) {
-										advanceTime = D.FinHour;
-									}
-								});
-							}
+							// // console.log(this.currentItem,'this.currentItem')
+							// this.currentItem = JSON.stringify(this.currentItem);
+							// //提前预约时间
+							// let advanceTime = 0;
+							// if (this.prodList.length > 0) {
+							// 	this.prodList.forEach((D, index) => {
+							// 		if (D.DeliveryType && D.DeliveryType !== "") {
+							// 			D.DeliveryType = D.DeliveryType.split(",");
+							// 		}
+							// 		if (D.FinHour > advanceTime) {
+							// 			advanceTime = D.FinHour;
+							// 		}
+							// 	});
+							// }
 
 							this.freight = Data.Freight;
-							this.DiscountList = Data.DiscList || [];
+							// this.DiscountList = Data.DiscList || [];
 							//     [
 							// 	{DiscPrice: 20, PrefName: '方案q', PrefNo: 11},
 							// 	{DiscPrice: 30, PrefName: '方案xx', PrefNo: 22}
 							// ]
-							if (this.DiscountList.length > 0) {
-								this.radioDiscount = this.DiscountList[0].PrefNo;
-								this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
-								this.UserDiscountName = this.DiscountList[0].PrefName;
-							}
+							// if (this.DiscountList.length > 0) {
+							// 	this.radioDiscount = this.DiscountList[0].PrefNo;
+							// 	this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
+							// 	this.UserDiscountName = this.DiscountList[0].PrefName;
+							// }
 							this.total = Data.SumTotal;
 							this.ProdTotal = Data.ProdTotal;
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
@@ -410,52 +410,52 @@
 							// 	Defaults: "1"
 							// }); 
 							//是否有默认地址
-							let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
 
 							this.currentArea = DefaultsArea ? DefaultsArea : {};
 							this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
 
-							let num = Number(Data.ShopBase.ScopeDay);
+							// let num = Number(Data.ShopBase.ScopeDay);
 
-							let dayAdvance = 0;
-							let tAdvance = 0;
-							if (Number(advanceTime) / 24 >= 1) {
-								//   // 按天数提前
-								dayAdvance = Number(advanceTime) / 24;
-								tAdvance = 0;
-							} else {
-								//   // 提前的时间+当前的时间>下班时间
-								let endTime = countDown(Data.ShopBase.EndTime);
-								let cutTime = countDown(getTime(false, false, true));
-								let acTime = Number(advanceTime) * 60 * 60;
+							// let dayAdvance = 0;
+							// let tAdvance = 0;
+							// if (Number(advanceTime) / 24 >= 1) {
+							// 	//   // 按天数提前
+							// 	dayAdvance = Number(advanceTime) / 24;
+							// 	tAdvance = 0;
+							// } else {
+							// 	//   // 提前的时间+当前的时间>下班时间
+							// 	let endTime = countDown(Data.ShopBase.EndTime);
+							// 	let cutTime = countDown(getTime(false, false, true));
+							// 	let acTime = Number(advanceTime) * 60 * 60;
 
-								if ((acTime + cutTime).toFixed(2) > endTime) {
-									// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
-									tAdvance = Number(advanceTime);
-									dayAdvance = dayAdvance + 1;
-								} else {
-									tAdvance = Number(advanceTime);
-									dayAdvance = 0;
-								}
-							}
-							// setChangeData(num); //左侧的天数
-							this.sidebarList = setChangeData(num, dayAdvance);
-							let {
-								arr,
-								arrToday
-							} = setChangeTime(
-								Data.ShopBase,
-								tAdvance,
-								dayAdvance
-							);
-							this.allTimeSlot = arr; //总的右侧时间间隔
-							this.todayTimeSlot = arrToday; //今天的右侧时间间隔
-							this.rightTimeList = arrToday; //当前页面的右侧时间间隔
-							this.radioTime = arrToday[0];
-							this.RecordTime = {
-								radioTime: arrToday[0],
-								index: 0
-							};
+							// 	if ((acTime + cutTime).toFixed(2) > endTime) {
+							// 		// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
+							// 		tAdvance = Number(advanceTime);
+							// 		dayAdvance = dayAdvance + 1;
+							// 	} else {
+							// 		tAdvance = Number(advanceTime);
+							// 		dayAdvance = 0;
+							// 	}
+							// }
+							// // setChangeData(num); //左侧的天数
+							// this.sidebarList = setChangeData(num, dayAdvance);
+							// let {
+							// 	arr,
+							// 	arrToday
+							// } = setChangeTime(
+							// 	Data.ShopBase,
+							// 	tAdvance,
+							// 	dayAdvance
+							// );
+							// this.allTimeSlot = arr; //总的右侧时间间隔
+							// this.todayTimeSlot = arrToday; //今天的右侧时间间隔
+							// this.rightTimeList = arrToday; //当前页面的右侧时间间隔
+							// this.radioTime = arrToday[0];
+							// this.RecordTime = {
+							// 	radioTime: arrToday[0],
+							// 	index: 0
+							// };
 
 							this.UserTime =
 								this.sidebarList[this.activeKey] + " " + this.radioTime;
@@ -501,6 +501,8 @@
 			},
 			orderArea() {},
 			changeMode(val) {
+				// 1自取，2 外卖
+				console.log(val,'改变配送方式')
 				this.radioModes = val;
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
 
@@ -516,6 +518,9 @@
 					this.resultArea = this.currentArea.SID;
 				}
 				this.totalCurrent = parseFloat(Number(this.totalCurrent).toFixed(2));
+				console.log(val);
+				console.log(this.total);
+				console.log(this.totalCurrent);
 			},
 			radioChange() {
 				this.showAreaList = true;
@@ -531,6 +536,7 @@
 				this.resultArea = val.detail.value
 			},
 			async changeArea(val, index) {
+				console.log(val,index)
 				this.showAreaList = val.SID
 				let api;
 				if (this.radioModes === 1) {
@@ -544,44 +550,44 @@
 						api = "CalcLogistics";
 					}
 				}
-				try {
-					this.loading = true;
-					uni.showLoading()
-					let currentItems = JSON.parse(this.currentItem);
-					let obj = {
-						Action: api,
-						ProdList: this.currentItem,
-						Latitude: val.Latitude || "",
-						Longitude: val.Longitude || "",
-						Province: val.Province || "",
-						PayType: this.radioPayType,
-						PrefNo: this.radioDiscount === "undefined" ? "" : this.radioDiscount,
-						ShopSID: val.SID
-					};
+				// try {
+				// 	this.loading = true;
+				// 	uni.showLoading()
+				// 	let currentItems = JSON.parse(this.currentItem);
+				// 	let obj = {
+				// 		Action: api,
+				// 		ProdList: this.currentItem,
+				// 		Latitude: val.Latitude || "",
+				// 		Longitude: val.Longitude || "",
+				// 		Province: val.Province || "",
+				// 		PayType: this.radioPayType,
+				// 		PrefNo: this.radioDiscount === "undefined" ? "" : this.radioDiscount,
+				// 		ShopSID: val.SID
+				// 	};
 
-					if (currentItems[0].hasOwnProperty("PromotionItemSID")) {
-						// 活动
-						obj.PromotionItemSID = currentItems[0].PromotionItemSID;
-					}
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
+				// 	if (currentItems[0].hasOwnProperty("PromotionItemSID")) {
+				// 		// 活动
+				// 		obj.PromotionItemSID = currentItems[0].PromotionItemSID;
+				// 	}
+				// 	let {
+				// 		Data
+				// 	} = await vipCard(obj, "UProdOpera");
 					this.currentArea = val;
 					this.showAreaList = false;
 					this.$refs.showAreaList.close()
 					this.resultArea = val.SID;
 					this.areaList.splice(index, 1);
 					this.areaList.unshift(val);
-					//改变位置，重新算运费和总价
+				// 	//改变位置，重新算运费和总价
 					this.freight = Data.Freight;
 					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 
-					this.loading = false;
-					uni.hideLoading()
-				} catch (e) {
-					this.loading = false;
-					uni.hideLoading()
-				}
+				// 	this.loading = false;
+				// 	uni.hideLoading()
+				// } catch (e) {
+				// 	this.loading = false;
+				// 	uni.hideLoading()
+				// }
 			},
 			clickEdit(val) {
 				this.areaInfo = val;
@@ -593,12 +599,17 @@
 				this.addEditArea = false;
 			},
 			clickLeft() {
-				this.$Router.push(this.$store.state.historyUrl)
+				if(this.$Route.query.flag){
+					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+				}else{
+					this.$Router.push(this.$store.state.historyUrl)
+				}
 			},
-			clickDataTime() {
-				this.selectTime = true;
-				this.$refs.selectTime.open()
-			},
+			// clickDataTime() {
+			// 	console.log('吊起时间')
+			// 	this.selectTime = true;
+			// 	this.$refs.selectTime.open()
+			// },
 			clickUserDiscount() {
 				this.discountProgram = true;
 				this.$refs.discountProgram.open()
@@ -951,10 +962,22 @@
 			background-color: #fff;
 			align-items: center;
 			padding: 26rpx 24rpx;
-
+			margin: 10px 0;
+			
+			.payStyle{
+				background: rgb(255, 255, 255);
+				font-size: 14px;
+				color: rgb(90, 91, 92);
+				padding: 13px 0px;
+			}
+			
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
+				.uni-radio .uni-radio-input{
+					width: 16px;
+					height: 16px;
+				}
 			}
 
 			.custom-title {
@@ -1090,7 +1113,7 @@
 		}
 
 		.confirm-selectTime-popup {
-			// height: 50vh;
+			height: 50vh;
 
 			.leftNavsidebar {
 				width: 130px;

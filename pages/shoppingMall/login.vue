@@ -63,7 +63,7 @@
 				</view>
 				<!-- 右边 -->
 				<view class="right">
-					<view class="rightTop">
+					<view class="rightTop" @tap="invite">
 						<image src="../../static/images/index/mcsb.png"></image>
 						<view style="display: inline-block;position: absolute;top: -2px;">买茶送包</view>
 					</view>
@@ -94,29 +94,36 @@
 		mapState,
 		mapGetters
 	} from 'vuex'
-
+	import {
+		vipCard
+	} from '@/api/http.js';
 	export default {
 		data() {
 			return {
-				homeSlide: [{
-						title: '第一张',
-						img: 'https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg'
-					},
-					{
-						title: '第二张',
-						img: 'https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg'
-					},
-					{
-						title: '第三张',
-						img: 'https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg'
-					}
-				], // 定义值接收轮播图数据
+				homeSlide: [], // 定义值接收轮播图数据
 			}
 		},
 		computed: {
 			
 		},
+		async onLoad() {
+			await this.getLunBoImg();
+		},
 		methods: {
+			// 轮播图
+			async getLunBoImg(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetImgList",
+						Type:'4'
+					}, "UShopOpera");
+					this.homeSlide = Data.BannerList;
+				} catch (e) {
+					console.log(e);
+				}
+			},
 			takein(){
 				// this.$Router.push("/pages/shoppingMall/list/goodsList");
 				// 自取页面
@@ -128,7 +135,17 @@
 					query:{flag:'login'}
 				});
 			},
-			integrals(){},
+			// 跳转到个人中心
+			integrals(){
+				this.$Router.push({
+					path: "/pages/home"
+				});
+			},
+			invite() {
+				uni.navigateTo({
+					url: '/pages/shoppingMall/menu_naixue/invite'
+				})
+			},
 			memberCode(){},
 		}
 	}

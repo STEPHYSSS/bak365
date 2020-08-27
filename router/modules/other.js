@@ -163,6 +163,12 @@ const other = [
 		meta: {
 			title: '新增地址',
 		}
+	},{ //login页面 买茶送包 
+		path: '/pages/shoppingMall/menu_naixue/invite',
+		name: 'invite',
+		meta: {
+			title: '活动助力',
+		}
 	}
 ]
 export default other

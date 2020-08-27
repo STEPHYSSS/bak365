@@ -35,7 +35,6 @@
 							<view class="menu" :id="`menu-${item.SID}`" :class="{'current': item.SID === currentCateId}" v-for="(item, index) in goods"
 							 :key="index" @tap="handleMenuTap(item.SID,index)">
 								<text>{{ item.Name }}</text>
-								{{item.SID}}
 								<view class="dot" v-show="menuCartNum(item.SID)">{{ menuCartNum(item.SID) }}</view>
 							</view>
 						</view>
@@ -284,7 +283,17 @@
 			goods,
 			modal,
 		},
-		computed: {			
+		computed: {
+			goodCartNum() { //计算单个饮品添加到购物车的数量
+				return (SID) => this.cart.reduce((acc, cur) => {
+					console.log(SID,'0')
+					if (cur.SID === SID) {	
+						console.log(cur.SID,'2')
+						return acc += cur.BuyCnt
+					}
+					return acc
+				}, 0)
+			},
 			getCartGoodsNumber() { //计算购物车总数
 				// return this.cart.length;
 				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt, 0)
@@ -299,14 +308,6 @@
 			spread() { //差多少元起送
 				if (this.orderType != 'takeout') return
 				return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2))
-			},
-			goodCartNum() { //计算单个饮品添加到购物车的数量
-				return (SID) => this.cart.reduce((acc, cur) => {
-					if (cur.SID === SID) {	
-						return acc += cur.BuyCnt
-					}
-					return acc
-				}, 0)
 			},
 			// 左侧类别小角标数量
 			menuCartNum() {
@@ -452,35 +453,35 @@
 			// 点击规格、图片需要调用的商品详情接口
 			// 多规格商品要传specSID
 			async addCart(item) {
-				try {
-					let obj = {
-						Action: "GetProdInfo"
-					};
-					Object.assign(obj, item);
+				// try {
+				// 	let obj = {
+				// 		Action: "GetProdInfo"
+				// 	};
+				// 	Object.assign(obj, item);
 
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
+				// 	let {
+				// 		Data
+				// 	} = await vipCard(obj, "UProdOpera");
 
-					this.skuDataInfo = Data;
-					this.goodsInfo = Data.ProdInfo;
-					this.normsList = Data.SpecList;
-					this.normsList.forEach(val => {
-						this.$set(val, 'type', 2);
-					});
-					if (this.goodsInfo.SpecType === '2') {
-						this.kouwei = this.normsList[0].TastName;
-					}
-					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
-						number: 1
-					}))
-					this.category = JSON.parse(JSON.stringify(item))
-					this.goodDetailModalVisible = true
-				} catch (e) {
-					console.log(e);
-				}
-				// this.publicGoodsInfo(item);
-				// this.goodDetailModalVisible = true
+				// 	this.skuDataInfo = Data;
+				// 	this.goodsInfo = Data.ProdInfo;
+				// 	this.normsList = Data.SpecList;
+				// 	this.normsList.forEach(val => {
+				// 		this.$set(val, 'type', 2);
+				// 	});
+				// 	if (this.goodsInfo.SpecType === '2') {
+				// 		this.kouwei = this.normsList[0].TastName;
+				// 	}
+				// 	this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
+				// 		number: 1
+				// 	}))
+				// 	this.category = JSON.parse(JSON.stringify(item))
+				// 	this.goodDetailModalVisible = true
+				// } catch (e) {
+				// 	console.log(e);
+				// }
+				this.publicGoodsInfo(item);
+				this.goodDetailModalVisible = true
 			},
 			// 选择规格
 			skuTopChoice(i, item) {

@@ -167,6 +167,10 @@
             "path" : "pages/myAddress/add",
             "style" : {"navigationBarTitleText": "新增地址"}
         }
+        ,{
+            "path" : "pages/shoppingMall/menu_naixue/invite",
+            "style" : {"navigationBarTitleText": "活动助力"}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -185,6 +189,11 @@
 				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu",
 				"iconPath": "static/images/tabBar/drink.png",
 				"selectedIconPath": "static/images/tabBar/drink_selected.png"				
+			},
+			{	
+				"pagePath": "pages/shoppingMall/shoppingCart/index",
+				"iconPath": "static/images/tabBar/take.png",
+				"selectedIconPath": "static/images/tabBar/take_selected.png"
 			},
 			// {
 			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
