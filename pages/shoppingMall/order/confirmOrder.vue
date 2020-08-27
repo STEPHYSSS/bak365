@@ -391,7 +391,7 @@
 							// 	this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
 							// 	this.UserDiscountName = this.DiscountList[0].PrefName;
 							// }
-							// this.total = Data.SumTotal;
+							this.total = Data.SumTotal;
 							this.ProdTotal = Data.ProdTotal;
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 							this.CardInfo = Data.hasOwnProperty("CardInfo") ?
@@ -411,10 +411,10 @@
 							// 	Defaults: "1"
 							// }); 
 							// //是否有默认地址
-							// let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
 
-							// this.currentArea = DefaultsArea ? DefaultsArea : {};
-							// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							this.currentArea = DefaultsArea ? DefaultsArea : {};
+							this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
 
 							// let num = Number(Data.ShopBase.ScopeDay);
 
@@ -488,7 +488,6 @@
 					this.allData = Data;
 					this.CardInfo = Data.CardInfo;
 					this.currentItem = JSON.parse(JSON.stringify(this.prodList));
-					console.log(this.currentItem,'00000')
 					this.totalCurrent = parseFloat(Number(Data.SalePriceTotal).toFixed(2));
 					if (Data.ScoreTotal) {
 						this.totalCurrentScore =
@@ -520,9 +519,6 @@
 					this.resultArea = this.currentArea.SID;
 				}
 				this.totalCurrent = parseFloat(Number(this.totalCurrent).toFixed(2));
-				console.log(val);
-				console.log(this.total);
-				console.log(this.totalCurrent);
 			},
 			radioChange() {
 				this.showAreaList = true;
@@ -601,7 +597,12 @@
 				this.addEditArea = false;
 			},
 			clickLeft() {
-				this.$Router.push(this.$store.state.historyUrl)
+				if(this.$Route.query.flag){
+					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+				}else{
+					this.$Router.push(this.$store.state.historyUrl)
+				}
+				
 			},
 			clickDataTime() {
 				console.log('吊起时间')

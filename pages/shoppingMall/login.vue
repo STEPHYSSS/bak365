@@ -141,17 +141,12 @@
 					path: "/pages/home"
 				});
 			},
-<<<<<<< HEAD
 			invite() {
 				uni.navigateTo({
 					url: '/pages/shoppingMall/menu_naixue/invite'
 				})
-			},
-=======
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
-			memberCode(){},
-		}
-	}
+			}
+	}}
 </script>
 
 <style lang="scss" scoped>

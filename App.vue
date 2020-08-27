@@ -25,15 +25,6 @@
 					text: '点餐',
 					iconPath: 'static/images/tabBar/drink.png',
 					selectedIconPath: 'static/images/tabBar/drink_selected.png'
-<<<<<<< HEAD
-=======
-				})
-				uni.setTabBarItem({
-					index: 3,
-					text: '购物车',
-					iconPath: 'static/img/gouwuche.png',
-					selectedIconPath: 'static/img/select-gouwuche1.png'
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 				})
 				uni.setTabBarItem({
 					index: 2,
@@ -41,7 +32,6 @@
 					iconPath: 'static/img/home.png',
 					selectedIconPath: 'static/img/select-home1.png'
 				})
-<<<<<<< HEAD
 				uni.setTabBarItem({
 					index: 3,
 					text: '个人中心',
@@ -54,9 +44,6 @@
 				// 	iconPath: 'static/img/gouwuche.png',
 				// 	selectedIconPath: 'static/img/select-gouwuche1.png'
 				// })
-				
-=======
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 				// uni.setTabBarItem({
 				// 	index: 3,
 				// 	text: '自定义模块',

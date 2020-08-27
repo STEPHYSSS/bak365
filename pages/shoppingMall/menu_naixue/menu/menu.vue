@@ -35,8 +35,8 @@
 							<view class="menu" :id="`menu-${item.SID}`" :class="{'current': item.SID === currentCateId}" v-for="(item, index) in goods"
 							 :key="index" @tap="handleMenuTap(item.SID,index)">
 								<text>{{ item.Name }}</text>
-								{{item.SID}}
-								<view class="dot" v-show="menuCartNum(item.SID)">{{ menuCartNum(item.SID) }}</view>
+								<!-- <view class="dot" v-show="menuCartNum(item.SID)">{{ menuCartNum(item.SID) }}</view> -->
+								<view class="dot" v-show="item.cartNum">{{ item.cartNum }}</view>
 							</view>
 						</view>
 					</scroll-view>
@@ -53,11 +53,7 @@
 							<!-- 轮播图结束 -->
 							<view class="list">
 								<!-- category begin -->
-<<<<<<< HEAD
-								<view class="category" :id="`cate-${currentType.id}`">
-=======
 								<view class="category">
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 									<view class="title">
 										<text>{{ currentType.Name }}</text>
 									</view>
@@ -75,17 +71,18 @@
 														 @tap="addCart(good)">
 															选规格
 														</button>
-														<view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+														<!-- <view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view> -->
+														<view class="dot" v-show="good.cartNum">{{ good.cartNum }}</view>
 													</view>
 													<!-- 常规加商品 -->
 													<view class="btn-group" v-else>
-														<button type="default" v-show="goodCartNum(good.SID)" plain class="btn reduce_btn" size="mini"
+														<!-- <button type="default" plain class="btn reduce_btn" size="mini"
 														 hover-class="none" @tap="handleReduceFromCart(good)">
 															-
-														</button>
-														<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+														</button> -->
+														<view class="number" v-show="good.cartNum">{{ good.cartNum }}</view>
 														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
-														 @tap="handleAddToCart(good, 1)">+
+															 @tap="handleAddToCart(good, 1, '单规格')">+
 														</button>
 													</view>
 												</view>
@@ -140,20 +137,14 @@
 								</view>
 							</view>
 							<view>口味：{{kouwei}}</view>
-<<<<<<< HEAD
+							<view class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)
+							</view>
 							<!-- <view class="value" v-for="(item,index) in flavorList" :key="index" :class="{'isActive': currentIndex2 === index, 'skuTopChoiceItem': true }"
-=======
-							<view class="value" v-for="(item,index) in flavorList" :key="index" :class="{'isActive': currentIndex2 === index, 'skuTopChoiceItem': true }"
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 							@click="skuTopChoicekw(index)">
 								<view >
 									{{item}}
 								</view>
-<<<<<<< HEAD
 							</view> -->
-=======
-							</view>
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 							<!-- <view class="property" v-for="(item, index) in good.property" :key="index">
 								<view class="title">
 									<text class="name">{{ item.name }}</text>
@@ -175,10 +166,6 @@
 						<view class="props">
 							<!-- 展示选择的规格和口味 -->
 							{{ this.normsList && this.normsList.length && `${this.normsList[this.currentIndex].Name} ${this.normsList[this.currentIndex].TastName}` }}
-<<<<<<< HEAD
-							<view class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</view>
-=======
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 						</view>
 					</view>
 					<view class="btn-group">
@@ -186,7 +173,6 @@
 							<view>-</view>
 						</button>
 						<view class="number">{{ good.number }}</view>
-						
 						<button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
 							<view>+</view>
 						</button>
@@ -299,9 +285,6 @@
 			goods,
 			modal,
 		},
-<<<<<<< HEAD
-		computed: {			
-=======
 		computed: {
 			goodCartNum() { //计算单个饮品添加到购物车的数量
 				return (SID) => this.cart.reduce((acc, cur) => {
@@ -311,7 +294,6 @@
 					return acc
 				}, 0)
 			},
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 			getCartGoodsNumber() { //计算购物车总数
 				// return this.cart.length;
 				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt, 0)
@@ -327,17 +309,6 @@
 				if (this.orderType != 'takeout') return
 				return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2))
 			},
-<<<<<<< HEAD
-			goodCartNum() { //计算单个饮品添加到购物车的数量
-				return (SID) => this.cart.reduce((acc, cur) => {
-					if (cur.SID === SID) {	
-						return acc += cur.BuyCnt
-					}
-					return acc
-				}, 0)
-			},
-=======
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 			// 左侧类别小角标数量
 			menuCartNum() {
 				return (SID) => this.cart.reduce((acc, cur) => {
@@ -452,10 +423,6 @@
 				}).exec()
 
 				this.goods.forEach(item => {
-<<<<<<< HEAD
-=======
-					console.log(item,'----')
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 					let view = uni.createSelectorQuery().select(`#menu-${item.SID}`)
 					view.fields({
 						size: true
@@ -507,13 +474,9 @@
 					this.normsList.forEach(val => {
 						this.$set(val, 'type', 2);
 					});
-<<<<<<< HEAD
-					if (this.goodsInfo.SpecType === '2') {
-=======
 					console.log(this.normsList);
 					if (this.goodsInfo.SpecType === '2') {
 						console.log(this.normsList);
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 						this.kouwei = this.normsList[0].TastName;
 					}
 					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
@@ -524,8 +487,6 @@
 				} catch (e) {
 					console.log(e);
 				}
-				// this.publicGoodsInfo(item);
-				// this.goodDetailModalVisible = true
 			},
 			// 选择规格
 			skuTopChoice(i, item) {
@@ -543,14 +504,10 @@
 				}
 				this.currentIndex2 = i;
 			},
-<<<<<<< HEAD
-			// 普通商品---添加 
-			async handleAddToCart(good, num) { //添加到购物车
-=======
 			// 普通商品---添加
-			async handleAddToCart(good, num) { //添加到购物车
+			async handleAddToCart(good, num, shopType) { //添加到购物车
+				console.log(good);
 				// console.log(good,'222')
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 				const Buy = {
 					BuyCnt: num
 				}
@@ -565,13 +522,11 @@
 				if (index > -1) {
 					this.cart[index].BuyCnt += num
 				} else {
-<<<<<<< HEAD
-=======
 					
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 					const obj = {
+						CateSID: shopType === '多规格' ? this.goodsInfo.CateSID : good.CateSID,
 						ProdNo: good.ProdNo,
-						SpecType: this.goodsInfo.SpecType,
+						SpecType: shopType === '多规格' ? this.goodsInfo.SpecType : good.SpecType,
 						TastName: good.TastName,
 						BuyCnt: num,
 						PartsList: '',
@@ -582,19 +537,32 @@
 						Describe: good.Describe,
 						DeliveryType: '2,1',
 						ProdType: 0,
-						DeliveryType:  this.goodsInfo.DeliveryType,
 						PromotionSID: "",
 					};
 					if (good.type === 2) {
 						this.$set(obj, 'SpecSID', good.SID);
 					}
-<<<<<<< HEAD
-					this.cart.push(obj);
-=======
 					console.log(obj);
 					this.cart.push(obj);
 					console.log(this.cart);
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
+					console.log(this.goods);
+					console.log(this.goods_list);
+					this.goods.forEach(val => {
+						let num = 0;
+						this.cart.forEach(item => {
+							if (val.SID === item.CateSID) num++;
+						})
+						this.$set(val, 'cartNum', num);
+					});
+					this.goods_list.forEach(val => {
+						let num = 0;
+						this.cart.forEach(item => {
+							if (val.SID === item.ProdSID) num++;
+						})
+						console.log(num);
+						this.$set(val, 'cartNum', num);
+					});
+					console.log(this.goods_list);
 				}
 			},
 			// 普通商品--减
@@ -603,41 +571,6 @@
 				this.cart[index].BuyCnt -= 1
 				if (this.cart[index].BuyCnt <= 0) {
 					this.cart.splice(index, 1)
-<<<<<<< HEAD
-				}
-			},
-			// 点击加号和图片和规格调用的商品信息
-			async publicGoodsInfo(good,Buy){
-				try {
-					let obj = {
-						Action: "GetProdInfo"
-					};
-					Object.assign(obj, good, Buy);
-				
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
-					this.skuDataInfo = Data;
-					this.goodsInfo = Data.ProdInfo;
-					this.normsList = Data.SpecList;					
-					this.normsList.forEach(val => {
-						this.$set(val, 'type', 2);
-					});
-					if (this.goodsInfo.SpecType === '2') {
-						this.kouwei = this.normsList[0].TastName;
-					}
-					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
-						number: 1
-					}))
-					this.category = JSON.parse(JSON.stringify(item))
-				} catch (e) {
-					console.log(e);
-				}
-			},
-			// 点击图片或者选择规格时弹窗里的加入购物车按钮
-			async AddToCartInModal(good) {
-				// 点击的时候会把商品信息带入，数量buycut，价格
-=======
 				}
 			},
 			// 点击加号和图片和规格调用的商品信息
@@ -654,8 +587,6 @@
 					this.skuDataInfo = Data;
 					this.goodsInfo = Data.ProdInfo;
 					this.normsList = Data.SpecList;
-					console.log(Data);
-					console.log(this.normsList);
 					// this.flavorList = this.goodsInfo.TastName.split(',')
 				} catch (e) {
 					console.log(e);
@@ -667,18 +598,13 @@
 				// const product = Object.assign()
 				// const product = Object.assign({}, this.good, {props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
 				// this.handleAddToCart(good, this.good.number)
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
-				this.handleAddToCart(this.normsList[this.currentIndex], this.good.number)
+				this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
 				this.closeGoodDetailModal()
 			},
 			// changePropertyDefault(index, key) { //改变默认属性值
-<<<<<<< HEAD
-	
-=======
 			// 	this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
 			// 	this.good.property[index].values[key].is_default = 1
 			// 	this.good.number = 1
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 			// },
 
 			closeGoodDetailModal() { //关闭饮品详情模态框
@@ -689,7 +615,7 @@
 			// 模态框里的加减
 			handlePropertyAdd() {
 				this.good.number += 1
-				if(this.good.number > this.goodsInfo.MaxBuyCnt){
+				if (this.good.number > this.goodsInfo.MaxBuyCnt) {
 					this.good.number = this.goodsInfo.MaxBuyCnt
 				}
 			},
@@ -716,11 +642,7 @@
 				})
 			},
 			handleCartItemAdd(index) {
-<<<<<<< HEAD
-				this.cart[index].BuyCnt += 1;				
-=======
 				this.cart[index].BuyCnt += 1
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 			},
 
 			handleCartItemReduce(index) { //购物车里面的加减
@@ -772,12 +694,10 @@
 					if (currentItem.length > 0) {
 						this.$store.commit("SET_CURRENT_CARD", currentItem);
 						this.$Router.push({
-<<<<<<< HEAD
 							path: '/pages/shoppingMall/order/confirmOrder',
-							query:{flag:'tpay'}
-=======
-							path: '/pages/shoppingMall/order/confirmOrder'
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
+							query:{
+								flag:'order'
+							}
 						})
 					}
 				} catch (e) {

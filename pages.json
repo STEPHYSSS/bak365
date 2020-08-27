@@ -190,15 +190,10 @@
 				"iconPath": "static/images/tabBar/drink.png",
 				"selectedIconPath": "static/images/tabBar/drink_selected.png"				
 			},
-<<<<<<< HEAD
 			{	
 				"pagePath": "pages/shoppingMall/shoppingCart/index",
 				"iconPath": "static/images/tabBar/take.png",
 				"selectedIconPath": "static/images/tabBar/take_selected.png"
-=======
-			{
-				"pagePath": "pages/shoppingMall/shoppingCart/index"
->>>>>>> ae9c84a673c8ae61ae41ae97f5117b59f33722be
 			},
 			// {
 			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
