@@ -22,6 +22,7 @@
 					<div class="order-area-icon">
 						<image src="/static/assets/img/weizhi.png" alt />
 					</div>
+					{{this.$store.state.currentStoreInfo}}
 					<div v-if="currentArea&&JSON.stringify(currentArea) !== '{}'" style="flex: 1">
 						<div>
 							<span>{{currentArea.Name}}{{currentArea.Sex | setSex}}</span>
@@ -212,7 +213,7 @@
 			adCell
 		},
 		data() {
-			return {
+			return {				
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
 				loading: true,

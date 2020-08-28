@@ -26,14 +26,14 @@
 					iconPath: 'static/images/tabBar/drink.png',
 					selectedIconPath: 'static/images/tabBar/drink_selected.png'
 				})
+				// uni.setTabBarItem({
+				// 	index: 2,
+				// 	text: '取餐',
+				// 	iconPath: 'static/img/home.png',
+				// 	selectedIconPath: 'static/img/select-home1.png'
+				// })
 				uni.setTabBarItem({
 					index: 2,
-					text: '取餐',
-					iconPath: 'static/img/home.png',
-					selectedIconPath: 'static/img/select-home1.png'
-				})
-				uni.setTabBarItem({
-					index: 3,
 					text: '个人中心',
 					iconPath: 'static/img/home.png',
 					selectedIconPath: 'static/img/select-home1.png'

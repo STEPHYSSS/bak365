@@ -2,21 +2,16 @@
 	<view class="container">
 		<view class="banner">
 			<!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
-			<swiper class="swiper-box"
-			    autoplay="true" 
-			    circular="true" 
-			    indicatorDots="true" 
-			    indicator-active-color="#ffaa00" 
-			>  
-			    <swiper-item v-for="(item, index) in homeSlide" :key="index">  
-			        <view class="swiper-item">  
-			            <image :src="item.img" class="bg" mode="aspectFill" />  
-			        </view>  
-			    </swiper-item>  
+			<swiper class="swiper-box" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
+				<swiper-item v-for="(item, index) in homeSlide" :key="index">
+					<view class="swiper-item">
+						<image :src="item.Img | imgFilter" class="bg" mode="aspectFill" />
+					</view>
+				</swiper-item>
 			</swiper>
 			<view class="intro">
 				<view class="greet">您好</view>
-				<view class="note">一杯奶茶，一口软欧包，在奈雪遇见两种美好</view>
+				<view class="note">一杯奶茶，一口软欧包，在烘焙遇见两种美好</view>
 			</view>
 		</view>
 		<view class="content">
@@ -37,7 +32,7 @@
 						<text class="value">411</text>
 					</view>
 					<view class="bottom" style="color: #919293;">
-						进入积分商城兑换奈雪券及周边好礼
+						进入积分商城兑换烘焙券及周边好礼
 					</view>
 				</view>
 				<view class="qrcode_section" @tap="memberCode">
@@ -53,7 +48,7 @@
 						<!-- 点击这个地方可以跳转到商城页面 待做 -->
 						<view>
 							<image src="../../static/images/index/csc.png" class="mark-img"></image>
-							<view style="margin-left: 6px;display: inline-block;">奈雪的茶商城</view>
+							<view style="margin-left: 6px;display: inline-block;">烘焙的茶商城</view>
 						</view>
 						<view style="margin-left: 40rpx;margin-top: 2px; font-size: 20rpx;">优质茶礼盒，网红零食</view>
 					</view>
@@ -104,39 +99,51 @@
 			}
 		},
 		computed: {
-			
+
 		},
 		async onLoad() {
 			await this.getLunBoImg();
 		},
+		filters: {
+			imgFilter(val) {
+				// const url = window.location;
+				// var localarr = url.split('#');
+				// console.log(localarr)
+				let localUrl = window.location.href;
+				let localToken = localUrl.split("#")[0]
+				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+			}
+		},
 		methods: {
 			// 轮播图
-			async getLunBoImg(){
+			async getLunBoImg() {
 				try {
 					let {
 						Data
 					} = await vipCard({
 						Action: "GetImgList",
-						Type:'4'
+						Type: '4'
 					}, "UShopOpera");
 					this.homeSlide = Data.BannerList;
 				} catch (e) {
 					console.log(e);
 				}
 			},
-			takein(){
+			takein() {
 				// this.$Router.push("/pages/shoppingMall/list/goodsList");
 				// 自取页面
 				this.$Router.push("/pages/shoppingMall/menu_naixue/menu/menu");
 			},
-			takeout(){
+			takeout() {
 				this.$Router.push({
 					path: "/pages/myAddress/myAddress",
-					query:{flag:'login'}
+					query: {
+						flag: 'login'
+					}
 				});
 			},
 			// 跳转到个人中心
-			integrals(){
+			integrals() {
 				this.$Router.push({
 					path: "/pages/home"
 				});
@@ -146,7 +153,8 @@
 					url: '/pages/shoppingMall/menu_naixue/invite'
 				})
 			}
-	}}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -162,6 +170,7 @@
 			bottom: 45px;
 		}
 	}
+
 	.banner {
 		position: relative;
 		width: 100%;
@@ -170,6 +179,7 @@
 		uni-swiper {
 			height: 600rpx;
 		}
+
 		// swiper-item 里面的图片高度
 		.swiper-item image {
 			width: 100%;
@@ -304,8 +314,8 @@
 			}
 		}
 	}
-	
-	.centerBox{
+
+	.centerBox {
 		position: relative;
 		margin-bottom: 30rpx;
 		border-radius: 10rpx;
@@ -313,50 +323,58 @@
 		// box-shadow: $box-shadow;
 		padding: 10px;
 		display: flex;
+
 		// align-items: center;
 		// justify-content: center;
-		.left{
+		.left {
 			background-color: #F2F2E6;
 			flex: 1.2;
 			padding: 10px;
 			margin-right: 10px;
-			.mark-img{
+
+			.mark-img {
 				width: 15px;
 				height: 15px;
 			}
-			.yzclh-img{
+
+			.yzclh-img {
 				width: 107px;
 				height: 61px;
 				float: right;
 				margin-top: 20px;
 			}
 		}
-		.right{
+
+		.right {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
-			.rightTop{
+
+			.rightTop {
 				position: relative;
 				background-color: #FDF3F2;
 				margin-bottom: 10px;
 				line-height: 62px;
-				image{
+
+				image {
 					width: 15px;
 					height: 15px;
 					margin: 0 5px;
 				}
-				
+
 			}
-			.rightBottom{
+
+			.rightBottom {
 				position: relative;
 				background-color: #FCF6D4;
 				line-height: 62px;
-				image{
+
+				image {
 					width: 15px;
 					height: 15px;
 					margin: 0 5px;
 				}
-				
+
 			}
 		}
 	}

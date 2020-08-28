@@ -65,8 +65,8 @@ router.beforeEach((to, from, next) => {
 				let currentUrl = setUrlDelCode()
 				
 				if (newBusinNo) {
-					Cookie.set('BusinNo', newBusinNo)
-					// Cookie.set('BusinNo', '1')
+					// Cookie.set('BusinNo', newBusinNo)
+					Cookie.set('BusinNo', '1')
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)

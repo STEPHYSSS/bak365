@@ -1,7 +1,7 @@
 <template>
 	<!-- 仿奈雪自取点单页面 -->
 	<view>
-		<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" title="奈雪" :shadow="false" :fixed="true" left-icon="back"></uni-nav-bar>
+		<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" title="点餐" :shadow="false" :fixed="true" left-icon="back"></uni-nav-bar>
 		<view class="container">
 			<view class="main">
 				<view class="nav">
@@ -46,21 +46,21 @@
 							<swiper class="ads" id="ads" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
 								<swiper-item v-for="(item, index) in goodsLunbo" :key="index">
 									<view class="swiper-item">
-										<image :src="item.Img" mode="aspectFill" />
+										<image :src="item.Img | imgFilter" mode="aspectFill" />
 									</view>
 								</swiper-item>
 							</swiper>
 							<!-- 轮播图结束 -->
 							<view class="list">
 								<!-- category begin -->
-								<view class="category">
+								<view class="category" >
 									<view class="title">
 										<text>{{ currentType.Name }}</text>
 									</view>
 									<view class="items">
 										<!-- 商品 begin -->
 										<view class="good" v-for="(good, key) in goods_list" :key="key">
-											<image :src="good.Img" class="image" @tap="addCart(good)"></image>
+											<image :src="good.Img | imgFilter" class="image" @tap="addCart(good)"></image>
 											<view class="right">
 												<text class="name">{{ good.Name }}</text>
 												<text class="tips">{{ good.Describe }}</text>
@@ -76,10 +76,10 @@
 													</view>
 													<!-- 常规加商品 -->
 													<view class="btn-group" v-else>
-														<!-- <button type="default" plain class="btn reduce_btn" size="mini"
-														 hover-class="none" @tap="handleReduceFromCart(good)">
+														<button type="default" plain class="btn reduce_btn" size="mini"
+														 hover-class="none" @tap="handleReduceFromCart(good)" v-show="good.cartNum">
 															-
-														</button> -->
+														</button>
 														<view class="number" v-show="good.cartNum">{{ good.cartNum }}</view>
 														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
 															 @tap="handleAddToCart(good, 1, '单规格')">+
@@ -115,9 +115,9 @@
 			<modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" width="90%" custom padding="0rpx"
 			 radius="12rpx">
 				<view class="cover">
-					<image :src="good.Img" class="image"></image>
+					<image :src="good.Img|imgFilter" class="image"></image>
 					<view class="btn-group2">
-						<image src="/static/images/menu/share-good.png"></image>
+						<!-- <image src="/static/images/menu/share-good.png"></image> -->
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
 					</view>
 				</view>
@@ -126,17 +126,28 @@
 					<view class="wrapper">
 						<view class="basic">
 							<view class="name">{{ goodsInfo.Name }}</view>
-							<view class="tips">{{ goodsInfo.Tip }}</view>
+							<view class="tips">{{goodsInfo.Tip }}</view>
 						</view>
 						<view class="properties">
-							<view>规格</view>
-							<view :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
-							 :key="item.SID" @click="skuTopChoice(index, item)">
-								<view class="guige">
-									{{item.Name}}
+							<view v-if="goodsInfo.SpecType==='2'" class="titleSty">规格</view>
+							<view class="specBox">
+								<view class="static" :class="{'isActive': currentIndex === index }" v-for="(item,index) in normsList"
+								 :key="item.SID" @click="skuTopChoice(index, item)">
+									<view class="guige">
+										{{item.Name}}
+									</view>
 								</view>
 							</view>
-							<view>口味：{{kouwei}}</view>
+							<!-- <view class="titleSty">口味</view>
+							<view class="teast">
+								<view class="testBox">{{kouwei}}</view>
+							</view> -->
+							<view class="favo" v-if="kouwei">
+								<view class="titleSty">口味</view>
+								<view class="teast">
+									<view class="testBox">{{kouwei}}</view>
+								</view>
+							</view>
 							<view class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)
 							</view>
 							<!-- <view class="value" v-for="(item,index) in flavorList" :key="index" :class="{'isActive': currentIndex2 === index, 'skuTopChoiceItem': true }"
@@ -183,7 +194,7 @@
 				</view>
 			</modal>
 			<!-- 结束 -->
-			<popup-layer direction="top" :show-pop="cartPopupVisible" class="cart-popup">
+			<popup-layer direction="top" :show-pop="cartPopupVisible" class="cart-popup" style="z-index: 99;">
 				<template slot="content">
 					<view class="top">
 						<text @tap="handleCartClear">清空</text>
@@ -193,17 +204,17 @@
 							<view class="item" v-for="(item, index) in cart" :key="index">
 								<view class="left">
 									<view class="name">{{ item.Name }}</view>
-									<view class="props">{{ item.props_text }}</view>
+									<!-- <view class="props">{{ item.props_text }}</view> -->
 								</view>
 								<view class="center">
 									<text>￥{{ item.SalePrice }}</text>
 								</view>
 								<view class="right">
-									<button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index)">
+									<button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index,item)">
 										-
 									</button>
 									<view class="number">{{ item.BuyCnt }}</view>
-									<button type="primary" class="btn" size="min" hover-class="none" @tap="handleCartItemAdd(index)">
+									<button type="primary" class="btn" size="min" style="background-color: #ADB838;" hover-class="none" @tap="handleCartItemAdd(index,item)">
 										+
 									</button>
 								</view>
@@ -280,6 +291,8 @@
 			this.getWxConfig() // 获取授权地址
 			await this.getShopList()
 			this.currentType = this.goods[0];
+			
+			console.log(window.location)
 		},
 		components: {
 			goods,
@@ -378,7 +391,6 @@
 						},
 						"UProdOpera"
 					);
-
 					this.goods_list = Data.Prod_InfoList;
 					this.loading = false;
 				} catch (e) {
@@ -453,11 +465,38 @@
 			// 点击规格、图片需要调用的商品详情接口
 			// 多规格商品要传specSID
 			async addCart(item) {
-				// this.good = JSON.parse(JSON.stringify({ ...item,
-				// 	number: 1
-				// }))
-				// this.goodDetailModalVisible = true
-				// console.log(this.good)
+				if(item.SpecType === '1'){
+					try {
+						let obj = {
+							Action: "GetProdInfo"
+						};
+						Object.assign(obj, item);
+					
+						let {
+							Data
+						} = await vipCard(obj, "UProdOpera");
+					
+						this.skuDataInfo = Data;
+						this.goodsInfo = Data.ProdInfo;
+						this.normsList = Data.SpecList;
+						// this.normsList.forEach(val => {
+						// 	this.$set(val, 'type', 2);
+						// });
+						if (this.goodsInfo.SpecType === '2') {
+							this.kouwei = this.normsList[0].TastName;
+						}
+						if(this.goodsInfo.SpecType === '1'){
+							this.kouwei = this.goodsInfo.TastName;
+						}
+						this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
+							number: 1
+						}))
+						this.category = JSON.parse(JSON.stringify(item))
+						this.goodDetailModalVisible = true
+					} catch (e) {
+						console.log(e);
+					}
+				}else{
 				try {
 					let obj = {
 						Action: "GetProdInfo"
@@ -474,9 +513,7 @@
 					this.normsList.forEach(val => {
 						this.$set(val, 'type', 2);
 					});
-					console.log(this.normsList);
 					if (this.goodsInfo.SpecType === '2') {
-						console.log(this.normsList);
 						this.kouwei = this.normsList[0].TastName;
 					}
 					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
@@ -487,10 +524,10 @@
 				} catch (e) {
 					console.log(e);
 				}
+				}
 			},
-			// 选择规格
+			// 切换规格
 			skuTopChoice(i, item) {
-				console.log(i)
 				if (this.currentIndex === i) {
 					return;
 				}
@@ -506,12 +543,10 @@
 			},
 			// 普通商品---添加
 			async handleAddToCart(good, num, shopType) { //添加到购物车
-				console.log(good);
-				// console.log(good,'222')
 				const Buy = {
 					BuyCnt: num
 				}
-				this.publicGoodsInfo(good,Buy);
+				// this.publicGoodsInfo(good,Buy);
 				const index = this.cart.findIndex(item => {
 					if (good.TastName) {
 						return (item.SID === good.SID) && (item.Describe === good.Describe)
@@ -522,7 +557,6 @@
 				if (index > -1) {
 					this.cart[index].BuyCnt += num
 				} else {
-					
 					const obj = {
 						CateSID: shopType === '多规格' ? this.goodsInfo.CateSID : good.CateSID,
 						ProdNo: good.ProdNo,
@@ -542,11 +576,19 @@
 					if (good.type === 2) {
 						this.$set(obj, 'SpecSID', good.SID);
 					}
-					console.log(obj);
+					// if(this.cart.length == '0'){
+					// 	this.cart.push(obj);						
+					// }else{
+					// 	this.cart.forEach(val => {
+					// 	      if (obj.ProdSID === val.ProdSID || obj.SpecSID === val.SpecSID) {
+					// 	        val.BuyCnt++;
+					// 	      } else {
+					// 	        this.cart.push(obj);
+					// 	      }
+					// 	    });
+					// }
+					// SpecSID对应的多规格的SpecList中sid， ProdSID对应的是prodInfo中SID
 					this.cart.push(obj);
-					console.log(this.cart);
-					console.log(this.goods);
-					console.log(this.goods_list);
 					this.goods.forEach(val => {
 						let num = 0;
 						this.cart.forEach(item => {
@@ -554,23 +596,43 @@
 						})
 						this.$set(val, 'cartNum', num);
 					});
+					
 					this.goods_list.forEach(val => {
 						let num = 0;
 						this.cart.forEach(item => {
 							if (val.SID === item.ProdSID) num++;
 						})
-						console.log(num);
 						this.$set(val, 'cartNum', num);
 					});
-					console.log(this.goods_list);
 				}
 			},
 			// 普通商品--减
 			handleReduceFromCart(good) {
-				const index = this.cart.findIndex(item => item.SID === good.SID)
+				const index = this.cart.findIndex(item => item.ProdSID === good.SID)
 				this.cart[index].BuyCnt -= 1
+				// if(good.cartNum){
+				// 	this.goods.forEach(val => {
+				// 		let num = 0;	
+				// 		this.cart.forEach(item => {
+				// 			if (val.SID === item.CateSID) {
+				// 				num = val.BuyCnt
+				// 			};
+				// 		})
+				// 		this.$set(val, 'cartNum', num);
+				// 	});
+					
+					this.goods_list.forEach(val => {
+						let num = 0;
+						this.cart.forEach(item => {
+							if (val.SID === item.ProdSID){
+								num = item.BuyCnt
+							};
+						})
+						this.$set(val, 'cartNum', num);
+					});
+				// }
 				if (this.cart[index].BuyCnt <= 0) {
-					this.cart.splice(index, 1)
+					this.cart.splice(index, 1)					
 				}
 			},
 			// 点击加号和图片和规格调用的商品信息
@@ -598,7 +660,12 @@
 				// const product = Object.assign()
 				// const product = Object.assign({}, this.good, {props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
 				// this.handleAddToCart(good, this.good.number)
-				this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
+				if(good.SpecType === '1'){
+					this.handleAddToCart(good, this.good.number, '单规格')
+				}else{
+					this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
+				}
+				// this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
 				this.closeGoodDetailModal()
 			},
 			// changePropertyDefault(index, key) { //改变默认属性值
@@ -614,10 +681,14 @@
 			},
 			// 模态框里的加减
 			handlePropertyAdd() {
-				this.good.number += 1
-				if (this.good.number > this.goodsInfo.MaxBuyCnt) {
-					this.good.number = this.goodsInfo.MaxBuyCnt
-				}
+				if(this.goodsInfo.MaxBuyCnt == '0'){
+					this.good.number += 1
+				}else if(this.goodsInfo.MaxBuyCnt != '0'){
+					this.good.number += 1
+					if (this.good.number > this.goodsInfo.MaxBuyCnt) {
+						this.good.number = this.goodsInfo.MaxBuyCnt
+					}
+				}				
 			},
 			handlePropertyReduce() {
 				if (this.good.number === 1) return
@@ -625,7 +696,6 @@
 			},
 			openCartPopup() { //打开/关闭购物车列表popup
 				this.cartPopupVisible = !this.cartPopupVisible
-				console.log(this.cart)
 			},
 			handleCartClear() { //清空购物车
 				uni.showModal({
@@ -637,6 +707,21 @@
 						if (confirm) {
 							this.cartPopupVisible = false
 							this.cart = []
+							this.goods.forEach(val => {
+								let num = 0;
+								this.cart.forEach(item => {
+									if (val.SID === item.CateSID) num++;
+								})
+								this.$set(val, 'cartNum', 0);
+							});
+							
+							this.goods_list.forEach(val => {
+								let num = 0;
+								this.cart.forEach(item => {
+									if (val.SID === item.ProdSID) num++;
+								})
+								this.$set(val, 'cartNum', 0);
+							});
 						}
 					}
 				})
@@ -645,7 +730,7 @@
 				this.cart[index].BuyCnt += 1
 			},
 
-			handleCartItemReduce(index) { //购物车里面的加减
+			handleCartItemReduce(index,item) { //购物车里面的加减
 				if (this.cart[index].BuyCnt === 1) {
 					this.cart.splice(index, 1)
 				} else {
@@ -711,21 +796,49 @@
 				// this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				uni.hideLoading()
 			}
+		},
+		filters:{
+			imgFilter(val){
+				let localUrl = window.location.href;
+				let localToken =localUrl.split("#")[0]
+				// console.log(localToken+`../`+val)
+				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+				
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
 	@import '@/pages/shoppingMall/menu_naixue/menu/menu.scss';
-
-	.isActive {
-		width: 50px;
-		text-align: center;
+	.specBox{
+		display: flex;
+		.static{
+			display: inline-block;
+			border-radius: 4px;
+			background-color: #F5F5F5;
+			padding: 8px 15px;
+			font-size: 13px;
+			color: #919293;
+			margin-right: 8px;
+			margin-bottom: 8px;
+			width: auto;
+			text-align: center;
+		}
+		.isActive {
+			background-color: #ADB838;
+			color: #ffffff;
+		}
+	}
+	.testBox{
+		display: inline-block;
+		width: auto;
 		background-color: #ADB838;
-		color: #ffffff;
-		border-radius: 4px;
 		padding: 8px 15px;
-		font-size: 13px;
-		margin: 12px 0;
+		color: #fff;
+		margin-bottom: 10px;
+	}
+	.skuTopInfoLimit{
+		margin-bottom: 15px;
 	}
 </style>

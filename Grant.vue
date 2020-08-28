@@ -14,7 +14,7 @@
 		},
 		onLoad(option) {
 			let query = JSON.parse(option.query)
-			console.log(query.redirect_uri,'query.redirect_uri')
+			// console.log(query.redirect_uri,'query.redirect_uri')
 			this.redirect_uri = query.redirect_uri
 			this.appId = query.appId
 		},

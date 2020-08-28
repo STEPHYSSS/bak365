@@ -190,11 +190,11 @@
 				"iconPath": "static/images/tabBar/drink.png",
 				"selectedIconPath": "static/images/tabBar/drink_selected.png"				
 			},
-			{	
-				"pagePath": "pages/shoppingMall/shoppingCart/index",
-				"iconPath": "static/images/tabBar/take.png",
-				"selectedIconPath": "static/images/tabBar/take_selected.png"
-			},
+			// {	
+			// 	"pagePath": "pages/shoppingMall/shoppingCart/index",
+			// 	"iconPath": "static/images/tabBar/take.png",
+			// 	"selectedIconPath": "static/images/tabBar/take_selected.png"
+			// },
 			// {
 			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
 			// },
