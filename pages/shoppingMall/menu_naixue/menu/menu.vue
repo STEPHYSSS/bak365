@@ -128,8 +128,8 @@
 							<view class="name">{{ goodsInfo.Name }}</view>
 							<view class="tips">{{goodsInfo.Tip }}</view>
 						</view>
-						<view class="properties">
-							<view v-if="goodsInfo.SpecType==='2'" class="titleSty">规格</view>
+						<view class="properties" v-if="goodsInfo.SpecType==='2'">
+							<view class="titleSty">规格</view>
 							<view class="specBox">
 								<view class="static" :class="{'isActive': currentIndex === index }" v-for="(item,index) in normsList"
 								 :key="item.SID" @click="skuTopChoice(index, item)">
@@ -138,45 +138,34 @@
 									</view>
 								</view>
 							</view>
-							<!-- <view class="titleSty">口味</view>
-							<view class="teast">
-								<view class="testBox">{{kouwei}}</view>
-							</view> -->
 							<view class="favo" v-if="kouwei">
 								<view class="titleSty">口味</view>
-								<view class="teast">
-									<view class="testBox">{{kouwei}}</view>
+								<view class="teast" v-for="(item, index) in kouwei" :key="index">
+									<view :class="currentIndex2 === index ? 'testBoxCheck' : 'testBox'" @click="skuTopChoicekw(index, item)">{{item}}</view>									
 								</view>
 							</view>
+							<!--  -->
 							<view class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)
+							</view>							
+						</view>
+						<view class="properties" v-else>
+							<view class="favo">
+								<view class="titleSty">口味</view>
+								<view class="teast" @click="skuTopChoice(index, item)">
+									<view class="testBoxCheck">{{kouwei2}}</view>									
+								</view>
 							</view>
-							<!-- <view class="value" v-for="(item,index) in flavorList" :key="index" :class="{'isActive': currentIndex2 === index, 'skuTopChoiceItem': true }"
-							@click="skuTopChoicekw(index)">
-								<view >
-									{{item}}
-								</view>
-							</view> -->
-							<!-- <view class="property" v-for="(item, index) in good.property" :key="index">
-								<view class="title">
-									<text class="name">{{ item.name }}</text>
-									<view class="desc" v-if="item.desc">({{ item.desc }})</view>
-								</view>
-								<view class="values">
-									<view class="value" v-for="(value, key) in item.values" :key="key" :class="{'default': value.is_default}" 
-								@tap="changePropertyDefault(index, key)">
-										{{ value.value }}
-									</view>
-								</view>
-							</view> -->
 						</view>
 					</view>
 				</scroll-view>
 				<view class="action">
 					<view class="left">
 						<view class="price">￥{{ goodsInfo.SalePrice }}</view>
-						<view class="props">
-							<!-- 展示选择的规格和口味 -->
-							{{ this.normsList && this.normsList.length && `${this.normsList[this.currentIndex].Name} ${this.normsList[this.currentIndex].TastName}` }}
+						<view class="props" v-if="goodsInfo.SpecType==='2'">
+							{{ this.normsList && this.normsList.length && `${this.normsList[this.currentIndex].Name}
+							${this.normsList[this.currentIndex].TastName.split(',')[currentIndex2]}` }}
+						</view>
+						<view class="props" v-if="goodsInfo.SpecType==='1'">
 						</view>
 					</view>
 					<view class="btn-group">
@@ -258,6 +247,7 @@
 			return {
 				curDes: '', // 多规格  已选信息
 				kouwei: '',
+				kouwei2:'',
 				currentType: {},
 				goods: [],
 				menuScrollIntoView: '',
@@ -291,8 +281,6 @@
 			this.getWxConfig() // 获取授权地址
 			await this.getShopList()
 			this.currentType = this.goods[0];
-			
-			console.log(window.location)
 		},
 		components: {
 			goods,
@@ -392,6 +380,11 @@
 						"UProdOpera"
 					);
 					this.goods_list = Data.Prod_InfoList;
+					this.goods_list = this.goods_list.map(val => {
+						let obj = { ...val };
+						this.$set(obj, 'cartNum', 0);
+						return obj
+					});
 					this.loading = false;
 				} catch (e) {
 					this.loading = false;
@@ -465,56 +458,29 @@
 			// 点击规格、图片需要调用的商品详情接口
 			// 多规格商品要传specSID
 			async addCart(item) {
-				if(item.SpecType === '1'){
-					try {
-						let obj = {
-							Action: "GetProdInfo"
-						};
-						Object.assign(obj, item);
-					
-						let {
-							Data
-						} = await vipCard(obj, "UProdOpera");
-					
-						this.skuDataInfo = Data;
-						this.goodsInfo = Data.ProdInfo;
-						this.normsList = Data.SpecList;
-						// this.normsList.forEach(val => {
-						// 	this.$set(val, 'type', 2);
-						// });
-						if (this.goodsInfo.SpecType === '2') {
-							this.kouwei = this.normsList[0].TastName;
-						}
-						if(this.goodsInfo.SpecType === '1'){
-							this.kouwei = this.goodsInfo.TastName;
-						}
-						this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
-							number: 1
-						}))
-						this.category = JSON.parse(JSON.stringify(item))
-						this.goodDetailModalVisible = true
-					} catch (e) {
-						console.log(e);
-					}
-				}else{
+				
 				try {
 					let obj = {
 						Action: "GetProdInfo"
 					};
 					Object.assign(obj, item);
-
+				
 					let {
 						Data
 					} = await vipCard(obj, "UProdOpera");
-
 					this.skuDataInfo = Data;
 					this.goodsInfo = Data.ProdInfo;
-					this.normsList = Data.SpecList;
-					this.normsList.forEach(val => {
-						this.$set(val, 'type', 2);
-					});
 					if (this.goodsInfo.SpecType === '2') {
-						this.kouwei = this.normsList[0].TastName;
+						this.normsList = Data.SpecList;
+						this.normsList.forEach(val => {
+							this.$set(val, 'type', 2);
+						});
+						console.log(this.normsList);
+						this.kouwei = this.normsList[0].TastName.split(',');
+						console.log(this.kouwei);
+						console.log(this.kouwei,'口味分割')						
+					}else if(this.goodsInfo.SpecType === '1'){
+						this.kouwei2 = this.goodsInfo.TastName;
 					}
 					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
 						number: 1
@@ -524,15 +490,81 @@
 				} catch (e) {
 					console.log(e);
 				}
-				}
+				
+				
+				// 分情况的
+				// if(item.SpecType === '1'){
+				// 	try {
+				// 		let obj = {
+				// 			Action: "GetProdInfo"
+				// 		};
+				// 		Object.assign(obj, item);
+					
+				// 		let {
+				// 			Data
+				// 		} = await vipCard(obj, "UProdOpera");
+					
+				// 		this.skuDataInfo = Data;
+				// 		this.goodsInfo = Data.ProdInfo;
+				// 		this.normsList = Data.SpecList;
+				// 		if (this.goodsInfo.SpecType === '2') {
+				// 			this.kouwei = this.normsList[0].TastName.split(',');
+				// 			console.log(this.kouwei,'口味分割')
+							
+				// 		}
+				// 		if(this.goodsInfo.SpecType === '1'){
+				// 			this.kouwei = this.goodsInfo.TastName;
+				// 		}
+				// 		this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
+				// 			number: 1
+				// 		}))
+				// 		this.category = JSON.parse(JSON.stringify(item))
+				// 		this.goodDetailModalVisible = true
+				// 	} catch (e) {
+				// 		console.log(e);
+				// 	}
+				// }else{
+				// try {
+				// 	let obj = {
+				// 		Action: "GetProdInfo"
+				// 	};
+				// 	Object.assign(obj, item);
+
+				// 	let {
+				// 		Data
+				// 	} = await vipCard(obj, "UProdOpera");
+
+				// 	this.skuDataInfo = Data;
+				// 	this.goodsInfo = Data.ProdInfo;
+				// 	this.normsList = Data.SpecList;
+				// 	this.normsList.forEach(val => {
+				// 		this.$set(val, 'type', 2);
+				// 	});
+				// 	if (this.goodsInfo.SpecType === '2') {
+				// 		this.kouwei = this.normsList[0].TastName;
+				// 	}
+				// 	this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
+				// 		number: 1
+				// 	}))
+				// 	this.category = JSON.parse(JSON.stringify(item))
+				// 	this.goodDetailModalVisible = true
+				// } catch (e) {
+				// 	console.log(e);
+				// }
+				// }
 			},
+			
 			// 切换规格
 			skuTopChoice(i, item) {
 				if (this.currentIndex === i) {
 					return;
 				}
 				this.currentIndex = i;
-				this.kouwei = item.TastName;
+				this.currentIndex2 = 0;
+				console.log(this.currentIndex2);
+				// this.kouwei = item.TastName;
+				this.kouwei = item.TastName.split(',');
+				console.log(this.kouwei);
 			},
 			//切换口味
 			skuTopChoicekw(i){
@@ -576,33 +608,48 @@
 					if (good.type === 2) {
 						this.$set(obj, 'SpecSID', good.SID);
 					}
-					// if(this.cart.length == '0'){
-					// 	this.cart.push(obj);						
-					// }else{
+					console.log(obj);
+					if(this.cart.length === 0){
+						this.cart.push(obj);						
+					}else{
 					// 	this.cart.forEach(val => {
-					// 	      if (obj.ProdSID === val.ProdSID || obj.SpecSID === val.SpecSID) {
-					// 	        val.BuyCnt++;
-					// 	      } else {
-					// 	        this.cart.push(obj);
-					// 	      }
-					// 	    });
-					// }
+					// 		console.log(val.ProdSID);
+					// 		console.log(obj.ProdSID);
+					//       if (obj.ProdSID === val.ProdSID) {
+					// 		console.log(val.ProdSID, '已有的商品id');
+					// 		console.log(obj.ProdSID, '新增的商品id');
+					//         val.BuyCnt++;
+					//       } else {
+					// 		console.log('没有重复');
+					//         this.cart.push(obj);
+					//       }
+					//     });
+					let isHave = this.cart.some(val => {
+						return obj.ProdSID === val.ProdSID;
+					})
+					if (isHave) {   // 如果购物车已存在此商品
+						// 找出购物车中已存在的商品  在BuyCnt进行加一
+						const a = this.cart.findIndex(val => val.ProdSID === obj.ProdSID);
+						let num = this.cart[a].BuyCnt + 1;
+						// BuyCnt数量加一
+						this.$set(this.cart[a], 'BuyCnt', num);
+					} else {
+						// 当购物车中不存在要添加的商品
+						this.cart.push(obj);
+					}
+					}
 					// SpecSID对应的多规格的SpecList中sid， ProdSID对应的是prodInfo中SID
-					this.cart.push(obj);
-					this.goods.forEach(val => {
-						let num = 0;
-						this.cart.forEach(item => {
-							if (val.SID === item.CateSID) num++;
-						})
-						this.$set(val, 'cartNum', num);
-					});
-					
+					this.changeMenuNum();
+					console.log(this.goods);
+					console.log(this.cart);
+					console.log(this.goods_list);
 					this.goods_list.forEach(val => {
-						let num = 0;
 						this.cart.forEach(item => {
-							if (val.SID === item.ProdSID) num++;
+							if (val.SID === item.ProdSID) {
+								this.$set(val, 'cartNum', item.BuyCnt);
+								// num = val.cartNum + 1;
+							};
 						})
-						this.$set(val, 'cartNum', num);
 					});
 				}
 			},
@@ -610,27 +657,8 @@
 			handleReduceFromCart(good) {
 				const index = this.cart.findIndex(item => item.ProdSID === good.SID)
 				this.cart[index].BuyCnt -= 1
-				// if(good.cartNum){
-				// 	this.goods.forEach(val => {
-				// 		let num = 0;	
-				// 		this.cart.forEach(item => {
-				// 			if (val.SID === item.CateSID) {
-				// 				num = val.BuyCnt
-				// 			};
-				// 		})
-				// 		this.$set(val, 'cartNum', num);
-				// 	});
-					
-					this.goods_list.forEach(val => {
-						let num = 0;
-						this.cart.forEach(item => {
-							if (val.SID === item.ProdSID){
-								num = item.BuyCnt
-							};
-						})
-						this.$set(val, 'cartNum', num);
-					});
-				// }
+				this.changeInfo();
+				this.changeMenuNum();
 				if (this.cart[index].BuyCnt <= 0) {
 					this.cart.splice(index, 1)					
 				}
@@ -707,27 +735,28 @@
 						if (confirm) {
 							this.cartPopupVisible = false
 							this.cart = []
-							this.goods.forEach(val => {
-								let num = 0;
-								this.cart.forEach(item => {
-									if (val.SID === item.CateSID) num++;
-								})
-								this.$set(val, 'cartNum', 0);
-							});
-							
-							this.goods_list.forEach(val => {
-								let num = 0;
-								this.cart.forEach(item => {
-									if (val.SID === item.ProdSID) num++;
-								})
-								this.$set(val, 'cartNum', 0);
-							});
+							this.changeMenuNum();
+							this.changeInfo();
 						}
 					}
 				})
 			},
+			// 购物车数据改变  也改变商品数据
+			changeInfo() {
+				this.goods_list.forEach(val => {
+					let num = 0;
+					this.cart.forEach(item => {
+						if (val.SID === item.ProdSID){
+							num = item.BuyCnt
+						};
+					})
+					this.$set(val, 'cartNum', num);
+				});
+			},
 			handleCartItemAdd(index) {
-				this.cart[index].BuyCnt += 1
+				this.cart[index].BuyCnt += 1;
+				this.changeMenuNum();
+				this.changeInfo();
 			},
 
 			handleCartItemReduce(index,item) { //购物车里面的加减
@@ -736,9 +765,23 @@
 				} else {
 					this.cart[index].BuyCnt -= 1
 				}
+				this.changeMenuNum();
+				this.changeInfo();
 				if (!this.cart.length) {
 					this.cartPopupVisible = false
 				}
+			},
+			// 根据购物车变化 改变侧边menu的角标
+			changeMenuNum() {
+				this.goods.forEach(val => {
+					let num = 0;
+					this.cart.forEach(item => {
+						if (val.SID === item.CateSID) {
+							num = num + item.BuyCnt;
+						};
+					})
+					this.$set(val, 'cartNum', num);
+				});
 			},
 			toPay() { //去结算
 				// if(!this.isLogin){
@@ -830,7 +873,7 @@
 			color: #ffffff;
 		}
 	}
-	.testBox{
+	.testBoxCheck{
 		display: inline-block;
 		width: auto;
 		background-color: #ADB838;
@@ -838,7 +881,20 @@
 		color: #fff;
 		margin-bottom: 10px;
 	}
+	.testBox{
+		display: inline-block;
+		width: auto;
+		background-color: #fff;
+		padding: 8px 15px;
+		color: gary;
+		margin-bottom: 10px;
+	}
 	.skuTopInfoLimit{
 		margin-bottom: 15px;
 	}
+	.teast{
+		display: inline-block;
+		margin-left: 5px;
+	}
+	
 </style>

@@ -4,6 +4,7 @@
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
 		<div v-if="prodList.length>0">
 			<div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
+				<!-- :class="{active: $store.state.orderType == 'takein'}" -->
 				<div :class="['changeMode','changeModeLeft',radioModes === 2?'borderColor':'']" @click="changeMode(2)" v-if="currentDeliveryType.indexOf('2')>-1||currentDeliveryType.indexOf('3')>-1">
 					<span v-if="radioModes === 2" class="iconfont icon-xuanzhong changeTopIcon"></span>
 					<image class="changeModeImg" src="/static/assets/img/Pack.png" />
@@ -13,7 +14,7 @@
 				<div :class="['changeMode','changeModeRight',radioModes === 1?'borderColor':'']" @click="changeMode(1)" v-if="currentDeliveryType.indexOf('1')>-1">
 					<span v-if="radioModes === 1" class="iconfont icon-xuanzhong changeTopIcon"></span>
 					<image class="changeModeImg" src="/static/assets/img/Eat.png" />
-					到店自取
+					到店自取{{radioModes}}
 				</div>
 			</div>
 			<!-- 展示地址的位置 -->
@@ -22,7 +23,6 @@
 					<div class="order-area-icon">
 						<image src="/static/assets/img/weizhi.png" alt />
 					</div>
-					{{this.$store.state.currentStoreInfo}}
 					<div v-if="currentArea&&JSON.stringify(currentArea) !== '{}'" style="flex: 1">
 						<div>
 							<span>{{currentArea.Name}}{{currentArea.Sex | setSex}}</span>
@@ -212,6 +212,13 @@
 			// receiveAddress
 			adCell
 		},
+		mounted() {
+			if (this.$store.state.orderType === 'takein') {
+				this.radioModes = 1;
+			} else {
+				this.radioModes = 2;
+			}
+		},
 		data() {
 			return {				
 				mainStyle: getApp().globalData.mainStyle,
@@ -273,6 +280,7 @@
 			};
 		},
 		async created() {
+			console.log(this.$store.state.orderType);
 			if (
 				!this.$store.state.currentCard ||
 				this.$store.state.currentCard.length === 0
