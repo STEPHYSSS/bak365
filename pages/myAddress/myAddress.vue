@@ -2,35 +2,38 @@
 	<view class="container">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
-		<view class="main">
-			<view v-if="!areaList.length" class="no-address-tips">
-				<view class="mb-30">暂无地址信息</view>
-				<view>请点击底部按钮添加地址信息</view>
-			</view>
-			<template v-else>
-				<uni-swipe-action>
-					<uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(item.id)" v-for="(item, index) in areaList" :key="index">
-						<view class="address" @tap="chooseAddress(item)">
-							<view class="left flex-fill overflow-hidden mr-20">
-								<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
-								{{item.Name}}
-								<span v-if="item.Sex">{{item.Sex | setSex}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-								<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
+		<!-- 外卖地址信息 -->
+		<view>
+			<view class="main">
+				<view v-if="!areaList.length" class="no-address-tips">
+					<view class="noAddressinfo">暂无地址信息</view>
+					<view>请点击底部按钮添加地址信息</view>
+				</view>
+				<template v-else>
+					<uni-swipe-action>
+						<uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(item.SID)" v-for="(item, index) in areaList" :key="index">
+							<view class="address" @tap="chooseAddress(item)">
+								<view class="left flex-fill overflow-hidden mr-20">
+									<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
+									{{item.Name}}
+									<span v-if="item.Sex">{{item.Sex | setSex}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
+								</view>
+								<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
 							</view>
-							<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
-						</view>
-					</uni-swipe-action-item>
-				</uni-swipe-action>
-			</template>
+						</uni-swipe-action-item>
+					</uni-swipe-action>
+				</template>
+			</view>
+			<view class="btn-box">
+				<button type="primary" size="default" @tap="add">新增地址</button>
+			</view>
 		</view>
-		<view class="btn-box">
-			<button type="primary" size="default" @tap="add">新增地址</button>
+		<view class="shopAddress">
+			
 		</view>
-		<!-- 新增地址 uni-popup -->
-		<!-- <uni-popup ref="addEditArea" v-model="addEditArea" position="bottom" class="confirm-area-popup">
-			<a-receive-address v-if="addEditArea" @clickGo="clickGo" :radioModes="radioModes" :areaInfo="areaInfo" @saveArea="saveAreaSet"
-			 :currentDeliveryType="currentDeliveryType"></a-receive-address>
-		</uni-popup> -->
+		<!-- 门店地址信息 -->
+		
 	</view>
 </template>
 
@@ -58,6 +61,7 @@
 				areaList: [],	//用来接收地址列表-			
 				areaInfo: {},// 编辑的地址
 				currentDeliveryType: "",//当前的配送类型
+				title:'门店详情'
 			}
 		},
 		created() {
@@ -91,7 +95,6 @@
 				// uni.navigateTo({
 				// 	url: '/pages/address/add?id=' + id
 				// })
-				console.log(val)
 				this.$Router.push({path:'/pages/myAddress/add',query:{
 					areaInfo:val
 				}})
@@ -100,17 +103,25 @@
 				// this.$refs.addEditArea.open()
 				// this.addEditArea = true;
 			},
-			handleSwipeClick(id) {
+			handleSwipeClick(id) {								
 				uni.showModal({
 					title: '提示',
 					content: '确定要删除？',
 					success: res => {
 						if(res.confirm) {
-								// const index = this.addresses.findIndex(item => item.id == id)
-								// const addresses = JSON.parse(JSON.stringify(this.addresses))
-								// addresses.splice(index, 1)
-								// this.SET_ADDRESSES(addresses)
-								// uni.showToast({title: '删除成功！', icon: 'success'})
+							let {Data} = vipCard({
+									Action: "RemoveAddress",
+									SID: id
+								},
+								"UMemberOpera"
+							);
+							uni.showToast({title: '删除成功！', icon: 'success'})
+							this.getAddressList()
+							// const index = this.addresses.findIndex(item => item.id == id)
+							// const addresses = JSON.parse(JSON.stringify(this.addresses))
+							// addresses.splice(index, 1)
+							// this.SET_ADDRESSES(addresses)
+							// uni.showToast({title: '删除成功！', icon: 'success'})
 						}
 					}
 				})
@@ -146,7 +157,18 @@
 		.address-wrapper {
 			margin-bottom: 30rpx;
 		}
-		
+		.no-address-tips{
+			display: inline-block;
+			font-size: 16px;
+			position: absolute;
+			top: 33%;
+			left: 21%;
+			text-align: center;
+			color: #b5b4b4;
+			.noAddressinfo{
+				margin-bottom: 10px;
+			}
+		}
 		.address {
 			width: 100%;
 			padding: 40rpx 20rpx;

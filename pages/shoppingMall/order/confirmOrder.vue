@@ -14,7 +14,7 @@
 				<div :class="['changeMode','changeModeRight',radioModes === 1?'borderColor':'']" @click="changeMode(1)" v-if="currentDeliveryType.indexOf('1')>-1">
 					<span v-if="radioModes === 1" class="iconfont icon-xuanzhong changeTopIcon"></span>
 					<image class="changeModeImg" src="/static/assets/img/Eat.png" />
-					到店自取{{radioModes}}
+					到店自取
 				</div>
 			</div>
 			<!-- 展示地址的位置 -->
@@ -39,6 +39,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- 商品信息 -->
 			<div class="good_card_box">
 				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
@@ -280,7 +281,6 @@
 			};
 		},
 		async created() {
-			console.log(this.$store.state.orderType);
 			if (
 				!this.$store.state.currentCard ||
 				this.$store.state.currentCard.length === 0
@@ -357,6 +357,7 @@
 							// console.log(Data,77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
+							console.log(this.prodList,'商品信息')
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
 

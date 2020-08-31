@@ -3,6 +3,28 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
 		<div>
+			<div class="setADcell">
+				<adCell text="联系人" showArrow="false">
+					<input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">
+				</adCell>
+			</div>
+			<div class="setADcell">
+				<adCell text="性别" showArrow="false">
+					<radio-group v-model="form.Sex" style="text-align:center" @change="radioChangeSex">
+						<radio style="display: inline-flex;margin-right:10px" value="1" :checked="form.Sex==='1'">先生</radio>
+						<radio style="display: inline-flex;" value="2" :checked="form.Sex==='2'">女士</radio>
+					</radio-group>
+					<!-- <view class="radio-group" v-model="form.Sex">
+						<view class="radio" :class="{'checked': form.Sex}" style="margin-right: 10rpx;" @click="Sex(1)">先生</view>
+						<view class="radio" :class="{'checked': form.Sex}" @click="Sex(2)">女士</view>
+					</view> -->
+				</adCell>
+			</div>
+			<div class="setADcell">
+				<adCell text="手机号" showArrow="false">
+					<input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
+				</adCell>
+			</div>
 			<div class="setADcell" @click="tenxButton">
 				<adCell text="收货地址"  showArrow="false">
 					<span>{{form.Address?form.Address:'点击选择'}}</span>
@@ -13,25 +35,6 @@
 					<input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室">
 				</adcell>
 			</div>
-			<div class="setADcell">
-				<adCell text="联系人" showArrow="false">
-					<input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">
-				</adCell>
-			</div>
-
-			<div class="setADcell">
-				<adCell text="性别" showArrow="false">
-					<radio-group v-model="form.Sex" style="text-align:center" @change="radioChangeSex">
-						<radio style="display: inline-flex;margin-right:10px" value="1" :checked="form.Sex==='1'">先生</radio>
-						<radio style="display: inline-flex;" value="2" :checked="form.Sex==='2'">女士</radio>
-					</radio-group>
-				</adCell>
-			</div>
-			<div class="setADcell">
-				<adCell text="手机号" showArrow="false">
-					<input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
-				</adCell>
-			</div>
 			<div class="setADcell setWidth">
 				<adCell text="设置为默认地址" showArrow="false">
 					<switch @change="switchChange" />
@@ -40,7 +43,7 @@
 		</div>
 		<div style="margin-top:50px;padding:0 20px;">
 			<button type="main" size="large" @click="saveArea" style="    background-color: #8d8bdb;
-    color: #fff;" :disabled="disabledLoad">保存地址</button>
+    color: #fff;" :disabled="disabledLoad">保存</button>
 		</div>
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
@@ -137,6 +140,13 @@
 			// #endif
 		},
 		methods: {
+			Sex(flag){
+				if(flag =='1'){
+					this.form.Sex = '1'
+				}else{
+					this.form.Sex = '2'
+				}
+			},
 			clickGo() {
 				if (this.specificAreaHead) {
 					this.specificArea = false;
@@ -248,6 +258,24 @@
 	.setWidth {
 		/deep/.headView {
 			width: 118px;
+		}
+	}
+	.radio-group {
+		display: flex;
+		justify-content: flex-start;
+		
+		.radio {
+			padding: 10rpx 30rpx;
+			border-radius: 6rpx;
+			border: 2rpx solid #919293;
+			color: #919293;
+			font-size: 14px;
+			
+			&.checked {
+				background-color: #ADB838;
+				color: #fff;
+				border: 2rpx solid #ADB838;
+			}
 		}
 	}
 </style>

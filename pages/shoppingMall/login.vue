@@ -9,10 +9,10 @@
 					</view>
 				</swiper-item>
 			</swiper>
-			<view class="intro">
+			<!-- <view class="intro">
 				<view class="greet">您好</view>
 				<view class="note">一杯奶茶，一口软欧包，在烘焙遇见两种美好</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="content">
 			<view class="entrance">
@@ -28,8 +28,8 @@
 			<view class="info">
 				<view class="integral_section" @tap="integrals">
 					<view class="top">
-						<text class="title" style="color: #5A5B5C;font-size: 14px;margin-right: 5px;">我的积分</text>
-						<text class="value">411</text>
+						<text class="title">我的积分</text>
+						<text class="value">{{myScore}}</text>
 					</view>
 					<view class="bottom" style="color: #919293;">
 						进入积分商城兑换烘焙券及周边好礼
@@ -96,6 +96,7 @@
 		data() {
 			return {
 				homeSlide: [], // 定义值接收轮播图数据
+				myScore:''
 			}
 		},
 		computed: {
@@ -103,12 +104,10 @@
 		},
 		async onLoad() {
 			await this.getLunBoImg();
+			await this.getScore();
 		},
 		filters: {
 			imgFilter(val) {
-				// const url = window.location;
-				// var localarr = url.split('#');
-				// console.log(localarr)
 				let localUrl = window.location.href;
 				let localToken = localUrl.split("#")[0]
 				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
@@ -142,6 +141,20 @@
 					}
 				});
 			},
+			// 获取积分
+			async getScore() {
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetCardInfo",
+						Type: 'Home'
+					}, "WeChatCardOpera");
+					this.myScore = Data.Score;
+				} catch (e) {
+					console.log(e);
+				}
+			},
 			// 跳转到个人中心
 			integrals() {
 				this.$Router.push({
@@ -151,6 +164,12 @@
 			invite() {
 				uni.navigateTo({
 					url: '/pages/shoppingMall/menu_naixue/invite'
+				})
+			},
+			//会员二维码
+			memberCode(){
+				uni.navigateTo({
+					url: '/pages/vip/payCode'
 				})
 			}
 		}
@@ -280,8 +299,9 @@
 				align-items: center;
 
 				.title {
-					// color: $text-color-base;
-					// font-size: $font-size-base;
+					color: #5A5B5C;
+					font-size: 14px;
+					margin-bottom: 5px;
 					margin-right: 10rpx;
 				}
 

@@ -213,7 +213,6 @@
 					let data = await vipCard({
 						Action: "GetCardInfo"
 					}, "WeChatCardOpera");
-					// console.log(data, 5555)
 					this.ImgUrl =
 						this.$VUE_APP_PREFIX + data.Data.CardImg || this.ImgUrl;
 					this.data = data.Data.CardInfo || {};

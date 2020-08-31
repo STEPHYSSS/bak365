@@ -8,10 +8,10 @@
 					<view class="header">
 						<view class="nav_left">
 							<text v-if="addressName">{{addressName}} </text>
-							<text v-else>{{currentStoreInfo.Address}}</text>
+							<text v-else @click="toShopAddress">{{currentStoreInfo.Name}}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>
 							<view class="navFlex">
 								<image src='@/static/images/order/location.png' style="width: 30rpx; height: 30rpx;" class="mr-10"></image>
-								<!-- <span>距离您 989 米</span> -->
+								<span>距离您 {{currentStoreInfo.Length}}</span>
 							</view>
 						</view>
 						<view class="nav_right">
@@ -76,13 +76,14 @@
 													</view>
 													<!-- 常规加商品 -->
 													<view class="btn-group" v-else>
-														<button type="default" plain class="btn reduce_btn" size="mini"
+														<button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
 														 hover-class="none" @tap="handleReduceFromCart(good)" v-show="good.cartNum">
-															-
+															<text class="iconSty">-</text>
 														</button>
 														<view class="number" v-show="good.cartNum">{{ good.cartNum }}</view>
 														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
-															 @tap="handleAddToCart(good, 1, '单规格')">+
+															 @tap="handleAddToCart(good, 1, '单规格')">
+															 <text class="iconStyAdd">+</text>
 														</button>
 													</view>
 												</view>
@@ -148,10 +149,10 @@
 							<view class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)
 							</view>							
 						</view>
-						<view class="properties" v-else>
+						<view class="properties" v-else-if="kouwei2">
 							<view class="favo">
 								<view class="titleSty">口味</view>
-								<view class="teast" @click="skuTopChoice(index, item)">
+								<view class="teast" >
 									<view class="testBoxCheck">{{kouwei2}}</view>									
 								</view>
 							</view>
@@ -169,12 +170,16 @@
 						</view>
 					</view>
 					<view class="btn-group">
-						<button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
-							<view>-</view>
+						<!-- <button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
+							<text class="iconSty">-</text>
+						</button> -->
+						<button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
+						 hover-class="none" @tap="handlePropertyReduce">
+							<text class="iconSty" style="background: #fff;">-</text>
 						</button>
 						<view class="number">{{ good.number }}</view>
 						<button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
-							<view>+</view>
+							<text class="iconStyAdd">+</text>
 						</button>
 					</view>
 				</view>
@@ -270,7 +275,8 @@
 				normsList: [], //规格数组
 				currentIndex: 0,
 				currentIndex2: 0,
-				currentStoreInfo:{},//商品地址
+				currentStoreInfo:{},//商家地址
+				Address:'小吃店',//搜索
 
 			}
 		},
@@ -342,16 +348,17 @@
 				} = await vipCard({
 						Action: "GetShopList",
 						DefLongitude: this.location.longitude,
-						DefLongitude: this.location.latitude
+						DefLatitude: this.location.latitude,
+						Name:this.Address
 					},
 					"UShopOpera"
 				);
 				this.currentStoreInfo = {
 					Name: Data.ShopList[0].Name,
 					Address: Data.ShopList[0].Address,
-					SID: Data.ShopList[0].SID
+					SID: Data.ShopList[0].SID,
+					Length:Data.ShopList[0].Length
 				}
-				// console.log(currentStoreInfo);
 				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 			},
 			// 商品类别
@@ -446,6 +453,8 @@
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');
 			},
+			// 点击跳转到门店地址列表
+			toShopAddress(){},
 			toAddress() {
 				this.$store.commit("SET_ORDER_TYPE", 'takeout');
 				this.$Router.push({
@@ -458,7 +467,6 @@
 			// 点击规格、图片需要调用的商品详情接口
 			// 多规格商品要传specSID
 			async addCart(item) {
-				
 				try {
 					let obj = {
 						Action: "GetProdInfo"
@@ -475,10 +483,7 @@
 						this.normsList.forEach(val => {
 							this.$set(val, 'type', 2);
 						});
-						console.log(this.normsList);
-						this.kouwei = this.normsList[0].TastName.split(',');
-						console.log(this.kouwei);
-						console.log(this.kouwei,'口味分割')						
+						this.kouwei = this.normsList[0].TastName.split(',');					
 					}else if(this.goodsInfo.SpecType === '1'){
 						this.kouwei2 = this.goodsInfo.TastName;
 					}
@@ -490,68 +495,6 @@
 				} catch (e) {
 					console.log(e);
 				}
-				
-				
-				// 分情况的
-				// if(item.SpecType === '1'){
-				// 	try {
-				// 		let obj = {
-				// 			Action: "GetProdInfo"
-				// 		};
-				// 		Object.assign(obj, item);
-					
-				// 		let {
-				// 			Data
-				// 		} = await vipCard(obj, "UProdOpera");
-					
-				// 		this.skuDataInfo = Data;
-				// 		this.goodsInfo = Data.ProdInfo;
-				// 		this.normsList = Data.SpecList;
-				// 		if (this.goodsInfo.SpecType === '2') {
-				// 			this.kouwei = this.normsList[0].TastName.split(',');
-				// 			console.log(this.kouwei,'口味分割')
-							
-				// 		}
-				// 		if(this.goodsInfo.SpecType === '1'){
-				// 			this.kouwei = this.goodsInfo.TastName;
-				// 		}
-				// 		this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
-				// 			number: 1
-				// 		}))
-				// 		this.category = JSON.parse(JSON.stringify(item))
-				// 		this.goodDetailModalVisible = true
-				// 	} catch (e) {
-				// 		console.log(e);
-				// 	}
-				// }else{
-				// try {
-				// 	let obj = {
-				// 		Action: "GetProdInfo"
-				// 	};
-				// 	Object.assign(obj, item);
-
-				// 	let {
-				// 		Data
-				// 	} = await vipCard(obj, "UProdOpera");
-
-				// 	this.skuDataInfo = Data;
-				// 	this.goodsInfo = Data.ProdInfo;
-				// 	this.normsList = Data.SpecList;
-				// 	this.normsList.forEach(val => {
-				// 		this.$set(val, 'type', 2);
-				// 	});
-				// 	if (this.goodsInfo.SpecType === '2') {
-				// 		this.kouwei = this.normsList[0].TastName;
-				// 	}
-				// 	this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
-				// 		number: 1
-				// 	}))
-				// 	this.category = JSON.parse(JSON.stringify(item))
-				// 	this.goodDetailModalVisible = true
-				// } catch (e) {
-				// 	console.log(e);
-				// }
-				// }
 			},
 			
 			// 切换规格
@@ -561,10 +504,8 @@
 				}
 				this.currentIndex = i;
 				this.currentIndex2 = 0;
-				console.log(this.currentIndex2);
 				// this.kouwei = item.TastName;
 				this.kouwei = item.TastName.split(',');
-				console.log(this.kouwei);
 			},
 			//切换口味
 			skuTopChoicekw(i){
@@ -608,7 +549,6 @@
 					if (good.type === 2) {
 						this.$set(obj, 'SpecSID', good.SID);
 					}
-					console.log(obj);
 					if(this.cart.length === 0){
 						this.cart.push(obj);						
 					}else{
@@ -640,9 +580,6 @@
 					}
 					// SpecSID对应的多规格的SpecList中sid， ProdSID对应的是prodInfo中SID
 					this.changeMenuNum();
-					console.log(this.goods);
-					console.log(this.cart);
-					console.log(this.goods_list);
 					this.goods_list.forEach(val => {
 						this.cart.forEach(item => {
 							if (val.SID === item.ProdSID) {
@@ -896,5 +833,25 @@
 		display: inline-block;
 		margin-left: 5px;
 	}
-	
+	.btn-group{
+		.iconSty{
+			font-size: 30px;
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			line-height: 16px;
+		}
+		.iconStyAdd{
+			font-size: 21px;
+			width: 21px;
+			height: 20px;
+			display: inline-block;
+			line-height: 18px;
+		}
+	}
+	.iconfont{
+		font-size: 13px;
+		padding-left: 5px;
+		color: #868181;
+	}
 </style>

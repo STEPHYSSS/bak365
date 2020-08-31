@@ -5,8 +5,9 @@
 			<a-up-img :key="itemData.Img" :url="itemData.Img|setImgPrex" :height="imgHeight" :width="imgHeight"></a-up-img>
 			<!-- <img :src="require('../../assets/img/defaultGood.png')" alt=""> -->
 			<div class="rightBox" style="width:50%">
+				<!-- 商品名称 -->
 				<div class="rightBoxTitle">{{itemData.Name}}</div>
-				<!--            口味：-->
+				<!-- 商品口味：-->
 				<div class="rightBox_tastName" v-if="itemData.TastName">{{itemData.TastName}}</div>
 				<div class="rightBox_quota" v-if="isShoppingCard&&Number(itemData.MaxBuyCnt)>0&&!isOrder">限购{{itemData.MaxBuyCnt}}件</div>
 		
@@ -67,11 +68,11 @@
 			return {
 				// stepperValue: ''
 				// itemDataNew:this.itemData
-				stepperNumOld: ""
+				stepperNumOld: "",
+				kouwei:'',//多口味
 			};
 		},
 		created() {
-			// console.log(this.itemData,'this.itemData')
 			this.stepperNumOld = this.itemData.BuyCnt;
 		},
 		computed: {},
