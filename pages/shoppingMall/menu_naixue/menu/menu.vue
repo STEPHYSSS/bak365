@@ -11,7 +11,7 @@
 							<text v-else @click="toShopAddress">{{currentStoreInfo.Name}}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>
 							<view class="navFlex">
 								<image src='@/static/images/order/location.png' style="width: 30rpx; height: 30rpx;" class="mr-10"></image>
-								<span>距离您 {{currentStoreInfo.Length}}</span>
+								<span>距离您{{currentStoreInfo.Length}}</span>
 							</view>
 						</view>
 						<view class="nav_right">

@@ -3,7 +3,7 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
-		<view>
+		<view v-show="false">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -30,7 +30,28 @@
 			</view>
 		</view>
 		<view class="shopAddress">
-			
+			<view class="search" style="width: 50%;">
+				<uni-search-bar cancelButton="none" :disabledMy="true" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+			</view>
+			<view class="addressList">
+				<view v-for="(item,index) in ShopAddress" :key="index" class="ShopAddress">
+					<view style="display: flex;">
+						<view class="left">
+							<span>武汉K11 Select店</span>
+							<span>距离您{{item.Length}}</span>
+							<span>{{item.Address}}</span>
+						</view>
+						<view class="right">
+							<view>
+								去下单
+							</view>
+							<view class="" @click="call(item.Tel)">
+								拨打电话
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
 		</view>
 		<!-- 门店地址信息 -->
 		
@@ -61,12 +82,15 @@
 				areaList: [],	//用来接收地址列表-			
 				areaInfo: {},// 编辑的地址
 				currentDeliveryType: "",//当前的配送类型
-				title:'门店详情'
+				title:'门店详情',
+				ShopAddress:{},//商家地址
+				Name:'',//门店搜索
 			}
 		},
 		created() {
 			// 获取授权地址
 			this.getAddressList();
+			this.getShopList();
 			
 		},
 		// 当是外卖配送的时候，点击地址的时候获取的是AddressList，
@@ -117,11 +141,6 @@
 							);
 							uni.showToast({title: '删除成功！', icon: 'success'})
 							this.getAddressList()
-							// const index = this.addresses.findIndex(item => item.id == id)
-							// const addresses = JSON.parse(JSON.stringify(this.addresses))
-							// addresses.splice(index, 1)
-							// this.SET_ADDRESSES(addresses)
-							// uni.showToast({title: '删除成功！', icon: 'success'})
 						}
 					}
 				})
@@ -138,6 +157,40 @@
 				}
 				
 			},
+			// 门店地址开始
+			// 获取地址
+			async getShopList() {
+				let {
+					Data
+				} = await vipCard({
+						Action: "GetShopList",
+						DefLongitude: this.location.longitude,
+						DefLatitude: this.location.latitude,
+						Name:this.Name
+					},
+					"UShopOpera"
+				);
+				this.ShopAddress = Data.ShopList;
+				this.$store.commit("SET_CURRENT_STORE",this.ShopAddress)
+			},
+			// 拨打电话
+			call(Tel){
+			 	uni.makePhoneCall({
+			 	// 手机号
+			    phoneNumber: 'Tel', 
+			
+				// 成功回调
+				success: (res) => {
+					console.log('调用成功!')	
+				},
+			
+				// 失败回调
+				fail: (res) => {
+					console.log('调用失败!')
+				}
+				
+			  });
+			}
 		}
 	}
 </script>
@@ -236,6 +289,15 @@
 			-webkit-justify-content: center;
 			justify-content: center;
 			background-color: #ADB838;
+		}
+	}
+	.ShopAddress{
+		background-color: #fff;
+		margin-bottom: 10px;
+		padding: 20px 10px;
+		margin: 10px 10px;
+		.left span{
+			display: block;
 		}
 	}
 </style>
