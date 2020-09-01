@@ -30,7 +30,7 @@
 						</div>
 						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}</div>
 					</div>
-					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
+					<div  style="flex: 1;margin:auto;font-size:14px;color:#909090">
 						选择{{radioModes ===
             2?'收货':'取货'}}地址
 					</div>
@@ -39,12 +39,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- 商品信息 -->
-			<div class="good_card_box">
-				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
-					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
-				</div>
-			</div>
+			
 
 			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />
 
@@ -68,11 +63,16 @@
 					<input type="text" placeholder="请输入收件名字" v-model="name_user">
 				</adCell>
 			</div>
-
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
 				</adCell>
+			</div>
+			<!-- 商品信息 -->
+			<div class="good_card_box">
+				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
+					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
+				</div>
 			</div>
 
 			<adCell text="商品总价格" showArrow="false" showBottomLine="false">
@@ -87,13 +87,15 @@
 					小计：
 					<span class="total-style__color">
 						<span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
-						<span v-if="totalCurrent>0">{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
+						<span v-if="totalCurrent>0 && radioModes === 1">¥{{ProdTotal |spliceNum}}</span>
+						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
 					</span>
 				</span>
 			</div>
-
+			
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
+				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
 						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
@@ -116,7 +118,8 @@
 					</div>
 				</radio-group>
 			</div>
-			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :scoreTatal="totalCurrentScore" :cardInfo="allData.CardInfo"
+			
+			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore" :cardInfo="allData.CardInfo"
 			 @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
 		</div>
 
@@ -239,7 +242,7 @@
 				selectTime: false,
 				discountProgram: false,
 				resultArea: "",
-				areaList: [],
+				areaList: [],//弹出窗地址渲染列表
 				DeliveryAreaList: [],
 				// 收货地址
 				takeOver: [],
@@ -318,6 +321,7 @@
 			}
 		},
 		methods: {
+			// 从商品下单的信息
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
@@ -349,18 +353,16 @@
 					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							// console.log(res, "res");
+							console.log(res,4444)
 							this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-
-							// console.log(Data,77765655)
+							console.log(Data,77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
-							console.log(this.prodList,'商品信息')
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-
+							
 							// this.currentItem.forEach(D => {
 							// 	if (typeof D.PartsNo !== "string") {
 							// 		D.PartsNo.forEach((data, index) => {
@@ -417,14 +419,25 @@
 							}
 
 							this.DeliveryAreaList = Data.ShopInfoList;
+							// if(this.$store.state.orderType === 'takein'){
+							// 	let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							// }
+							console.log(this.radioModes,'配送潍坊')
+							if(this.radioModes === 1){
+								this.areaList = this.DeliveryAreaList;
+								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							}else{
+								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
+								this.currentArea = DefaultsArea ? DefaultsArea : {};
+								this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							}
 							// let DefaultsArea = _.find(this.areaList, {
 							// 	Defaults: "1"
 							// }); 
 							// //是否有默认地址
-							let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
-
-							this.currentArea = DefaultsArea ? DefaultsArea : {};
-							this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							// let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							// this.currentArea = DefaultsArea ? DefaultsArea : {};
+							// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
 
 							// let num = Number(Data.ShopBase.ScopeDay);
 
@@ -515,8 +528,8 @@
 				// 1自取，2 外卖
 				console.log(val,'改变配送方式')
 				this.radioModes = val;
+				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
-
 				this.currentArea = {};
 				if (val === 1) {
 					this.totalCurrent = this.total - this.freight;
@@ -531,6 +544,7 @@
 				this.totalCurrent = parseFloat(Number(this.totalCurrent).toFixed(2));
 			},
 			radioChange() {
+				// 控制地址的展示
 				this.showAreaList = true;
 				this.$refs.showAreaList.open()
 			},
@@ -949,7 +963,9 @@
 
 <style lang="less">
 	@import "../../../assets/css/radioModes";
-
+	.setADcell{
+		margin: 5px 0;
+	}
 	.confirm-order-style {
 		margin-bottom: 80px;
 
@@ -971,8 +987,14 @@
 		.radio-group-play {
 			background-color: #fff;
 			align-items: center;
-			padding: 26rpx 24rpx;
-
+			padding: 5px 24rpx;
+			margin-top: 5px;
+			.payStyle{
+				background: rgb(255, 255, 255);
+				font-size: 14px;
+				color: rgb(90, 91, 92);
+				padding: 13px 0px;
+			}
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;

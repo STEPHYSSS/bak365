@@ -233,18 +233,50 @@
 		}
 
 		.nav_left {
+			// display: flex;
+			// flex-direction: column;
+			// font-size: 16px;
+			flex: 1;
 			display: flex;
 			flex-direction: column;
-			font-size: 16px;
-
-			.navFlex {
+			.store-name {
 				display: flex;
-				margin-top: 5px;
-
-				span {
-					font-size: 12px;
-					color: #919293;
-					padding-left: 5px;
+				justify-content: flex-start;
+				align-items: center;
+				font-size: 17px;
+				margin-bottom: 10rpx;
+			
+				.iconfont {
+					margin-left: 10rpx;
+					line-height: 100%;
+				}
+			}
+			.store-location {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				color: #919293;
+				font-size: 13px;
+				.iconfont {
+					vertical-align: middle;
+					display: table-cell;
+					// color: $color-primary;
+					line-height: 100%;
+				}
+				image{
+					padding-right: 5px;
+					width: 30rpx;
+					height: 30rpx;
+				}
+			}
+			.nav_leftAdd{
+				display: inline-block;
+				margin-bottom: 5px;
+				.addresName{
+					font-size: 15px;
+					font-weight: 700;
+					display: inline-block;
+					margin-left: 5px;
 				}
 			}
 		}
@@ -664,7 +696,6 @@
 						height: 2rpx;
 						transform: scaleY(.6);
 					}
-
 					.left {
 						flex: 1;
 						display: flex;

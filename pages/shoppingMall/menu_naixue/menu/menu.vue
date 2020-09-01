@@ -6,12 +6,32 @@
 			<view class="main">
 				<view class="nav">
 					<view class="header">
-						<view class="nav_left">
+						<!-- <view class="nav_left">
 							<text v-if="addressName">{{addressName}} </text>
 							<text v-else @click="toShopAddress">{{currentStoreInfo.Name}}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>
 							<view class="navFlex">
 								<image src='@/static/images/order/location.png' style="width: 30rpx; height: 30rpx;" class="mr-10"></image>
 								<span>距离您{{currentStoreInfo.Length}}</span>
+							</view>
+						</view> -->
+						<view class="nav_left" v-if="$store.state.orderType == 'takein'">
+							<view class="store-name" @click="toShopAddress">
+								<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
+							</view>
+							<view class="store-location">
+								<image src='/static/images/order/location.png'></image>
+								<text style="color: #919293;">距离您 {{ currentStoreInfo.Length }}</text>
+							</view>
+						</view>
+						<view class="nav_left overflow-hidden" v-else>
+							<view class="nav_leftAdd">
+								<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
+								<view class="addresName">
+									{{ addressName }}
+								</view>
+							</view>
+							<view style="color: #919293;">
+								由<text style="margin: 0 10rpx;color: #5A5B5C;">{{ currentStoreInfo.Name }}</text>配送
 							</view>
 						</view>
 						<view class="nav_right">
@@ -239,7 +259,6 @@
 </template>
 
 <script>
-	import goods from '../../../../api/goods.js'
 	import modal from '@/components/modal/modal'
 	import popupLayer from '@/components/popup-layer/popup-layer'
 	import Mixins from "../../mixins.js"
@@ -276,7 +295,6 @@
 				currentIndex: 0,
 				currentIndex2: 0,
 				currentStoreInfo:{},//商家地址
-				Address:'小吃店',//搜索
 
 			}
 		},
@@ -287,10 +305,11 @@
 			this.getWxConfig() // 获取授权地址
 			await this.getShopList()
 			this.currentType = this.goods[0];
+			this.cart = uni.getStorageSync('cart') || []
+			console.log(this.cart,'获取同步缓存的商品信息')
 		},
 		components: {
-			goods,
-			modal,
+			modal
 		},
 		computed: {
 			goodCartNum() { //计算单个饮品添加到购物车的数量
@@ -348,13 +367,12 @@
 				} = await vipCard({
 						Action: "GetShopList",
 						DefLongitude: this.location.longitude,
-						DefLatitude: this.location.latitude,
-						Name:this.Address
+						DefLatitude: this.location.latitude
 					},
 					"UShopOpera"
 				);
 				this.currentStoreInfo = {
-					Name: Data.ShopList[0].Name,
+					Name: Data.ShopList[0].Name,	
 					Address: Data.ShopList[0].Address,
 					SID: Data.ShopList[0].SID,
 					Length:Data.ShopList[0].Length
@@ -452,9 +470,17 @@
 			// 点击自取和外卖时状态改变
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');
+				// this.addressName = ''
 			},
 			// 点击跳转到门店地址列表
-			toShopAddress(){},
+			toShopAddress(){
+				this.$Router.push({
+					path: '/pages/myAddress/myAddress',
+					query: {
+						flag: 'shop'
+					}
+				})
+			},
 			toAddress() {
 				this.$store.commit("SET_ORDER_TYPE", 'takeout');
 				this.$Router.push({
@@ -622,22 +648,13 @@
 			// 点击图片或者选择规格时弹窗里的加入购物车按钮
 			async AddToCartInModal(good) {
 				// 点击的时候会把商品信息带入，数量buycut，价格
-				// const product = Object.assign()
-				// const product = Object.assign({}, this.good, {props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
-				// this.handleAddToCart(good, this.good.number)
 				if(good.SpecType === '1'){
 					this.handleAddToCart(good, this.good.number, '单规格')
 				}else{
 					this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
 				}
-				// this.handleAddToCart(this.normsList[this.currentIndex], this.good.number, '多规格')
 				this.closeGoodDetailModal()
 			},
-			// changePropertyDefault(index, key) { //改变默认属性值
-			// 	this.good.property[index].values.forEach(value => this.$set(value, 'is_default', 0))
-			// 	this.good.property[index].values[key].is_default = 1
-			// 	this.good.number = 1
-			// },
 
 			closeGoodDetailModal() { //关闭饮品详情模态框
 				this.goodDetailModalVisible = false
@@ -720,11 +737,7 @@
 					this.$set(val, 'cartNum', num);
 				});
 			},
-			toPay() { //去结算
-				// if(!this.isLogin){
-				// 	uni.navigateTo({url: '/pages/login/login'})
-				// 	return
-				// }				
+			toPay() { //去结算			
 				uni.showLoading({
 					title: '加载中'
 				})
@@ -771,7 +784,6 @@
 
 				// uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
 				// let currentItem = JSON.parse(JSON.stringify(this.cart));
-				// console.log(currentItem);
 				// this.$store.commit("SET_CURRENT_CARD", currentItem);
 				// this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				uni.hideLoading()
@@ -781,9 +793,7 @@
 			imgFilter(val){
 				let localUrl = window.location.href;
 				let localToken =localUrl.split("#")[0]
-				// console.log(localToken+`../`+val)
 				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
-				
 			}
 		}
 	}

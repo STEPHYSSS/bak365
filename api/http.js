@@ -18,7 +18,7 @@ export const vipCard = (data, ViewKay, businNo) => {
 					let UserMACPhone = Cookies.get('UserMACPhone')
 					let BusinNo = Cookies.get('BusinNo') ? Cookies.get('BusinNo') : businNo
 					// let BusinNo = '1'
-					let urlaspx = 'Inter/RenderMobile.aspx'
+					let urlaspx = 'RenderMobile.aspx'
 					let url = dataConfig.url + urlaspx + '?BusinNo=' + BusinNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
 

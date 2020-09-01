@@ -23,8 +23,8 @@
 				uni.setTabBarItem({
 					index: 1,
 					text: '点餐',
-					iconPath: 'static/images/tabBar/drink.png',
-					selectedIconPath: 'static/images/tabBar/drink_selected.png'
+					iconPath: 'static/img/drink.png',
+					selectedIconPath: 'static/img/drink_selected2.png'
 				})
 				// uni.setTabBarItem({
 				// 	index: 2,
@@ -44,12 +44,12 @@
 				// 	iconPath: 'static/img/gouwuche.png',
 				// 	selectedIconPath: 'static/img/select-gouwuche1.png'
 				// })
-				// uni.setTabBarItem({
-				// 	index: 3,
-				// 	text: '自定义模块',
-				// 	iconPath: 'static/img/home.png',
-				// 	selectedIconPath: 'static/img/select-home1.png'
-				// })
+				uni.setTabBarItem({
+					index: 3,
+					text: '自定义模块',
+					iconPath: 'static/img/home.png',
+					selectedIconPath: 'static/img/select-home1.png'
+				})
 				getApp().globalData.mainColor = mainColor
 				Cookie.set('mainColor', mainColor)
 			}

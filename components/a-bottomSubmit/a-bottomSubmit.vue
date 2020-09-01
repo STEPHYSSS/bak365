@@ -11,7 +11,8 @@
 				合计：
 				<div class="bottom-submit-style__price" style="display: inline-block;">
 					<span v-if="scoreTatal">{{scoreTatal|spliceNum}}积分</span>
-					<span>{{allMoney>0&&scoreTatal?'+':''}}¥{{allMoney |spliceNum}}</span>
+					<span v-if="isType === 'isType'">{{allMoney>0&&scoreTatal?'+':''}}¥{{ziquSumMoney}}</span>
+					<span v-else>{{allMoney>0&&scoreTatal?'+':''}}¥{{ allMoney }}</span>
 				</div>
 			</div>
 			<div style="margin-right: 6px;">
@@ -28,7 +29,9 @@
 		props: {
 			batchState: [Boolean],
 			allMoney: [String, Number],
+			ziquSumMoney:[String, Number],
 			scoreTatal: [String, Number],
+			isType:[String, Number],
 			isOrder: {
 				type: Boolean,
 				default: false

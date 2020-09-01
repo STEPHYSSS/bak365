@@ -3,7 +3,7 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
-		<view v-show="false">
+		<view v-show="$Route.query.flag == 'towaimai'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -29,24 +29,25 @@
 				<button type="primary" size="default" @tap="add">新增地址</button>
 			</view>
 		</view>
-		<view class="shopAddress">
-			<view class="search" style="width: 50%;">
-				<uni-search-bar cancelButton="none" :disabledMy="true" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+		<view class="shopAddress" v-show="$Route.query.flag == 'shop'">
+			<view class="search" style="width: 96%;">
+				<uni-search-bar cancelButton="none" :disabledMy="false" style="width:100%" @confirm="confirm" placeholder="请输入搜索关键词" v-model="Name" :radius="50"></uni-search-bar>
+				<!-- <uni-search-bar placeholder="请输入内容" @input="input"></uni-search-bar> -->
 			</view>
 			<view class="addressList">
 				<view v-for="(item,index) in ShopAddress" :key="index" class="ShopAddress">
 					<view style="display: flex;">
-						<view class="left">
-							<span>武汉K11 Select店</span>
-							<span>距离您{{item.Length}}</span>
-							<span>{{item.Address}}</span>
+						<view class="left" @click="toDownOrder(item)">
+							<span class="span1">{{item.Name}}</span>
+							<span class="span2">距离您{{item.Length}}</span>
+							<span class="span3">{{item.Address}}</span>
 						</view>
 						<view class="right">
-							<view>
+							<view style="color: #ADB838;font-size: 13px;" @click="toDownOrder(item)">
 								去下单
 							</view>
-							<view class="" @click="call(item.Tel)">
-								拨打电话
+							<view class="iconPhone" @click="call(item.Tel)">
+								<span class="iconfont icon-bodadianhua" style="color: #AAB63A;font-size: 26px;"></span>
 							</view>
 						</view>
 					</view>
@@ -107,7 +108,7 @@
 				this.areaList =  Data.AddressList;
 			},
 			// 
-			chooseAddress(item){				
+			chooseAddress(item){
 				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:item.Address}})
 			},
 			add() {
@@ -150,7 +151,7 @@
 			clickLeft(){
 				if(this.$Route.query.flag == 'login'){
 					this.$Router.push('/pages/shoppingMall/login')
-				}else if(this.$Route.query.flag == 'towaimai'){
+				}else if(this.$Route.query.flag == 'towaimai'|| this.$Route.query.flag == 'shop'){
 					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
 				}else{
 					this.$Router.push('/pages/home')
@@ -158,6 +159,11 @@
 				
 			},
 			// 门店地址开始
+			
+			confirm(e){//搜索
+				this.Name = e.value;
+				this.getShopList();
+			},
 			// 获取地址
 			async getShopList() {
 				let {
@@ -172,6 +178,18 @@
 				);
 				this.ShopAddress = Data.ShopList;
 				this.$store.commit("SET_CURRENT_STORE",this.ShopAddress)
+			},
+			toDownOrder(item){//选择地址
+				let currentStoreInfo = {
+					Name: item.Name,
+					Address: item.Address,
+					SID: item.SID,
+					Length:item.Length
+				}
+				// this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{
+				// 	currentStoreInfo:currentStoreInfo
+				// }})
 			},
 			// 拨打电话
 			call(Tel){
@@ -293,11 +311,44 @@
 	}
 	.ShopAddress{
 		background-color: #fff;
-		margin-bottom: 10px;
-		padding: 20px 10px;
+		padding:10px;
 		margin: 10px 10px;
-		.left span{
-			display: block;
+		.left{
+			width: 65%;
+			box-sizing: border-box;
+			span{
+				display: block;
+			}
+			.span1{
+				font-weight: 700;
+				font-size: 15px;
+				margin-bottom: 10px;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				width: 70%;
+			}
+			.span2{
+				color: #5a5858;
+			}
+			.span3{
+				color: #9c9898;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				width: 90%;
+			}
+			.span2,.span3{
+				margin-bottom: 5px;
+			}
+		}
+		.right{
+			text-align: right;
+			flex: 1;
+			.iconPhone{
+				margin-top: 23px;
+				margin-right: 5px;
+			}
 		}
 	}
 </style>

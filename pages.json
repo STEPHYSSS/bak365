@@ -186,24 +186,17 @@
 				"pagePath":"pages/shoppingMall/login"
 			},
 			{
-				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu",
-				"iconPath": "static/images/tabBar/drink.png",
-				"selectedIconPath": "static/images/tabBar/drink_selected.png"				
+				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu"		
 			},
-			// {	
-			// 	"pagePath": "pages/shoppingMall/shoppingCart/index",
-			// 	"iconPath": "static/images/tabBar/take.png",
-			// 	"selectedIconPath": "static/images/tabBar/take_selected.png"
-			// },
 			// {
 			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
 			// },
 			{
 				"pagePath": "pages/home"
-			}	
-			// {
-			// 	"pagePath": "pages/shoppingMall/index"				
-			// }
+			},	
+			{
+				"pagePath": "pages/shoppingMall/index"				
+			}
 		]
 	}
 }

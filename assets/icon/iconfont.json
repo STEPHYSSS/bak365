@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "13090672",
+      "name": "拨打电话",
+      "font_class": "bodadianhua",
+      "unicode": "e69c",
+      "unicode_decimal": 59036
+    },
+    {
       "icon_id": "4141107",
       "name": "会员码icons",
       "font_class": "huiyuanmaicons",
