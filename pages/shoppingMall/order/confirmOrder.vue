@@ -4,7 +4,6 @@
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
 		<div v-if="prodList.length>0">
 			<div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
-				<!-- :class="{active: $store.state.orderType == 'takein'}" -->
 				<div :class="['changeMode','changeModeLeft',radioModes === 2?'borderColor':'']" @click="changeMode(2)" v-if="currentDeliveryType.indexOf('2')>-1||currentDeliveryType.indexOf('3')>-1">
 					<span v-if="radioModes === 2" class="iconfont icon-xuanzhong changeTopIcon"></span>
 					<image class="changeModeImg" src="/static/assets/img/Pack.png" />
@@ -30,13 +29,13 @@
 						</div>
 						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}</div>
 					</div>
-					<div  style="flex: 1;margin:auto;font-size:14px;color:#909090">
-						选择{{radioModes ===
-            2?'收货':'取货'}}地址
-					</div>
-					<div style="margin:auto 8px;color:#909090">
-						<uni-icons type="arrowright" />
-					</div>
+					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
+								选择{{radioModes ===
+					2?'收货':'取货'}}地址
+							</div>
+							<div style="margin:auto 8px;color:#909090">
+								<uni-icons type="arrowright" />
+							</div>
 				</div>
 			</div>
 			
@@ -52,17 +51,17 @@
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
 				<view>{{UserDiscount}}</view>
 			</adCell>
-
+			<div class="setADcell" v-if="radioModes === 1">
+				<adCell text="姓名" showArrow="false">
+					<input type="text" placeholder="请输入收件名字" v-model="name_user">
+				</adCell>
+			</div>
 			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="手机号码" showArrow="false">
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
 				</adCell>
 			</div>
-			<div class="setADcell" v-if="radioModes === 1">
-				<adCell text="收件名字" showArrow="false">
-					<input type="text" placeholder="请输入收件名字" v-model="name_user">
-				</adCell>
-			</div>
+			
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
@@ -353,7 +352,6 @@
 					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							console.log(res,4444)
 							this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
@@ -422,10 +420,10 @@
 							// if(this.$store.state.orderType === 'takein'){
 							// 	let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
 							// }
-							console.log(this.radioModes,'配送潍坊')
 							if(this.radioModes === 1){
 								this.areaList = this.DeliveryAreaList;
-								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+								let DefaultsArea = this.areaList[0]
+								this.currentArea = DefaultsArea ? DefaultsArea : {}
 							}else{
 								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
 								this.currentArea = DefaultsArea ? DefaultsArea : {};
@@ -530,7 +528,9 @@
 				this.radioModes = val;
 				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
-				this.currentArea = {};
+				console.log(this.areaList[0])
+				this.currentArea = this.areaList[0];
+				
 				if (val === 1) {
 					this.totalCurrent = this.total - this.freight;
 					// this.currentArea = {};

@@ -11,7 +11,7 @@
 				合计：
 				<div class="bottom-submit-style__price" style="display: inline-block;">
 					<span v-if="scoreTatal">{{scoreTatal|spliceNum}}积分</span>
-					<span v-if="isType === 'isType'">{{allMoney>0&&scoreTatal?'+':''}}¥{{ziquSumMoney}}</span>
+					<span v-if="isType === 1">¥{{ziquSumMoney}}</span>
 					<span v-else>{{allMoney>0&&scoreTatal?'+':''}}¥{{ allMoney }}</span>
 				</div>
 			</div>

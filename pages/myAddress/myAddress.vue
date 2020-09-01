@@ -3,7 +3,7 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
-		<view v-show="$Route.query.flag == 'towaimai'">
+		<view v-if="$Route.query.flag == 'towaimai'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -152,7 +152,8 @@
 				if(this.$Route.query.flag == 'login'){
 					this.$Router.push('/pages/shoppingMall/login')
 				}else if(this.$Route.query.flag == 'towaimai'|| this.$Route.query.flag == 'shop'){
-					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+					// this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
 				}else{
 					this.$Router.push('/pages/home')
 				}
