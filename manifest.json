@@ -56,6 +56,7 @@
         "router" : {
             "base" : "./"
         },
-        "domain" : "http://dingtalk.bak365.cn/WeixinNew/Dist/"
+        "domain" : "http://dingtalk.bak365.cn/WeixinNew/Dist/",
+        "title" : "烘焙365"
     }
 }

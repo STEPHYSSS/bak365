@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "11875953",
+      "name": "定位 位置",
+      "font_class": "dingweiweizhi",
+      "unicode": "e703",
+      "unicode_decimal": 59139
+    },
+    {
+      "icon_id": "11939694",
+      "name": "通讯录",
+      "font_class": "tongxunlu",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
       "icon_id": "13090672",
       "name": "拨打电话",
       "font_class": "bodadianhua",

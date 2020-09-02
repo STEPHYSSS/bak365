@@ -3,7 +3,8 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
-		<view v-if="$Route.query.flag == 'towaimai'">
+		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
+		 <view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -16,7 +17,7 @@
 								<view class="left flex-fill overflow-hidden mr-20">
 									<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
 									{{item.Name}}
-									<span v-if="item.Sex">{{item.Sex | setSex}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<span v-if="item.Sex">{{item.Sex | setSex2}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
 									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
 								</view>
 								<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
@@ -29,7 +30,7 @@
 				<button type="primary" size="default" @tap="add">新增地址</button>
 			</view>
 		</view>
-		<view class="shopAddress" v-show="$Route.query.flag == 'shop'">
+		<view class="shopAddress" v-if="$Route.query.flag == 'shop'">
 			<view class="search" style="width: 96%;">
 				<uni-search-bar cancelButton="none" :disabledMy="false" style="width:100%" @confirm="confirm" placeholder="请输入搜索关键词" v-model="Name" :radius="50"></uni-search-bar>
 				<!-- <uni-search-bar placeholder="请输入内容" @input="input"></uni-search-bar> -->
@@ -89,10 +90,19 @@
 			}
 		},
 		created() {
-			// 获取授权地址
+			this.getWxConfig(); // 获取授权地址
 			this.getAddressList();
 			this.getShopList();
-			
+			console.log(this.location)
+		},
+		filters:{
+			setSex2(val){
+				if(val==0){
+					return '先生'
+				}else if(val==1){
+					return '女士'
+				}
+			}
 		},
 		// 当是外卖配送的时候，点击地址的时候获取的是AddressList，
 		// 到店自取的时候是shopInfoList,接口是settlepay这个接口
@@ -106,10 +116,24 @@
 					"UMemberOpera"
 				);
 				this.areaList =  Data.AddressList;
+				this.$store.commit("SET_CURRENT_STORE",this.areaList)
 			},
 			// 
 			chooseAddress(item){
-				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:item.Address}})
+				if(this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login'){
+					let currentStoreOut = {
+						Name: item.Name,
+						Address: item.Address,
+						SID: item.SID,
+						Length:item.Length,
+						Mobile:item.Mobile
+					}
+					sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreOut));
+					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
+					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:item.Address}})
+				}else{
+					console.log('555')
+				}
 			},
 			add() {
 				uni.navigateTo({
@@ -117,18 +141,12 @@
 				})
 			},
 			edit(val) {
-				// uni.navigateTo({
-				// 	url: '/pages/address/add?id=' + id
-				// })
 				this.$Router.push({path:'/pages/myAddress/add',query:{
 					areaInfo:val
 				}})
-				// this.areaInfo = val;
-				
-				// this.$refs.addEditArea.open()
-				// this.addEditArea = true;
 			},
-			handleSwipeClick(id) {								
+			// 删除
+			handleSwipeClick(id) {
 				uni.showModal({
 					title: '提示',
 					content: '确定要删除？',
@@ -186,12 +204,13 @@
 					Address: item.Address,
 					SID: item.SID,
 					Length:item.Length
-				}
-				// this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
-				// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{
-				// 	currentStoreInfo:currentStoreInfo
-				// }})
+				}				
+				this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{
+					flag:'Deflocation'
+				}})
 			},
+			
 			// 拨打电话
 			call(Tel){
 			 	uni.makePhoneCall({

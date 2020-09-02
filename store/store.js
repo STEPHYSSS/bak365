@@ -34,9 +34,9 @@ const store = new Vuex.Store({
 		['SET_CURRENT_STORE'](state, data) {
 			state.currentStoreInfo = data
 			Cookies.set('currentStoreInfo', data)
+			console.log(state.currentStoreInfo,'地址改变了')
 		},
 		['SET_CURRENT_CARD'](state, data) {
-			console.log(state,data,'shagnp')
 			state.currentCard = data
 			Cookies.set('currentCard', data)
 		},

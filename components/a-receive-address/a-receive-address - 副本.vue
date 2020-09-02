@@ -1,41 +1,46 @@
 <template>
-	<view>
+	<div>
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
-		<view class="main">
+		<div>
 			<div class="setADcell">
-				<adCell text="收货人" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
-						<text class="iconfont icon-tongxunlu" style="float: right;" @click="getWxAddress"></text>
-					</div>
+				<adCell text="收货地址" @click="tenxButton" showArrow="false">
+					<span>{{form.Address?form.Address:'点击选择'}}</span>
 				</adCell>
-				<adCell text="性别" showArrow="false">
-					<div class="widthBox">
-						<view class="radio-group">
-							<view class="radio" :class="{'checked': !form.Sex}" style="margin-right: 10rpx;" @tap="form.Sex=0">先生</view>
-							<view class="radio" :class="{'checked': form.Sex}" @tap="form.Sex=1">女士</view>
-						</view>
-					</div>
-				</adCell>
-				<adCell text="手机号" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
-					</div>
-				</adCell>
-				<adCell text="收货地址" showArrow="false" @click="tenxButton">
-					<div class="widthBox"><span>{{form.Address?form.Address:'点击选择'}}</span></div>
-				</adCell>
+			</div>
+			<div class="setADcell">
 				<adCell text="门牌号" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室"></div>
+					<input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室">
+				</adcell>
+			</div>
+			<div class="setADcell">
+				<adCell text="联系人" showArrow="false">
+					<input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">
 				</adCell>
+			</div>
+
+			<div class="setADcell">
+				<adCell text="性别" showArrow="false">
+					<radio-group v-model="form.Sex" style="text-align:center" @change="radioChangeSex">
+						<radio style="display: inline-flex;margin-right:10px" value="1" :checked="form.Sex==='0'">先生</radio>
+						<radio style="display: inline-flex;" value="2" :checked="form.Sex==='1'">女士</radio>
+					</radio-group>
+				</adCell>
+			</div>
+			<div class="setADcell">
+				<adCell text="手机号" showArrow="false">
+					<input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
+				</adCell>
+			</div>
+			<div class="setADcell setWidth">
 				<adCell text="设置为默认地址" showArrow="false">
-					<div class="widthBox" style="width: 40%;"><switch @change="switchChange" style="position: absolute;top: 7px;left: 33%;transform:scale(0.8)"/></div>
+					<switch @change="switchChange" />
 				</adCell>
 			</div>
-			<div style="margin-top:50px;padding:0 20px;">
-				<button type="main" size="large" @click="saveArea" style="background-color: #ADB838;color: #fff;" :disabled="disabledLoad">保存</button>
-			</div>
-		</view>
-		<!-- 地址popup -->
+		</div>
+		<div style="margin-top:50px;padding:0 20px;">
+			<button type="main" size="large" @click="saveArea" :disabled="disabledLoad">保存地址</button>
+		</div>
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
 			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0" :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
@@ -46,51 +51,46 @@
 			<!-- #endif -->
 		</uni-popup>
 		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" cancelColor="#999" themeColor="#007AFF"></simple-address>
-	</view>
+	</div>
 </template>
+
 <script>
-	import { vipCard,getSuggestion } from "@/api/http.js";
+	import {
+		vipCard,
+		getSuggestion
+	} from "@/api/http.js";
 	import areaLists from "@/config/area_json/area";
+	import {
+		checkMobile
+	} from "@/util/publicFunction";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-	import { checkMobile } from "@/util/publicFunction";
-	import wxAddress from "@/pages/myAddress/wxAddress.js";
-	export default{
+
+	export default {
 		name: "index",
-		wxAddress: [wxAddress],
 		components: {
 			adCell
 		},
-		data(){
-			return{
-				areaInfo: {},
-				currentDeliveryType: '',
+		props: {
+			areaInfo: [Object],
+			currentDeliveryType: [String, Number]
+		},
+		data() {
+			return {
 				specificArea: false,
 				logisticsArea: false,
 				isAdd: false,
 				form: {
-					Sex: 0,
-					Name:'',
-					Mobile:'',
-					Address:'',
-					House:''
+					Sex: "0"
 				},
 				location: {},
 				areaList: areaLists,
 				disabledLoad: false,
 				specificAreaHead: false,
-				cityPickerValueDefault: [0, 0, 1],
-				edotAddress:this.$Route.query.areaInfo
-			}
+				cityPickerValueDefault: [0, 0, 1]
+			};
 		},
-		// async onLoad(){
-		// 	await this.getWxConfig();
-		// },
 		created() {
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
-			
-			if(this.$Route.query.areaInfo){
-				this.areaInfo = this.edotAddress;
-			}
 			if (JSON.stringify(this.areaInfo) !== "{}") {
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
 				this.form.Defaults = this.form.Defaults === "1" ? true : false;
@@ -103,10 +103,9 @@
 			} else {
 				this.location = this.$store.state.currentLocation; //当前的位置
 			}
-			console.log(this.location);
-		
+
 			let _this = this;
-		
+
 			// #ifdef H5
 			window.addEventListener(
 				"message",
@@ -125,82 +124,55 @@
 							_this.$set(_this.form, 'Latitude', loc.latlng.lat)
 							_this.$set(_this.form, 'Longitude', loc.latlng.lng)
 						})
-		
+
 					}
 				},
 				false
 			);
 			// #endif
 		},
-		methods:{
-			getWxAddress(){
-				uni.chooseAddress({
-				  success(res) {
-					  alert(res.userName);
-				    console.log(res.userName)
-				    console.log(res.postalCode)
-				    console.log(res.provinceName)
-				    console.log(res.cityName)
-				    console.log(res.countyName)
-				    console.log(res.detailInfo)
-				    console.log(res.nationalCode)
-				    console.log(res.telNumber)
-				  }
-				})
-				// wx.openAddress({
-				//   success: function (res) {
-				//     let address = '';
-				//     self.form.Name = res.userName; // 收货人姓名
-				//     self.form.Mobile = res.telNumber; // 收货人手机号码
-				//     let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
-				//     let cityName = res.cityName; // 国标收货地址第二级地址（市）
-				//     let countryName = res.countryName; // 国标收货地址第三级地址（国家）
-				//     let detailInfo = res.detailInfo; // 详细收货地址信息
-				//     address+=provinceName+cityName+countryName+detailInfo;
-				//     self.address = address;
-				//   }})
-			},
+		methods: {
 			clickGo() {
-				debugger
 				if (this.specificAreaHead) {
 					this.specificArea = false;
 					this.specificAreaHead = false
 					this.$refs.specificArea.close()
 				} else {
-					// this.$emit("clickGo");
-					this.$Router.push({path:'/pages/myAddress/myAddress',query:{
-						flag:'towaimai'
-					}})
+					this.$emit("clickGo");
 				}
 			},
-			// 默认地址
+			radioChangeSex(val) {
+				this.form.Sex = val.detail.value
+			},
 			switchChange(val) {
 				//true,false
 				this.form.Defaults = val.detail.value
 			},
-			// 点击选择地址按钮
+			clickGoAddress() {
+
+			},
 			tenxButton() {
-				// if (Number(this.DeliveryType) === 2) {
+				if (Number(this.DeliveryType) === 2) {
 					this.specificArea = true;
 					this.$refs.specificArea.open()
 					this.specificAreaHead = true
-				// } else {
-				// 	this.logisticsArea = true;
-				// 	this.$refs.logisticsArea.open()
-				// }
+				} else {
+					this.logisticsArea = true;
+					this.$refs.logisticsArea.open()
+				}
 			},
 			confirmArea(val) {
 				this.logisticsArea = false;
 				this.$refs.logisticsArea.close()
 				this.form.Address = val.label;
 				this.form.Type = 2;
-			
+
 				this.form.Province = val.labelArr[0];
 				this.form.City =  val.labelArr[1];
 				this.form.District =  val.labelArr[2];
 			},
-			// 保存地址
 			async saveArea() {
+				// console.log(this.form, "this.form");
 				if (!this.form.Address) {
 					this.$toast("选择地址");
 					return;
@@ -229,22 +201,19 @@
 						Action: "SetAddress"
 					};
 					Object.assign(obj, this.form);
-			
+
 					// console.log(obj,'obj')
 					obj.Defaults = obj.Defaults === true ? 1 : 0;
-			
+
 					let {
 						Data
 					} = await vipCard(obj, "UMemberOpera");
-					this.$toast("新增成功");
-					// this.$emit("saveArea");
-					this.$Router.push({path:'/pages/myAddress/myAddress'})
+					this.$emit("saveArea");
 					this.disabledLoad = false;
 				} catch (e) {
 					this.disabledLoad = false;
 				}
 			},
-			
 			bindAddress(val) {
 				let _this = this
 				if (_this.$refs.specificArea) {
@@ -259,34 +228,17 @@
 				})
 			},
 		}
-	}
+	};
 </script>
-<style lang="less">
+
+<style scoped lang="less">
 	/deep/.uni-popup__wrapper-box {
 		width: 100%;
-		height: 100%;
 	}
-	.widthBox{
-		width:68%;
-		input{
-			font-size: 12px;
-		}
-		.radio-group {
-			display: flex;
-			justify-content: flex-start;
-			
-			.radio {
-				padding: 10rpx 30rpx;
-				border-radius: 6rpx;
-				border: 1px solid #CCCCCC;
-				margin-right: 6px;
-				&.checked {
-					background-color: #ADB838;
-					color: #ffffff;
-					border: 1px solid #ADB838;
-				}
-			}
+
+	.setWidth {
+		/deep/.headView {
+			width: 118px;
 		}
 	}
 </style>
-

@@ -91,6 +91,7 @@
 
 	.theme2 {
 		.theme(rgb(141, 139, 219), pink, #eee, rgba(141, 139, 219, 0.5));
+		// .theme(rgb(173,184,56), pink, #eee, rgba(173,184,56, 0.5));
 	}
 
 	.theme3 {

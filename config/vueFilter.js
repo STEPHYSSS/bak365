@@ -121,7 +121,7 @@ Vue.filter('setSex', (val) => {
 	}
 	let num = Number(val)
 	if (num) {
-		return num === 1 ? '先生' : '女士'
+		return num == 0 ? '先生' : '女士'
 	} else {
 		return num
 	}

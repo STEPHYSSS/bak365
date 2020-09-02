@@ -2,12 +2,14 @@
 	<div class="confirm-order-style" :class="mainStyle">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="确认订单" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
+		<!-- 当点击外卖配送时，选择地址，缓存未做，选择了新地址，返回到点餐页面，地址渲染有问题，电话调用有问题 -->
 		<div v-if="prodList.length>0">
-			<div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
+			<!--2 外卖 ；3物流-->
+			<!-- <div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
 				<div :class="['changeMode','changeModeLeft',radioModes === 2?'borderColor':'']" @click="changeMode(2)" v-if="currentDeliveryType.indexOf('2')>-1||currentDeliveryType.indexOf('3')>-1">
 					<span v-if="radioModes === 2" class="iconfont icon-xuanzhong changeTopIcon"></span>
 					<image class="changeModeImg" src="/static/assets/img/Pack.png" />
-					<!--                    2 外卖 ；3物流-->
+					
 					<span>{{currentDeliveryType.indexOf('2')>-1?'外卖配送':'物流配送'}}</span>
 				</div>
 				<div :class="['changeMode','changeModeRight',radioModes === 1?'borderColor':'']" @click="changeMode(1)" v-if="currentDeliveryType.indexOf('1')>-1">
@@ -15,7 +17,7 @@
 					<image class="changeModeImg" src="/static/assets/img/Eat.png" />
 					到店自取
 				</div>
-			</div>
+			</div> -->
 			<!-- 展示地址的位置 -->
 			<div @click="radioChange" v-if="!$Route.query.isIntegral">
 				<div class="order-area">
@@ -24,21 +26,18 @@
 					</div>
 					<div v-if="currentArea&&JSON.stringify(currentArea) !== '{}'" style="flex: 1">
 						<div>
-							<span>{{currentArea.Name}}{{currentArea.Sex | setSex}}</span>
+							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>
 							<span class="order-area-phone">{{currentArea.Mobile?currentArea.Mobile:currentArea.Tel}}</span>
 						</div>
 						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}</div>
 					</div>
 					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
-								选择{{radioModes ===
+						选择{{radioModes ===
 					2?'收货':'取货'}}地址
-							</div>
-							<div style="margin:auto 8px;color:#909090">
-								<uni-icons type="arrowright" />
-							</div>
+					</div>
 				</div>
 			</div>
-			
+
 
 			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />
 
@@ -54,14 +53,18 @@
 			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="姓名" showArrow="false">
 					<input type="text" placeholder="请输入收件名字" v-model="name_user">
+					<text class="iconfont icon-tongxunlu" @click="getOpenAddress"></text>
 				</adCell>
-			</div>
-			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="手机号码" showArrow="false">
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
 				</adCell>
 			</div>
-			
+			<!-- <div class="setADcell" v-if="radioModes === 1">
+				<adCell text="手机号码" showArrow="false">
+					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
+				</adCell>
+			</div> -->
+
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
@@ -91,7 +94,7 @@
 					</span>
 				</span>
 			</div>
-			
+
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
 				<view class="payStyle">支付方式</view>
@@ -117,9 +120,9 @@
 					</div>
 				</radio-group>
 			</div>
-			
-			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore" :cardInfo="allData.CardInfo"
-			 @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
+
+			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore"
+			 :cardInfo="allData.CardInfo" @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
 		</div>
 
 		<div class="changeAreaStyle">
@@ -136,7 +139,7 @@
 								<div>{{item.Address}}&nbsp;{{item.House}}</div>
 								<div class="bottom-area__phone">
 									{{item.Name}}
-									<span v-if="item.Sex">{{item.Sex | setSex}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<span v-if="item.Sex">{{item.Sex | setSex2}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
 									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
 								</div>
 							</div>
@@ -179,14 +182,13 @@
 		</uni-popup> -->
 		<uni-popup ref="discountProgram" type="bottom">
 			<radio-group @change="setDiscountClick">
-				<ad-cell text="暂不使用" @click="DiscountClick('undefined')" showArrow="false" >
-					<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" 
-					 :checked="'undefined' === radioDiscount"/>
+				<ad-cell text="暂不使用" @click="DiscountClick('undefined')" showArrow="false">
+					<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
 				</ad-cell>
 				<div v-for="(item,index) in DiscountList" :key="index">
 					<adCell :text="item.PrefName" showArrow="false" showBottomLine="false" @click="DiscountClick(item)">
 						<span style="margin-right: 20px">-¥{{item.DiscPrice || 0}}</span>
-						<radio :value="item.PrefNo"  :checked="item.PrefNo === radioDiscount"/>
+						<radio :value="item.PrefNo" :checked="item.PrefNo === radioDiscount" />
 					</adCell>
 				</div>
 			</radio-group>
@@ -215,15 +217,9 @@
 			// receiveAddress
 			adCell
 		},
-		mounted() {
-			if (this.$store.state.orderType === 'takein') {
-				this.radioModes = 1;
-			} else {
-				this.radioModes = 2;
-			}
-		},
+		
 		data() {
-			return {				
+			return {
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
 				loading: true,
@@ -241,7 +237,7 @@
 				selectTime: false,
 				discountProgram: false,
 				resultArea: "",
-				areaList: [],//弹出窗地址渲染列表
+				areaList: [], //弹出窗地址渲染列表
 				DeliveryAreaList: [],
 				// 收货地址
 				takeOver: [],
@@ -291,6 +287,7 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
+			console.log(this.$store.state.currentStoreInfo)
 			// 获取授权地址
 			await this.getWxConfig();
 
@@ -308,7 +305,7 @@
 					D.PartsNo = arr.join(",");
 				}
 			});
-			
+
 			// console.log(item, 7777);
 			this.currentItem = JSON.stringify(item);
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
@@ -319,6 +316,15 @@
 				await this.getInfo();
 			}
 		},
+		mounted() {
+			if (this.$store.state.orderType === 'takein') {
+				this.radioModes = 1;
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				this.currentArea = currentStore.data;
+			} else {
+				this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+			}
+		},
 		methods: {
 			// 从商品下单的信息
 			async getInfo() {
@@ -327,8 +333,8 @@
 				try {
 					if (!this.location.longitude) {
 						uni.showToast({
-						    title: '地址获取失败',
-						    duration: 2000
+							title: '地址获取失败',
+							duration: 2000
 						});
 						throw "地址获取失败";
 					}
@@ -352,15 +358,19 @@
 					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							this.areaList = res[0];
+							// this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-							console.log(Data,77765655)
+							console.log(Data, 77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-							
+							if(this.radioModes === 1){
+								this.areaList = Data.ShopInfoList;
+							}else{
+								this.areaList = res[0];
+							}
 							// this.currentItem.forEach(D => {
 							// 	if (typeof D.PartsNo !== "string") {
 							// 		D.PartsNo.forEach((data, index) => {
@@ -420,15 +430,16 @@
 							// if(this.$store.state.orderType === 'takein'){
 							// 	let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
 							// }
-							if(this.radioModes === 1){
-								this.areaList = this.DeliveryAreaList;
-								let DefaultsArea = this.areaList[0]
-								this.currentArea = DefaultsArea ? DefaultsArea : {}
-							}else{
-								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
-								this.currentArea = DefaultsArea ? DefaultsArea : {};
-								this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
-							}
+							// if (this.radioModes === 1) {
+							// 	this.areaList = this.DeliveryAreaList;
+							// 	let DefaultsArea = this.areaList[0]
+							// 	this.currentArea = DefaultsArea ? DefaultsArea : {}
+							// } else {
+							// 	this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+							// 	// let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
+							// 	// this.currentArea = DefaultsArea ? DefaultsArea : {};
+							// 	// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							// }
 							// let DefaultsArea = _.find(this.areaList, {
 							// 	Defaults: "1"
 							// }); 
@@ -522,15 +533,15 @@
 				}
 			},
 			orderArea() {},
+			// 自取和外卖的切换按钮，暂时不用了
 			changeMode(val) {
 				// 1自取，2 外卖
-				console.log(val,'改变配送方式')
+				console.log(val, '改变配送方式')
 				this.radioModes = val;
 				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
-				console.log(this.areaList[0])
 				this.currentArea = this.areaList[0];
-				
+
 				if (val === 1) {
 					this.totalCurrent = this.total - this.freight;
 					// this.currentArea = {};
@@ -557,8 +568,8 @@
 			changeGroup(val) {
 				this.resultArea = val.detail.value
 			},
+			// 切换并选择地址
 			async changeArea(val, index) {
-				console.log(val,index)
 				this.showAreaList = val.SID
 				let api;
 				if (this.radioModes === 1) {
@@ -572,31 +583,26 @@
 						api = "CalcLogistics";
 					}
 				}
+				
 				// try {
 				// 	this.loading = true;
 				// 	uni.showLoading()
-				// 	let currentItems = JSON.parse(this.currentItem);
 				// 	let obj = {
-				// 		Action: api,
-				// 		ProdList: this.currentItem,
+				// 		Action:api,
 				// 		Latitude: val.Latitude || "",
 				// 		Longitude: val.Longitude || "",
-				// 		Province: val.Province || "",
-				// 		PayType: this.radioPayType,
-				// 		PrefNo: this.radioDiscount === "undefined" ? "" : this.radioDiscount,
-				// 		ShopSID: val.SID
-				// 	};
-
-				// 	if (currentItems[0].hasOwnProperty("PromotionItemSID")) {
-				// 		// 活动
-				// 		obj.PromotionItemSID = currentItems[0].PromotionItemSID;
+				// 		ShopSID: val.SID,
+				// 		PayType: this.radioPayType
 				// 	}
-				// 	let {
-				// 		Data
-				// 	} = await vipCard(obj, "UProdOpera");
-					this.currentArea = val;
-					this.showAreaList = false;
-					this.$refs.showAreaList.close()
+				// 	let { Data } = await vipCard(obj, "UProdOpera");
+				// 	console.log(Data)
+					
+					
+				this.currentArea = val;
+				let currentStoreInfo = this.currentArea
+				this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				this.showAreaList = false;
+				this.$refs.showAreaList.close()
 				// 	this.resultArea = val.SID;
 				// 	this.areaList.splice(index, 1);
 				// 	this.areaList.unshift(val);
@@ -604,8 +610,8 @@
 				// 	this.freight = Data.Freight;
 				// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 
-				// 	this.loading = false;
-				// 	uni.hideLoading()
+					this.loading = false;
+					uni.hideLoading()
 				// } catch (e) {
 				// 	this.loading = false;
 				// 	uni.hideLoading()
@@ -621,12 +627,14 @@
 				this.addEditArea = false;
 			},
 			clickLeft() {
-				if(this.$Route.query.flag){
-					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
-				}else{
+				if (this.$Route.query.flag) {
+					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{
+						flag :'Deflocation'
+					}})
+				} else {
 					this.$Router.push(this.$store.state.historyUrl)
 				}
-				
+
 			},
 			clickDataTime() {
 				console.log('吊起时间')
@@ -665,7 +673,7 @@
 						},
 						"UMemberOpera"
 					);
-					if(bool){
+					if (bool) {
 						uni.showLoading()
 					}
 					return Data.AddressList;
@@ -704,10 +712,10 @@
 				this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
 			},
 			radioTimeFun(val) {
-				console.log(val,'shijian')
+				console.log(val, 'shijian')
 				this.radioTime = val.detail.value
 			},
-			setDiscountClick(val){
+			setDiscountClick(val) {
 				this.radioDiscount = val.detail.value
 			},
 			async DiscountClick(item) {
@@ -736,9 +744,9 @@
 					this.UserDiscount =
 						item === "undefined" ? "暂不使用" : "¥" + item.DiscPrice;
 					this.radioDiscount = item === "undefined" ? item : item.PrefNo;
-					this.totalCurrent = parseFloat(Number(Data.Total?Data.Total:Data.SumTotal).toFixed(2));
+					this.totalCurrent = parseFloat(Number(Data.Total ? Data.Total : Data.SumTotal).toFixed(2));
 					this.loading = false;
-					
+
 					uni.hideLoading();
 				} catch (e) {
 					this.loading = false;
@@ -875,8 +883,94 @@
 					this.loading = false;
 					uni.hideLoading();
 				}
+			},
+			// 点击icon调用微信共享地址中的通讯录
+			//调微信接口 获取当前位置经纬度
+			// async getLocal() {
+			// 	let self = this;
+			// 	try {
+			// 		let {
+			// 			Data
+			// 		} = await vipCard({
+			// 			Action: "GetJSSDK"
+			// 		}, "UProdOpera");
+			// 		wx.config({
+			// 			debug: false,
+			// 			appId: Data.SDK.appId,
+			// 			timestamp: Data.SDK.timestamp,
+			// 			nonceStr: Data.SDK.nonceStr,
+			// 			signature: Data.SDK.signature,
+			// 			jsApiList: ["getLocation"]
+			// 		});
+			// 		wx.ready(res => {
+			// 			wx.getLocation({
+			// 				type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			// 				success: function(res) {
+			// 					var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+			// 					var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			// 					self.latitude = latitude;
+			// 					self.longitude = longitude;
+			// 					self.passLocal(latitude, longitude);
+			// 				},
+			// 				cancel: function(res) {
+			// 					console.log("cancel", res);
+			// 				}
+			// 			});
+			// 			wx.error(function(res) {
+			// 				toast1.clear();
+			// 				let toast2 = this.$toast.fail('获取当前位置失败');
+			// 				// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+			// 				console.log("调用微信接口获取当前位置失败", res);
+			// 			});
+			// 		})
+			// 	} catch (e) {
+			// 		// console.log(e, "55555");
+			// 	}
+			// },
+			// async passLocal(lat,lng){
+			//     let data ={
+			//       Modu: "Common",
+			//       Type: "Shop",
+			//       Token: this.token,
+			//       Handler: "Distance",
+			//       Lat:lat,
+			//       Lng:lng,
+			//       ShopNo:this.shopNoStr
+			//     };
+			//     const res = await serveData(data);
+			//     if(res.data.State == 'OK'){
+			//       this.shopList = res.data.Data;
+			//       this.filterlist = this.shopList;
+			//     }
+			//     toast1.clear();
+			// },
+			// // 点击电话簿
+			// getOpenAddress() {
+			// 	let self = this;
+			// 	wx.openAddress({
+			// 		success: function(res) {
+			// 			let address = '';
+			// 			self.contact = res.userName; // 收货人姓名
+			// 			self.phone = res.telNumber; // 收货人手机号码
+			// 			let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
+			// 			let cityName = res.cityName; // 国标收货地址第二级地址（市）
+			// 			let countryName = res.countryName; // 国标收货地址第三级地址（国家）
+			// 			let detailInfo = res.detailInfo; // 详细收货地址信息
+			// 			address += provinceName + cityName + countryName + detailInfo;
+			// 			self.address = address;
+			// 		}
+			// 	});
+			// },
+		},
+		filters: {
+			setSex2(val) {
+				if (val == 0) {
+					return '先生'
+				} else if (val == 1) {
+					return '女士'
+				}
 			}
-		}
+		},
 	};
 
 	function setChangeData(num, aceTime) {
@@ -963,9 +1057,11 @@
 
 <style lang="less">
 	@import "../../../assets/css/radioModes";
-	.setADcell{
+
+	.setADcell {
 		margin: 5px 0;
 	}
+
 	.confirm-order-style {
 		margin-bottom: 80px;
 
@@ -989,12 +1085,14 @@
 			align-items: center;
 			padding: 5px 24rpx;
 			margin-top: 5px;
-			.payStyle{
+
+			.payStyle {
 				background: rgb(255, 255, 255);
 				font-size: 14px;
 				color: rgb(90, 91, 92);
 				padding: 13px 0px;
 			}
+
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;

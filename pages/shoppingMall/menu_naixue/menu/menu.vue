@@ -26,8 +26,8 @@
 						<view class="nav_left overflow-hidden" v-else>
 							<view class="nav_leftAdd">
 								<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
-								<view class="addresName">
-									{{ addressName }}
+								<view class="addresName" @click="toAddress">
+									{{ addressName.Address }}
 								</view>
 							</view>
 							<view style="color: #919293;">
@@ -288,7 +288,7 @@
 				currentArea: {}, //当前选择的地址
 				skuDataInfo: {}, //商品弹窗
 				goodsInfo: {},
-				addressName: this.$Route.query.addressName, //地址名称
+				addressName: JSON.parse(sessionStorage.getItem('takeOutAddress')), //地址名称
 				currentTast: [], //口味数组
 				flavorList: [], //口味list
 				normsList: [], //规格数组
@@ -303,10 +303,24 @@
 			await this.getList();
 			this.getLunBoImg();
 			this.getWxConfig() // 获取授权地址
-			await this.getShopList()
+			if(this.$Route.query.flag =='Deflocation'){
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				this.currentStoreInfo = {
+					Name: currentStore.data.Name,
+					Address: currentStore.data.Address,
+					SID: currentStore.data.SID,
+					Length:currentStore.data.Length
+				}
+			}else{
+				await this.getShopList()
+			}
 			this.currentType = this.goods[0];
 			this.cart = uni.getStorageSync('cart') || []
 			console.log(this.cart,'获取同步缓存的商品信息')
+			if(this.cart.length!=0){
+				this.changeMenuNum();
+				this.changeInfo();
+			}
 		},
 		components: {
 			modal
@@ -388,6 +402,7 @@
 						Action: "GetCateList"
 					}, "UProdOpera");
 					this.goods = Data.ProdCateList;
+					this.changeInfo()
 				} catch (e) {
 					console.log(e);
 				}
@@ -410,6 +425,8 @@
 						this.$set(obj, 'cartNum', 0);
 						return obj
 					});
+					this.changeMenuNum();
+					this.changeInfo()
 					this.loading = false;
 				} catch (e) {
 					this.loading = false;
@@ -470,7 +487,7 @@
 			// 点击自取和外卖时状态改变
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');
-				// this.addressName = ''
+				
 			},
 			// 点击跳转到门店地址列表
 			toShopAddress(){
@@ -482,6 +499,7 @@
 				})
 			},
 			toAddress() {
+				if(this.$store.state.orderType == 'takeout') return
 				this.$store.commit("SET_ORDER_TYPE", 'takeout');
 				this.$Router.push({
 					path: '/pages/myAddress/myAddress',
@@ -689,6 +707,12 @@
 						if (confirm) {
 							this.cartPopupVisible = false
 							this.cart = []
+							 // uni.removeStorageSync('cart');
+							 try {
+							     uni.removeStorageSync('cart');
+							 } catch (e) {
+							     // error
+							 }
 							this.changeMenuNum();
 							this.changeInfo();
 						}
@@ -781,11 +805,6 @@
 				} catch (e) {
 					console.log(e);
 				}
-
-				// uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))
-				// let currentItem = JSON.parse(JSON.stringify(this.cart));
-				// this.$store.commit("SET_CURRENT_CARD", currentItem);
-				// this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				uni.hideLoading()
 			}
 		},

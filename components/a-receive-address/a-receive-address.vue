@@ -1,46 +1,38 @@
 <template>
-	<div>
+	<view>
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
-		<div>
+		<view class="main">
 			<div class="setADcell">
-				<adCell text="收货地址" @click="tenxButton" showArrow="false">
-					<span>{{form.Address?form.Address:'点击选择'}}</span>
+				<adCell text="收货人" showArrow="false">
+					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名"></div>
 				</adCell>
-			</div>
-			<div class="setADcell">
-				<adCell text="门牌号" showArrow="false">
-					<input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室">
-				</adcell>
-			</div>
-			<div class="setADcell">
-				<adCell text="联系人" showArrow="false">
-					<input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">
-				</adCell>
-			</div>
-
-			<div class="setADcell">
 				<adCell text="性别" showArrow="false">
-					<radio-group v-model="form.Sex" style="text-align:center" @change="radioChangeSex">
-						<radio style="display: inline-flex;margin-right:10px" value="1" :checked="form.Sex==='1'">先生</radio>
-						<radio style="display: inline-flex;" value="2" :checked="form.Sex==='2'">女士</radio>
-					</radio-group>
+					<div class="widthBox">
+						<view class="radio-group">
+							<view class="radio" :class="{'checked': !form.Sex}" style="margin-right: 10rpx;" @tap="form.Sex=0">先生</view>
+							<view class="radio" :class="{'checked': form.Sex}" @tap="form.Sex=1">女士</view>
+						</view>
+					</div>
 				</adCell>
-			</div>
-			<div class="setADcell">
 				<adCell text="手机号" showArrow="false">
-					<input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
+					<div class="widthBox"><input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码"></div>
 				</adCell>
-			</div>
-			<div class="setADcell setWidth">
+				<adCell text="收货地址" showArrow="false" @click="tenxButton">
+					<div class="widthBox"><span>{{form.Address?form.Address:'点击选择'}}</span></div>
+				</adCell>
+				<adCell text="门牌号" showArrow="false">
+					<div class="widthBox"><input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室"></div>
+				</adCell>
 				<adCell text="设置为默认地址" showArrow="false">
-					<switch @change="switchChange" />
+					<div class="widthBox" style="width: 40%;"><switch @change="switchChange" style="position: absolute;top: 7px;left: 33%;transform:scale(0.8)"/></div>
 				</adCell>
 			</div>
-		</div>
-		<div style="margin-top:50px;padding:0 20px;">
-			<button type="main" size="large" @click="saveArea" :disabled="disabledLoad">保存地址</button>
-		</div>
+			<div style="margin-top:50px;padding:0 20px;">
+				<button type="main" size="large" @click="saveArea" style="background-color: #ADB838;color: #fff;" :disabled="disabledLoad">保存</button>
+			</div>
+		</view>
+		<!-- 地址popup -->
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
 			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0" :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
@@ -51,7 +43,7 @@
 			<!-- #endif -->
 		</uni-popup>
 		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" cancelColor="#999" themeColor="#007AFF"></simple-address>
-	</div>
+	</view>
 </template>
 
 <script>
@@ -80,7 +72,11 @@
 				logisticsArea: false,
 				isAdd: false,
 				form: {
-					Sex: "1"
+					Sex: 0,
+					Name:'',
+					Mobile:'',
+					Address:'',
+					House:''
 				},
 				location: {},
 				areaList: areaLists,
@@ -95,7 +91,7 @@
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
 				this.form.Defaults = this.form.Defaults === "1" ? true : false;
 				let Sex = this.form.Sex.replace(/\s*/g, "");
-				this.form.Sex = Sex === "先生" ? "1" : "2";
+				this.form.Sex = Sex === "先生" ? "0" : "1";
 				this.location = {
 					latitude: this.areaInfo.Latitude,
 					longitude: this.areaInfo.Longitude
@@ -228,6 +224,7 @@
 				})
 			},
 		}
+		
 	};
 </script>
 
@@ -238,7 +235,30 @@
 
 	.setWidth {
 		/deep/.headView {
-			width: 118px;
+			width: 100px !important;
+		}
+	}
+	.theme2 .setADcell .headView {}
+	.widthBox{
+		width:68%;
+		input{
+			font-size: 12px;
+		}
+		.radio-group {
+			display: flex;
+			justify-content: flex-start;
+			
+			.radio {
+				padding: 10rpx 30rpx;
+				border-radius: 6rpx;
+				border: 1px solid #CCCCCC;
+				margin-right: 6px;
+				&.checked {
+					background-color: #ADB838;
+					color: #ffffff;
+					border: 1px solid #ADB838;
+				}
+			}
 		}
 	}
 </style>

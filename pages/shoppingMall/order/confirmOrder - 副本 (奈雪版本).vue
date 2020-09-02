@@ -30,19 +30,15 @@
 						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}</div>
 					</div>
 					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
-						选择{{radioModes ===
-            2?'收货':'取货'}}地址
-					</div>
-					<div style="margin:auto 8px;color:#909090">
-						<uni-icons type="arrowright" />
-					</div>
+								选择{{radioModes ===
+					2?'收货':'取货'}}地址
+							</div>
+							<div style="margin:auto 8px;color:#909090">
+								<uni-icons type="arrowright" />
+							</div>
 				</div>
 			</div>
-			<div class="good_card_box">
-				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
-					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
-				</div>
-			</div>
+			
 
 			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />
 
@@ -55,22 +51,27 @@
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
 				<view>{{UserDiscount}}</view>
 			</adCell>
-
+			<div class="setADcell" v-if="radioModes === 1">
+				<adCell text="姓名" showArrow="false" @click="getOpenAddress">
+					<input type="text" placeholder="请输入收件名字" v-model="name_user">
+				</adCell>
+			</div>
 			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="手机号码" showArrow="false">
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
 				</adCell>
 			</div>
-			<div class="setADcell" v-if="radioModes === 1">
-				<adCell text="收件名字" showArrow="false">
-					<input type="text" placeholder="请输入收件名字" v-model="name_user">
-				</adCell>
-			</div>
-
+			
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
 				</adCell>
+			</div>
+			<!-- 商品信息 -->
+			<div class="good_card_box">
+				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
+					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
+				</div>
 			</div>
 
 			<adCell text="商品总价格" showArrow="false" showBottomLine="false">
@@ -85,11 +86,12 @@
 					小计：
 					<span class="total-style__color">
 						<span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
-						<span v-if="totalCurrent>0">{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
+						<span v-if="totalCurrent>0 && radioModes === 1">¥{{ProdTotal |spliceNum}}</span>
+						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
 					</span>
 				</span>
 			</div>
-
+			
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
 				<view class="payStyle">支付方式</view>
@@ -115,7 +117,8 @@
 					</div>
 				</radio-group>
 			</div>
-			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :scoreTatal="totalCurrentScore" :cardInfo="allData.CardInfo"
+			
+			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore" :cardInfo="allData.CardInfo"
 			 @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
 		</div>
 
@@ -126,7 +129,6 @@
 						<span class="cancel" @click="$refs.showAreaList.close()">取消</span>
 						<span>选择地址</span>
 					</div>
-					<!-- 从这里开始 -->
 					<radio-group class="bottom-area" ref="checkboxAreaRef" @change="changeGroup">
 						<div v-for="(item,index) in areaList" :key="index" class="bottom-area__box" @click="changeArea(item,index)">
 							<radio :value="item.SID" class="checkbox-my" :checked="showAreaList == item.SID"></radio>
@@ -213,6 +215,13 @@
 			// receiveAddress
 			adCell
 		},
+		mounted() {
+			if (this.$store.state.orderType === 'takein') {
+				this.radioModes = 1;
+			} else {
+				this.radioModes = 2;
+			}
+		},
 		data() {
 			return {
 				mainStyle: getApp().globalData.mainStyle,
@@ -232,7 +241,7 @@
 				selectTime: false,
 				discountProgram: false,
 				resultArea: "",
-				areaList: [],
+				areaList: [],//弹出窗地址渲染列表
 				DeliveryAreaList: [],
 				// 收货地址
 				takeOver: [],
@@ -282,8 +291,10 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
+			console.log(this.$store.state.currentStoreInfo)
 			// 获取授权地址
 			await this.getWxConfig();
+
 			let item = this.$store.state.currentCard || [];
 			item.forEach(D => {
 				if (D.SID) {
@@ -310,6 +321,7 @@
 			}
 		},
 		methods: {
+			// 从商品下单的信息
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
@@ -323,6 +335,7 @@
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
+
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
@@ -340,7 +353,6 @@
 					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							// console.log(res, "res");
 							this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
@@ -349,7 +361,7 @@
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-
+							
 							// this.currentItem.forEach(D => {
 							// 	if (typeof D.PartsNo !== "string") {
 							// 		D.PartsNo.forEach((data, index) => {
@@ -406,14 +418,25 @@
 							}
 
 							this.DeliveryAreaList = Data.ShopInfoList;
+							// if(this.$store.state.orderType === 'takein'){
+							// 	let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							// }
+							if(this.radioModes === 1){
+								this.areaList = this.DeliveryAreaList;
+								let DefaultsArea = this.areaList[0]
+								this.currentArea = DefaultsArea ? DefaultsArea : {}
+							}else{
+								let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
+								this.currentArea = DefaultsArea ? DefaultsArea : {};
+								this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							}
 							// let DefaultsArea = _.find(this.areaList, {
 							// 	Defaults: "1"
 							// }); 
-							//是否有默认地址
-							let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0];
-
-							this.currentArea = DefaultsArea ? DefaultsArea : {};
-							this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
+							// //是否有默认地址
+							// let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
+							// this.currentArea = DefaultsArea ? DefaultsArea : {};
+							// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
 
 							// let num = Number(Data.ShopBase.ScopeDay);
 
@@ -457,8 +480,8 @@
 							// 	index: 0
 							// };
 
-							this.UserTime =
-								this.sidebarList[this.activeKey] + " " + this.radioTime;
+							// this.UserTime =
+							// 	this.sidebarList[this.activeKey] + " " + this.radioTime;
 
 							this.loading = false;
 							uni.hideLoading()
@@ -504,9 +527,11 @@
 				// 1自取，2 外卖
 				console.log(val,'改变配送方式')
 				this.radioModes = val;
+				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
-
-				this.currentArea = {};
+				console.log(this.areaList[0])
+				this.currentArea = this.areaList[0];
+				
 				if (val === 1) {
 					this.totalCurrent = this.total - this.freight;
 					// this.currentArea = {};
@@ -518,11 +543,9 @@
 					this.resultArea = this.currentArea.SID;
 				}
 				this.totalCurrent = parseFloat(Number(this.totalCurrent).toFixed(2));
-				console.log(val);
-				console.log(this.total);
-				console.log(this.totalCurrent);
 			},
 			radioChange() {
+				// 控制地址的展示
 				this.showAreaList = true;
 				this.$refs.showAreaList.open()
 			},
@@ -575,12 +598,12 @@
 					this.currentArea = val;
 					this.showAreaList = false;
 					this.$refs.showAreaList.close()
-					this.resultArea = val.SID;
-					this.areaList.splice(index, 1);
-					this.areaList.unshift(val);
+				// 	this.resultArea = val.SID;
+				// 	this.areaList.splice(index, 1);
+				// 	this.areaList.unshift(val);
 				// 	//改变位置，重新算运费和总价
-					this.freight = Data.Freight;
-					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
+				// 	this.freight = Data.Freight;
+				// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 
 				// 	this.loading = false;
 				// 	uni.hideLoading()
@@ -604,12 +627,13 @@
 				}else{
 					this.$Router.push(this.$store.state.historyUrl)
 				}
+				
 			},
-			// clickDataTime() {
-			// 	console.log('吊起时间')
-			// 	this.selectTime = true;
-			// 	this.$refs.selectTime.open()
-			// },
+			clickDataTime() {
+				console.log('吊起时间')
+				this.selectTime = true;
+				this.$refs.selectTime.open()
+			},
 			clickUserDiscount() {
 				this.discountProgram = true;
 				this.$refs.discountProgram.open()
@@ -681,6 +705,7 @@
 				this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
 			},
 			radioTimeFun(val) {
+				console.log(val,'shijian')
 				this.radioTime = val.detail.value
 			},
 			setDiscountClick(val){
@@ -939,7 +964,9 @@
 
 <style lang="less">
 	@import "../../../assets/css/radioModes";
-
+	.setADcell{
+		margin: 5px 0;
+	}
 	.confirm-order-style {
 		margin-bottom: 80px;
 
@@ -961,23 +988,17 @@
 		.radio-group-play {
 			background-color: #fff;
 			align-items: center;
-			padding: 26rpx 24rpx;
-			margin: 10px 0;
-			
+			padding: 5px 24rpx;
+			margin-top: 5px;
 			.payStyle{
 				background: rgb(255, 255, 255);
 				font-size: 14px;
 				color: rgb(90, 91, 92);
 				padding: 13px 0px;
 			}
-			
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
-				.uni-radio .uni-radio-input{
-					width: 16px;
-					height: 16px;
-				}
 			}
 
 			.custom-title {

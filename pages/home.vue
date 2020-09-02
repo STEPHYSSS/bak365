@@ -145,7 +145,7 @@
 				<div class="cardWei">
 					<div>
 						<!-- <adCell text="收货地址" to="/home/myAddress" /> -->
-						<adCell text="收货地址" @click="$Router.push('/pages/myAddress/myAddress')"  />
+						<adCell text="收货地址" @click="$Router.push({path:'/pages/myAddress/myAddress',query:{flag:'homeD'}})"  />
 					</div>
 				</div>
 
