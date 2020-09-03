@@ -4,7 +4,7 @@
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
-		 <view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login'">
+		 <view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -93,7 +93,6 @@
 			this.getWxConfig(); // 获取授权地址
 			this.getAddressList();
 			this.getShopList();
-			console.log(this.location)
 		},
 		filters:{
 			setSex2(val){
@@ -116,7 +115,14 @@
 					"UMemberOpera"
 				);
 				this.areaList =  Data.AddressList;
-				this.$store.commit("SET_CURRENT_STORE",this.areaList)
+				let currentStoreInfo = {
+					Name: Data.AddressList[0].Name,	
+					Address: Data.AddressList[0].Address,
+					SID: Data.AddressList[0].SID,
+					Length:Data.AddressList[0].Length
+				}
+				sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
+				// this.$store.commit("SET_CURRENT_STORE",this.areaList)
 			},
 			// 
 			chooseAddress(item){

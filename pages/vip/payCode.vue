@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<uni-nav-bar :fixed="true" left-icon="back" :noG0="true" title="二维码支付" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<!-- <uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :noG0="true" title="二维码支付" :status-bar="true" :shadow="false"></uni-nav-bar> -->
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft"  title="二维码支付" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<view class="vipQR-code-page" v-if="loadding">
 			<view class="vipQR-code">
 				<view class="vipQR-backg">
@@ -70,7 +71,14 @@
 					this.loadding = true
 				}
 			},
-			onShow: function() {}
+			onShow: function() {},
+			
+			clickLeft(){
+				if(this.$Route.query.flag){
+					this.$Router.push({path: "/pages/shoppingMall/login"});
+				}
+				
+			}
 		}
 	}
 </script>

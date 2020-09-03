@@ -288,7 +288,7 @@
 				currentArea: {}, //当前选择的地址
 				skuDataInfo: {}, //商品弹窗
 				goodsInfo: {},
-				addressName: JSON.parse(sessionStorage.getItem('takeOutAddress')), //地址名称
+				addressName: {}, //地址名称
 				currentTast: [], //口味数组
 				flavorList: [], //口味list
 				normsList: [], //规格数组
@@ -315,8 +315,12 @@
 				await this.getShopList()
 			}
 			this.currentType = this.goods[0];
-			this.cart = uni.getStorageSync('cart') || []
-			console.log(this.cart,'获取同步缓存的商品信息')
+			this.cart = uni.getStorageSync('cart') || [];
+			if(!this.addresses){				
+				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+			}else{
+				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+			}
 			if(this.cart.length!=0){
 				this.changeMenuNum();
 				this.changeInfo();

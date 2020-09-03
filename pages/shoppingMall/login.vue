@@ -168,9 +168,14 @@
 			},
 			//会员二维码
 			memberCode(){
-				uni.navigateTo({
-					url: '/pages/vip/payCode'
-				})
+				// uni.navigateTo({
+				// 	url: '/pages/vip/payCode'
+				// })
+				this.$Router.push({
+					path: "/pages/vip/payCode",query:{
+						flag:'paycode'
+					}
+				});
 			}
 		}
 	}

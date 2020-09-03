@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/shoppingMall/login",
     "pages/shoppingMall/index",
     "pages/error/index",
     "pages/home",
@@ -29,7 +30,11 @@
     "pages/vip/rebate",
     "pages/vip/SpreadOrder",
     "pages/vip/myEarnings",
-    "pages/vip/FootPrint"
+    "pages/vip/FootPrint",
+    "pages/shoppingMall/menu_naixue/menu/menu",
+    "pages/myAddress/myAddress",
+    "pages/myAddress/add",
+    "pages/shoppingMall/menu_naixue/invite"
   ],
   "subPackages": [],
   "window": {
@@ -43,10 +48,10 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/shoppingMall/index"
+        "pagePath": "pages/shoppingMall/login"
       },
       {
-        "pagePath": "pages/shoppingMall/shoppingCart/index"
+        "pagePath": "pages/shoppingMall/menu_naixue/menu/menu"
       },
       {
         "pagePath": "pages/home"

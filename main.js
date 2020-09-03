@@ -83,3 +83,9 @@ RouterMount(app, '#app');
 // #ifndef H5
 app.$mount();
 // #endif
+// #ifdef H5  
+import wechat from '@/pages/myAddress/wechar.js'  
+if(wechat.isWechat()){  
+    Vue.prototype.$wechat =wechat;  
+}  
+// #endif

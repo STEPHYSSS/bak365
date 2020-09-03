@@ -1720,15 +1720,110 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 117:
+/***/ 12:
+/*!***************************************!*\
+  !*** D:/uni/uni_phone/store/store.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
+var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 16));
+var _http = __webpack_require__(/*! @/api/http.js */ 17);
+
+
+var _index = _interopRequireDefault(__webpack_require__(/*! @/config/cookie-my/index.js */ 8));
+var _publicFunction = __webpack_require__(/*! @/util/publicFunction */ 51);
+
+
+
+var _index2 = _interopRequireDefault(__webpack_require__(/*! @/config/index */ 52));var _mutations;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+
+_vue.default.use(_vuex.default);
+var store = new _vuex.default.Store({
+  state: {
+    orderType: 'takein', // 0外卖  1自取
+    // 加入购物车商品信息
+    currentCard: _index.default.get('currentCard') || [],
+    // 当前定位的位置
+    currentLocation: _index.default.get('currentLocation') || {},
+    currentStoreInfo: _index.default.get('currentStoreInfo') || {},
+    historyUrl: _index.default.get('historyUrl') || {} },
+
+  mutations: (_mutations = {}, _defineProperty(_mutations,
+
+
+  'SET_ORDER_TYPE', function SET_ORDER_TYPE(state, type) {
+    state.orderType = type;
+  }), _defineProperty(_mutations,
+  'SET_CURRENT_LOCATION', function SET_CURRENT_LOCATION(state, data) {
+    state.currentLocation = data;
+    _index.default.set('currentLocation', data);
+  }), _defineProperty(_mutations,
+  'SET_CURRENT_STORE', function SET_CURRENT_STORE(state, data) {
+    state.currentStoreInfo = data;
+    _index.default.set('currentStoreInfo', data);
+    console.log(state.currentStoreInfo, '地址改变了');
+  }), _defineProperty(_mutations,
+  'SET_CURRENT_CARD', function SET_CURRENT_CARD(state, data) {
+    state.currentCard = data;
+    _index.default.set('currentCard', data);
+  }), _defineProperty(_mutations,
+  'SET_HISTORY_URL', function SET_HISTORY_URL(state, data) {
+    // this.$store.state.historyUrl
+    // this.$store.commit("SET_HISTORY_URL",{})
+    state.historyUrl = data;
+    _index.default.set('historyUrl', data);
+  }), _mutations),
+
+  actions: {
+    // 获取appId 和 保存UserMAC     obj={BusinNo:newBusinNo,code:code} 登录的时候获取
+    get_user: function get_user(_ref,
+
+    obj) {var commit = _ref.commit;
+      return new Promise( /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve, reject) {var response;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.prev = 0;_context.next = 3;return (
+
+                    (0, _http.vipCard)(obj, 'UserSign'));case 3:response = _context.sent;
+                  if (response.Data.hasOwnProperty('UserMAC')) {
+                    // let seconds = 7200000 //两小时 秒
+                    // let expires = new Date(new Date() * 1 + seconds * 1000)
+                    _index.default.set('UserMACPhone', response.Data.UserMAC);
+                  }
+                  if (response.Data.hasOwnProperty('UserBind')) {
+                    _index.default.set('isMember', response.Data.UserBind);
+                  }
+                  if (response.Data.hasOwnProperty('CardType')) {
+                    _index.default.set('CardType', response.Data.CardType);
+                  }
+
+                  //主题模板
+                  getApp().globalData.mainStyle = 'theme2';
+                  _index.default.set('mainStyle', 'theme2');
+
+                  resolve(response.Data.hasOwnProperty('AppId') ? response.Data.AppId : response.Data.hasOwnProperty('UserBind') ?
+                  response.Data.UserBind : '');_context.next = 15;break;case 12:_context.prev = 12;_context.t0 = _context["catch"](0);
+
+                  reject(_context.t0);case 15:case "end":return _context.stop();}}}, _callee, null, [[0, 12]]);}));return function (_x, _x2) {return _ref2.apply(this, arguments);};}());
+
+
+    } } });var _default =
+
+
+
+store;exports.default = _default;
+
+/***/ }),
+
+/***/ 125:
 /*!*************************************************!*\
   !*** D:/uni/uni_phone/util/codeChange/index.js ***!
   \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var barcode = __webpack_require__(/*! ./barcode */ 118);
-var qrcode = __webpack_require__(/*! ./qrcode */ 119);
+var barcode = __webpack_require__(/*! ./barcode */ 126);
+var qrcode = __webpack_require__(/*! ./qrcode */ 127);
 
 // function convert_length(length) {
 // 	return Math.round(wx.getSystemInfoSync().windowWidth * length / 750);
@@ -1752,7 +1847,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 118:
+/***/ 126:
 /*!***************************************************!*\
   !*** D:/uni/uni_phone/util/codeChange/barcode.js ***!
   \***************************************************/
@@ -2166,7 +2261,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 119:
+/***/ 127:
 /*!**************************************************!*\
   !*** D:/uni/uni_phone/util/codeChange/qrcode.js ***!
   \**************************************************/
@@ -2954,95 +3049,6 @@ var QR = function () {
 
 /***/ }),
 
-/***/ 12:
-/*!***************************************!*\
-  !*** D:/uni/uni_phone/store/store.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
-var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 16));
-var _http = __webpack_require__(/*! @/api/http.js */ 17);
-
-
-var _index = _interopRequireDefault(__webpack_require__(/*! @/config/cookie-my/index.js */ 8));
-var _publicFunction = __webpack_require__(/*! @/util/publicFunction */ 51);
-
-
-
-var _index2 = _interopRequireDefault(__webpack_require__(/*! @/config/index */ 52));var _mutations;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-
-_vue.default.use(_vuex.default);
-var store = new _vuex.default.Store({
-  state: {
-    // 加入购物车商品信息
-    currentCard: _index.default.get('currentCard') || [],
-    // 当前定位的位置
-    currentLocation: _index.default.get('currentLocation') || {},
-    currentStoreInfo: _index.default.get('currentStoreInfo') || {},
-    historyUrl: _index.default.get('historyUrl') || {} },
-
-  mutations: (_mutations = {}, _defineProperty(_mutations,
-  'SET_CURRENT_LOCATION', function SET_CURRENT_LOCATION(state, data) {
-    state.currentLocation = data;
-    _index.default.set('currentLocation', data);
-  }), _defineProperty(_mutations,
-  'SET_CURRENT_STORE', function SET_CURRENT_STORE(state, data) {
-    state.currentStoreInfo = data;
-    _index.default.set('currentStoreInfo', data);
-  }), _defineProperty(_mutations,
-  'SET_CURRENT_CARD', function SET_CURRENT_CARD(state, data) {
-    state.currentCard = data;
-    _index.default.set('currentCard', data);
-  }), _defineProperty(_mutations,
-  'SET_HISTORY_URL', function SET_HISTORY_URL(state, data) {
-    // this.$store.state.historyUrl
-    // this.$store.commit("SET_HISTORY_URL",{})
-    state.historyUrl = data;
-    _index.default.set('historyUrl', data);
-  }), _mutations),
-
-  actions: {
-    // 获取appId 和 保存UserMAC     obj={BusinNo:newBusinNo,code:code} 登录的时候获取
-    get_user: function get_user(_ref,
-
-    obj) {var commit = _ref.commit;
-      return new Promise( /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve, reject) {var response;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.prev = 0;_context.next = 3;return (
-
-                    (0, _http.vipCard)(obj, 'UserSign'));case 3:response = _context.sent;
-                  alert(response);
-                  if (response.Data.hasOwnProperty('UserMAC')) {
-                    // let seconds = 7200000 //两小时 秒
-                    // let expires = new Date(new Date() * 1 + seconds * 1000)
-                    _index.default.set('UserMACPhone', response.Data.UserMAC);
-                  }
-                  if (response.Data.hasOwnProperty('UserBind')) {
-                    _index.default.set('isMember', response.Data.UserBind);
-                  }
-                  if (response.Data.hasOwnProperty('CardType')) {
-                    _index.default.set('CardType', response.Data.CardType);
-                  }
-
-                  //主题模板
-                  getApp().globalData.mainStyle = 'theme2';
-                  _index.default.set('mainStyle', 'theme2');
-
-                  resolve(response.Data.hasOwnProperty('AppId') ? response.Data.AppId : response.Data.hasOwnProperty('UserBind') ?
-                  response.Data.UserBind : '');_context.next = 16;break;case 13:_context.prev = 13;_context.t0 = _context["catch"](0);
-
-                  reject(_context.t0);case 16:case "end":return _context.stop();}}}, _callee, null, [[0, 13]]);}));return function (_x, _x2) {return _ref2.apply(this, arguments);};}());
-
-
-    } } });var _default =
-
-
-
-store;exports.default = _default;
-
-/***/ }),
-
 /***/ 13:
 /*!*********************************************************************************************!*\
   !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
@@ -3051,28 +3057,6 @@ store;exports.default = _default;
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! regenerator-runtime */ 14);
-
-/***/ }),
-
-/***/ 134:
-/*!***************************************!*\
-  !*** D:/uni/uni_phone/config/util.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.refundTypeList = exports.bindList = void 0;var bindList = [
-{ name: '姓名', value: '0' },
-{ name: '生日', value: '1' },
-{ name: '性别', value: '2' },
-{ name: '密码', value: '3' }];exports.bindList = bindList;
-
-
-var refundTypeList = [
-{ name: '不想要/不喜欢', value: '1' },
-{ name: '已经买了', value: '2' },
-{ name: '其它', value: '3' }];exports.refundTypeList = refundTypeList;
 
 /***/ }),
 
@@ -3121,6 +3105,28 @@ if (hadRuntime) {
   }
 }
 
+
+/***/ }),
+
+/***/ 142:
+/*!***************************************!*\
+  !*** D:/uni/uni_phone/config/util.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.refundTypeList = exports.bindList = void 0;var bindList = [
+{ name: '姓名', value: '0' },
+{ name: '生日', value: '1' },
+{ name: '性别', value: '2' },
+{ name: '密码', value: '3' }];exports.bindList = bindList;
+
+
+var refundTypeList = [
+{ name: '不想要/不喜欢', value: '1' },
+{ name: '已经买了', value: '2' },
+{ name: '其它', value: '3' }];exports.refundTypeList = refundTypeList;
 
 /***/ }),
 
@@ -4833,9 +4839,9 @@ var vipCard = function vipCard(data, ViewKay, businNo) {
 
                   // h5
                   UserMACPhone = _index.default.get('UserMACPhone');
-                  // let BusinNo = Cookies.get('BusinNo') ? Cookies.get('BusinNo') : businNo
-                  BusinNo = '1';
-                  urlaspx = 'Inter/RenderMobile.aspx';
+                  BusinNo = _index.default.get('BusinNo') ? _index.default.get('BusinNo') : businNo;
+                  // let BusinNo = '1'
+                  urlaspx = 'RenderMobile.aspx';
                   url = _index3.default.url + urlaspx + '?BusinNo=' + BusinNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
                   UserMACPhone;
 
@@ -4996,7 +5002,8 @@ router.beforeEach(function (to, from, next) {
                 _index.default.set('mainStyle', 'theme2');
 
                 GetQuery = (0, _publicFunction.GetQueryString)('BusinNo');
-                newBusinNo = GetQuery ? GetQuery : _index.default.get('BusinNo');
+                // let newBusinNo = GetQuery ? GetQuery : Cookie.get('BusinNo')
+                newBusinNo = '1';
                 UserMACPhone = _index.default.get('UserMACPhone');
                 UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone;
                 UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone;
@@ -5018,9 +5025,9 @@ router.beforeEach(function (to, from, next) {
                 currentUrl = (0, _publicFunction.setUrlDelCode)();if (!
 
                 newBusinNo) {_context.next = 44;break;}
-                _index.default.set('BusinNo', newBusinNo);
-                // Cookie.set('BusinNo', '1')
-                if (!(to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone)) {_context.next = 41;break;}
+                // Cookie.set('BusinNo', newBusinNo)
+                _index.default.set('BusinNo', '1');if (!(
+                to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone)) {_context.next = 41;break;}
                 currentUrl = (0, _publicFunction.setUrlDelCode)();
                 _index.default.set('currentUrl', currentUrl);
 
@@ -5102,7 +5109,6 @@ router;exports.default = _default;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(n);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}var files = __webpack_require__(20);
 var modules = [];
-
 files.keys().forEach(function (key) {
   if (key === './index.js') return;
   var item = files(key).default;
@@ -5110,48 +5116,6 @@ files.keys().forEach(function (key) {
 });var _default =
 
 modules;exports.default = _default;
-
-/***/ }),
-
-/***/ 199:
-/*!**********************************************************!*\
-  !*** D:/uni/uni_phone/pages/shoppingMall/list/public.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.goodListPublic = void 0;var goodListPublic = {
-  data: function data() {
-    return {
-      valueSearch: '',
-      list: [
-        // {
-        // 	ImgList: ['/img/norder.4ec0662e.png'],
-        // 	Name: '5323232323232323423232323232323555',
-        // 	SalePrice: '80',
-        // 	SaleCnt: '200',
-        // 	SID: 2222
-        // },
-        // {
-        // 	ImgList: ['/img/norder.4ec0662e.png'],
-        // 	Name: '5323232323232323423232323232323555',
-        // 	SalePrice: '80',
-        // 	SaleCnt: '200',
-        // 	SID: 1111
-        // },{
-        // 	ImgList: ['/img/norder.4ec0662e.png'],
-        // 	Name: '5323232323232323423232323232323555',
-        // 	SalePrice: '80',
-        // 	SaleCnt: '200',
-        // 	SID: 1111
-        // },
-      ],
-
-      sidebarList: [],
-      loading: true };
-
-  } };exports.goodListPublic = goodListPublic;
 
 /***/ }),
 
@@ -11228,6 +11192,48 @@ webpackContext.id = 20;
 
 /***/ }),
 
+/***/ 207:
+/*!**********************************************************!*\
+  !*** D:/uni/uni_phone/pages/shoppingMall/list/public.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.goodListPublic = void 0;var goodListPublic = {
+  data: function data() {
+    return {
+      valueSearch: '',
+      list: [
+        // {
+        // 	ImgList: ['/img/norder.4ec0662e.png'],
+        // 	Name: '5323232323232323423232323232323555',
+        // 	SalePrice: '80',
+        // 	SaleCnt: '200',
+        // 	SID: 2222
+        // },
+        // {
+        // 	ImgList: ['/img/norder.4ec0662e.png'],
+        // 	Name: '5323232323232323423232323232323555',
+        // 	SalePrice: '80',
+        // 	SaleCnt: '200',
+        // 	SID: 1111
+        // },{
+        // 	ImgList: ['/img/norder.4ec0662e.png'],
+        // 	Name: '5323232323232323423232323232323555',
+        // 	SalePrice: '80',
+        // 	SaleCnt: '200',
+        // 	SID: 1111
+        // },
+      ],
+
+      sidebarList: [],
+      loading: true };
+
+  } };exports.goodListPublic = goodListPublic;
+
+/***/ }),
+
 /***/ 21:
 /*!***********************************************!*\
   !*** D:/uni/uni_phone/router/modules/home.js ***!
@@ -11237,11 +11243,27 @@ webpackContext.id = 20;
 
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var home = [{
-  path: '/pages/shoppingMall/index',
+  // path: '/pages/shoppingMall/index',
+  path: '/pages/shoppingMall/login',
   aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
+  name: 'login',
+  meta: {
+    title: '首页' } },
+
+
+{
+  path: '/pages/shoppingMall/index',
+  // aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
   name: 'shoppingMallHome',
   meta: {
     title: '商城' } },
+
+
+{
+  path: '/pages/shoppingMall/menu_naixue/menu/menu',
+  name: 'menu',
+  meta: {
+    title: '点餐' } },
 
 
 {
@@ -11256,11 +11278,13 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
   meta: {
     title: '会员中心' } },
 
+
 {
   path: '/pages/shoppingMall/shoppingCart/index',
   name: 'shoppingCart',
   meta: {
     title: '购物车' } },
+
 
 {
   path: '/Grant',
@@ -11433,7 +11457,31 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
   path: '/pages/vip/bind/index',
   name: 'bindCard',
   meta: {
-    title: '绑定卡' } }];var _default =
+    title: '绑定卡' } },
+
+{ //仿奈雪 商品列表
+  path: '/pages/shoppingMall/menu_naixue/menu/menu',
+  name: 'menuGoodsList',
+  meta: {
+    title: '商品列表' } },
+
+{ //个人中心-我的地址
+  path: '/pages/myAddress/myAddress',
+  name: 'myAddress',
+  meta: {
+    title: '我的地址' } },
+
+{ //个人中心-新增我的地址
+  path: '/pages/myAddress/add',
+  name: 'myAdd',
+  meta: {
+    title: '新增地址' } },
+
+{ //login页面 买茶送包 
+  path: '/pages/shoppingMall/menu_naixue/invite',
+  name: 'invite',
+  meta: {
+    title: '活动助力' } }];var _default =
 
 
 
@@ -13172,4541 +13220,7 @@ MyArray;exports.default = _default;
 
 /***/ }),
 
-/***/ 33:
-/*!*************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/util.js ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.assertCanBack = exports.getPageOnBeforeBack = exports.APPGetPageRoute = exports.getFormatQuery = exports.ruleToUniNavInfo = exports.pathOrNameToRoute = exports.formatFrom = exports.formatTo = exports.getPageVmOrMp = exports.isNvuePage = exports.getPages = exports.callAppHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
-var _util = __webpack_require__(/*! ../helpers/util */ 24);
-var _config = __webpack_require__(/*! ../helpers/config */ 25);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * 触发指定生命钩子
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @param {Array} funList	//需要执行的方法列表
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @param {Object} args //触发生命钩子传递的参数
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
-var callAppHook = function callAppHook(funList, args) {
-  for (var i = 0; i < funList.length; i++) {
-    funList[i].call(this, args);
-  }
-};
-/**
-    * @param {Number} index //需要获取的页面下标 -2:表示获取最后一个即当前页面 -1:表示全部 -3:当前页面的前一个页面
-    * @param {Boolean} all //是否获取全部的页面
-    */exports.callAppHook = callAppHook;
-var getPages = function getPages() {var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;var all = arguments.length > 1 ? arguments[1] : undefined;
-  var pages = getCurrentPages(all);
-  if (index === -1) {
-    return pages;
-  }
-  if (index === -2) {
-    return pages[pages.length - 1];
-  }
-  if (index === -3) {
-    return pages[pages.length - 2];
-  }
-  return pages[index];
-};
-/**
-    * 验证当前页面是否为nvue页面
-    * @param {Object} page 当前页面对象
-    */exports.getPages = getPages;
-var isNvuePage = function isNvuePage(page) {
-  var cstr = page.constructor.name;
-  var pageType = {
-    s: true,
-    z: false };
-
-  return pageType[cstr];
-};
-
-/**
-    * @param {Object} page //当前顶级页面对象
-    * @param {Object} vim:? //是否获取 $vm 对象还是 $mp 对象
-    */exports.isNvuePage = isNvuePage;
-var getPageVmOrMp = function getPageVmOrMp(page) {var vim = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  if (vim) {
-    return page.$vm;
-  }
-  if (page.$vm.$mp) {
-    return page.$vm.$mp;
-  } else {
-    if (isNvuePage(page)) {//nvue 页面
-      return {
-        page: page,
-        query: page.__displayReporter.query };
-
-    }
-  }
-};
-
-/**
-    * 获取 to 的配置参数
-    * @param {Object} rule 当前跳转的规则
-    */exports.getPageVmOrMp = getPageVmOrMp;
-var formatTo = function formatTo(finalRoute) {
-  var route = (0, _util.copyObject)(finalRoute.route);
-  var rule = finalRoute.rule;
-  route.query = rule['query'] || rule['params'] || {};
-  return route;
-};
-/**
-    * 获取 from 的配置参数 from 页面永远都是站在当前页面忘其它地方走 所以都是最后一个页面
-    * 
-    * @param {Object} routes //当前对象的所有路由表
-    */exports.formatTo = formatTo;
-var formatFrom = function formatFrom(routes) {
-  var topPage = getPages(-2);var _getPageVmOrMp =
-  getPageVmOrMp(topPage, false),page = _getPageVmOrMp.page,query = _getPageVmOrMp.query;
-  var route = pathOrNameToRoute(page.route, routes); //获取到当前路由表下的 route
-  route.query = getFormatQuery(query); //不管是编码传输还是非编码 最后都得在 to/from 中换成json对象
-  return route;
-};
-/**
-    * 通过一个未知的路径或者名称 在路由表中查找指定路由表 并返回
-    * @param {string} type   //path 或者 name
-    * @param {Object} routes //当前对象的所有路由表
-    */exports.formatFrom = formatFrom;
-var pathOrNameToRoute = function pathOrNameToRoute(type) {var routes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _config.Global.Router.CONFIG.routes;
-  for (var key in routes) {
-    var item = routes[key];
-    if (item.path === "/".concat(type)) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-    if (item.path === type) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-    if (item.name == type) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-  }
-  (0, _warn.err)("\u5F53\u524D '".concat(type, "' \u5728\u8DEF\u7531\u8868\u4E2D\u6CA1\u6709\u627E\u5230\u5339\u914D\u7684 name \u6216\u8005 path"));
-};
-/**
-    * 
-    * 把用户的跳转路由规则格式化成uni-app可用的路由跳转规则
-    * 
-    * @param {Object} rule  //当前用户跳转的路由规则
-    * @param {Object} routes //当前simple-router 下的路由表 
-    */exports.pathOrNameToRoute = pathOrNameToRoute;
-var ruleToUniNavInfo = function ruleToUniNavInfo(rule, routes) {
-  if (rule == null) {
-    return (0, _warn.err)("\u5F53\u524D\u8DF3\u8F6C\u89C4\u5219\u4E3A\u7A7A,\u8BF7\u68C0\u67E5\u8DF3\u8F6C\u4EE3\u7801");
-  }var
-  navType = 'path',route = null,query = {},animation = {};
-  if (rule.constructor === String) {//是字符串类型 那当前就是路径啦
-    route = pathOrNameToRoute(rule, routes); //直接把 rule 当 path 传递 完事
-  } else if (rule.constructor === Object) {//对象类型 可以是 path 或者 name
-    route = pathOrNameToRoute(rule['path'] || (navType = 'name', rule['name']), routes); //两则必有其一 报错自己处理
-    query = rule['query'] || rule['params'] || {};
-    animation = rule.animation || {};
-  } else {
-    return (0, _warn.err)("\u4F20\u7684\u4EC0\u4E48\u4E71\u4E03\u516B\u7CDF\u7684\u7C7B\u578B?\u8DEF\u7531\u8DF3\u8F6C\u89C4\u5219\u53EA\u8BA4\u5B57\u7B26\u4E32 'path' , \u5BF9\u8C61 'path' , \u5BF9\u8C61 'name' ");
-  }
-  animation = _objectSpread({}, _config.Global.Router.CONFIG.APP.animation, {}, route.animation || {}, {}, animation); //合并多种方式声明的动画效果
-  route.animation = animation; //这才是最终的页面切换效果
-  //路径处理完后   开始格式化参数
-  var uniRoute = (0, _util.parseQuery)(route.path, query); //uni-app 需要的跳转规则
-  return {
-    rule: rule,
-    route: route,
-    uniRoute: uniRoute };
-
-};
-/**
-    * 统一格式话 路由传递的参数 看看是编码还是非编码 做相应的对策
-    * 
-    * @param {Object} query 当前的路由参数
-    * @param {Boolean} getter 是从页面获取 route 对象下的参数 还是编码后传输
-    */exports.ruleToUniNavInfo = ruleToUniNavInfo;
-var getFormatQuery = function getFormatQuery() {var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var getter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (_config.Global.Router.CONFIG.encodeURI) {
-    try {
-      query = JSON.parse(decodeURIComponent(query.query || encodeURIComponent('{}')));
-    } catch (e) {
-      query = JSON.parse(query.query);
-    }
-  }
-  return query;
-};
-/**
-    * 获取当前页面下的 Route 信息
-    * 
-    * @param {Object} pages 获取页面对象集合
-    * @param {Object} Vim 用户传递的当前页面对象
-    */exports.getFormatQuery = getFormatQuery;
-var APPGetPageRoute = function APPGetPageRoute(pages, Vim) {var
-  query = {},path = '';
-  if (pages.length > 0) {
-    var _page = pages[pages.length - 1]; //获取到当前页面
-    query = getFormatQuery(_page.options, true);
-    path = _page.route;
-  } else if (Vim != null) {
-    query = getFormatQuery(Vim.$mp.page.options, true);
-    path = page.route;
-  }
-  var route = pathOrNameToRoute(path);
-  route.query = query;
-  return route;
-};
-/**
-    * 获取当前页面下的onBeforeBack 生命周期并执行
-    * 
-    * @param {Object} args 当前返回页面时uni-app传递的参数
-    */exports.APPGetPageRoute = APPGetPageRoute;
-var getPageOnBeforeBack = function getPageOnBeforeBack(args) {
-  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var currPage, onBeforeBack, isNext;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
-              currPage = getPages(-2); //获取到当前页面
-              onBeforeBack = currPage.$vm.$options.onBeforeBack;if (!(
-              onBeforeBack != null && onBeforeBack.constructor === Function)) {_context.next = 8;break;}_context.next = 5;return (
-                onBeforeBack.call(currPage.$vm, args));case 5:isNext = _context.sent;if (!(
-              isNext === true)) {_context.next = 8;break;}return _context.abrupt("return",
-              resolve(false));case 8:return _context.abrupt("return",
-
-
-              resolve(true));case 9:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
-
-};
-/**
-    * 断言当前页面是否可返回上一级
-    * @param {Object} page 当前页面webview对象
-    */exports.getPageOnBeforeBack = getPageOnBeforeBack;
-var assertCanBack = function assertCanBack(page) {
-  var pageStyle = page.$getAppWebview().getStyle();
-  if (pageStyle.titleNView != null && pageStyle.titleNView.autoBackButton) {//只有处理有带返回按钮的页面  
-    return true;
-  }
-  //两种情况 1.真的是顶级页面时  2.自定义头部
-  var $page = page.$page;
-  if ($page && $page.meta.isQuit === false) {//自定义头部 不是顶级页面
-    return true;
-  }
-  return false; //不可返回 真的是顶级页面时 返回就直接退出app了
-};exports.assertCanBack = assertCanBack;
-
-/***/ }),
-
-/***/ 34:
-/*!*****************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/util.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.AppletsPageRoute = exports.ruleToUniNavInfo = exports.formatFrom = exports.formatTo = exports.pathOrNameToRoute = exports.getPages = exports.getFormatQuery = exports.getPageVmOrMp = exports.callAppHook = void 0;var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ../helpers/util */ 24);
-var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
-var _compile = __webpack_require__(/*! ../helpers/compile.js */ 35);
-/**
-                                                  * 触发指定生命钩子
-                                                  * @param {Array} funList	//需要执行的方法列表
-                                                  * @param {Object} args //触发生命钩子传递的参数
-                                                  */
-var callAppHook = function callAppHook(funList, args) {
-  for (var i = 0; i < funList.length; i++) {
-    funList[i].call(this, args);
-  }
-};
-/**
-    * @param {Object} page //当前顶级页面对象
-    * @param {Object} vim:? //是否获取 $vm 对象还是 $mp 对象
-    */exports.callAppHook = callAppHook;
-var getPageVmOrMp = function getPageVmOrMp(page) {var vim = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-  if (vim) {
-    return page.$vm;
-  }var
-  $mp = page.$vm.$mp;
-  (0, _compile.baiduApple)(function () {//百度小程序新增一个route属性
-    $mp.page.route = $mp.page.is;
-  });
-  (0, _compile.touTiao)(function () {//头条小程序新增一个route属性
-    $mp.page.route = $mp.page.is;
-  });
-  return $mp;
-};
-/**
-    * 统一格式话 路由传递的参数 看看是编码还是非编码 做相应的对策
-    * 
-    * @param {Object} query 当前的路由参数
-    * @param {Boolean} getter 是从页面获取 route 对象下的参数 还是编码后传输
-    */exports.getPageVmOrMp = getPageVmOrMp;
-var getFormatQuery = function getFormatQuery() {var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var getter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (_config.Global.Router.CONFIG.encodeURI) {
-    if (getter) {
-      try {//除去微信小程序都不需要 decodeURIComponent
-        query = JSON.parse(decodeURIComponent(query.query) || '{}');
-      } catch (e) {//其他小程序
-        query = JSON.parse(query.query || '{}');
-      }
-    } else {
-      try {
-        query = JSON.parse(decodeURIComponent(query.query || encodeURIComponent('{}')));
-      } catch (e) {
-        query = JSON.parse(query.query);
-      }
-    }
-  }
-  return query;
-};
-/**
-    * @param {Number} index //需要获取的页面下标 -2:表示获取最后一个即当前页面 -1:表示全部 -3:当前页面的前一个页面
-    * @param {Boolean} all //是否获取全部的页面
-    */exports.getFormatQuery = getFormatQuery;
-var getPages = function getPages() {var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;var all = arguments.length > 1 ? arguments[1] : undefined;
-  var pages = getCurrentPages(all);
-  if (index === -1) {
-    return pages;
-  }
-  if (index === -2) {
-    return pages[pages.length - 1];
-  }
-  if (index === -3) {
-    return pages[pages.length - 2];
-  }
-  return pages[index];
-};
-/**
-    * 通过一个未知的路径或者名称 在路由表中查找指定路由表 并返回
-    * @param {string} type   //path 或者 name
-    * @param {Object} routes //当前对象的所有路由表
-    */exports.getPages = getPages;
-var pathOrNameToRoute = function pathOrNameToRoute(type) {var routes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _config.Global.Router.CONFIG.routes;
-  for (var key in routes) {
-    var item = routes[key];
-    if (item.path === "/".concat(type)) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-    if (item.path === type) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-    if (item.name == type) {
-      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
-    }
-  }
-  (0, _warn.err)("\u5F53\u524D '".concat(type, "' \u5728\u8DEF\u7531\u8868\u4E2D\u6CA1\u6709\u627E\u5230\u5339\u914D\u7684 name \u6216\u8005 path"));
-};
-
-/**
-    * 获取 to 的配置参数
-    * @param {Object} rule 当前跳转的规则
-    */exports.pathOrNameToRoute = pathOrNameToRoute;
-var formatTo = function formatTo(finalRoute) {
-  var route = (0, _util.copyObject)(finalRoute.route);
-  var rule = finalRoute.rule;
-  route.query = rule['query'] || rule['params'] || {};
-  return route;
-};
-
-/**
-    * 获取 from 的配置参数 from 页面永远都是站在当前页面忘其它地方走 所以都是最后一个页面
-    * 
-    * @param {Object} routes //当前对象的所有路由表
-    */exports.formatTo = formatTo;
-var formatFrom = function formatFrom(routes) {
-  var topPage = getPages(-2);var _getPageVmOrMp =
-  getPageVmOrMp(topPage, false),page = _getPageVmOrMp.page,query = _getPageVmOrMp.query;
-  var route = pathOrNameToRoute(page.route, routes); //获取到当前路由表下的 route
-  route.query = getFormatQuery(query); //不管是编码传输还是非编码 最后都得在 to/from 中换成json对象
-  return route;
-};
-
-/**
-    * 
-    * 把用户的跳转路由规则格式化成uni-app可用的路由跳转规则
-    * 
-    * @param {Object} rule  //当前用户跳转的路由规则
-    * @param {Object} routes //当前simple-router 下的路由表 
-    */exports.formatFrom = formatFrom;
-var ruleToUniNavInfo = function ruleToUniNavInfo(rule, routes) {
-  if (rule == null) {
-    return (0, _warn.err)("\u5F53\u524D\u8DF3\u8F6C\u89C4\u5219\u4E3A\u7A7A,\u8BF7\u68C0\u67E5\u8DF3\u8F6C\u4EE3\u7801");
-  }var
-  navType = 'path',route = null,query = {};
-  if (rule.constructor === String) {//是字符串类型 那当前就是路径啦
-    route = pathOrNameToRoute(rule, routes); //直接把 rule 当 path 传递 完事
-  } else if (rule.constructor === Object) {//对象类型 可以是 path 或者 name
-    route = pathOrNameToRoute(rule['path'] || (navType = 'name', rule['name']), routes); //两则必有其一 报错自己处理
-    query = rule['query'] || rule['params'] || {};
-  } else {
-    return (0, _warn.err)("\u4F20\u7684\u4EC0\u4E48\u4E71\u4E03\u516B\u7CDF\u7684\u7C7B\u578B?\u8DEF\u7531\u8DF3\u8F6C\u89C4\u5219\u53EA\u8BA4\u5B57\u7B26\u4E32 'path' , \u5BF9\u8C61 'path' , \u5BF9\u8C61 'name' ");
-  }
-  //路径处理完后   开始格式化参数
-  var uniRoute = (0, _util.parseQuery)(route.path, query); //uni-app 需要的跳转规则
-  return {
-    rule: rule,
-    route: route,
-    uniRoute: uniRoute };
-
-};
-/**
-    * 获取当前页面下的 Route 信息
-    * 
-    * @param {Object} pages 获取页面对象集合
-    * @param {Object} Vim 用户传递的当前页面对象
-    */exports.ruleToUniNavInfo = ruleToUniNavInfo;
-var AppletsPageRoute = function AppletsPageRoute(pages, Vim) {var
-  query = {},path = '';
-  if (pages.length > 0) {
-    var _page = pages[pages.length - 1]; //获取到当前页面
-    var uniQuery = getPageVmOrMp(_page, false).query;
-    query = getFormatQuery(uniQuery, true);
-    path = _page.route;
-  } else if (Vim != null) {
-    query = getFormatQuery(Vim.$mp.page.options, true);
-    path = page.route;
-  }
-  var route = pathOrNameToRoute(path);
-  route.query = query;
-  return route;
-};exports.AppletsPageRoute = AppletsPageRoute;
-
-/***/ }),
-
-/***/ 35:
-/*!**************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/helpers/compile.js ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.touTiao = exports.baiduApple = exports.notH5 = exports.applets = exports.APP = exports.H5 = void 0;var H5 = function H5(fn) {
-
-
-
-};exports.H5 = H5;
-var APP = function APP(fn) {
-
-
-
-};exports.APP = APP;
-var applets = function applets(fn) {
-
-  fn();
-
-};exports.applets = applets;
-var notH5 = function notH5(fn) {
-
-  fn();
-
-};exports.notH5 = notH5;
-var baiduApple = function baiduApple(fn) {
-
-
-
-};exports.baiduApple = baiduApple;
-var touTiao = function touTiao(fn) {
-
-
-
-};exports.touTiao = touTiao;
-
-/***/ }),
-
-/***/ 36:
-/*!**************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/lifeCycle/hooks.js ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.registerRouterHooks = exports.registerHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _util = __webpack_require__(/*! ../helpers/util */ 24);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
-
-
-
-
-
-
-var registerHook = function registerHook(list, fn) {
-  list.push(fn);
-  return function () {
-    var i = list.indexOf(fn);
-    if (i > -1) list.splice(i, 1);
-  };
-};
-/**
-    * 注册全局Router生命钩子
-    */exports.registerHook = registerHook;
-var registerRouterHooks = function registerRouterHooks() {
-  registerHook(this.lifeCycle.routerbeforeHooks, function (fnType) {var _this = this;
-    return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
-                _this.CONFIG.routerBeforeEach(); //触发暴露给开发者的生命钩子
-                if ((0, _util.appPlatform)(true) === 'H5') {
-                  H5PATCH.on('toogle', 'startLodding');
-                }return _context.abrupt("return",
-                resolve(true));case 3:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
-
-  });
-  registerHook(this.lifeCycle.routerAfterHooks, function () {var res = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    if (res.H5Intercept !== true) {
-      this.CONFIG.routerAfterEach(); //触发暴露给开发者的生命钩子
-    }
-    if ((0, _util.appPlatform)(true) === 'H5') {
-      H5PATCH.on('toogle', 'stopLodding');
-    }
-    return true;
-  });
-};exports.registerRouterHooks = registerRouterHooks;
-
-/***/ }),
-
-/***/ 37:
-/*!**************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/hooks.js ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.beforeTabHooks = exports.backApiCallHook = exports.beforeBackHooks = exports.transitionTo = exports.triggerLifeCycle = exports.proxyIndexHook = exports.proxyLaunchHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ./util */ 33);
-var _util2 = __webpack_require__(/*! ../helpers/util */ 24);
-var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
-var _uniNav = __webpack_require__(/*! ./uniNav */ 38);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
-
-var startBack = false; // 主要是兼容低端手机返回卡 然后多次返回直接提示退出的问题 
-
-/**
- * 还原并执行所有 拦截下来的生命周期 app.vue 及 index 下的生命周期 
- * @param {Boolean} callHome // 是否触发首页的生命周期
- * 
- * this 为当前 page 对象
- */
-var callwaitHooks = function callwaitHooks(callHome) {var _this = this;
-  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var variation, appVue, indexVue, onLaunch, onShow, waitHooks, variationFuns, indexCallHooks, app, key, _loop, _key;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
-              variation = []; //存储一下在uni-app上的变异生命钩子  奇葩的要死
-              appVue = _config.uniAppHook.appVue, indexVue = _config.uniAppHook.indexVue, onLaunch = _config.uniAppHook.onLaunch, onShow = _config.uniAppHook.onShow, waitHooks = _config.uniAppHook.waitHooks, variationFuns = _config.uniAppHook.variationFuns, indexCallHooks = _config.uniAppHook.indexCallHooks;
-              app = appVue.$options;_context.next = 5;return (
-                onLaunch.fun[onLaunch.fun.length - 1].call(appVue, onLaunch.args));case 5: //确保只执行最后一个 并且强化异步操作
-              onShow.fun[onShow.fun.length - 1].call(appVue, onShow.args); //onshow 不保证异步 直接确保执行最后一个
-              if (callHome) {//触发首页生命周期
-                for (key in waitHooks) {
-                  if (indexCallHooks.includes(key)) {//只有在被包含的情况下才执行
-                    _util.callAppHook.call(_this, waitHooks[key].fun);
-                  }
-                }
-              }
-              if (onLaunch.isHijack) {//还原 onLaunch生命钩子
-                app.onLaunch.splice(app.onLaunch.length - 1, 1, onLaunch.fun[0]);
-              }
-              if (onShow.isHijack) {//继续还原 onShow
-                app.onShow.splice(app.onShow.length - 1, 1, onShow.fun[0]);
-              }_loop = function _loop(
-              _key) {//还原 首页下的生命钩子
-                var item = waitHooks[_key];
-                if (item.isHijack) {
-                  if (variationFuns.includes(_key)) {//变异方法
-                    variation.push({ key: _key, fun: item.fun[0] });
-                  } else {
-                    var indeHooks = indexVue[_key];
-                    //修复 https://github.com/SilurianYang/uni-simple-router/issues/76
-                    setTimeout(function () {//异步延迟还原 不然 uni-app 给给触发了
-                      indeHooks.splice(indeHooks.length - 1, 1, item.fun[0]);
-                    }, 50);
-                  }
-                }};for (_key in waitHooks) {_loop(_key);
-              }
-              resolve(variation);case 12:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
-
-};
-/**
-    * 还原剩下的奇葩生命钩子
-    * @param {Object} variation 当前uni-app中的一些变异方法  奇葩生命钩子
-    */
-var callVariationHooks = function callVariationHooks(variation) {
-  for (var i = 0; i < variation.length; i++) {var _variation$i =
-    variation[i],key = _variation$i.key,fun = _variation$i.fun;
-    var indeHooks = _config.uniAppHook.indexVue[key];
-    indeHooks.splice(indeHooks.length - 1, 1, fun);
-  }
-};
-
-/**
-    * 主要是对app.vue下onLaunch和onShow生命周期进行劫持
-    * 
-    * this 为当前 page 对象
-    */
-var proxyLaunchHook = function proxyLaunchHook() {var _this2 = this;var _this$$options =
-
-
-
-  this.$options,onLaunch = _this$$options.onLaunch,onShow = _this$$options.onShow;
-  _config.uniAppHook.appVue = this; //缓存 当前app.vue组件对象
-  if (onLaunch.length > 1) {//确保有写 onLaunch 可能有其他混入 那也办法
-    _config.uniAppHook.onLaunch.isHijack = true;
-    _config.uniAppHook.onLaunch.fun = onLaunch.splice(onLaunch.length - 1, 1, function (arg) {
-      _config.uniAppHook.onLaunch.args = arg;
-    }); //替换uni-app自带的生命周期
-  }
-  if (onShow.length > 0) {
-    _config.uniAppHook.onShow.isHijack = true;
-    _config.uniAppHook.onShow.fun = onShow.splice(onShow.length - 1, 1, function (arg) {
-      _config.uniAppHook.onShow.args = arg;
-      if (_config.uniAppHook.pageReady) {//因为还有app切前台后台的操作
-        _util.callAppHook.call(_this2, _config.uniAppHook.onShow.fun, arg);
-      }
-    }); //替换替换 都替换
-  }
-};
-/**
-    * 把指定页面的生命钩子函数保存并替换
-    * this 为当前 page 对象
-    */exports.proxyLaunchHook = proxyLaunchHook;
-var proxyIndexHook = function proxyIndexHook(Router) {var
-  needHooks = _config.uniAppHook.needHooks,waitHooks = _config.uniAppHook.waitHooks;
-  var options = this.$options;
-  _config.uniAppHook.indexVue = options;
-  for (var i = 0; i < needHooks.length; i++) {
-    var key = needHooks[i];
-    if (options[key] != null) {//只劫持开发者声明的生命周期
-      var length = options[key].length;
-      var whObject = waitHooks[key] = {};
-      whObject.fun = options[key].splice(length - 1, 1, _util2.noop); //把实际的页面生命钩子函数缓存起来,替换原有的生命钩子
-      whObject.isHijack = true;
-    }
-  }
-  triggerLifeCycle.call(this, Router); //接着 主动我们触发导航守卫
-};
-
-/**
-    * 主动触发导航守卫
-    * @param {Object} Router 当前路由对象
-    * 
-    * this  当前vue页面组件对象
-    */exports.proxyIndexHook = proxyIndexHook;
-var triggerLifeCycle = function triggerLifeCycle(Router) {var _this3 = this;
-  var topPage = getCurrentPages()[0];
-  if (topPage == null) {
-    return (0, _warn.warn)('打扰了,当前一个页面也没有 这不是官方的bug是什么??');
-  }var _getPageVmOrMp =
-  (0, _util.getPageVmOrMp)(topPage, false),query = _getPageVmOrMp.query,page = _getPageVmOrMp.page;
-  transitionTo.call(Router, { path: page.route, query: query }, 'push', /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(finalRoute, fnType) {var variation;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
-              variation = [];if (!(
-              "/".concat(page.route) == finalRoute.route.path)) {_context2.next = 8;break;} //在首页不动的情况下
-              (0, _uniNav.pageNavFinish)('launch', page.route);
-              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
-              _context2.next = 6;return callwaitHooks.call(_this3, true);case 6:_context2.next = 13;break;case 8:_context2.next = 10;return (
-
-                callwaitHooks.call(_this3, false));case 10:variation = _context2.sent;_context2.next = 13;return (
-                (0, _uniNav.uniPushTo)(finalRoute, fnType));case 13:
-
-              plus.nativeObj.View.getViewById('router-loadding').close();
-              callVariationHooks(variation);
-              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
-            case 16:case "end":return _context2.stop();}}}, _callee2);}));return function (_x2, _x3) {return _ref2.apply(this, arguments);};}());
-};
-/**
-    * 核心方法 处理一系列的跳转配置
-    * @param {Object} rule 当前跳转规则
-    * @param {Object} fnType 跳转页面的类型方法
-    * @param {Object} navCB:? 回调函数
-    * 
-    * this 为当前 Router 对象
-    * 
-    */exports.triggerLifeCycle = triggerLifeCycle;
-var transitionTo = /*#__PURE__*/function () {var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(rule, fnType, navCB) {var finalRoute, _from, _to, beforeResult, enterResult;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
-              this.lifeCycle["routerbeforeHooks"][0].call(this));case 2: //触发内部跳转前的生命周期
-            finalRoute = (0, _util.ruleToUniNavInfo)(rule, this.CONFIG.routes); //获得到最终的 route 对象
-            _from = (0, _util.formatFrom)(this.CONFIG.routes); //先根据跳转类型获取 from 数据
-            _to = (0, _util.formatTo)(finalRoute); //再根据跳转类型获取 to 数据
-            _context3.next = 7;return beforeHooks.call(this, _from, _to);case 7:beforeResult = _context3.sent;_context3.prev = 8;_context3.next = 11;return (
-
-              isNext.call(this, beforeResult, fnType, navCB));case 11:_context3.next = 13;return (
-              beforeEnterHooks.call(this, finalRoute, _from, _to));case 13:enterResult = _context3.sent;_context3.next = 16;return (
-              isNext.call(this, enterResult, fnType, navCB));case 16:_context3.next = 21;break;case 18:_context3.prev = 18;_context3.t0 = _context3["catch"](8);return _context3.abrupt("return",
-
-            false);case 21:
-
-            navCB && navCB.call(this, finalRoute, fnType); //执行当前回调生命周期
-            afterEachHooks.call(this, _from, _to);_context3.next = 25;return (
-              this.lifeCycle["routerAfterHooks"][0].call(this));case 25:case "end":return _context3.stop();}}}, _callee3, this, [[8, 18]]);}));return function transitionTo(_x4, _x5, _x6) {return _ref3.apply(this, arguments);};}();
-
-/**
-                                                                                                                                                                                                                                        * 触发全局beforeHooks 生命钩子
-                                                                                                                                                                                                                                        * @param {Object} _from // from  参数
-                                                                                                                                                                                                                                        * @param {Object} _to  // to 参数
-                                                                                                                                                                                                                                        * 
-                                                                                                                                                                                                                                        * this 为当前 Router 对象
-                                                                                                                                                                                                                                        */exports.transitionTo = transitionTo;
-var beforeHooks = function beforeHooks(_from, _to) {var _this4 = this;
-  return new Promise( /*#__PURE__*/function () {var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve) {var beforeHooks;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
-              beforeHooks = _this4.lifeCycle["beforeHooks"][0];if (!(
-              beforeHooks == null)) {_context4.next = 3;break;}return _context4.abrupt("return",
-              resolve());case 3:_context4.next = 5;return (
-
-                beforeHooks.call(_this4, _to, _from, resolve));case 5:case "end":return _context4.stop();}}}, _callee4);}));return function (_x7) {return _ref4.apply(this, arguments);};}());
-
-};
-/**
-    * 触发全局afterEachHooks 生命钩子
-    * @param {Object} _from // from  参数
-    * @param {Object} _to  // to 参数
-    * 
-    * this 为当前 Router 对象
-    */
-var afterEachHooks = function afterEachHooks(_from, _to) {
-  var afterHooks = this.lifeCycle["afterHooks"][0];
-  if (afterHooks != null && afterHooks.constructor === Function) {
-    afterHooks.call(this, _to, _from);
-  }
-};
-/**
-    * 触发全局 beforeEnter 生命钩子
-    * @param {Object} finalRoute 	// 当前格式化后的路由参数
-    * @param {Object} _from // from  参数
-    * @param {Object} _to  // to 参数
-    * 
-    * this 为当前 Router 对象
-    */
-var beforeEnterHooks = function beforeEnterHooks(finalRoute, _from, _to) {var _this5 = this;
-  return new Promise( /*#__PURE__*/function () {var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(resolve) {var beforeEnter;return _regenerator.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:
-              beforeEnter = finalRoute.route.beforeEnter;if (!(
-              beforeEnter == null || beforeEnter.constructor !== Function)) {_context5.next = 3;break;}return _context5.abrupt("return",
-              resolve());case 3:_context5.next = 5;return (
-
-                beforeEnter.call(_this5, _to, _from, resolve));case 5:case "end":return _context5.stop();}}}, _callee5);}));return function (_x8) {return _ref5.apply(this, arguments);};}());
-
-};
-/**
-    * 处理返回按钮的生命钩子
-    * @param {Object} options 当前 vue 组件对象下的$options对象
-    * @param {Array} args  当前页面是点击头部返回还是底部返回
-    * 
-    * this 为当前 Router 对象
-    */
-var beforeBackHooks = /*#__PURE__*/function () {var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6(options, args) {var isNext, page;return _regenerator.default.wrap(function _callee6$(_context6) {while (1) {switch (_context6.prev = _context6.next) {case 0:_context6.next = 2;return (
-              (0, _util.getPageOnBeforeBack)(args));case 2:isNext = _context6.sent;if (!(
-            isNext === false)) {_context6.next = 5;break;}return _context6.abrupt("return",
-            false);case 5:
-
-            page = (0, _util.getPages)(-3); //上一个页面对象
-            backCallHook.call(this, page, options);case 7:case "end":return _context6.stop();}}}, _callee6, this);}));return function beforeBackHooks(_x9, _x10) {return _ref6.apply(this, arguments);};}();
-
-/**
-                                                                                                                                                                                                              * 处理back api的生命钩子
-                                                                                                                                                                                                              * @param {Object} options 当前 vue 组件对象下的$options对象
-                                                                                                                                                                                                              * @param {Array} args  当前页面是点击头部返回还是底部返回
-                                                                                                                                                                                                              * 
-                                                                                                                                                                                                              * this 为当前 Router 对象
-                                                                                                                                                                                                              */exports.beforeBackHooks = beforeBackHooks;
-var backApiCallHook = /*#__PURE__*/function () {var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee7(options, args) {var isNext, backLayerC, pages, page;return _regenerator.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.next = 2;return (
-              (0, _util.getPageOnBeforeBack)(args));case 2:isNext = _context7.sent;
-            backLayerC = _config.Global.backLayerC;
-            pages = (0, _util.getPages)();
-            page = null;
-            if (backLayerC > pages.length - 1 || backLayerC == pages.length - 1) {//返回的首页 我们需要显示tabbar拦截
-              page = pages[0];
-            } else {
-              page = pages[pages.length - 2];
-            }
-            backCallHook.call(this, page, options, backLayerC);case 8:case "end":return _context7.stop();}}}, _callee7, this);}));return function backApiCallHook(_x11, _x12) {return _ref7.apply(this, arguments);};}();
-
-/**
-                                                                                                                                                                                                                           * 触发返回事件公共方法
-                                                                                                                                                                                                                           * @param {Object} page	用getPages获取到的页面栈对象
-                                                                                                                                                                                                                           * @param {Object} options 	当前vue页面对象
-                                                                                                                                                                                                                           * @param {Object} backLayerC	需要返回页面的层级
-                                                                                                                                                                                                                             * 
-                                                                                                                                                                                                                           * this 为当前 Router 对象
-                                                                                                                                                                                                                           */exports.backApiCallHook = backApiCallHook;
-var backCallHook = function backCallHook(page, options) {var _this6 = this;var backLayerC = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  var route = (0, _util.APPGetPageRoute)([page]);
-  transitionTo.call(this, { path: route.path, query: route.query }, 'RouterBack', function () {
-    if (startBack) {return false;}; //如果当前处于正在放回的状态
-    startBack = true; //标记开始返回
-    options.onBackPress = [_util2.noop]; //改回uni-app可执行的状态
-    setTimeout(function () {
-      _this6.back(backLayerC);
-      startBack = false; //返回结束
-      (0, _uniNav.pageNavFinish)('bcak', route.path);
-    });
-  });
-};
-/**
-    * 处理tabbar点击拦截事件
-    * @param {Object} path 当前需要跳转的tab页面路径
-    * 
-    * this 为当前 Router 对象
-    */
-var beforeTabHooks = function beforeTabHooks(path) {
-  transitionTo.call(this, { path: "/".concat(path), query: {} }, 'pushTab', function (finalRoute, fnType) {
-    (0, _uniNav.uniPushTo)(finalRoute, fnType);
-  });
-};
-/**
-    * 验证当前 next() 管道函数是否支持下一步
-    * 
-    * @param {Object} Intercept 拦截到的新路由规则
-    * @param {Object} fnType 跳转页面的类型方法 原始的
-    * @param {Object} navCB 回调函数 原始的
-    * 
-    * this 为当前 Router 对象
-    * 
-    */exports.beforeTabHooks = beforeTabHooks;
-var isNext = function isNext(Intercept, fnType, navCB) {var _this7 = this;
-  return new Promise(function (resolve, reject) {
-    if (Intercept == null) {//什么也不做 直接执行下一个钩子
-      return resolve();
-    }
-    if (Intercept === false) {//路由中断
-      return reject('路由终止');
-    }
-    if (Intercept.constructor === String) {//说明 开发者直接传的path 并且没有指定 NAVTYPE 那么采用原来的navType
-      reject(1);
-      return transitionTo.call(_this7, Intercept, fnType, navCB);
-    }
-    if (Intercept.constructor === Object) {//有一系列的配置 包括页面切换动画什么的
-      reject(1);
-      return transitionTo.call(_this7, Intercept, Intercept.NAVTYPE || fnType, navCB);
-    }
-  });
-};
-
-/***/ }),
-
-/***/ 377:
-/*!**************************************!*\
-  !*** ./node_modules/buffer/index.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <http://feross.org>
- * @license  MIT
- */
-/* eslint-disable no-proto */
-
-
-
-var base64 = __webpack_require__(/*! base64-js */ 378)
-var ieee754 = __webpack_require__(/*! ieee754 */ 379)
-var isArray = __webpack_require__(/*! isarray */ 380)
-
-exports.Buffer = Buffer
-exports.SlowBuffer = SlowBuffer
-exports.INSPECT_MAX_BYTES = 50
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Due to various browser bugs, sometimes the Object implementation will be used even
- * when the browser supports typed arrays.
- *
- * Note:
- *
- *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
- *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *     incorrect length in some situations.
-
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
- * get the Object implementation, which is slower but behaves correctly.
- */
-Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
-  ? global.TYPED_ARRAY_SUPPORT
-  : typedArraySupport()
-
-/*
- * Export kMaxLength after typed array support is determined.
- */
-exports.kMaxLength = kMaxLength()
-
-function typedArraySupport () {
-  try {
-    var arr = new Uint8Array(1)
-    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
-    return arr.foo() === 42 && // typed array instances can be augmented
-        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-  } catch (e) {
-    return false
-  }
-}
-
-function kMaxLength () {
-  return Buffer.TYPED_ARRAY_SUPPORT
-    ? 0x7fffffff
-    : 0x3fffffff
-}
-
-function createBuffer (that, length) {
-  if (kMaxLength() < length) {
-    throw new RangeError('Invalid typed array length')
-  }
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = new Uint8Array(length)
-    that.__proto__ = Buffer.prototype
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    if (that === null) {
-      that = new Buffer(length)
-    }
-    that.length = length
-  }
-
-  return that
-}
-
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
-
-function Buffer (arg, encodingOrOffset, length) {
-  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
-    return new Buffer(arg, encodingOrOffset, length)
-  }
-
-  // Common case.
-  if (typeof arg === 'number') {
-    if (typeof encodingOrOffset === 'string') {
-      throw new Error(
-        'If encoding is specified then the first argument must be a string'
-      )
-    }
-    return allocUnsafe(this, arg)
-  }
-  return from(this, arg, encodingOrOffset, length)
-}
-
-Buffer.poolSize = 8192 // not used by this implementation
-
-// TODO: Legacy, not needed anymore. Remove in next major version.
-Buffer._augment = function (arr) {
-  arr.__proto__ = Buffer.prototype
-  return arr
-}
-
-function from (that, value, encodingOrOffset, length) {
-  if (typeof value === 'number') {
-    throw new TypeError('"value" argument must not be a number')
-  }
-
-  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-    return fromArrayBuffer(that, value, encodingOrOffset, length)
-  }
-
-  if (typeof value === 'string') {
-    return fromString(that, value, encodingOrOffset)
-  }
-
-  return fromObject(that, value)
-}
-
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
-Buffer.from = function (value, encodingOrOffset, length) {
-  return from(null, value, encodingOrOffset, length)
-}
-
-if (Buffer.TYPED_ARRAY_SUPPORT) {
-  Buffer.prototype.__proto__ = Uint8Array.prototype
-  Buffer.__proto__ = Uint8Array
-  if (typeof Symbol !== 'undefined' && Symbol.species &&
-      Buffer[Symbol.species] === Buffer) {
-    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
-    Object.defineProperty(Buffer, Symbol.species, {
-      value: null,
-      configurable: true
-    })
-  }
-}
-
-function assertSize (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('"size" argument must be a number')
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
-  }
-}
-
-function alloc (that, size, fill, encoding) {
-  assertSize(size)
-  if (size <= 0) {
-    return createBuffer(that, size)
-  }
-  if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
-    return typeof encoding === 'string'
-      ? createBuffer(that, size).fill(fill, encoding)
-      : createBuffer(that, size).fill(fill)
-  }
-  return createBuffer(that, size)
-}
-
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
-Buffer.alloc = function (size, fill, encoding) {
-  return alloc(null, size, fill, encoding)
-}
-
-function allocUnsafe (that, size) {
-  assertSize(size)
-  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < size; ++i) {
-      that[i] = 0
-    }
-  }
-  return that
-}
-
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
-Buffer.allocUnsafe = function (size) {
-  return allocUnsafe(null, size)
-}
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
-Buffer.allocUnsafeSlow = function (size) {
-  return allocUnsafe(null, size)
-}
-
-function fromString (that, string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') {
-    encoding = 'utf8'
-  }
-
-  if (!Buffer.isEncoding(encoding)) {
-    throw new TypeError('"encoding" must be a valid string encoding')
-  }
-
-  var length = byteLength(string, encoding) | 0
-  that = createBuffer(that, length)
-
-  var actual = that.write(string, encoding)
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    that = that.slice(0, actual)
-  }
-
-  return that
-}
-
-function fromArrayLike (that, array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0
-  that = createBuffer(that, length)
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255
-  }
-  return that
-}
-
-function fromArrayBuffer (that, array, byteOffset, length) {
-  array.byteLength // this throws if `array` is not a valid ArrayBuffer
-
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError('\'offset\' is out of bounds')
-  }
-
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError('\'length\' is out of bounds')
-  }
-
-  if (byteOffset === undefined && length === undefined) {
-    array = new Uint8Array(array)
-  } else if (length === undefined) {
-    array = new Uint8Array(array, byteOffset)
-  } else {
-    array = new Uint8Array(array, byteOffset, length)
-  }
-
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = array
-    that.__proto__ = Buffer.prototype
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    that = fromArrayLike(that, array)
-  }
-  return that
-}
-
-function fromObject (that, obj) {
-  if (Buffer.isBuffer(obj)) {
-    var len = checked(obj.length) | 0
-    that = createBuffer(that, len)
-
-    if (that.length === 0) {
-      return that
-    }
-
-    obj.copy(that, 0, 0, len)
-    return that
-  }
-
-  if (obj) {
-    if ((typeof ArrayBuffer !== 'undefined' &&
-        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || isnan(obj.length)) {
-        return createBuffer(that, 0)
-      }
-      return fromArrayLike(that, obj)
-    }
-
-    if (obj.type === 'Buffer' && isArray(obj.data)) {
-      return fromArrayLike(that, obj.data)
-    }
-  }
-
-  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
-}
-
-function checked (length) {
-  // Note: cannot use `length < kMaxLength()` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength()) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
-  }
-  return length | 0
-}
-
-function SlowBuffer (length) {
-  if (+length != length) { // eslint-disable-line eqeqeq
-    length = 0
-  }
-  return Buffer.alloc(+length)
-}
-
-Buffer.isBuffer = function isBuffer (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer.compare = function compare (a, b) {
-  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-    throw new TypeError('Arguments must be Buffers')
-  }
-
-  if (a === b) return 0
-
-  var x = a.length
-  var y = b.length
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i]
-      y = b[i]
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-Buffer.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'latin1':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-}
-
-Buffer.concat = function concat (list, length) {
-  if (!isArray(list)) {
-    throw new TypeError('"list" argument must be an Array of Buffers')
-  }
-
-  if (list.length === 0) {
-    return Buffer.alloc(0)
-  }
-
-  var i
-  if (length === undefined) {
-    length = 0
-    for (i = 0; i < list.length; ++i) {
-      length += list[i].length
-    }
-  }
-
-  var buffer = Buffer.allocUnsafe(length)
-  var pos = 0
-  for (i = 0; i < list.length; ++i) {
-    var buf = list[i]
-    if (!Buffer.isBuffer(buf)) {
-      throw new TypeError('"list" argument must be an Array of Buffers')
-    }
-    buf.copy(buffer, pos)
-    pos += buf.length
-  }
-  return buffer
-}
-
-function byteLength (string, encoding) {
-  if (Buffer.isBuffer(string)) {
-    return string.length
-  }
-  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
-      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
-    return string.byteLength
-  }
-  if (typeof string !== 'string') {
-    string = '' + string
-  }
-
-  var len = string.length
-  if (len === 0) return 0
-
-  // Use a for loop to avoid recursion
-  var loweredCase = false
-  for (;;) {
-    switch (encoding) {
-      case 'ascii':
-      case 'latin1':
-      case 'binary':
-        return len
-      case 'utf8':
-      case 'utf-8':
-      case undefined:
-        return utf8ToBytes(string).length
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return len * 2
-      case 'hex':
-        return len >>> 1
-      case 'base64':
-        return base64ToBytes(string).length
-      default:
-        if (loweredCase) return utf8ToBytes(string).length // assume utf8
-        encoding = ('' + encoding).toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-Buffer.byteLength = byteLength
-
-function slowToString (encoding, start, end) {
-  var loweredCase = false
-
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
-  if (start === undefined || start < 0) {
-    start = 0
-  }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
-  if (start > this.length) {
-    return ''
-  }
-
-  if (end === undefined || end > this.length) {
-    end = this.length
-  }
-
-  if (end <= 0) {
-    return ''
-  }
-
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
-  end >>>= 0
-  start >>>= 0
-
-  if (end <= start) {
-    return ''
-  }
-
-  if (!encoding) encoding = 'utf8'
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Slice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
-// Buffer instances.
-Buffer.prototype._isBuffer = true
-
-function swap (b, n, m) {
-  var i = b[n]
-  b[n] = b[m]
-  b[m] = i
-}
-
-Buffer.prototype.swap16 = function swap16 () {
-  var len = this.length
-  if (len % 2 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 16-bits')
-  }
-  for (var i = 0; i < len; i += 2) {
-    swap(this, i, i + 1)
-  }
-  return this
-}
-
-Buffer.prototype.swap32 = function swap32 () {
-  var len = this.length
-  if (len % 4 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 32-bits')
-  }
-  for (var i = 0; i < len; i += 4) {
-    swap(this, i, i + 3)
-    swap(this, i + 1, i + 2)
-  }
-  return this
-}
-
-Buffer.prototype.swap64 = function swap64 () {
-  var len = this.length
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap(this, i, i + 7)
-    swap(this, i + 1, i + 6)
-    swap(this, i + 2, i + 5)
-    swap(this, i + 3, i + 4)
-  }
-  return this
-}
-
-Buffer.prototype.toString = function toString () {
-  var length = this.length | 0
-  if (length === 0) return ''
-  if (arguments.length === 0) return utf8Slice(this, 0, length)
-  return slowToString.apply(this, arguments)
-}
-
-Buffer.prototype.equals = function equals (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer.compare(this, b) === 0
-}
-
-Buffer.prototype.inspect = function inspect () {
-  var str = ''
-  var max = exports.INSPECT_MAX_BYTES
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
-    if (this.length > max) str += ' ... '
-  }
-  return '<Buffer ' + str + '>'
-}
-
-Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (!Buffer.isBuffer(target)) {
-    throw new TypeError('Argument must be a Buffer')
-  }
-
-  if (start === undefined) {
-    start = 0
-  }
-  if (end === undefined) {
-    end = target ? target.length : 0
-  }
-  if (thisStart === undefined) {
-    thisStart = 0
-  }
-  if (thisEnd === undefined) {
-    thisEnd = this.length
-  }
-
-  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-    throw new RangeError('out of range index')
-  }
-
-  if (thisStart >= thisEnd && start >= end) {
-    return 0
-  }
-  if (thisStart >= thisEnd) {
-    return -1
-  }
-  if (start >= end) {
-    return 1
-  }
-
-  start >>>= 0
-  end >>>= 0
-  thisStart >>>= 0
-  thisEnd >>>= 0
-
-  if (this === target) return 0
-
-  var x = thisEnd - thisStart
-  var y = end - start
-  var len = Math.min(x, y)
-
-  var thisCopy = this.slice(thisStart, thisEnd)
-  var targetCopy = target.slice(start, end)
-
-  for (var i = 0; i < len; ++i) {
-    if (thisCopy[i] !== targetCopy[i]) {
-      x = thisCopy[i]
-      y = targetCopy[i]
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset
-    byteOffset = 0
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000
-  }
-  byteOffset = +byteOffset  // Coerce to Number.
-  if (isNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1)
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer.from(val, encoding)
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (Buffer.isBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF // Search for a byte value [0-255]
-    if (Buffer.TYPED_ARRAY_SUPPORT &&
-        typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1
-  var arrLength = arr.length
-  var valLength = val.length
-
-  if (encoding !== undefined) {
-    encoding = String(encoding).toLowerCase()
-    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
-        encoding === 'utf16le' || encoding === 'utf-16le') {
-      if (arr.length < 2 || val.length < 2) {
-        return -1
-      }
-      indexSize = 2
-      arrLength /= 2
-      valLength /= 2
-      byteOffset /= 2
-    }
-  }
-
-  function read (buf, i) {
-    if (indexSize === 1) {
-      return buf[i]
-    } else {
-      return buf.readUInt16BE(i * indexSize)
-    }
-  }
-
-  var i
-  if (dir) {
-    var foundIndex = -1
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex
-        foundIndex = -1
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false
-          break
-        }
-      }
-      if (found) return i
-    }
-  }
-
-  return -1
-}
-
-Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
-  return this.indexOf(val, byteOffset, encoding) !== -1
-}
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
-}
-
-Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
-}
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0
-  var remaining = buf.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length
-  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16)
-    if (isNaN(parsed)) return i
-    buf[offset + i] = parsed
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite (buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function latin1Write (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function ucs2Write (buf, string, offset, length) {
-  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8'
-    length = this.length
-    offset = 0
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset
-    length = this.length
-    offset = 0
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset | 0
-    if (isFinite(length)) {
-      length = length | 0
-      if (encoding === undefined) encoding = 'utf8'
-    } else {
-      encoding = length
-      length = undefined
-    }
-  // legacy write(string, encoding, offset, length) - remove in v0.13
-  } else {
-    throw new Error(
-      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
-    )
-  }
-
-  var remaining = this.length - offset
-  if (length === undefined || length > remaining) length = remaining
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('Attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8'
-
-  var loweredCase = false
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite(this, string, offset, length)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Write(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-Buffer.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-}
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return base64.fromByteArray(buf)
-  } else {
-    return base64.fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  end = Math.min(buf.length, end)
-  var res = []
-
-  var i = start
-  while (i < end) {
-    var firstByte = buf[i]
-    var codePoint = null
-    var bytesPerSequence = (firstByte > 0xEF) ? 4
-      : (firstByte > 0xDF) ? 3
-      : (firstByte > 0xBF) ? 2
-      : 1
-
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint
-
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 0x80) {
-            codePoint = firstByte
-          }
-          break
-        case 2:
-          secondByte = buf[i + 1]
-          if ((secondByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
-            if (tempCodePoint > 0x7F) {
-              codePoint = tempCodePoint
-            }
-          }
-          break
-        case 3:
-          secondByte = buf[i + 1]
-          thirdByte = buf[i + 2]
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
-            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-              codePoint = tempCodePoint
-            }
-          }
-          break
-        case 4:
-          secondByte = buf[i + 1]
-          thirdByte = buf[i + 2]
-          fourthByte = buf[i + 3]
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
-            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-              codePoint = tempCodePoint
-            }
-          }
-      }
-    }
-
-    if (codePoint === null) {
-      // we did not generate a valid codePoint so insert a
-      // replacement char (U+FFFD) and advance only 1 byte
-      codePoint = 0xFFFD
-      bytesPerSequence = 1
-    } else if (codePoint > 0xFFFF) {
-      // encode to utf16 (surrogate pair dance)
-      codePoint -= 0x10000
-      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
-      codePoint = 0xDC00 | codePoint & 0x3FF
-    }
-
-    res.push(codePoint)
-    i += bytesPerSequence
-  }
-
-  return decodeCodePointsArray(res)
-}
-
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-// the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
-var MAX_ARGUMENTS_LENGTH = 0x1000
-
-function decodeCodePointsArray (codePoints) {
-  var len = codePoints.length
-  if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-  }
-
-  // Decode in chunks to avoid "call stack size exceeded".
-  var res = ''
-  var i = 0
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-    )
-  }
-  return res
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 0x7F)
-  }
-  return ret
-}
-
-function latin1Slice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i])
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length
-
-  if (!start || start < 0) start = 0
-  if (!end || end < 0 || end > len) end = len
-
-  var out = ''
-  for (var i = start; i < end; ++i) {
-    out += toHex(buf[i])
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
-  }
-  return res
-}
-
-Buffer.prototype.slice = function slice (start, end) {
-  var len = this.length
-  start = ~~start
-  end = end === undefined ? len : ~~end
-
-  if (start < 0) {
-    start += len
-    if (start < 0) start = 0
-  } else if (start > len) {
-    start = len
-  }
-
-  if (end < 0) {
-    end += len
-    if (end < 0) end = 0
-  } else if (end > len) {
-    end = len
-  }
-
-  if (end < start) end = start
-
-  var newBuf
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    newBuf = this.subarray(start, end)
-    newBuf.__proto__ = Buffer.prototype
-  } else {
-    var sliceLen = end - start
-    newBuf = new Buffer(sliceLen, undefined)
-    for (var i = 0; i < sliceLen; ++i) {
-      newBuf[i] = this[i + start]
-    }
-  }
-
-  return newBuf
-}
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) {
-    checkOffset(offset, byteLength, this.length)
-  }
-
-  var val = this[offset + --byteLength]
-  var mul = 1
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  return this[offset]
-}
-
-Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return this[offset] | (this[offset + 1] << 8)
-}
-
-Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return (this[offset] << 8) | this[offset + 1]
-}
-
-Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-}
-
-Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-}
-
-Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var i = byteLength
-  var mul = 1
-  var val = this[offset + --i]
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-}
-
-Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset] | (this[offset + 1] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset + 1] | (this[offset] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-}
-
-Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-}
-
-Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, true, 23, 4)
-}
-
-Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, false, 23, 4)
-}
-
-Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, true, 52, 8)
-}
-
-Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, false, 52, 8)
-}
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1
-    checkInt(this, value, offset, byteLength, maxBytes, 0)
-  }
-
-  var mul = 1
-  var i = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1
-    checkInt(this, value, offset, byteLength, maxBytes, 0)
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = (value & 0xff)
-  return offset + 1
-}
-
-function objectWriteUInt16 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8
-  }
-}
-
-Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff)
-    this[offset + 1] = (value >>> 8)
-  } else {
-    objectWriteUInt16(this, value, offset, true)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = (value & 0xff)
-  } else {
-    objectWriteUInt16(this, value, offset, false)
-  }
-  return offset + 2
-}
-
-function objectWriteUInt32 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
-  }
-}
-
-Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 1] = (value >>> 8)
-    this[offset] = (value & 0xff)
-  } else {
-    objectWriteUInt32(this, value, offset, true)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = (value & 0xff)
-  } else {
-    objectWriteUInt32(this, value, offset, false)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = 0
-  var mul = 1
-  var sub = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-      sub = 1
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  var sub = 0
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-      sub = 1
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  if (value < 0) value = 0xff + value + 1
-  this[offset] = (value & 0xff)
-  return offset + 1
-}
-
-Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff)
-    this[offset + 1] = (value >>> 8)
-  } else {
-    objectWriteUInt16(this, value, offset, true)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = (value & 0xff)
-  } else {
-    objectWriteUInt16(this, value, offset, false)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff)
-    this[offset + 1] = (value >>> 8)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 3] = (value >>> 24)
-  } else {
-    objectWriteUInt32(this, value, offset, true)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (value < 0) value = 0xffffffff + value + 1
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = (value & 0xff)
-  } else {
-    objectWriteUInt32(this, value, offset, false)
-  }
-  return offset + 4
-}
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-  if (offset < 0) throw new RangeError('Index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 23, 4)
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-}
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 52, 8)
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-}
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!start) start = 0
-  if (!end && end !== 0) end = this.length
-  if (targetStart >= target.length) targetStart = target.length
-  if (!targetStart) targetStart = 0
-  if (end > 0 && end < start) end = start
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start
-  }
-
-  var len = end - start
-  var i
-
-  if (this === target && start < targetStart && targetStart < end) {
-    // descending copy from end
-    for (i = len - 1; i >= 0; --i) {
-      target[i + targetStart] = this[i + start]
-    }
-  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    // ascending copy from start
-    for (i = 0; i < len; ++i) {
-      target[i + targetStart] = this[i + start]
-    }
-  } else {
-    Uint8Array.prototype.set.call(
-      target,
-      this.subarray(start, start + len),
-      targetStart
-    )
-  }
-
-  return len
-}
-
-// Usage:
-//    buffer.fill(number[, offset[, end]])
-//    buffer.fill(buffer[, offset[, end]])
-//    buffer.fill(string[, offset[, end]][, encoding])
-Buffer.prototype.fill = function fill (val, start, end, encoding) {
-  // Handle string cases:
-  if (typeof val === 'string') {
-    if (typeof start === 'string') {
-      encoding = start
-      start = 0
-      end = this.length
-    } else if (typeof end === 'string') {
-      encoding = end
-      end = this.length
-    }
-    if (val.length === 1) {
-      var code = val.charCodeAt(0)
-      if (code < 256) {
-        val = code
-      }
-    }
-    if (encoding !== undefined && typeof encoding !== 'string') {
-      throw new TypeError('encoding must be a string')
-    }
-    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
-      throw new TypeError('Unknown encoding: ' + encoding)
-    }
-  } else if (typeof val === 'number') {
-    val = val & 255
-  }
-
-  // Invalid ranges are not set to a default, so can range check early.
-  if (start < 0 || this.length < start || this.length < end) {
-    throw new RangeError('Out of range index')
-  }
-
-  if (end <= start) {
-    return this
-  }
-
-  start = start >>> 0
-  end = end === undefined ? this.length : end >>> 0
-
-  if (!val) val = 0
-
-  var i
-  if (typeof val === 'number') {
-    for (i = start; i < end; ++i) {
-      this[i] = val
-    }
-  } else {
-    var bytes = Buffer.isBuffer(val)
-      ? val
-      : utf8ToBytes(new Buffer(val, encoding).toString())
-    var len = bytes.length
-    for (i = 0; i < end - start; ++i) {
-      this[i + start] = bytes[i % len]
-    }
-  }
-
-  return this
-}
-
-// HELPER FUNCTIONS
-// ================
-
-var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
-
-function base64clean (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '='
-  }
-  return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (string, units) {
-  units = units || Infinity
-  var codePoint
-  var length = string.length
-  var leadSurrogate = null
-  var bytes = []
-
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i)
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (!leadSurrogate) {
-        // no lead yet
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        }
-
-        // valid lead
-        leadSurrogate = codePoint
-
-        continue
-      }
-
-      // 2 leads in a row
-      if (codePoint < 0xDC00) {
-        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-        leadSurrogate = codePoint
-        continue
-      }
-
-      // valid surrogate pair
-      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-    }
-
-    leadSurrogate = null
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint)
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x110000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; ++i) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF)
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo
-  var byteArray = []
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i)
-    hi = c >> 8
-    lo = c % 256
-    byteArray.push(lo)
-    byteArray.push(hi)
-  }
-
-  return byteArray
-}
-
-function base64ToBytes (str) {
-  return base64.toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i]
-  }
-  return i
-}
-
-function isnan (val) {
-  return val !== val // eslint-disable-line no-self-compare
-}
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ 3)))
-
-/***/ }),
-
-/***/ 378:
-/*!*****************************************!*\
-  !*** ./node_modules/base64-js/index.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.byteLength = byteLength
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-for (var i = 0, len = code.length; i < len; ++i) {
-  lookup[i] = code[i]
-  revLookup[code.charCodeAt(i)] = i
-}
-
-// Support decoding URL-safe base64 strings, as Node.js does.
-// See: https://en.wikipedia.org/wiki/Base64#URL_applications
-revLookup['-'.charCodeAt(0)] = 62
-revLookup['_'.charCodeAt(0)] = 63
-
-function getLens (b64) {
-  var len = b64.length
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // Trim off extra bytes after placeholder bytes are found
-  // See: https://github.com/beatgammit/base64-js/issues/42
-  var validLen = b64.indexOf('=')
-  if (validLen === -1) validLen = len
-
-  var placeHoldersLen = validLen === len
-    ? 0
-    : 4 - (validLen % 4)
-
-  return [validLen, placeHoldersLen]
-}
-
-// base64 is 4/3 + up to two characters of the original data
-function byteLength (b64) {
-  var lens = getLens(b64)
-  var validLen = lens[0]
-  var placeHoldersLen = lens[1]
-  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
-}
-
-function _byteLength (b64, validLen, placeHoldersLen) {
-  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
-}
-
-function toByteArray (b64) {
-  var tmp
-  var lens = getLens(b64)
-  var validLen = lens[0]
-  var placeHoldersLen = lens[1]
-
-  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
-
-  var curByte = 0
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  var len = placeHoldersLen > 0
-    ? validLen - 4
-    : validLen
-
-  var i
-  for (i = 0; i < len; i += 4) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 18) |
-      (revLookup[b64.charCodeAt(i + 1)] << 12) |
-      (revLookup[b64.charCodeAt(i + 2)] << 6) |
-      revLookup[b64.charCodeAt(i + 3)]
-    arr[curByte++] = (tmp >> 16) & 0xFF
-    arr[curByte++] = (tmp >> 8) & 0xFF
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  if (placeHoldersLen === 2) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 2) |
-      (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  if (placeHoldersLen === 1) {
-    tmp =
-      (revLookup[b64.charCodeAt(i)] << 10) |
-      (revLookup[b64.charCodeAt(i + 1)] << 4) |
-      (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[curByte++] = (tmp >> 8) & 0xFF
-    arr[curByte++] = tmp & 0xFF
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] +
-    lookup[num >> 12 & 0x3F] +
-    lookup[num >> 6 & 0x3F] +
-    lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp =
-      ((uint8[i] << 16) & 0xFF0000) +
-      ((uint8[i + 1] << 8) & 0xFF00) +
-      (uint8[i + 2] & 0xFF)
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(
-      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
-    ))
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    parts.push(
-      lookup[tmp >> 2] +
-      lookup[(tmp << 4) & 0x3F] +
-      '=='
-    )
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
-    parts.push(
-      lookup[tmp >> 10] +
-      lookup[(tmp >> 4) & 0x3F] +
-      lookup[(tmp << 2) & 0x3F] +
-      '='
-    )
-  }
-
-  return parts.join('')
-}
-
-
-/***/ }),
-
-/***/ 379:
-/*!***************************************!*\
-  !*** ./node_modules/ieee754/index.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = ((value * c) - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-
-/***/ }),
-
-/***/ 38:
-/*!***************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/uniNav.js ***!
-  \***************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.pageNavFinish = exports.uniPushTo = void 0;
-var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ../helpers/util */ 24);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-
-var stop = null;
-
-/**
-                  * @param {Object} finalRoute 格式化后的路由跳转规则
-                  * @param {Object} NAVTYPE 需要调用的跳转方法
-                  */
-var uniPushTo = function uniPushTo(finalRoute, NAVTYPE) {
-  var promise = new Promise(function (resolve) {
-    var query = (0, _util.formatURLQuery)("?".concat(finalRoute.uniRoute.query));
-    var APP = _config.baseConfig.APP;
-    var url = finalRoute.uniRoute.url;
-    stop = setTimeout(function () {
-      resolve(url);
-      resolve = _util.noop; //执行完了就没了 确保不会被下一次执行
-    }, APP.switchPageOutTime);
-
-    uni[_config.methods[NAVTYPE]](_objectSpread({
-      url: url + query },
-    finalRoute.route.animation, {
-      complete: function complete() {
-        clearTimeout(stop);
-        resolve(url);
-        resolve = _util.noop; //执行完了就没了 确保不会被下一次执行
-      } }));
-
-  });
-  promise.then(function (url) {
-    pageNavFinish('NAV', url);
-  });
-  return promise;
-};
-/**
-    * 验证页面是否跳转完成
-    * @param {Object} type 是用怎么样的方式进行跳转的
-    * @param {Object} path 当前切换完成的页面路径
-    */exports.uniPushTo = uniPushTo;
-var pageNavFinish = function pageNavFinish(type, path) {var
-  $holdTab = _config.Global.$holdTab,Router = _config.Global.Router;
-  if (Router.CONFIG.APP.holdTabbar === false) {//没有开启不必处理
-    return false;
-  }
-  var tabbarList = [];
-  if (__uniConfig.tabBar && __uniConfig.tabBar.list) {//有tabbar才触发
-    tabbarList = __uniConfig.tabBar.list;
-  } else {
-    return false;
-  }
-  for (var i = 0; i < tabbarList.length; i++) {var
-    pagePath = tabbarList[i].pagePath;
-    if (pagePath == "".concat(path, ".html") || "/".concat(pagePath) == "".concat(path, ".html")) {//在当前tabbar下
-      return $holdTab.showHoldTab();
-    }
-  }
-  if ($holdTab.isVisible === true) {
-    return $holdTab.hideHoldTab();
-  }
-};exports.pageNavFinish = pageNavFinish;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 380:
-/*!***************************************!*\
-  !*** ./node_modules/isarray/index.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ }),
-
-/***/ 381:
-/*!*********************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/js-base64/base64.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
- *  base64.js
- *
- *  Licensed under the BSD 3-Clause License.
- *    http://opensource.org/licenses/BSD-3-Clause
- *
- *  References:
- *    http://en.wikipedia.org/wiki/Base64
- */
-;(function (global, factory) {
-   true ?
-  module.exports = factory(global) :
-  undefined;
-})(
-typeof self !== 'undefined' ? self :
-typeof window !== 'undefined' ? window :
-typeof global !== 'undefined' ? global :
-this,
-function (global) {
-  'use strict';
-  // existing version for noConflict()
-  global = global || {};
-  var _Base64 = global.Base64;
-  var version = "2.5.2";
-  // if node.js and NOT React Native, we use Buffer
-  var buffer;
-  if ( true && module.exports) {
-    try {
-      buffer = eval("require('buffer').Buffer");
-    } catch (err) {
-      buffer = undefined;
-    }
-  }
-  // constants
-  var b64chars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  var b64tab = function (bin) {
-    var t = {};
-    for (var i = 0, l = bin.length; i < l; i++) {t[bin.charAt(i)] = i;}
-    return t;
-  }(b64chars);
-  var fromCharCode = String.fromCharCode;
-  // encoder stuff
-  var cb_utob = function cb_utob(c) {
-    if (c.length < 2) {
-      var cc = c.charCodeAt(0);
-      return cc < 0x80 ? c :
-      cc < 0x800 ? fromCharCode(0xc0 | cc >>> 6) +
-      fromCharCode(0x80 | cc & 0x3f) :
-      fromCharCode(0xe0 | cc >>> 12 & 0x0f) +
-      fromCharCode(0x80 | cc >>> 6 & 0x3f) +
-      fromCharCode(0x80 | cc & 0x3f);
-    } else {
-      var cc = 0x10000 +
-      (c.charCodeAt(0) - 0xD800) * 0x400 + (
-      c.charCodeAt(1) - 0xDC00);
-      return fromCharCode(0xf0 | cc >>> 18 & 0x07) +
-      fromCharCode(0x80 | cc >>> 12 & 0x3f) +
-      fromCharCode(0x80 | cc >>> 6 & 0x3f) +
-      fromCharCode(0x80 | cc & 0x3f);
-    }
-  };
-  var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
-  var utob = function utob(u) {
-    return u.replace(re_utob, cb_utob);
-  };
-  var cb_encode = function cb_encode(ccc) {
-    var padlen = [0, 2, 1][ccc.length % 3],
-    ord = ccc.charCodeAt(0) << 16 |
-    (ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8 | (
-    ccc.length > 2 ? ccc.charCodeAt(2) : 0),
-    chars = [
-    b64chars.charAt(ord >>> 18),
-    b64chars.charAt(ord >>> 12 & 63),
-    padlen >= 2 ? '=' : b64chars.charAt(ord >>> 6 & 63),
-    padlen >= 1 ? '=' : b64chars.charAt(ord & 63)];
-
-    return chars.join('');
-  };
-  var btoa = global.btoa ? function (b) {
-    return global.btoa(b);
-  } : function (b) {
-    return b.replace(/[\s\S]{1,3}/g, cb_encode);
-  };
-  var _encode = function _encode(u) {
-    var isUint8Array = Object.prototype.toString.call(u) === '[object Uint8Array]';
-    return isUint8Array ? u.toString('base64') :
-    btoa(utob(String(u)));
-  };
-  var encode = function encode(u, urisafe) {
-    return !urisafe ?
-    _encode(u) :
-    _encode(String(u)).replace(/[+\/]/g, function (m0) {
-      return m0 == '+' ? '-' : '_';
-    }).replace(/=/g, '');
-  };
-  var encodeURI = function encodeURI(u) {return encode(u, true);};
-  // decoder stuff
-  var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
-  var cb_btou = function cb_btou(cccc) {
-    switch (cccc.length) {
-      case 4:
-        var cp = (0x07 & cccc.charCodeAt(0)) << 18 |
-        (0x3f & cccc.charCodeAt(1)) << 12 |
-        (0x3f & cccc.charCodeAt(2)) << 6 |
-        0x3f & cccc.charCodeAt(3),
-        offset = cp - 0x10000;
-        return fromCharCode((offset >>> 10) + 0xD800) +
-        fromCharCode((offset & 0x3FF) + 0xDC00);
-      case 3:
-        return fromCharCode(
-        (0x0f & cccc.charCodeAt(0)) << 12 |
-        (0x3f & cccc.charCodeAt(1)) << 6 |
-        0x3f & cccc.charCodeAt(2));
-
-      default:
-        return fromCharCode(
-        (0x1f & cccc.charCodeAt(0)) << 6 |
-        0x3f & cccc.charCodeAt(1));}
-
-
-  };
-  var btou = function btou(b) {
-    return b.replace(re_btou, cb_btou);
-  };
-  var cb_decode = function cb_decode(cccc) {
-    var len = cccc.length,
-    padlen = len % 4,
-    n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0) | (
-    len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0) | (
-    len > 2 ? b64tab[cccc.charAt(2)] << 6 : 0) | (
-    len > 3 ? b64tab[cccc.charAt(3)] : 0),
-    chars = [
-    fromCharCode(n >>> 16),
-    fromCharCode(n >>> 8 & 0xff),
-    fromCharCode(n & 0xff)];
-
-    chars.length -= [0, 0, 2, 1][padlen];
-    return chars.join('');
-  };
-  var _atob = global.atob ? function (a) {
-    return global.atob(a);
-  } : function (a) {
-    return a.replace(/\S{1,4}/g, cb_decode);
-  };
-  var atob = function atob(a) {
-    return _atob(String(a).replace(/[^A-Za-z0-9\+\/]/g, ''));
-  };
-  var _decode = buffer ?
-  buffer.from && Uint8Array && buffer.from !== Uint8Array.from ?
-  function (a) {
-    return (a.constructor === buffer.constructor ?
-    a : buffer.from(a, 'base64')).toString();
-  } :
-  function (a) {
-    return (a.constructor === buffer.constructor ?
-    a : new buffer(a, 'base64')).toString();
-  } :
-  function (a) {return btou(_atob(a));};
-  var decode = function decode(a) {
-    return _decode(
-    String(a).replace(/[-_]/g, function (m0) {return m0 == '-' ? '+' : '/';}).
-    replace(/[^A-Za-z0-9\+\/]/g, ''));
-
-  };
-  var noConflict = function noConflict() {
-    var Base64 = global.Base64;
-    global.Base64 = _Base64;
-    return Base64;
-  };
-  // export Base64
-  global.Base64 = {
-    VERSION: version,
-    atob: atob,
-    btoa: btoa,
-    fromBase64: decode,
-    toBase64: encode,
-    utob: utob,
-    encode: encode,
-    encodeURI: encodeURI,
-    btou: btou,
-    decode: decode,
-    noConflict: noConflict,
-    __buffer__: buffer };
-
-  // if ES5 is available, make Base64.extendString() available
-  if (typeof Object.defineProperty === 'function') {
-    var noEnum = function noEnum(v) {
-      return { value: v, enumerable: false, writable: true, configurable: true };
-    };
-    global.Base64.extendString = function () {
-      Object.defineProperty(
-      String.prototype, 'fromBase64', noEnum(function () {
-        return decode(this);
-      }));
-      Object.defineProperty(
-      String.prototype, 'toBase64', noEnum(function (urisafe) {
-        return encode(this, urisafe);
-      }));
-      Object.defineProperty(
-      String.prototype, 'toBase64URI', noEnum(function () {
-        return encode(this, true);
-      }));
-    };
-  }
-  //
-  // export Base64 to the namespace
-  //
-  if (global['Meteor']) {// Meteor.js
-    Base64 = global.Base64;
-  }
-  // module.exports and AMD are mutually exclusive.
-  // module.exports has precedence.
-  if ( true && module.exports) {
-    module.exports.Base64 = global.Base64;
-  } else
-  if (true) {
-    // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {return global.Base64;}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  }
-  // that's it!
-  return { Base64: global.Base64 };
-});
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../下载/HBuilderX/plugins/uniapp-cli/node_modules/webpack/buildin/global.js */ 3)))
-
-/***/ }),
-
-/***/ 39:
-/*!******************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/hooks.js ***!
-  \******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.appletsTransitionTo = exports.triggerLifeCycle = exports.appletsProxyIndexHook = exports.proxyLaunchHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ./util */ 34);
-var _appletsNav = __webpack_require__(/*! ./appletsNav */ 40);
-var _util2 = __webpack_require__(/*! ../helpers/util */ 24);
-var _warn = __webpack_require__(/*! ../helpers/warn */ 27);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
-
-
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * 还原并执行所有 拦截下来的生命周期 app.vue 及 index 下的生命周期 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * @param {Boolean} callHome // 是否触发首页的生命周期
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * this 为当前 page 对象
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
-var callwaitHooks = function callwaitHooks(callHome) {var _this = this;
-  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var variation, appVue, indexVue, onLaunch, onShow, waitHooks, variationFuns, indexCallHooks, app, key, _loop, _key;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
-              variation = []; //存储一下在uni-app上的变异生命钩子  奇葩的要死
-              appVue = _config.uniAppHook.appVue, indexVue = _config.uniAppHook.indexVue, onLaunch = _config.uniAppHook.onLaunch, onShow = _config.uniAppHook.onShow, waitHooks = _config.uniAppHook.waitHooks, variationFuns = _config.uniAppHook.variationFuns, indexCallHooks = _config.uniAppHook.indexCallHooks;
-              app = appVue.$options;_context.next = 5;return (
-                onLaunch.fun[onLaunch.fun.length - 1].call(appVue, onLaunch.args));case 5: //确保只执行最后一个 并且强化异步操作
-              onShow.fun[onShow.fun.length - 1].call(appVue, onShow.args); //onshow 不保证异步 直接确保执行最后一个
-              if (callHome) {//触发首页生命周期
-                for (key in waitHooks) {
-                  if (indexCallHooks.includes(key)) {//只有在被包含的情况下才执行
-                    _util.callAppHook.call(_this, waitHooks[key].fun);
-                  }
-                }
-              }
-              if (onLaunch.isHijack) {//还原 onLaunch生命钩子
-                app.onLaunch.splice(app.onLaunch.length - 1, 1, onLaunch.fun[0]);
-              }
-              if (onShow.isHijack) {//继续还原 onShow
-                app.onShow.splice(app.onShow.length - 1, 1, onShow.fun[0]);
-              }_loop = function _loop(
-              _key) {//还原 首页下的生命钩子
-                var item = waitHooks[_key];
-                if (item.isHijack) {
-                  if (variationFuns.includes(_key)) {//变异方法
-                    variation.push({ key: _key, fun: item.fun[0] });
-                  } else {
-                    var indeHooks = indexVue[_key];
-                    //修复 https://github.com/SilurianYang/uni-simple-router/issues/76
-                    setTimeout(function () {//异步延迟还原 不然 uni-app 给给触发了
-                      indeHooks.splice(indeHooks.length - 1, 1, item.fun[0]);
-                    }, 50);
-                  }
-                }};for (_key in waitHooks) {_loop(_key);
-              }
-              resolve(variation);case 12:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
-
-};
-/**
-    * 还原剩下的奇葩生命钩子
-    * @param {Object} variation 当前uni-app中的一些变异方法  奇葩生命钩子
-    */
-var callVariationHooks = function callVariationHooks(variation) {
-  for (var i = 0; i < variation.length; i++) {var _variation$i =
-    variation[i],key = _variation$i.key,fun = _variation$i.fun;
-    var indeHooks = _config.uniAppHook.indexVue[key];
-    indeHooks.splice(indeHooks.length - 1, 1, fun);
-  }
-};
-/**
-    * 主要是对app.vue下onLaunch和onShow生命周期进行劫持
-    * 
-    * this 为当前 page 对象
-    */
-var proxyLaunchHook = function proxyLaunchHook() {var _this2 = this;var _this$$options =
-
-
-
-  this.$options,onLaunch = _this$$options.onLaunch,onShow = _this$$options.onShow;
-  _config.uniAppHook.appVue = this; //缓存 当前app.vue组件对象
-  if (onLaunch.length > 1) {//确保有写 onLaunch 可能有其他混入 那也办法
-    _config.uniAppHook.onLaunch.isHijack = true;
-    _config.uniAppHook.onLaunch.fun = onLaunch.splice(onLaunch.length - 1, 1, function (arg) {
-      _config.uniAppHook.onLaunch.args = arg;
-    }); //替换uni-app自带的生命周期
-  }
-  if (onShow.length > 0) {
-    _config.uniAppHook.onShow.isHijack = true;
-    _config.uniAppHook.onShow.fun = onShow.splice(onShow.length - 1, 1, function (arg) {
-      _config.uniAppHook.onShow.args = arg;
-      if (_config.uniAppHook.pageReady) {//因为还有app切前台后台的操作
-        _util.callAppHook.call(_this2, _config.uniAppHook.onShow.fun, arg);
-      }
-    }); //替换替换 都替换
-  }
-};
-/**
-    * 把指定页面的生命钩子函数保存并替换
-    * this 为当前 page 对象
-    */exports.proxyLaunchHook = proxyLaunchHook;
-var appletsProxyIndexHook = function appletsProxyIndexHook(Router) {var
-  needHooks = _config.uniAppHook.needHooks,waitHooks = _config.uniAppHook.waitHooks;
-  var options = this.$options;
-  _config.uniAppHook.indexVue = options;
-  for (var i = 0; i < needHooks.length; i++) {
-    var key = needHooks[i];
-    if (options[key] != null) {//只劫持开发者声明的生命周期
-      var length = options[key].length;
-      var whObject = waitHooks[key] = {};
-      whObject.fun = options[key].splice(length - 1, 1, _util2.noop); //把实际的页面生命钩子函数缓存起来,替换原有的生命钩子
-      whObject.isHijack = true;
-    }
-  }
-  triggerLifeCycle.call(this, Router); //接着 主动我们触发导航守卫
-};
-
-/**
-    * 主动触发导航守卫
-    * @param {Object} Router 当前路由对象
-    * 
-    */exports.appletsProxyIndexHook = appletsProxyIndexHook;
-var triggerLifeCycle = function triggerLifeCycle(Router) {var _this3 = this;
-  var topPage = getCurrentPages()[0];
-  if (topPage == null) {
-    return (0, _warn.warn)('打扰了,当前一个页面也没有 这不是官方的bug是什么??');
-  }var _getPageVmOrMp =
-  (0, _util.getPageVmOrMp)(topPage, false),query = _getPageVmOrMp.query,page = _getPageVmOrMp.page;
-  appletsTransitionTo.call(Router, { path: page.route, query: query }, 'push', /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(finalRoute, fnType) {var variation;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
-              variation = [];if (!(
-              "/".concat(page.route) == finalRoute.route.path)) {_context2.next = 7;break;} //在首页不动的情况下
-              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
-              _context2.next = 5;return callwaitHooks.call(_this3, true);case 5:_context2.next = 12;break;case 7:_context2.next = 9;return (
-
-                callwaitHooks.call(_this3, false));case 9:variation = _context2.sent;_context2.next = 12;return (
-                (0, _appletsNav.appletsUniPushTo)(finalRoute, fnType));case 12:
-
-              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
-              callVariationHooks(variation);case 14:case "end":return _context2.stop();}}}, _callee2);}));return function (_x2, _x3) {return _ref2.apply(this, arguments);};}());
-
-};
-/**
-    * 核心方法 处理一系列的跳转配置
-    * @param {Object} rule 当前跳转规则
-    * @param {Object} fnType 跳转页面的类型方法
-    * @param {Object} navCB:? 回调函数
-    * 
-    * this 为当前 Router 对象
-    * 
-    */exports.triggerLifeCycle = triggerLifeCycle;
-var appletsTransitionTo = /*#__PURE__*/function () {var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(rule, fnType, navCB) {var finalRoute, _from, _to, beforeResult, enterResult;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
-              this.lifeCycle["routerbeforeHooks"][0].call(this));case 2: //触发内部跳转前的生命周期
-            finalRoute = (0, _util.ruleToUniNavInfo)(rule, this.CONFIG.routes); //获得到最终的 route 对象
-            _from = (0, _util.formatFrom)(this.CONFIG.routes); //先根据跳转类型获取 from 数据
-            _to = (0, _util.formatTo)(finalRoute); //再根据跳转类型获取 to 数据
-            _context3.next = 7;return beforeHooks.call(this, _from, _to);case 7:beforeResult = _context3.sent;_context3.prev = 8;_context3.next = 11;return (
-
-              isNext.call(this, beforeResult, fnType, navCB));case 11:_context3.next = 13;return (
-              beforeEnterHooks.call(this, finalRoute, _from, _to));case 13:enterResult = _context3.sent;_context3.next = 16;return (
-              isNext.call(this, enterResult, fnType, navCB));case 16:_context3.next = 21;break;case 18:_context3.prev = 18;_context3.t0 = _context3["catch"](8);return _context3.abrupt("return",
-
-            false);case 21:
-
-            navCB && navCB.call(this, finalRoute, fnType); //执行当前回调生命周期
-            afterEachHooks.call(this, _from, _to);_context3.next = 25;return (
-              this.lifeCycle["routerAfterHooks"][0].call(this));case 25:case "end":return _context3.stop();}}}, _callee3, this, [[8, 18]]);}));return function appletsTransitionTo(_x4, _x5, _x6) {return _ref3.apply(this, arguments);};}();
-
-/**
-                                                                                                                                                                                                                                               * 触发全局beforeHooks 生命钩子
-                                                                                                                                                                                                                                               * @param {Object} _from // from  参数
-                                                                                                                                                                                                                                               * @param {Object} _to  // to 参数
-                                                                                                                                                                                                                                               * 
-                                                                                                                                                                                                                                               * this 为当前 Router 对象
-                                                                                                                                                                                                                                               */exports.appletsTransitionTo = appletsTransitionTo;
-var beforeHooks = function beforeHooks(_from, _to) {var _this4 = this;
-  return new Promise( /*#__PURE__*/function () {var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve) {var beforeHooks;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
-              beforeHooks = _this4.lifeCycle["beforeHooks"][0];if (!(
-              beforeHooks == null)) {_context4.next = 3;break;}return _context4.abrupt("return",
-              resolve());case 3:_context4.next = 5;return (
-
-                beforeHooks.call(_this4, _to, _from, resolve));case 5:case "end":return _context4.stop();}}}, _callee4);}));return function (_x7) {return _ref4.apply(this, arguments);};}());
-
-};
-/**
-    * 触发全局afterEachHooks 生命钩子
-    * @param {Object} _from // from  参数
-    * @param {Object} _to  // to 参数
-    * 
-    * this 为当前 Router 对象
-    */
-var afterEachHooks = function afterEachHooks(_from, _to) {
-  var afterHooks = this.lifeCycle["afterHooks"][0];
-  if (afterHooks != null && afterHooks.constructor === Function) {
-    afterHooks.call(this, _to, _from);
-  }
-};
-/**
-    * 触发全局 beforeEnter 生命钩子
-    * @param {Object} finalRoute 	// 当前格式化后的路由参数
-    * @param {Object} _from // from  参数
-    * @param {Object} _to  // to 参数
-    * 
-    * this 为当前 Router 对象
-    */
-var beforeEnterHooks = function beforeEnterHooks(finalRoute, _from, _to) {var _this5 = this;
-  return new Promise( /*#__PURE__*/function () {var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(resolve) {var beforeEnter;return _regenerator.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:
-              beforeEnter = finalRoute.route.beforeEnter;if (!(
-              beforeEnter == null || beforeEnter.constructor !== Function)) {_context5.next = 3;break;}return _context5.abrupt("return",
-              resolve());case 3:_context5.next = 5;return (
-
-                beforeEnter.call(_this5, _to, _from, resolve));case 5:case "end":return _context5.stop();}}}, _callee5);}));return function (_x8) {return _ref5.apply(this, arguments);};}());
-
-};
-
-/**
-    * 验证当前 next() 管道函数是否支持下一步
-    * 
-    * @param {Object} Intercept 拦截到的新路由规则
-    * @param {Object} fnType 跳转页面的类型方法 原始的
-    * @param {Object} navCB 回调函数 原始的
-    * 
-    * this 为当前 Router 对象
-    * 
-    */
-var isNext = function isNext(Intercept, fnType, navCB) {var _this6 = this;
-  return new Promise(function (resolve, reject) {
-    if (Intercept == null) {//什么也不做 直接执行下一个钩子
-      return resolve();
-    }
-    if (Intercept === false) {//路由中断
-      return reject('路由终止');
-    }
-    if (Intercept.constructor === String) {//说明 开发者直接传的path 并且没有指定 NAVTYPE 那么采用原来的navType
-      reject(1);
-      return appletsTransitionTo.call(_this6, Intercept, fnType, navCB);
-    }
-    if (Intercept.constructor === Object) {//有一系列的配置 包括页面切换动画什么的
-      reject(1);
-      return appletsTransitionTo.call(_this6, Intercept, Intercept.NAVTYPE || fnType, navCB);
-    }
-  });
-};
-
-/***/ }),
-
-/***/ 4:
-/*!***********************************!*\
-  !*** D:/uni/uni_phone/pages.json ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
-/***/ 40:
-/*!***********************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/appletsNav.js ***!
-  \***********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.appletsUniPushTo = void 0;
-var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ../helpers/util */ 24);
-
-
-/**
-                                         * @param {Object} finalRoute 格式化后的路由跳转规则
-                                         * @param {Object} NAVTYPE 需要调用的跳转方法
-                                         */
-var appletsUniPushTo = function appletsUniPushTo(finalRoute, NAVTYPE) {
-  return new Promise(function (resolve) {
-    var query = (0, _util.formatURLQuery)("?".concat(finalRoute.uniRoute.query));
-    var url = finalRoute.uniRoute.url;
-    uni[_config.methods[NAVTYPE]]({
-      url: url + query,
-      complete: function complete() {
-        resolve(url);
-      } });
-
-  });
-};exports.appletsUniPushTo = appletsUniPushTo;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 41:
-/*!**************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/patch/app-patch.js ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.appMount = void 0; /**
-                                                                                                       * 截止 1.3.5 版本 不做任何操作
-                                                                                                       * @param {element} el dom节点 
-                                                                                                       */
-var appMount = function appMount(Vim, el) {
-  Vim.$mount();
-};exports.appMount = appMount;
-
-/***/ }),
-
-/***/ 42:
-/*!*************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/helpers/mixins.js ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _config = __webpack_require__(/*! ./config */ 25);
-var _init = __webpack_require__(/*! ../vueRouter/init */ 43);
-var _init2 = __webpack_require__(/*! ../appRouter/init */ 44);
-var _init3 = __webpack_require__(/*! ../appletsRouter/init */ 50);
-var _util = __webpack_require__(/*! ../helpers/util */ 24);
-var _hooks = __webpack_require__(/*! ../appRouter/hooks */ 37);
-var _hooks2 = __webpack_require__(/*! ../appletsRouter/hooks */ 39);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * 获取一些需要在各个平台混入的事件
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @param {Object} Router 当前原始路由对象
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
-var getMixins = function getMixins(Router) {
-  return {
-    H5: {
-      beforeCreate: function beforeCreate() {
-        if (this.$options.router) {
-          (0, _init.init)(Router.$root, this.$options.router, this);
-        }
-      } },
-
-    APP: {
-      onLaunch: function onLaunch() {
-        _config.uniAppHook.onLaunched = true; //标志已经触发了 onLaunch 事件
-        _init2.appInit.call(this, Router.$root);
-      },
-      onLoad: function onLoad() {
-        //第一个页面 拦截所有生命周期
-        if (_config.uniAppHook.onLaunched && !_config.uniAppHook.pageReady) {
-          _config.uniAppHook.onLaunched = false;
-          _hooks.proxyIndexHook.call(this, Router.$root);
-        }
-        (0, _init2.removeBackPressEvent)(this.$mp.page, this.$options); //移除页面的onBackPress事件
-      },
-      onBackPress: function onBackPress() {for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
-        return _init2.pageIsHeadBack.call(Router.$root, this.$mp.page, this.$options, args);
-      } },
-
-    APPLETS: {
-      onLaunch: function onLaunch() {
-        _config.uniAppHook.onLaunched = true; //标志已经触发了 onLaunch 事件
-        _init3.appletsInit.call(this, Router.$root);
-      },
-      onLoad: function onLoad() {
-        if (_config.uniAppHook.onLaunched && !_config.uniAppHook.pageReady) {//必须是第一个页面
-          _config.uniAppHook.onLaunched = false;
-          _hooks2.appletsProxyIndexHook.call(this, Router.$root);
-        }
-      } } };
-
-
-};
-
-var initMixins = function initMixins(Vue, Router) {
-  Vue.mixin(_objectSpread({},
-  getMixins(Router)[(0, _util.appPlatform)(true)]));
-
-};var _default =
-
-initMixins;exports.default = _default;
-
-/***/ }),
-
-/***/ 43:
-/*!*************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/vueRouter/init.js ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.init = void 0;var _concat = __webpack_require__(/*! ./concat.js */ 31);
-var _util = __webpack_require__(/*! ./util.js */ 28);
-var _warn = __webpack_require__(/*! ../helpers/warn.js */ 27);
-var _proxy = __webpack_require__(/*! ./proxy/proxy.js */ 30);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 重写掉H5端 uni-app原始存在的bug
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @param {Object} Router
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-var rewriteUniFun = function rewriteUniFun(Router) {
-  if (Router.CONFIG.h5.rewriteFun === false) {//不需要重写
-    return false;
-  }
-  uni.reLaunch = function (_ref)
-
-  {var url = _ref.url;
-    if (url === '/') {
-      (0, _warn.warn)("H5\u7AEF uni.reLaunch('/')\u65F6 \u9ED8\u8BA4\u88AB\u91CD\u5199\u4E86! \u4F60\u53EF\u4EE5\u4F7F\u7528 this.$Router.replaceAll() \u6216\u8005 uni.reLaunch('/'?xxx)");
-      if (history.length > 1) {//只有在有历史记录的时候才返回  不然直接返回首页
-        return Router.back();
-      }
-      return Router.replaceAll('/');
-    }
-    var path = url.match(/^[^?]+|(\/)/)[0];
-    try {
-      var query = {};
-      url.replace(/([^?&]+)=([^?&]+)/g, function (s, v, k) {
-        query[v] = decodeURIComponent(k);
-        return k + '=' + v;
-      });
-      Router.replaceAll({
-        path: path,
-        query: query });
-
-    } catch (e) {
-      (0, _warn.err)("".concat(url, "\u89E3\u6790\u5931\u8D25\u4E86....  \u8BD5\u8BD5 this.$Router.replaceAll() \u5427"));
-    }
-  };
-  uni.navigateBack = function (delta) {
-    var backLayer = delta;
-    if (delta.constructor === Object) {//这种可能就只是uni-app自带的返回按钮,还有种可能就是开发者另类传递的
-      backLayer = 1;
-    }
-    Router.back(backLayer, delta);
-  };
-};
-/**
-    * 拦截并注册vueRouter中的生命钩子，路由表解析
-    * @param {Object} Router 
-    * @param {vueRouter} vueRouter 
-    * @param {VueComponent} vueVim
-    */
-var init = function init(Router, vueRouter, vueVim) {
-  var CONFIG = Router.CONFIG.h5;
-  vueRouter.afterHooks = (0, _proxy.proxyEachHooks)(Router, 'afterHooks', _concat.afterHooks);
-  vueRouter.beforeHooks = (0, _proxy.proxyEachHooks)(Router, 'beforeHooks', _concat.beforeHooks);
-  var objVueRoutes = (0, _util.fromatRoutes)(vueRouter.options.routes, false, {}); //返回一个格式化好的routes 键值对的形式
-  var objSelfRoutes = (0, _util.fromatRoutes)(Router.CONFIG.routes, true, CONFIG);
-  Router.vueRoutes = objVueRoutes; //挂载vue-routes到当前的路由下
-  Router.selfRoutes = _objectSpread({}, Router.selfRoutes || {}, {},
-  objSelfRoutes);
-  //挂载self-routes到当前路由下
-  Router.$route = vueRouter; //挂载vue-router到$route
-  rewriteUniFun(Router); //重新掉uniapp上的一些有异常的方法
-  (0, _concat.registerRouter)(Router, vueRouter, CONFIG.vueRouterDev);
-};exports.init = init;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 44:
-/*!*************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/init.js ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.appInit = exports.pageIsHeadBack = exports.removeBackPressEvent = exports.registerLoddingPage = exports.rewriteUniFun = exports.uniRewritePublicFun = void 0;var _hooks = __webpack_require__(/*! ./hooks */ 37);
-var _config = __webpack_require__(/*! ../helpers/config */ 25);
-var _util = __webpack_require__(/*! ./util */ 33);
-var _uniNav = __webpack_require__(/*! ./uniNav */ 38);
-var _uniHoldTabbar = _interopRequireDefault(__webpack_require__(/*! uni-hold-tabbar */ 45));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * 创建底部菜单拦截
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * @param {Object} Router  当前路由对象
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
-var createdHoldTab = function createdHoldTab(Router) {var
-  holdTabbarStyle = Router.CONFIG.APP.holdTabbarStyle; //获取app所有配置
-  var holdTab = new _uniHoldTabbar.default({
-    style: holdTabbarStyle.call(Router),
-    event: {
-      click: function click(index, _ref) {var pagePath = _ref.pagePath;
-        _hooks.beforeTabHooks.call(Router, pagePath);
-      } } });
-
-
-  _config.Global.$holdTab = holdTab;
-};
-/**
-    * uni-app 重写共用的方法
-    * @param {Object} object 开发者传递的相关参数
-    * @param {Object} callFun 需要执行的uni方法
-    */
-var uniRewritePublicFun = function uniRewritePublicFun(object, finishFun, callFun) {
-  var page = (0, _util.getPages)(-2);
-  var complete = object.complete; //获取到开发者传递的complete事件
-  if (complete) {//有写此函数的时候
-    object.complete = function (arg) {
-      finishFun && finishFun('pageShow', page.route);
-      complete.call(page.$vm, arg);
-    };
-  } else {//没有写次函数
-    object.complete = function (arg) {
-      finishFun && finishFun('pageShow', page.route);
-    };
-  }
-  if (_config.Global.$holdTab.isVisible) {
-    _config.Global.$holdTab.hideHoldTab(); //先隐藏底部tabbar拦截器
-  }
-  callFun && callFun(object);
-};
-
-/**
-    * 重写掉uni-app的 uni.getLocation 和 uni.chooseLocation APi
-    * @param {Boolean}  rewriteFun 是否重写方法
-    */exports.uniRewritePublicFun = uniRewritePublicFun;
-var rewriteUniFun = function rewriteUniFun(rewriteFun) {
-  if (rewriteFun === false) {
-    return false;
-  }
-  var oldChooseLocation = uni.chooseLocation; //打开地图选择位置
-  var oldOpenLocation = uni.openLocation; //打开内置地图
-  uni.chooseLocation = function (object) {
-    uniRewritePublicFun(object, _uniNav.pageNavFinish, oldChooseLocation);
-  };
-  uni.openLocation = function (object) {
-    uniRewritePublicFun(object, function () {
-      var webViews = plus.webview.all();
-      var webview = webViews[webViews.length - 1];
-      webview.addEventListener('close', function () {
-        var page = (0, _util.getPages)(-2);
-        (0, _uniNav.pageNavFinish)('pageShow', page.route);
-      }, false);
-    }, oldOpenLocation);
-  };
-};
-
-/**
-    * 对当前app做一个动画页面 用来过渡首次next 等待时间过长的尴尬
-    * @param {Object} Router 当前路由对象
-    */exports.rewriteUniFun = rewriteUniFun;
-var registerLoddingPage = function registerLoddingPage(Router) {var _Router$CONFIG$APP =
-  Router.CONFIG.APP,loddingPageHook = _Router$CONFIG$APP.loddingPageHook,loddingPageStyle = _Router$CONFIG$APP.loddingPageStyle; //获取app所有配置
-  var view = new plus.nativeObj.View('router-loadding', _objectSpread({
-    top: '0px',
-    left: '0px',
-    height: '100%',
-    width: '100%' },
-  loddingPageStyle.call(Router)));
-
-  loddingPageHook.call(Router, view); //触发等待页面生命周期
-  view.show();
-};
-/**
-    * 移除当前 页面上 非router 声明的 onBackPress 事件
-    * @param {Object} page 当前 vue 组件对象 
-    * @param {Object} options	当前page对象的 $options
-    * 修复 https://github.com/SilurianYang/uni-simple-router/issues/106
-    */exports.registerLoddingPage = registerLoddingPage;
-var removeBackPressEvent = function removeBackPressEvent(page, options) {
-  var isBack = (0, _util.assertCanBack)(page);
-  if (isBack) {//可返回
-    options.onBackPress = [options.onBackPress[0]]; //路由混入的都干掉
-  }
-};
-/**
-    * 判断当前页面是否需要拦截返回
-    * 
-    * @param {Object} page 当前 vue 组件对象 
-    * @param {Object} options 当前 vue 组件对象下的$options对象
-    * @param {Array} args  当前页面是点击头部返回还是底部返回
-    * 修复 https://github.com/SilurianYang/uni-simple-router/issues/66
-    * 
-    * this 为当前 Router 对象
-    */exports.removeBackPressEvent = removeBackPressEvent;
-var pageIsHeadBack = function pageIsHeadBack(page, options, args) {
-  if (args[0].from == 'navigateBack') {//调用api返回 
-    _hooks.backApiCallHook.call(this, options, args);
-    return true;
-  }
-  var isBack = (0, _util.assertCanBack)(page);
-  if (isBack) {//可返回
-    _hooks.beforeBackHooks.call(this, options, args);
-    return true;
-  }
-  return false;
-};
-
-/**
-    * 开始初始化app端路由配置
-    * 
-    * @param {Object} Router
-    * 
-    * this 为当前 page 对象
-    */exports.pageIsHeadBack = pageIsHeadBack;
-var appInit = function appInit(Router) {
-  _hooks.proxyLaunchHook.call(this);var _Router$CONFIG$APP2 =
-  Router.CONFIG.APP,holdTabbar = _Router$CONFIG$APP2.holdTabbar,rewriteFun = _Router$CONFIG$APP2.rewriteFun;
-  if (holdTabbar) {
-    rewriteUniFun(rewriteFun);
-    createdHoldTab(Router);
-  }
-  registerLoddingPage(Router);
-};exports.appInit = appInit;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 45:
-/*!**************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/index.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _createdTab = __webpack_require__(/*! ./init/createdTab */ 46);
-var _util = __webpack_require__(/*! ./util/util */ 49);function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}var
-
-HoldTabbar = /*#__PURE__*/function () {
-  function HoldTabbar() {var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, HoldTabbar);
-    var isNext = (0, _util.assertTabbar)();
-    if (!isNext) {
-      return false;
-    }
-    config = (0, _util.mergeConfig)(config);
-    this.tabbarView = (0, _createdTab.init)(config, isNext);
-  }_createClass(HoldTabbar, [{ key: "hideHoldTab", value: function hideHoldTab()
-
-
-
-
-
-
-    {
-      this.tabbarView.hide();
-    } }, { key: "showHoldTab", value: function showHoldTab()
-    {
-      this.tabbarView.show();
-    } }, { key: "getTabbarView", get: function get() {return this.tabbarView;} }, { key: "isVisible", get: function get() {return this.tabbarView.isVisible();} }]);return HoldTabbar;}();var _default =
-
-
-HoldTabbar;exports.default = _default;
-
-/***/ }),
-
-/***/ 452:
-/*!******************************************************!*\
-  !*** D:/uni/uni_phone/components/uni-icons/icons.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  "pulldown": "\uE588",
-  "refreshempty": "\uE461",
-  "back": "\uE471",
-  "forward": "\uE470",
-  "more": "\uE507",
-  "more-filled": "\uE537",
-  "scan": "\uE612",
-  "qq": "\uE264",
-  "weibo": "\uE260",
-  "weixin": "\uE261",
-  "pengyouquan": "\uE262",
-  "loop": "\uE565",
-  "refresh": "\uE407",
-  "refresh-filled": "\uE437",
-  "arrowthindown": "\uE585",
-  "arrowthinleft": "\uE586",
-  "arrowthinright": "\uE587",
-  "arrowthinup": "\uE584",
-  "undo-filled": "\uE7D6",
-  "undo": "\uE406",
-  "redo": "\uE405",
-  "redo-filled": "\uE7D9",
-  "bars": "\uE563",
-  "chatboxes": "\uE203",
-  "camera": "\uE301",
-  "chatboxes-filled": "\uE233",
-  "camera-filled": "\uE7EF",
-  "cart-filled": "\uE7F4",
-  "cart": "\uE7F5",
-  "checkbox-filled": "\uE442",
-  "checkbox": "\uE7FA",
-  "arrowleft": "\uE582",
-  "arrowdown": "\uE581",
-  "arrowright": "\uE583",
-  "smallcircle-filled": "\uE801",
-  "arrowup": "\uE580",
-  "circle": "\uE411",
-  "eye-filled": "\uE568",
-  "eye-slash-filled": "\uE822",
-  "eye-slash": "\uE823",
-  "eye": "\uE824",
-  "flag-filled": "\uE825",
-  "flag": "\uE508",
-  "gear-filled": "\uE532",
-  "reload": "\uE462",
-  "gear": "\uE502",
-  "hand-thumbsdown-filled": "\uE83B",
-  "hand-thumbsdown": "\uE83C",
-  "hand-thumbsup-filled": "\uE83D",
-  "heart-filled": "\uE83E",
-  "hand-thumbsup": "\uE83F",
-  "heart": "\uE840",
-  "home": "\uE500",
-  "info": "\uE504",
-  "home-filled": "\uE530",
-  "info-filled": "\uE534",
-  "circle-filled": "\uE441",
-  "chat-filled": "\uE847",
-  "chat": "\uE263",
-  "mail-open-filled": "\uE84D",
-  "email-filled": "\uE231",
-  "mail-open": "\uE84E",
-  "email": "\uE201",
-  "checkmarkempty": "\uE472",
-  "list": "\uE562",
-  "locked-filled": "\uE856",
-  "locked": "\uE506",
-  "map-filled": "\uE85C",
-  "map-pin": "\uE85E",
-  "map-pin-ellipse": "\uE864",
-  "map": "\uE364",
-  "minus-filled": "\uE440",
-  "mic-filled": "\uE332",
-  "minus": "\uE410",
-  "micoff": "\uE360",
-  "mic": "\uE302",
-  "clear": "\uE434",
-  "smallcircle": "\uE868",
-  "close": "\uE404",
-  "closeempty": "\uE460",
-  "paperclip": "\uE567",
-  "paperplane": "\uE503",
-  "paperplane-filled": "\uE86E",
-  "person-filled": "\uE131",
-  "contact-filled": "\uE130",
-  "person": "\uE101",
-  "contact": "\uE100",
-  "images-filled": "\uE87A",
-  "phone": "\uE200",
-  "images": "\uE87B",
-  "image": "\uE363",
-  "image-filled": "\uE877",
-  "location-filled": "\uE333",
-  "location": "\uE303",
-  "plus-filled": "\uE439",
-  "plus": "\uE409",
-  "plusempty": "\uE468",
-  "help-filled": "\uE535",
-  "help": "\uE505",
-  "navigate-filled": "\uE884",
-  "navigate": "\uE501",
-  "mic-slash-filled": "\uE892",
-  "search": "\uE466",
-  "settings": "\uE560",
-  "sound": "\uE590",
-  "sound-filled": "\uE8A1",
-  "spinner-cycle": "\uE465",
-  "download-filled": "\uE8A4",
-  "personadd-filled": "\uE132",
-  "videocam-filled": "\uE8AF",
-  "personadd": "\uE102",
-  "upload": "\uE402",
-  "upload-filled": "\uE8B1",
-  "starhalf": "\uE463",
-  "star-filled": "\uE438",
-  "star": "\uE408",
-  "trash": "\uE401",
-  "phone-filled": "\uE230",
-  "compose": "\uE400",
-  "videocam": "\uE300",
-  "trash-filled": "\uE8DC",
-  "download": "\uE403",
-  "chatbubble-filled": "\uE232",
-  "chatbubble": "\uE202",
-  "cloud-download": "\uE8E4",
-  "cloud-upload-filled": "\uE8E5",
-  "cloud-upload": "\uE8E6",
-  "cloud-download-filled": "\uE8E9",
-  "headphones": "\uE8BF",
-  "shop": "\uE609" };exports.default = _default;
-
-/***/ }),
-
-/***/ 46:
-/*!************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/init/createdTab.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.init = void 0;var _addEvent = __webpack_require__(/*! ./addEvent */ 47);
-
-/**
-                                                                                                                                         * 通过配置信息创建指定tabbar层
-                                                                                                                                         */
-var createdTab = function createdTab()
-
-
-
-
-
-
-{var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},id = _ref.id,style = _ref.style,beforeMount = _ref.beforeMount,mounted = _ref.mounted,event = _ref.event,registerPageHook = _ref.registerPageHook;var tabList = arguments.length > 1 ? arguments[1] : undefined;
-  var tabbarView = new plus.nativeObj.View(id, style);
-  var isHold = beforeMount(tabbarView, tabList);
-  if (!isHold) {
-    (0, _addEvent.initAddEvents)(event, tabbarView, tabList, registerPageHook);
-    mounted(tabbarView, tabList);
-    tabbarView.show();
-    return tabbarView;
-  }
-};
-/**
-    * 初始化入口
-    * @param {*} config 
-    * @param {*} tabList 
-    */
-var init = function init(config, tabList) {
-  return createdTab(config, tabList);
-};exports.init = init;
-
-/***/ }),
-
-/***/ 47:
-/*!**********************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/init/addEvent.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.initAddEvents = void 0;var _base = __webpack_require__(/*! ../config/base */ 48);
-var _util = __webpack_require__(/*! ../util/util */ 49);
-
-/**
-                                      * 根据坐标获得点击的位置 并传入到开发者声明的回调函数中
-                                      */
-var xyTransformTo = function xyTransformTo(type, _ref, tabList, callBack, isHook) {var pageX = _ref.pageX;var
-  length = tabList.length;
-  var screenWidth = plus.screen.resolutionWidth;
-  var single = (screenWidth / length).toFixed(4);
-  var index = Math.ceil(pageX.toFixed(4) / single) - 1;
-  var tab = tabList[index];var _getActiveTabPage =
-  (0, _util.getActiveTabPage)(),route = _getActiveTabPage.route; //获取当前页面的路径
-  if (route != tab.pagePath) {
-    callBack(index, tab, function () {
-      callPageHook(type, isHook, tab);
-    });
-  } else {
-    callBack(index, tab, function () {});
-    callPageHook(type, isHook, tab);
-  }
-};
-/**
-    * 执行页面生命钩子
-    * @param {Object} type
-    * @param {Object} isHook
-    * @param {Object} tab
-    */
-var callPageHook = function callPageHook(type, isHook, tab) {
-  if (isHook) {//如果有设置页面拦截函数 则调用
-    var page = (0, _util.getActiveTabPage)(tab.pagePath);
-    if (page) {
-      var onTabEvent = page.$vm.$options.onTabEvent;
-      onTabEvent && onTabEvent.call(page.$vm, type, tab);
-    }
-  }
-};
-/**
-    * 绑定一些指定的事件
-    * @param {Object} event 事假json对象
-    * @param {Object} view 当前底部的tabbar遮罩层
-    */
-var initAddEvents = function initAddEvents(event, view, tabList, isHook) {var _loop = function _loop(
-  key) {
-    var callBack = event[key];
-    var type = _base.eventBind[key];
-    view.addEventListener(type, function (e) {
-      xyTransformTo(type, e, tabList, callBack, isHook);
-    });};for (var key in event) {_loop(key);
-  }
-};exports.initAddEvents = initAddEvents;
-
-/***/ }),
-
-/***/ 48:
-/*!********************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/config/base.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.BaseConfig = exports.eventBind = void 0;
-var eventBind = {
-  dbClick: 'doubleclick',
-  click: 'click',
-  touchstart: 'touchstart',
-  touchmove: 'touchmove',
-  touchend: 'touchend' };exports.eventBind = eventBind;
-
-
-var BaseConfig = {
-  registerPageHook: false,
-  id: 'HoldTabbar',
-  style: {
-    width: '100%',
-    height: '50px',
-    opacity: 0,
-    bottom: '0' },
-
-  event: {},
-  beforeMount: function beforeMount() {},
-  mounted: function mounted() {} };exports.BaseConfig = BaseConfig;
-
-/***/ }),
-
-/***/ 49:
-/*!******************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/util/util.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getActiveTabPage = exports.assertTabbar = exports.mergeConfig = void 0;var _base = __webpack_require__(/*! ../config/base */ 48);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-/**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * 合并配置信息 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @param {Object} config 开发者传递的配置信息
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
-var mergeConfig = function mergeConfig(config) {
-  var CONFIG = {};
-  for (var key in _base.BaseConfig) {
-    var item = _base.BaseConfig[key];
-    if (config[key] == null) {
-      CONFIG[key] = item;
-    } else if (config[key].constructor === Object) {
-      CONFIG[key] = _objectSpread({}, item, {}, config[key]);
-    } else {
-      CONFIG[key] = config[key];
-    }
-  }
-  return CONFIG;
-};
-/**
-    * 断言当前是否有 原生tabbar
-    */exports.mergeConfig = mergeConfig;
-var assertTabbar = function assertTabbar() {
-  if (__uniConfig.tabBar && __uniConfig.tabBar.list && __uniConfig.tabBar.list.length > 0) {
-    var list = JSON.parse(JSON.stringify(__uniConfig.tabBar.list));
-    for (var i = 0; i < list.length; i++) {
-      list[i].pagePath = list[i].pagePath.replace(/\.html$/, '');
-    }
-    return list;
-  } else {
-    console.error('当前没有uni-app自带的原生tabbar 无须进行拦截  告辞!!');
-    return false;
-  }
-};
-/**
-    * 获取当前底部tabbar页面对象
-    * @param {Object} path 当前点击的页面路径
-    */exports.assertTabbar = assertTabbar;
-var getActiveTabPage = function getActiveTabPage(path) {
-  var pages = getCurrentPages();
-  if (path == null) {
-    return pages[0];
-  }
-  for (var i = 0; i < pages.length; i++) {
-    var item = pages[i];
-    if (item.route === path) {
-      return item;
-    }
-  }
-  return false;
-};exports.getActiveTabPage = getActiveTabPage;
-
-/***/ }),
-
-/***/ 495:
-/*!************************************************************!*\
-  !*** D:/uni/uni_phone/components/a-good-lineBox/public.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.Mixin = void 0;var Mixin = {
-  props: {
-    itemData: {
-      type: Object,
-      default: function _default() {
-        return {};
-      } },
-
-    imgHeight: {
-      type: String,
-      default: '80px' },
-
-    isShoppingCard: {
-      type: Boolean,
-      default: false },
-
-    isOrder: {
-      type: Boolean,
-      default: false },
-
-    isIntegral: {
-      type: Boolean,
-      default: false },
-
-    seckill: {
-      type: Boolean,
-      default: false } },
-
-
-  data: function data() {
-    return {
-      list: [] };
-
-  },
-  methods: {
-    goodBoxCoupon: function goodBoxCoupon(val) {
-      this.$emit('goodBox', val);
-      // this.$router.push({path: '/shoppingMall/couponPage/' + val.SID})
-    },
-    addCart: function addCart() {
-      // 加入购物车
-    } } };exports.Mixin = Mixin;
-
-/***/ }),
-
-/***/ 50:
-/*!*****************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/init.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.appletsInit = void 0;var _hooks = __webpack_require__(/*! ./hooks */ 39);
-
-/**
-                                                                                                                                          * 开始初始化app端路由配置
-                                                                                                                                          * 
-                                                                                                                                          * @param {Object} Router 	当前Router对象
-                                                                                                                                          * 
-                                                                                                                                          * this 为当前 page 对象
-                                                                                                                                          */
-var appletsInit = function appletsInit(Router) {
-  _hooks.proxyLaunchHook.call(this);
-};exports.appletsInit = appletsInit;
-
-/***/ }),
-
-/***/ 51:
-/*!***********************************************!*\
-  !*** D:/uni/uni_phone/util/publicFunction.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.GetQueryString = GetQueryString;exports.getTime = getTime;exports.bottomScrollbar = bottomScrollbar;exports.setUrlDelCode = setUrlDelCode;exports.checkMobile = checkMobile;exports.weChatPayment = weChatPayment;exports.formatDate = void 0; // 获取商户编号 获取 ?name='' 的值
-function GetQueryString(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-  var r;
-  // console.log(window.location.search)
-  if (window.location.search) {
-    r = window.location.search.substr(1).match(reg);
-  } else {
-    var a = window.location.href;
-    if (a.indexOf('query') > -1) {
-      a = decodeA(a);
-      console.log(JSON.stringify(a) + '0000');
-      if (JSON.stringify(a) != '{}') return a[name];
-    } else {
-      var b = a.substr(a.indexOf(name), a.length - 1);
-      r = b.match(reg);
-      if (r != null) return unescape(r[2]);
-    }
-  }
-  return null;
-}
-
-function decodeA(a) {
-  if (a.indexOf('query') > -1) {
-    var queryObj = a.substr(a.indexOf('query') + 6, a.length - 1);
-    // console.log(queryObj)
-    try {
-      var queryObjP = JSON.parse(queryObj);
-      // console.log(queryObjP)
-      if (typeof queryObjP == 'object') {
-        return queryObjP;
-      }
-    } catch (e) {
-      a = decodeURIComponent(a);
-      return decodeA(a);
-    }
-
-  } else {
-    return a;
-  }
-}
-
-function getTime(time, bool, dataBool) {
-  var z = '- -';
-  var date;
-  if (time) {
-    // time.replace(/-/g,"/")
-    date = new Date(time);
-  } else {
-    date = new Date();
-  }
-  if (!isNaN(date) && date !== 0) {
-
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    m = m < 10 ? '0' + m : m;
-    var d = date.getDate();
-    d = d < 10 ? '0' + d : d;
-    var h = date.getHours();
-    h = h < 10 ? '0' + h : h;
-    var minute = date.getMinutes();
-    var second = date.getSeconds();
-    minute = minute < 10 ? '0' + minute : minute;
-    second = second < 10 ? '0' + second : second;
-    if (bool) {
-      z = y + '-' + m + '-' + d;
-    } else if (dataBool) {
-      z = h + ':' + minute + ':' + second;
-    } else {
-      z = y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
-    }
-  }
-
-  return z;
-}
-
-function bottomScrollbar(_this, Dom, faDom) {var bottom = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;var top = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;var _uni$getSystemInfoSyn =
-
-
-
-  uni.getSystemInfoSync(),windowWidth = _uni$getSystemInfoSyn.windowWidth,windowHeight = _uni$getSystemInfoSyn.windowHeight;
-  var faDomHeight = '';
-  var faDomInfo = uni.createSelectorQuery().select(faDom);
-  faDomInfo.boundingClientRect(function (data) {
-    console.log(data.height); // 获取元素宽度
-    faDomHeight = data.height;
-  }).exec();
-  var a = windowHeight - faDomHeight - top - 10;
-
-  if (a <= 0) {
-    uni.createSelectorQuery().select(faDom).boundingClientRect(function (data) {});
-    uni.createSelectorQuery().select(Dom).boundingClientRect(function (data) {});
-    // $(Dom).css('transform', `translateY(0px)`)
-    // $(faDom).css({
-    // 	'marginBottom': 60 + 'px'
-    // })
-  } else {
-      // $('.btnBottom').css('transform', `translateY(${a}px)`)
-      // $(Dom).css({
-      // 	'position': `absolute`,
-      // 	'bottom': bottom + 'px',
-      // 	'width': `96%`
-      // })
-    }
-}
-
-function setUrlDelCode() {
-  var url = document.location.toString();
-  if (!url) {
-    return url;
-  }
-  if (url.indexOf('?') < 0) {
-    return url;
-  }
-  var arrUrl = url.split("?");
-  var para = arrUrl[1];
-  if (para.indexOf('&')) {
-    para = para.split("&"); //获取url的参数
-  }
-  para.forEach(function (D, index) {//删除原本url上的code
-    if (D.indexOf('code') > -1) {
-      para.splice(index, 1);
-    }
-  });
-  para = para.join(',');
-  // let currentUrl = arrUrl[0] + '?' + para
-  return arrUrl[0] + '?' + para;
-}
-
-// export function setImg(img){
-// 	return process.env.VUE_APP_PREFIX + img
-// }
-
-function checkMobile(s) {
-  var regu = /^1[3456789]\d{9}$/;
-  var re = new RegExp(regu);
-  if (re.test(s)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function weChatPayment(that, Data, bool) {
-  if (typeof WeixinJSBridge == "undefined") {
-    if (document.addEventListener) {
-      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-    } else if (document.attachEvent) {
-      document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-      document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-    }
-  } else {
-    onBridgeReady();
-  }
-
-  function onBridgeReady() {
-    WeixinJSBridge.invoke(
-    "getBrandWCPayRequest", {
-      appId: Data.appId,
-      timeStamp: Data.timeStamp,
-      nonceStr: Data.nonceStr,
-      package: Data.package,
-      signType: Data.signType,
-      paySign: Data.paySign },
-
-    function (res) {
-      // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-      if (res.err_msg === "get_brand_wcpay_request:ok") {
-        if (bool) {
-          that.$router.push({
-            path: "/home/index" });
-
-        } else {
-          that.$router.push({
-            path: "/home/index" });
-
-        }
-
-        // that.$router.push('/shoppingMall/order/OrderPaySuccess')
-      } else {
-        //失败
-        that.$toast.fail("支付失败");
-
-        setTimeout(function () {
-          if (bool) {
-            that.$router.push({
-              path: "/shoppingMall/order/orderInfo?order_id=" +
-              that.OrderInfo.SID });
-
-          } else {
-            that.$router.push({
-              path: "/home/myOrder",
-              query: {
-                id: "1" } },
-
-            2000);
-          }
-
-        });
-      }
-    });
-
-  }
-}
-
-var formatDate = function formatDate(dateObj) {var fmt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Y-m-d H:i';var empty = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  var days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  var months = [
-  '一月', '二月', '三月', '四月', '五月', '六月',
-  '七月', '八月', '九月', '十月', '十一月', '十二月'];
-
-  var lz = function lz(n) {
-    var num = n.toString();
-    if (num.length === 1) return "0".concat(num);
-    return num;
-  };
-  var t = dateObj;
-  // typeof dateObj !== 'string'是为了判断万一传过来的是y-m-d h:i:s格式，会直接执行最后一个else if，格式化为日期格式
-  if (dateObj === null || Number.isNaN(dateObj) && typeof dateObj !== 'string') {
-    if (typeof empty === 'string') return empty;
-    t = new Date();
-  } else if (typeof dateObj === 'number') {
-    t = new Date(dateObj * 1000);
-  } else if (typeof dateObj === 'string') {
-    t = new Date(dateObj.replace(/-/g, '/'));
-  }
-  if (!(t instanceof Date)) {
-    throw new Error('被处理的只能是Date对象');
-  }
-  if (Number.isNaN(t.getTime())) {
-    throw new Error('非法日期对象');
-  }
-  var date = t.getDate();
-  var year = t.getFullYear();
-  var hours = t.getHours();
-  var day = t.getDay();
-  var dayName = days[day];
-  var min = t.getMinutes();
-  var sec = t.getSeconds();
-  var month = t.getMonth();
-  var am = hours < 12 ? 'am' : 'pm';
-  var ms = t.getTime() % 1000;
-  var hours12 = hours % 12;
-  hours12 = hours12 || 12;
-  var fd = new Date(t.getFullYear(), 0, 1);
-  var dayOfYear = Math.round((t - fd) / 8.64e7);
-  var weekNum = Math.ceil(((t - fd) / 8.64e7 + fd.getDay() - 1) / 7);
-  var a = {
-    d: lz(date),
-    D: dayName.substr(0, 3),
-    l: dayName,
-    w: day,
-    j: date,
-    z: dayOfYear,
-    W: weekNum,
-    M: months[month].substr(0, 3),
-    F: months[month],
-    Y: year,
-    a: am,
-    A: am.toUpperCase(),
-    y: year.toString().substr(2, 2),
-    c: t.toISOString(),
-    m: lz(month + 1),
-    U: Math.round(t / 1000),
-    g: hours12,
-    G: lz(hours12),
-    h: hours,
-    H: lz(hours),
-    i: lz(min),
-    s: lz(sec),
-    e: ms };
-
-  var v = [];
-  Object.keys(a).forEach(function (k) {
-    v.push("(\\\\)?".concat(k));
-  });
-  return fmt.replace(new RegExp(v.join('|'), 'g'), function (k) {
-    if (a[k]) return a[k];
-    return k.replace('\\', '');
-  });
-};exports.formatDate = formatDate;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 517:
+/***/ 329:
 /*!*************************************************!*\
   !*** D:/uni/uni_phone/config/area_json/area.js ***!
   \*************************************************/
@@ -21755,6 +17269,5395 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 
+/***/ 33:
+/*!*************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/util.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.assertCanBack = exports.getPageOnBeforeBack = exports.APPGetPageRoute = exports.getFormatQuery = exports.ruleToUniNavInfo = exports.pathOrNameToRoute = exports.formatFrom = exports.formatTo = exports.getPageVmOrMp = exports.isNvuePage = exports.getPages = exports.callAppHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
+var _util = __webpack_require__(/*! ../helpers/util */ 24);
+var _config = __webpack_require__(/*! ../helpers/config */ 25);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * 触发指定生命钩子
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @param {Array} funList	//需要执行的方法列表
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @param {Object} args //触发生命钩子传递的参数
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
+var callAppHook = function callAppHook(funList, args) {
+  for (var i = 0; i < funList.length; i++) {
+    funList[i].call(this, args);
+  }
+};
+/**
+    * @param {Number} index //需要获取的页面下标 -2:表示获取最后一个即当前页面 -1:表示全部 -3:当前页面的前一个页面
+    * @param {Boolean} all //是否获取全部的页面
+    */exports.callAppHook = callAppHook;
+var getPages = function getPages() {var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;var all = arguments.length > 1 ? arguments[1] : undefined;
+  var pages = getCurrentPages(all);
+  if (index === -1) {
+    return pages;
+  }
+  if (index === -2) {
+    return pages[pages.length - 1];
+  }
+  if (index === -3) {
+    return pages[pages.length - 2];
+  }
+  return pages[index];
+};
+/**
+    * 验证当前页面是否为nvue页面
+    * @param {Object} page 当前页面对象
+    */exports.getPages = getPages;
+var isNvuePage = function isNvuePage(page) {
+  var cstr = page.constructor.name;
+  var pageType = {
+    s: true,
+    z: false };
+
+  return pageType[cstr];
+};
+
+/**
+    * @param {Object} page //当前顶级页面对象
+    * @param {Object} vim:? //是否获取 $vm 对象还是 $mp 对象
+    */exports.isNvuePage = isNvuePage;
+var getPageVmOrMp = function getPageVmOrMp(page) {var vim = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  if (vim) {
+    return page.$vm;
+  }
+  if (page.$vm.$mp) {
+    return page.$vm.$mp;
+  } else {
+    if (isNvuePage(page)) {//nvue 页面
+      return {
+        page: page,
+        query: page.__displayReporter.query };
+
+    }
+  }
+};
+
+/**
+    * 获取 to 的配置参数
+    * @param {Object} rule 当前跳转的规则
+    */exports.getPageVmOrMp = getPageVmOrMp;
+var formatTo = function formatTo(finalRoute) {
+  var route = (0, _util.copyObject)(finalRoute.route);
+  var rule = finalRoute.rule;
+  route.query = rule['query'] || rule['params'] || {};
+  return route;
+};
+/**
+    * 获取 from 的配置参数 from 页面永远都是站在当前页面忘其它地方走 所以都是最后一个页面
+    * 
+    * @param {Object} routes //当前对象的所有路由表
+    */exports.formatTo = formatTo;
+var formatFrom = function formatFrom(routes) {
+  var topPage = getPages(-2);var _getPageVmOrMp =
+  getPageVmOrMp(topPage, false),page = _getPageVmOrMp.page,query = _getPageVmOrMp.query;
+  var route = pathOrNameToRoute(page.route, routes); //获取到当前路由表下的 route
+  route.query = getFormatQuery(query); //不管是编码传输还是非编码 最后都得在 to/from 中换成json对象
+  return route;
+};
+/**
+    * 通过一个未知的路径或者名称 在路由表中查找指定路由表 并返回
+    * @param {string} type   //path 或者 name
+    * @param {Object} routes //当前对象的所有路由表
+    */exports.formatFrom = formatFrom;
+var pathOrNameToRoute = function pathOrNameToRoute(type) {var routes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _config.Global.Router.CONFIG.routes;
+  for (var key in routes) {
+    var item = routes[key];
+    if (item.path === "/".concat(type)) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+    if (item.path === type) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+    if (item.name == type) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+  }
+  (0, _warn.err)("\u5F53\u524D '".concat(type, "' \u5728\u8DEF\u7531\u8868\u4E2D\u6CA1\u6709\u627E\u5230\u5339\u914D\u7684 name \u6216\u8005 path"));
+};
+/**
+    * 
+    * 把用户的跳转路由规则格式化成uni-app可用的路由跳转规则
+    * 
+    * @param {Object} rule  //当前用户跳转的路由规则
+    * @param {Object} routes //当前simple-router 下的路由表 
+    */exports.pathOrNameToRoute = pathOrNameToRoute;
+var ruleToUniNavInfo = function ruleToUniNavInfo(rule, routes) {
+  if (rule == null) {
+    return (0, _warn.err)("\u5F53\u524D\u8DF3\u8F6C\u89C4\u5219\u4E3A\u7A7A,\u8BF7\u68C0\u67E5\u8DF3\u8F6C\u4EE3\u7801");
+  }var
+  navType = 'path',route = null,query = {},animation = {};
+  if (rule.constructor === String) {//是字符串类型 那当前就是路径啦
+    route = pathOrNameToRoute(rule, routes); //直接把 rule 当 path 传递 完事
+  } else if (rule.constructor === Object) {//对象类型 可以是 path 或者 name
+    route = pathOrNameToRoute(rule['path'] || (navType = 'name', rule['name']), routes); //两则必有其一 报错自己处理
+    query = rule['query'] || rule['params'] || {};
+    animation = rule.animation || {};
+  } else {
+    return (0, _warn.err)("\u4F20\u7684\u4EC0\u4E48\u4E71\u4E03\u516B\u7CDF\u7684\u7C7B\u578B?\u8DEF\u7531\u8DF3\u8F6C\u89C4\u5219\u53EA\u8BA4\u5B57\u7B26\u4E32 'path' , \u5BF9\u8C61 'path' , \u5BF9\u8C61 'name' ");
+  }
+  animation = _objectSpread({}, _config.Global.Router.CONFIG.APP.animation, {}, route.animation || {}, {}, animation); //合并多种方式声明的动画效果
+  route.animation = animation; //这才是最终的页面切换效果
+  //路径处理完后   开始格式化参数
+  var uniRoute = (0, _util.parseQuery)(route.path, query); //uni-app 需要的跳转规则
+  return {
+    rule: rule,
+    route: route,
+    uniRoute: uniRoute };
+
+};
+/**
+    * 统一格式话 路由传递的参数 看看是编码还是非编码 做相应的对策
+    * 
+    * @param {Object} query 当前的路由参数
+    * @param {Boolean} getter 是从页面获取 route 对象下的参数 还是编码后传输
+    */exports.ruleToUniNavInfo = ruleToUniNavInfo;
+var getFormatQuery = function getFormatQuery() {var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var getter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (_config.Global.Router.CONFIG.encodeURI) {
+    try {
+      query = JSON.parse(decodeURIComponent(query.query || encodeURIComponent('{}')));
+    } catch (e) {
+      query = JSON.parse(query.query);
+    }
+  }
+  return query;
+};
+/**
+    * 获取当前页面下的 Route 信息
+    * 
+    * @param {Object} pages 获取页面对象集合
+    * @param {Object} Vim 用户传递的当前页面对象
+    */exports.getFormatQuery = getFormatQuery;
+var APPGetPageRoute = function APPGetPageRoute(pages, Vim) {var
+  query = {},path = '';
+  if (pages.length > 0) {
+    var _page = pages[pages.length - 1]; //获取到当前页面
+    query = getFormatQuery(_page.options, true);
+    path = _page.route;
+  } else if (Vim != null) {
+    query = getFormatQuery(Vim.$mp.page.options, true);
+    path = page.route;
+  }
+  var route = pathOrNameToRoute(path);
+  route.query = query;
+  return route;
+};
+/**
+    * 获取当前页面下的onBeforeBack 生命周期并执行
+    * 
+    * @param {Object} args 当前返回页面时uni-app传递的参数
+    */exports.APPGetPageRoute = APPGetPageRoute;
+var getPageOnBeforeBack = function getPageOnBeforeBack(args) {
+  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var currPage, onBeforeBack, isNext;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+              currPage = getPages(-2); //获取到当前页面
+              onBeforeBack = currPage.$vm.$options.onBeforeBack;if (!(
+              onBeforeBack != null && onBeforeBack.constructor === Function)) {_context.next = 8;break;}_context.next = 5;return (
+                onBeforeBack.call(currPage.$vm, args));case 5:isNext = _context.sent;if (!(
+              isNext === true)) {_context.next = 8;break;}return _context.abrupt("return",
+              resolve(false));case 8:return _context.abrupt("return",
+
+
+              resolve(true));case 9:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
+
+};
+/**
+    * 断言当前页面是否可返回上一级
+    * @param {Object} page 当前页面webview对象
+    */exports.getPageOnBeforeBack = getPageOnBeforeBack;
+var assertCanBack = function assertCanBack(page) {
+  var pageStyle = page.$getAppWebview().getStyle();
+  if (pageStyle.titleNView != null && pageStyle.titleNView.autoBackButton) {//只有处理有带返回按钮的页面  
+    return true;
+  }
+  //两种情况 1.真的是顶级页面时  2.自定义头部
+  var $page = page.$page;
+  if ($page && $page.meta.isQuit === false) {//自定义头部 不是顶级页面
+    return true;
+  }
+  return false; //不可返回 真的是顶级页面时 返回就直接退出app了
+};exports.assertCanBack = assertCanBack;
+
+/***/ }),
+
+/***/ 330:
+/*!************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/weixin-js-sdk/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}!function (e, n) {
+  module.exports = n(e);
+}(window, function (o, e) {
+  if (!o.jWeixin) {var _w;
+    var n,
+    c = {
+      config: "preVerifyJSAPI",
+      onMenuShareTimeline: "menu:share:timeline",
+      onMenuShareAppMessage: "menu:share:appmessage",
+      onMenuShareQQ: "menu:share:qq",
+      onMenuShareWeibo: "menu:share:weiboApp",
+      onMenuShareQZone: "menu:share:QZone",
+      previewImage: "imagePreview",
+      getLocation: "geoLocation",
+      openProductSpecificView: "openProductViewWithPid",
+      addCard: "batchAddCard",
+      openCard: "batchViewCard",
+      chooseWXPay: "getBrandWCPayRequest",
+      openEnterpriseRedPacket: "getRecevieBizHongBaoRequest",
+      startSearchBeacons: "startMonitoringBeacons",
+      stopSearchBeacons: "stopMonitoringBeacons",
+      onSearchBeacons: "onBeaconsInRange",
+      consumeAndShareCard: "consumedShareCard",
+      openAddress: "editAddress" },
+
+    a = function () {
+      var e = {};
+      for (var n in c) {e[c[n]] = n;}
+      return e;
+    }(),
+    i = o.document,
+    t = i.title,
+    r = navigator.userAgent.toLowerCase(),
+    s = navigator.platform.toLowerCase(),
+    d = !(!s.match("mac") && !s.match("win")),
+    u = -1 != r.indexOf("wxdebugger"),
+    l = -1 != r.indexOf("micromessenger"),
+    p = -1 != r.indexOf("android"),
+    f = -1 != r.indexOf("iphone") || -1 != r.indexOf("ipad"),
+    m = (n =
+    r.match(/micromessenger\/(\d+\.\d+\.\d+)/) ||
+    r.match(/micromessenger\/(\d+\.\d+)/)) ?
+    n[1] :
+    "",
+    g = {
+      initStartTime: L(),
+      initEndTime: 0,
+      preVerifyStartTime: 0,
+      preVerifyEndTime: 0 },
+
+    h = {
+      version: 1,
+      appId: "",
+      initTime: 0,
+      preVerifyTime: 0,
+      networkType: "",
+      isPreVerifyOk: 1,
+      systemType: f ? 1 : p ? 2 : -1,
+      clientVersion: m,
+      url: encodeURIComponent(location.href) },
+
+    v = {},
+    S = { _completes: [] },
+    y = { state: 0, data: {} };
+    O(function () {
+      g.initEndTime = L();
+    });
+    var I = !1,
+    _ = [],
+    w = (_w = {
+      config: function config(e) {
+        B("config", v = e);
+        var t = !1 !== v.check;
+        O(function () {
+          if (t)
+          M(
+          c.config,
+          {
+            verifyJsApiList: C(v.jsApiList),
+            verifyOpenTagList: C(v.openTagList) },
+
+          function () {
+            S._complete = function (e) {
+              g.preVerifyEndTime = L(), y.state = 1, y.data = e;
+            },
+            S.success = function (e) {
+              h.isPreVerifyOk = 0;
+            },
+            S.fail = function (e) {
+              S._fail ? S._fail(e) : y.state = -1;
+            };
+            var t = S._completes;
+            return (
+              t.push(function () {
+                !function () {
+                  if (
+                  !(
+                  d ||
+                  u ||
+                  v.debug ||
+                  m < "6.0.2" ||
+                  h.systemType < 0))
+
+                  {
+                    var i = new Image();
+                    h.appId = v.appId,
+                    h.initTime = g.initEndTime - g.initStartTime,
+                    h.preVerifyTime =
+                    g.preVerifyEndTime - g.preVerifyStartTime,
+                    w.getNetworkType({
+                      isInnerInvoke: !0,
+                      success: function success(e) {
+                        h.networkType = e.networkType;
+                        var n =
+                        "https://open.weixin.qq.com/sdk/report?v=" +
+                        h.version +
+                        "&o=" +
+                        h.isPreVerifyOk +
+                        "&s=" +
+                        h.systemType +
+                        "&c=" +
+                        h.clientVersion +
+                        "&a=" +
+                        h.appId +
+                        "&n=" +
+                        h.networkType +
+                        "&i=" +
+                        h.initTime +
+                        "&p=" +
+                        h.preVerifyTime +
+                        "&u=" +
+                        h.url;
+                        i.src = n;
+                      } });
+
+                  }
+                }();
+              }),
+              S.complete = function (e) {
+                for (var n = 0, i = t.length; n < i; ++n) {t[n]();}
+                S._completes = [];
+              },
+              S);
+
+          }()),
+
+          g.preVerifyStartTime = L();else
+          {
+            y.state = 1;
+            for (var e = S._completes, n = 0, i = e.length; n < i; ++n) {
+              e[n]();}
+            S._completes = [];
+          }
+        }),
+        w.invoke || (
+        w.invoke = function (e, n, i) {
+          o.WeixinJSBridge && WeixinJSBridge.invoke(e, x(n), i);
+        },
+        w.on = function (e, n) {
+          o.WeixinJSBridge && WeixinJSBridge.on(e, n);
+        });
+      },
+      ready: function ready(e) {
+        0 != y.state ? e() : (S._completes.push(e), !l && v.debug && e());
+      },
+      error: function error(e) {
+        m < "6.0.2" || (-1 == y.state ? e(y.data) : S._fail = e);
+      },
+      checkJsApi: function checkJsApi(e) {
+        M(
+        "checkJsApi",
+        { jsApiList: C(e.jsApiList) }, (
+        e._complete = function (e) {
+          if (p) {
+            var n = e.checkResult;
+            n && (e.checkResult = JSON.parse(n));
+          }
+          e = function (e) {
+            var n = e.checkResult;
+            for (var i in n) {
+              var t = a[i];
+              t && (n[t] = n[i], delete n[i]);
+            }
+            return e;
+          }(e);
+        },
+        e));
+
+      },
+      onMenuShareTimeline: function onMenuShareTimeline(e) {
+        P(
+        c.onMenuShareTimeline,
+        {
+          complete: function complete() {
+            M(
+            "shareTimeline",
+            {
+              title: e.title || t,
+              desc: e.title || t,
+              img_url: e.imgUrl || "",
+              link: e.link || location.href,
+              type: e.type || "link",
+              data_url: e.dataUrl || "" },
+
+            e);
+
+          } },
+
+        e);
+
+      },
+      onMenuShareAppMessage: function onMenuShareAppMessage(n) {
+        P(
+        c.onMenuShareAppMessage,
+        {
+          complete: function complete(e) {
+            "favorite" === e.scene ?
+            M("sendAppMessage", {
+              title: n.title || t,
+              desc: n.desc || "",
+              link: n.link || location.href,
+              img_url: n.imgUrl || "",
+              type: n.type || "link",
+              data_url: n.dataUrl || "" }) :
+
+            M(
+            "sendAppMessage",
+            {
+              title: n.title || t,
+              desc: n.desc || "",
+              link: n.link || location.href,
+              img_url: n.imgUrl || "",
+              type: n.type || "link",
+              data_url: n.dataUrl || "" },
+
+            n);
+
+          } },
+
+        n);
+
+      },
+      onMenuShareQQ: function onMenuShareQQ(e) {
+        P(
+        c.onMenuShareQQ,
+        {
+          complete: function complete() {
+            M(
+            "shareQQ",
+            {
+              title: e.title || t,
+              desc: e.desc || "",
+              img_url: e.imgUrl || "",
+              link: e.link || location.href },
+
+            e);
+
+          } },
+
+        e);
+
+      },
+      onMenuShareWeibo: function onMenuShareWeibo(e) {
+        P(
+        c.onMenuShareWeibo,
+        {
+          complete: function complete() {
+            M(
+            "shareWeiboApp",
+            {
+              title: e.title || t,
+              desc: e.desc || "",
+              img_url: e.imgUrl || "",
+              link: e.link || location.href },
+
+            e);
+
+          } },
+
+        e);
+
+      },
+      onMenuShareQZone: function onMenuShareQZone(e) {
+        P(
+        c.onMenuShareQZone,
+        {
+          complete: function complete() {
+            M(
+            "shareQZone",
+            {
+              title: e.title || t,
+              desc: e.desc || "",
+              img_url: e.imgUrl || "",
+              link: e.link || location.href },
+
+            e);
+
+          } },
+
+        e);
+
+      },
+      updateTimelineShareData: function updateTimelineShareData(e) {
+        M(
+        "updateTimelineShareData",
+        { title: e.title, link: e.link, imgUrl: e.imgUrl },
+        e);
+
+      },
+      updateAppMessageShareData: function updateAppMessageShareData(e) {
+        M(
+        "updateAppMessageShareData",
+        { title: e.title, desc: e.desc, link: e.link, imgUrl: e.imgUrl },
+        e);
+
+      },
+      startRecord: function startRecord(e) {
+        M("startRecord", {}, e);
+      },
+      stopRecord: function stopRecord(e) {
+        M("stopRecord", {}, e);
+      },
+      onVoiceRecordEnd: function onVoiceRecordEnd(e) {
+        P("onVoiceRecordEnd", e);
+      },
+      playVoice: function playVoice(e) {
+        M("playVoice", { localId: e.localId }, e);
+      },
+      pauseVoice: function pauseVoice(e) {
+        M("pauseVoice", { localId: e.localId }, e);
+      },
+      stopVoice: function stopVoice(e) {
+        M("stopVoice", { localId: e.localId }, e);
+      },
+      onVoicePlayEnd: function onVoicePlayEnd(e) {
+        P("onVoicePlayEnd", e);
+      },
+      uploadVoice: function uploadVoice(e) {
+        M(
+        "uploadVoice",
+        {
+          localId: e.localId,
+          isShowProgressTips: 0 == e.isShowProgressTips ? 0 : 1 },
+
+        e);
+
+      },
+      downloadVoice: function downloadVoice(e) {
+        M(
+        "downloadVoice",
+        {
+          serverId: e.serverId,
+          isShowProgressTips: 0 == e.isShowProgressTips ? 0 : 1 },
+
+        e);
+
+      },
+      translateVoice: function translateVoice(e) {
+        M(
+        "translateVoice",
+        {
+          localId: e.localId,
+          isShowProgressTips: 0 == e.isShowProgressTips ? 0 : 1 },
+
+        e);
+
+      },
+      chooseImage: function chooseImage(e) {
+        M(
+        "chooseImage",
+        {
+          scene: "1|2",
+          count: e.count || 9,
+          sizeType: e.sizeType || ["original", "compressed"],
+          sourceType: e.sourceType || ["album", "camera"] }, (
+
+        e._complete = function (e) {
+          if (p) {
+            var n = e.localIds;
+            try {
+              n && (e.localIds = JSON.parse(n));
+            } catch (e) {}
+          }
+        },
+        e));
+
+      },
+      getLocation: function getLocation(e) {},
+      previewImage: function previewImage(e) {
+        M(c.previewImage, { current: e.current, urls: e.urls }, e);
+      },
+      uploadImage: function uploadImage(e) {
+        M(
+        "uploadImage",
+        {
+          localId: e.localId,
+          isShowProgressTips: 0 == e.isShowProgressTips ? 0 : 1 },
+
+        e);
+
+      },
+      downloadImage: function downloadImage(e) {
+        M(
+        "downloadImage",
+        {
+          serverId: e.serverId,
+          isShowProgressTips: 0 == e.isShowProgressTips ? 0 : 1 },
+
+        e);
+
+      },
+      getLocalImgData: function getLocalImgData(e) {
+        !1 === I ? (
+        I = !0,
+        M(
+        "getLocalImgData",
+        { localId: e.localId }, (
+        e._complete = function (e) {
+          if (I = !1, 0 < _.length) {
+            var n = _.shift();
+            wx.getLocalImgData(n);
+          }
+        },
+        e))) :
+
+        _.push(e);
+      },
+      getNetworkType: function getNetworkType(e) {
+        M(
+        "getNetworkType",
+        {}, (
+        e._complete = function (e) {
+          e = function (e) {
+            var n = e.errMsg;
+            e.errMsg = "getNetworkType:ok";
+            var i = e.subtype;
+            if (delete e.subtype, i) e.networkType = i;else
+            {
+              var t = n.indexOf(":"),
+              o = n.substring(t + 1);
+              switch (o) {
+                case "wifi":
+                case "edge":
+                case "wwan":
+                  e.networkType = o;
+                  break;
+                default:
+                  e.errMsg = "getNetworkType:fail";}
+
+            }
+            return e;
+          }(e);
+        },
+        e));
+
+      },
+      openLocation: function openLocation(e) {
+        M(
+        "openLocation",
+        {
+          latitude: e.latitude,
+          longitude: e.longitude,
+          name: e.name || "",
+          address: e.address || "",
+          scale: e.scale || 28,
+          infoUrl: e.infoUrl || "" },
+
+        e);
+
+      } }, _defineProperty(_w, "getLocation",
+    function getLocation(e) {
+      M(
+      c.getLocation,
+      { type: (e = e || {}).type || "wgs84" }, (
+      e._complete = function (e) {
+        delete e.type;
+      },
+      e));
+
+    }), _defineProperty(_w, "hideOptionMenu",
+    function hideOptionMenu(e) {
+      M("hideOptionMenu", {}, e);
+    }), _defineProperty(_w, "showOptionMenu",
+    function showOptionMenu(e) {
+      M("showOptionMenu", {}, e);
+    }), _defineProperty(_w, "closeWindow",
+    function closeWindow(e) {
+      M("closeWindow", {}, e = e || {});
+    }), _defineProperty(_w, "hideMenuItems",
+    function hideMenuItems(e) {
+      M("hideMenuItems", { menuList: e.menuList }, e);
+    }), _defineProperty(_w, "showMenuItems",
+    function showMenuItems(e) {
+      M("showMenuItems", { menuList: e.menuList }, e);
+    }), _defineProperty(_w, "hideAllNonBaseMenuItem",
+    function hideAllNonBaseMenuItem(e) {
+      M("hideAllNonBaseMenuItem", {}, e);
+    }), _defineProperty(_w, "showAllNonBaseMenuItem",
+    function showAllNonBaseMenuItem(e) {
+      M("showAllNonBaseMenuItem", {}, e);
+    }), _defineProperty(_w, "scanQRCode",
+    function scanQRCode(e) {
+      M(
+      "scanQRCode",
+      {
+        needResult: (e = e || {}).needResult || 0,
+        scanType: e.scanType || ["qrCode", "barCode"] }, (
+
+      e._complete = function (e) {
+        if (f) {
+          var n = e.resultStr;
+          if (n) {
+            var i = JSON.parse(n);
+            e.resultStr = i && i.scan_code && i.scan_code.scan_result;
+          }
+        }
+      },
+      e));
+
+    }), _defineProperty(_w, "openAddress",
+    function openAddress(e) {
+      M(
+      c.openAddress,
+      {}, (
+      e._complete = function (e) {
+        e = function (e) {
+          return (
+            e.postalCode = e.addressPostalCode,
+            delete e.addressPostalCode,
+            e.provinceName = e.proviceFirstStageName,
+            delete e.proviceFirstStageName,
+            e.cityName = e.addressCitySecondStageName,
+            delete e.addressCitySecondStageName,
+            e.countryName = e.addressCountiesThirdStageName,
+            delete e.addressCountiesThirdStageName,
+            e.detailInfo = e.addressDetailInfo,
+            delete e.addressDetailInfo,
+            e);
+
+        }(e);
+      },
+      e));
+
+    }), _defineProperty(_w, "openProductSpecificView",
+    function openProductSpecificView(e) {
+      M(
+      c.openProductSpecificView,
+      {
+        pid: e.productId,
+        view_type: e.viewType || 0,
+        ext_info: e.extInfo },
+
+      e);
+
+    }), _defineProperty(_w, "addCard",
+    function addCard(e) {
+      for (var n = e.cardList, i = [], t = 0, o = n.length; t < o; ++t) {
+        var r = n[t],
+        a = { card_id: r.cardId, card_ext: r.cardExt };
+        i.push(a);
+      }
+      M(
+      c.addCard,
+      { card_list: i }, (
+      e._complete = function (e) {
+        var n = e.card_list;
+        if (n) {
+          for (var i = 0, t = (n = JSON.parse(n)).length; i < t; ++i) {
+            var o = n[i];
+            o.cardId = o.card_id,
+            o.cardExt = o.card_ext,
+            o.isSuccess = !!o.is_succ,
+            delete o.card_id,
+            delete o.card_ext,
+            delete o.is_succ;
+          }
+          e.cardList = n, delete e.card_list;
+        }
+      },
+      e));
+
+    }), _defineProperty(_w, "chooseCard",
+    function chooseCard(e) {
+      M(
+      "chooseCard",
+      {
+        app_id: v.appId,
+        location_id: e.shopId || "",
+        sign_type: e.signType || "SHA1",
+        card_id: e.cardId || "",
+        card_type: e.cardType || "",
+        card_sign: e.cardSign,
+        time_stamp: e.timestamp + "",
+        nonce_str: e.nonceStr }, (
+
+      e._complete = function (e) {
+        e.cardList = e.choose_card_info, delete e.choose_card_info;
+      },
+      e));
+
+    }), _defineProperty(_w, "openCard",
+    function openCard(e) {
+      for (var n = e.cardList, i = [], t = 0, o = n.length; t < o; ++t) {
+        var r = n[t],
+        a = { card_id: r.cardId, code: r.code };
+        i.push(a);
+      }
+      M(c.openCard, { card_list: i }, e);
+    }), _defineProperty(_w, "consumeAndShareCard",
+    function consumeAndShareCard(e) {
+      M(
+      c.consumeAndShareCard,
+      { consumedCardId: e.cardId, consumedCode: e.code },
+      e);
+
+    }), _defineProperty(_w, "chooseWXPay",
+    function chooseWXPay(e) {
+      M(c.chooseWXPay, V(e), e);
+    }), _defineProperty(_w, "openEnterpriseRedPacket",
+    function openEnterpriseRedPacket(e) {
+      M(c.openEnterpriseRedPacket, V(e), e);
+    }), _defineProperty(_w, "startSearchBeacons",
+    function startSearchBeacons(e) {
+      M(c.startSearchBeacons, { ticket: e.ticket }, e);
+    }), _defineProperty(_w, "stopSearchBeacons",
+    function stopSearchBeacons(e) {
+      M(c.stopSearchBeacons, {}, e);
+    }), _defineProperty(_w, "onSearchBeacons",
+    function onSearchBeacons(e) {
+      P(c.onSearchBeacons, e);
+    }), _defineProperty(_w, "openEnterpriseChat",
+    function openEnterpriseChat(e) {
+      M(
+      "openEnterpriseChat",
+      { useridlist: e.userIds, chatname: e.groupName },
+      e);
+
+    }), _defineProperty(_w, "launchMiniProgram",
+    function launchMiniProgram(e) {
+      M(
+      "launchMiniProgram",
+      {
+        targetAppId: e.targetAppId,
+        path: function (e) {
+          if ("string" == typeof e && 0 < e.length) {
+            var n = e.split("?")[0],
+            i = e.split("?")[1];
+            return n += ".html", void 0 !== i ? n + "?" + i : n;
+          }
+        }(e.path),
+        envVersion: e.envVersion },
+
+      e);
+
+    }), _defineProperty(_w, "openBusinessView",
+    function openBusinessView(e) {
+      M(
+      "openBusinessView",
+      {
+        businessType: e.businessType,
+        queryString: e.queryString || "",
+        envVersion: e.envVersion }, (
+
+      e._complete = function (n) {
+        if (p) {
+          var e = n.extraData;
+          if (e)
+          try {
+            n.extraData = JSON.parse(e);
+          } catch (e) {
+            n.extraData = {};
+          }
+        }
+      },
+      e));
+
+    }), _defineProperty(_w, "miniProgram",
+    {
+      navigateBack: function navigateBack(e) {
+        e = e || {},
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "navigateBack", arg: { delta: e.delta || 1 } },
+          e);
+
+        });
+      },
+      navigateTo: function navigateTo(e) {
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "navigateTo", arg: { url: e.url } },
+          e);
+
+        });
+      },
+      redirectTo: function redirectTo(e) {
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "redirectTo", arg: { url: e.url } },
+          e);
+
+        });
+      },
+      switchTab: function switchTab(e) {
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "switchTab", arg: { url: e.url } },
+          e);
+
+        });
+      },
+      reLaunch: function reLaunch(e) {
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "reLaunch", arg: { url: e.url } },
+          e);
+
+        });
+      },
+      postMessage: function postMessage(e) {
+        O(function () {
+          M(
+          "invokeMiniProgramAPI",
+          { name: "postMessage", arg: e.data || {} },
+          e);
+
+        });
+      },
+      getEnv: function getEnv(e) {
+        O(function () {
+          e({ miniprogram: "miniprogram" === o.__wxjs_environment });
+        });
+      } }), _w),
+
+
+    T = 1,
+    k = {};
+    return (
+      i.addEventListener(
+      "error",
+      function (e) {
+        if (!p) {
+          var n = e.target,
+          i = n.tagName,
+          t = n.src;
+          if ("IMG" == i || "VIDEO" == i || "AUDIO" == i || "SOURCE" == i)
+          if (-1 != t.indexOf("wxlocalresource://")) {
+            e.preventDefault(), e.stopPropagation();
+            var o = n["wx-id"];
+            if (o || (o = T++, n["wx-id"] = o), k[o]) return;
+            k[o] = !0,
+            wx.ready(function () {
+              wx.getLocalImgData({
+                localId: t,
+                success: function success(e) {
+                  n.src = e.localData;
+                } });
+
+            });
+          }
+        }
+      },
+      !0),
+
+      i.addEventListener(
+      "load",
+      function (e) {
+        if (!p) {
+          var n = e.target,
+          i = n.tagName;
+          n.src;
+          if ("IMG" == i || "VIDEO" == i || "AUDIO" == i || "SOURCE" == i) {
+            var t = n["wx-id"];
+            t && (k[t] = !1);
+          }
+        }
+      },
+      !0),
+
+      e && (o.wx = o.jWeixin = w),
+      w);
+
+  }
+  function M(n, e, i) {
+    o.WeixinJSBridge ?
+    WeixinJSBridge.invoke(n, x(e), function (e) {
+      A(n, e, i);
+    }) :
+    B(n, i);
+  }
+  function P(n, i, t) {
+    o.WeixinJSBridge ?
+    WeixinJSBridge.on(n, function (e) {
+      t && t.trigger && t.trigger(e), A(n, e, i);
+    }) :
+    B(n, t || i);
+  }
+  function x(e) {
+    return (
+      (e = e || {}).appId = v.appId,
+      e.verifyAppId = v.appId,
+      e.verifySignType = "sha1",
+      e.verifyTimestamp = v.timestamp + "",
+      e.verifyNonceStr = v.nonceStr,
+      e.verifySignature = v.signature,
+      e);
+
+  }
+  function V(e) {
+    return {
+      timeStamp: e.timestamp + "",
+      nonceStr: e.nonceStr,
+      package: e.package,
+      paySign: e.paySign,
+      signType: e.signType || "SHA1" };
+
+  }
+  function A(e, n, i) {
+    "openEnterpriseChat" != e && "openBusinessView" !== e || (
+    n.errCode = n.err_code),
+    delete n.err_code,
+    delete n.err_desc,
+    delete n.err_detail;
+    var t = n.errMsg;
+    t || (
+    t = n.err_msg,
+    delete n.err_msg,
+    t = function (e, n) {
+      var i = e,
+      t = a[i];
+      t && (i = t);
+      var o = "ok";
+      if (n) {
+        var r = n.indexOf(":");
+        "confirm" == (o = n.substring(r + 1)) && (o = "ok"),
+        "failed" == o && (o = "fail"),
+        -1 != o.indexOf("failed_") && (o = o.substring(7)),
+        -1 != o.indexOf("fail_") && (o = o.substring(5)),
+        "access denied" != (
+        o = (o = o.replace(/_/g, " ")).toLowerCase()) &&
+        "no permission to execute" != o || (
+        o = "permission denied"),
+        "config" == i && "function not exist" == o && (o = "ok"),
+        "" == o && (o = "fail");
+      }
+      return n = i + ":" + o;
+    }(e, t),
+    n.errMsg = t),
+    (i = i || {})._complete && (i._complete(n), delete i._complete),
+    t = n.errMsg || "",
+    v.debug && !i.isInnerInvoke && alert(JSON.stringify(n));
+    var o = t.indexOf(":");
+    switch (t.substring(o + 1)) {
+      case "ok":
+        i.success && i.success(n);
+        break;
+      case "cancel":
+        i.cancel && i.cancel(n);
+        break;
+      default:
+        i.fail && i.fail(n);}
+
+    i.complete && i.complete(n);
+  }
+  function C(e) {
+    if (e) {
+      for (var n = 0, i = e.length; n < i; ++n) {
+        var t = e[n],
+        o = c[t];
+        o && (e[n] = o);
+      }
+      return e;
+    }
+  }
+  function B(e, n) {
+    if (!(!v.debug || n && n.isInnerInvoke)) {
+      var i = a[e];
+      i && (e = i),
+      n && n._complete && delete n._complete,
+      console.log('"' + e + '",', n || "");
+    }
+  }
+  function L() {
+    return new Date().getTime();
+  }
+  function O(e) {
+    l && (
+    o.WeixinJSBridge ?
+    e() :
+    i.addEventListener &&
+    i.addEventListener("WeixinJSBridgeReady", e, !1));
+  }
+});
+
+/***/ }),
+
+/***/ 34:
+/*!*****************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/util.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.AppletsPageRoute = exports.ruleToUniNavInfo = exports.formatFrom = exports.formatTo = exports.pathOrNameToRoute = exports.getPages = exports.getFormatQuery = exports.getPageVmOrMp = exports.callAppHook = void 0;var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ../helpers/util */ 24);
+var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
+var _compile = __webpack_require__(/*! ../helpers/compile.js */ 35);
+/**
+                                                  * 触发指定生命钩子
+                                                  * @param {Array} funList	//需要执行的方法列表
+                                                  * @param {Object} args //触发生命钩子传递的参数
+                                                  */
+var callAppHook = function callAppHook(funList, args) {
+  for (var i = 0; i < funList.length; i++) {
+    funList[i].call(this, args);
+  }
+};
+/**
+    * @param {Object} page //当前顶级页面对象
+    * @param {Object} vim:? //是否获取 $vm 对象还是 $mp 对象
+    */exports.callAppHook = callAppHook;
+var getPageVmOrMp = function getPageVmOrMp(page) {var vim = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  if (vim) {
+    return page.$vm;
+  }var
+  $mp = page.$vm.$mp;
+  (0, _compile.baiduApple)(function () {//百度小程序新增一个route属性
+    $mp.page.route = $mp.page.is;
+  });
+  (0, _compile.touTiao)(function () {//头条小程序新增一个route属性
+    $mp.page.route = $mp.page.is;
+  });
+  return $mp;
+};
+/**
+    * 统一格式话 路由传递的参数 看看是编码还是非编码 做相应的对策
+    * 
+    * @param {Object} query 当前的路由参数
+    * @param {Boolean} getter 是从页面获取 route 对象下的参数 还是编码后传输
+    */exports.getPageVmOrMp = getPageVmOrMp;
+var getFormatQuery = function getFormatQuery() {var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var getter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (_config.Global.Router.CONFIG.encodeURI) {
+    if (getter) {
+      try {//除去微信小程序都不需要 decodeURIComponent
+        query = JSON.parse(decodeURIComponent(query.query) || '{}');
+      } catch (e) {//其他小程序
+        query = JSON.parse(query.query || '{}');
+      }
+    } else {
+      try {
+        query = JSON.parse(decodeURIComponent(query.query || encodeURIComponent('{}')));
+      } catch (e) {
+        query = JSON.parse(query.query);
+      }
+    }
+  }
+  return query;
+};
+/**
+    * @param {Number} index //需要获取的页面下标 -2:表示获取最后一个即当前页面 -1:表示全部 -3:当前页面的前一个页面
+    * @param {Boolean} all //是否获取全部的页面
+    */exports.getFormatQuery = getFormatQuery;
+var getPages = function getPages() {var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;var all = arguments.length > 1 ? arguments[1] : undefined;
+  var pages = getCurrentPages(all);
+  if (index === -1) {
+    return pages;
+  }
+  if (index === -2) {
+    return pages[pages.length - 1];
+  }
+  if (index === -3) {
+    return pages[pages.length - 2];
+  }
+  return pages[index];
+};
+/**
+    * 通过一个未知的路径或者名称 在路由表中查找指定路由表 并返回
+    * @param {string} type   //path 或者 name
+    * @param {Object} routes //当前对象的所有路由表
+    */exports.getPages = getPages;
+var pathOrNameToRoute = function pathOrNameToRoute(type) {var routes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _config.Global.Router.CONFIG.routes;
+  for (var key in routes) {
+    var item = routes[key];
+    if (item.path === "/".concat(type)) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+    if (item.path === type) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+    if (item.name == type) {
+      return (0, _config.route)(item); //合并一下对象,主要是合并 query:{} 及 params:{}
+    }
+  }
+  (0, _warn.err)("\u5F53\u524D '".concat(type, "' \u5728\u8DEF\u7531\u8868\u4E2D\u6CA1\u6709\u627E\u5230\u5339\u914D\u7684 name \u6216\u8005 path"));
+};
+
+/**
+    * 获取 to 的配置参数
+    * @param {Object} rule 当前跳转的规则
+    */exports.pathOrNameToRoute = pathOrNameToRoute;
+var formatTo = function formatTo(finalRoute) {
+  var route = (0, _util.copyObject)(finalRoute.route);
+  var rule = finalRoute.rule;
+  route.query = rule['query'] || rule['params'] || {};
+  return route;
+};
+
+/**
+    * 获取 from 的配置参数 from 页面永远都是站在当前页面忘其它地方走 所以都是最后一个页面
+    * 
+    * @param {Object} routes //当前对象的所有路由表
+    */exports.formatTo = formatTo;
+var formatFrom = function formatFrom(routes) {
+  var topPage = getPages(-2);var _getPageVmOrMp =
+  getPageVmOrMp(topPage, false),page = _getPageVmOrMp.page,query = _getPageVmOrMp.query;
+  var route = pathOrNameToRoute(page.route, routes); //获取到当前路由表下的 route
+  route.query = getFormatQuery(query); //不管是编码传输还是非编码 最后都得在 to/from 中换成json对象
+  return route;
+};
+
+/**
+    * 
+    * 把用户的跳转路由规则格式化成uni-app可用的路由跳转规则
+    * 
+    * @param {Object} rule  //当前用户跳转的路由规则
+    * @param {Object} routes //当前simple-router 下的路由表 
+    */exports.formatFrom = formatFrom;
+var ruleToUniNavInfo = function ruleToUniNavInfo(rule, routes) {
+  if (rule == null) {
+    return (0, _warn.err)("\u5F53\u524D\u8DF3\u8F6C\u89C4\u5219\u4E3A\u7A7A,\u8BF7\u68C0\u67E5\u8DF3\u8F6C\u4EE3\u7801");
+  }var
+  navType = 'path',route = null,query = {};
+  if (rule.constructor === String) {//是字符串类型 那当前就是路径啦
+    route = pathOrNameToRoute(rule, routes); //直接把 rule 当 path 传递 完事
+  } else if (rule.constructor === Object) {//对象类型 可以是 path 或者 name
+    route = pathOrNameToRoute(rule['path'] || (navType = 'name', rule['name']), routes); //两则必有其一 报错自己处理
+    query = rule['query'] || rule['params'] || {};
+  } else {
+    return (0, _warn.err)("\u4F20\u7684\u4EC0\u4E48\u4E71\u4E03\u516B\u7CDF\u7684\u7C7B\u578B?\u8DEF\u7531\u8DF3\u8F6C\u89C4\u5219\u53EA\u8BA4\u5B57\u7B26\u4E32 'path' , \u5BF9\u8C61 'path' , \u5BF9\u8C61 'name' ");
+  }
+  //路径处理完后   开始格式化参数
+  var uniRoute = (0, _util.parseQuery)(route.path, query); //uni-app 需要的跳转规则
+  return {
+    rule: rule,
+    route: route,
+    uniRoute: uniRoute };
+
+};
+/**
+    * 获取当前页面下的 Route 信息
+    * 
+    * @param {Object} pages 获取页面对象集合
+    * @param {Object} Vim 用户传递的当前页面对象
+    */exports.ruleToUniNavInfo = ruleToUniNavInfo;
+var AppletsPageRoute = function AppletsPageRoute(pages, Vim) {var
+  query = {},path = '';
+  if (pages.length > 0) {
+    var _page = pages[pages.length - 1]; //获取到当前页面
+    var uniQuery = getPageVmOrMp(_page, false).query;
+    query = getFormatQuery(uniQuery, true);
+    path = _page.route;
+  } else if (Vim != null) {
+    query = getFormatQuery(Vim.$mp.page.options, true);
+    path = page.route;
+  }
+  var route = pathOrNameToRoute(path);
+  route.query = query;
+  return route;
+};exports.AppletsPageRoute = AppletsPageRoute;
+
+/***/ }),
+
+/***/ 35:
+/*!**************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/helpers/compile.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.touTiao = exports.baiduApple = exports.notH5 = exports.applets = exports.APP = exports.H5 = void 0;var H5 = function H5(fn) {
+
+
+
+};exports.H5 = H5;
+var APP = function APP(fn) {
+
+
+
+};exports.APP = APP;
+var applets = function applets(fn) {
+
+  fn();
+
+};exports.applets = applets;
+var notH5 = function notH5(fn) {
+
+  fn();
+
+};exports.notH5 = notH5;
+var baiduApple = function baiduApple(fn) {
+
+
+
+};exports.baiduApple = baiduApple;
+var touTiao = function touTiao(fn) {
+
+
+
+};exports.touTiao = touTiao;
+
+/***/ }),
+
+/***/ 36:
+/*!**************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/lifeCycle/hooks.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.registerRouterHooks = exports.registerHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _util = __webpack_require__(/*! ../helpers/util */ 24);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
+
+
+
+
+
+
+var registerHook = function registerHook(list, fn) {
+  list.push(fn);
+  return function () {
+    var i = list.indexOf(fn);
+    if (i > -1) list.splice(i, 1);
+  };
+};
+/**
+    * 注册全局Router生命钩子
+    */exports.registerHook = registerHook;
+var registerRouterHooks = function registerRouterHooks() {
+  registerHook(this.lifeCycle.routerbeforeHooks, function (fnType) {var _this = this;
+    return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+                _this.CONFIG.routerBeforeEach(); //触发暴露给开发者的生命钩子
+                if ((0, _util.appPlatform)(true) === 'H5') {
+                  H5PATCH.on('toogle', 'startLodding');
+                }return _context.abrupt("return",
+                resolve(true));case 3:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
+
+  });
+  registerHook(this.lifeCycle.routerAfterHooks, function () {var res = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    if (res.H5Intercept !== true) {
+      this.CONFIG.routerAfterEach(); //触发暴露给开发者的生命钩子
+    }
+    if ((0, _util.appPlatform)(true) === 'H5') {
+      H5PATCH.on('toogle', 'stopLodding');
+    }
+    return true;
+  });
+};exports.registerRouterHooks = registerRouterHooks;
+
+/***/ }),
+
+/***/ 37:
+/*!**************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/hooks.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.beforeTabHooks = exports.backApiCallHook = exports.beforeBackHooks = exports.transitionTo = exports.triggerLifeCycle = exports.proxyIndexHook = exports.proxyLaunchHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ./util */ 33);
+var _util2 = __webpack_require__(/*! ../helpers/util */ 24);
+var _warn = __webpack_require__(/*! ../helpers/warn */ 27);
+var _uniNav = __webpack_require__(/*! ./uniNav */ 38);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
+
+var startBack = false; // 主要是兼容低端手机返回卡 然后多次返回直接提示退出的问题 
+
+/**
+ * 还原并执行所有 拦截下来的生命周期 app.vue 及 index 下的生命周期 
+ * @param {Boolean} callHome // 是否触发首页的生命周期
+ * 
+ * this 为当前 page 对象
+ */
+var callwaitHooks = function callwaitHooks(callHome) {var _this = this;
+  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var variation, appVue, indexVue, onLaunch, onShow, waitHooks, variationFuns, indexCallHooks, app, key, _loop, _key;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+              variation = []; //存储一下在uni-app上的变异生命钩子  奇葩的要死
+              appVue = _config.uniAppHook.appVue, indexVue = _config.uniAppHook.indexVue, onLaunch = _config.uniAppHook.onLaunch, onShow = _config.uniAppHook.onShow, waitHooks = _config.uniAppHook.waitHooks, variationFuns = _config.uniAppHook.variationFuns, indexCallHooks = _config.uniAppHook.indexCallHooks;
+              app = appVue.$options;_context.next = 5;return (
+                onLaunch.fun[onLaunch.fun.length - 1].call(appVue, onLaunch.args));case 5: //确保只执行最后一个 并且强化异步操作
+              onShow.fun[onShow.fun.length - 1].call(appVue, onShow.args); //onshow 不保证异步 直接确保执行最后一个
+              if (callHome) {//触发首页生命周期
+                for (key in waitHooks) {
+                  if (indexCallHooks.includes(key)) {//只有在被包含的情况下才执行
+                    _util.callAppHook.call(_this, waitHooks[key].fun);
+                  }
+                }
+              }
+              if (onLaunch.isHijack) {//还原 onLaunch生命钩子
+                app.onLaunch.splice(app.onLaunch.length - 1, 1, onLaunch.fun[0]);
+              }
+              if (onShow.isHijack) {//继续还原 onShow
+                app.onShow.splice(app.onShow.length - 1, 1, onShow.fun[0]);
+              }_loop = function _loop(
+              _key) {//还原 首页下的生命钩子
+                var item = waitHooks[_key];
+                if (item.isHijack) {
+                  if (variationFuns.includes(_key)) {//变异方法
+                    variation.push({ key: _key, fun: item.fun[0] });
+                  } else {
+                    var indeHooks = indexVue[_key];
+                    //修复 https://github.com/SilurianYang/uni-simple-router/issues/76
+                    setTimeout(function () {//异步延迟还原 不然 uni-app 给给触发了
+                      indeHooks.splice(indeHooks.length - 1, 1, item.fun[0]);
+                    }, 50);
+                  }
+                }};for (_key in waitHooks) {_loop(_key);
+              }
+              resolve(variation);case 12:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
+
+};
+/**
+    * 还原剩下的奇葩生命钩子
+    * @param {Object} variation 当前uni-app中的一些变异方法  奇葩生命钩子
+    */
+var callVariationHooks = function callVariationHooks(variation) {
+  for (var i = 0; i < variation.length; i++) {var _variation$i =
+    variation[i],key = _variation$i.key,fun = _variation$i.fun;
+    var indeHooks = _config.uniAppHook.indexVue[key];
+    indeHooks.splice(indeHooks.length - 1, 1, fun);
+  }
+};
+
+/**
+    * 主要是对app.vue下onLaunch和onShow生命周期进行劫持
+    * 
+    * this 为当前 page 对象
+    */
+var proxyLaunchHook = function proxyLaunchHook() {var _this2 = this;var _this$$options =
+
+
+
+  this.$options,onLaunch = _this$$options.onLaunch,onShow = _this$$options.onShow;
+  _config.uniAppHook.appVue = this; //缓存 当前app.vue组件对象
+  if (onLaunch.length > 1) {//确保有写 onLaunch 可能有其他混入 那也办法
+    _config.uniAppHook.onLaunch.isHijack = true;
+    _config.uniAppHook.onLaunch.fun = onLaunch.splice(onLaunch.length - 1, 1, function (arg) {
+      _config.uniAppHook.onLaunch.args = arg;
+    }); //替换uni-app自带的生命周期
+  }
+  if (onShow.length > 0) {
+    _config.uniAppHook.onShow.isHijack = true;
+    _config.uniAppHook.onShow.fun = onShow.splice(onShow.length - 1, 1, function (arg) {
+      _config.uniAppHook.onShow.args = arg;
+      if (_config.uniAppHook.pageReady) {//因为还有app切前台后台的操作
+        _util.callAppHook.call(_this2, _config.uniAppHook.onShow.fun, arg);
+      }
+    }); //替换替换 都替换
+  }
+};
+/**
+    * 把指定页面的生命钩子函数保存并替换
+    * this 为当前 page 对象
+    */exports.proxyLaunchHook = proxyLaunchHook;
+var proxyIndexHook = function proxyIndexHook(Router) {var
+  needHooks = _config.uniAppHook.needHooks,waitHooks = _config.uniAppHook.waitHooks;
+  var options = this.$options;
+  _config.uniAppHook.indexVue = options;
+  for (var i = 0; i < needHooks.length; i++) {
+    var key = needHooks[i];
+    if (options[key] != null) {//只劫持开发者声明的生命周期
+      var length = options[key].length;
+      var whObject = waitHooks[key] = {};
+      whObject.fun = options[key].splice(length - 1, 1, _util2.noop); //把实际的页面生命钩子函数缓存起来,替换原有的生命钩子
+      whObject.isHijack = true;
+    }
+  }
+  triggerLifeCycle.call(this, Router); //接着 主动我们触发导航守卫
+};
+
+/**
+    * 主动触发导航守卫
+    * @param {Object} Router 当前路由对象
+    * 
+    * this  当前vue页面组件对象
+    */exports.proxyIndexHook = proxyIndexHook;
+var triggerLifeCycle = function triggerLifeCycle(Router) {var _this3 = this;
+  var topPage = getCurrentPages()[0];
+  if (topPage == null) {
+    return (0, _warn.warn)('打扰了,当前一个页面也没有 这不是官方的bug是什么??');
+  }var _getPageVmOrMp =
+  (0, _util.getPageVmOrMp)(topPage, false),query = _getPageVmOrMp.query,page = _getPageVmOrMp.page;
+  transitionTo.call(Router, { path: page.route, query: query }, 'push', /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(finalRoute, fnType) {var variation;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
+              variation = [];if (!(
+              "/".concat(page.route) == finalRoute.route.path)) {_context2.next = 8;break;} //在首页不动的情况下
+              (0, _uniNav.pageNavFinish)('launch', page.route);
+              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
+              _context2.next = 6;return callwaitHooks.call(_this3, true);case 6:_context2.next = 13;break;case 8:_context2.next = 10;return (
+
+                callwaitHooks.call(_this3, false));case 10:variation = _context2.sent;_context2.next = 13;return (
+                (0, _uniNav.uniPushTo)(finalRoute, fnType));case 13:
+
+              plus.nativeObj.View.getViewById('router-loadding').close();
+              callVariationHooks(variation);
+              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
+            case 16:case "end":return _context2.stop();}}}, _callee2);}));return function (_x2, _x3) {return _ref2.apply(this, arguments);};}());
+};
+/**
+    * 核心方法 处理一系列的跳转配置
+    * @param {Object} rule 当前跳转规则
+    * @param {Object} fnType 跳转页面的类型方法
+    * @param {Object} navCB:? 回调函数
+    * 
+    * this 为当前 Router 对象
+    * 
+    */exports.triggerLifeCycle = triggerLifeCycle;
+var transitionTo = /*#__PURE__*/function () {var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(rule, fnType, navCB) {var finalRoute, _from, _to, beforeResult, enterResult;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
+              this.lifeCycle["routerbeforeHooks"][0].call(this));case 2: //触发内部跳转前的生命周期
+            finalRoute = (0, _util.ruleToUniNavInfo)(rule, this.CONFIG.routes); //获得到最终的 route 对象
+            _from = (0, _util.formatFrom)(this.CONFIG.routes); //先根据跳转类型获取 from 数据
+            _to = (0, _util.formatTo)(finalRoute); //再根据跳转类型获取 to 数据
+            _context3.next = 7;return beforeHooks.call(this, _from, _to);case 7:beforeResult = _context3.sent;_context3.prev = 8;_context3.next = 11;return (
+
+              isNext.call(this, beforeResult, fnType, navCB));case 11:_context3.next = 13;return (
+              beforeEnterHooks.call(this, finalRoute, _from, _to));case 13:enterResult = _context3.sent;_context3.next = 16;return (
+              isNext.call(this, enterResult, fnType, navCB));case 16:_context3.next = 21;break;case 18:_context3.prev = 18;_context3.t0 = _context3["catch"](8);return _context3.abrupt("return",
+
+            false);case 21:
+
+            navCB && navCB.call(this, finalRoute, fnType); //执行当前回调生命周期
+            afterEachHooks.call(this, _from, _to);_context3.next = 25;return (
+              this.lifeCycle["routerAfterHooks"][0].call(this));case 25:case "end":return _context3.stop();}}}, _callee3, this, [[8, 18]]);}));return function transitionTo(_x4, _x5, _x6) {return _ref3.apply(this, arguments);};}();
+
+/**
+                                                                                                                                                                                                                                        * 触发全局beforeHooks 生命钩子
+                                                                                                                                                                                                                                        * @param {Object} _from // from  参数
+                                                                                                                                                                                                                                        * @param {Object} _to  // to 参数
+                                                                                                                                                                                                                                        * 
+                                                                                                                                                                                                                                        * this 为当前 Router 对象
+                                                                                                                                                                                                                                        */exports.transitionTo = transitionTo;
+var beforeHooks = function beforeHooks(_from, _to) {var _this4 = this;
+  return new Promise( /*#__PURE__*/function () {var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve) {var beforeHooks;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
+              beforeHooks = _this4.lifeCycle["beforeHooks"][0];if (!(
+              beforeHooks == null)) {_context4.next = 3;break;}return _context4.abrupt("return",
+              resolve());case 3:_context4.next = 5;return (
+
+                beforeHooks.call(_this4, _to, _from, resolve));case 5:case "end":return _context4.stop();}}}, _callee4);}));return function (_x7) {return _ref4.apply(this, arguments);};}());
+
+};
+/**
+    * 触发全局afterEachHooks 生命钩子
+    * @param {Object} _from // from  参数
+    * @param {Object} _to  // to 参数
+    * 
+    * this 为当前 Router 对象
+    */
+var afterEachHooks = function afterEachHooks(_from, _to) {
+  var afterHooks = this.lifeCycle["afterHooks"][0];
+  if (afterHooks != null && afterHooks.constructor === Function) {
+    afterHooks.call(this, _to, _from);
+  }
+};
+/**
+    * 触发全局 beforeEnter 生命钩子
+    * @param {Object} finalRoute 	// 当前格式化后的路由参数
+    * @param {Object} _from // from  参数
+    * @param {Object} _to  // to 参数
+    * 
+    * this 为当前 Router 对象
+    */
+var beforeEnterHooks = function beforeEnterHooks(finalRoute, _from, _to) {var _this5 = this;
+  return new Promise( /*#__PURE__*/function () {var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(resolve) {var beforeEnter;return _regenerator.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:
+              beforeEnter = finalRoute.route.beforeEnter;if (!(
+              beforeEnter == null || beforeEnter.constructor !== Function)) {_context5.next = 3;break;}return _context5.abrupt("return",
+              resolve());case 3:_context5.next = 5;return (
+
+                beforeEnter.call(_this5, _to, _from, resolve));case 5:case "end":return _context5.stop();}}}, _callee5);}));return function (_x8) {return _ref5.apply(this, arguments);};}());
+
+};
+/**
+    * 处理返回按钮的生命钩子
+    * @param {Object} options 当前 vue 组件对象下的$options对象
+    * @param {Array} args  当前页面是点击头部返回还是底部返回
+    * 
+    * this 为当前 Router 对象
+    */
+var beforeBackHooks = /*#__PURE__*/function () {var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6(options, args) {var isNext, page;return _regenerator.default.wrap(function _callee6$(_context6) {while (1) {switch (_context6.prev = _context6.next) {case 0:_context6.next = 2;return (
+              (0, _util.getPageOnBeforeBack)(args));case 2:isNext = _context6.sent;if (!(
+            isNext === false)) {_context6.next = 5;break;}return _context6.abrupt("return",
+            false);case 5:
+
+            page = (0, _util.getPages)(-3); //上一个页面对象
+            backCallHook.call(this, page, options);case 7:case "end":return _context6.stop();}}}, _callee6, this);}));return function beforeBackHooks(_x9, _x10) {return _ref6.apply(this, arguments);};}();
+
+/**
+                                                                                                                                                                                                              * 处理back api的生命钩子
+                                                                                                                                                                                                              * @param {Object} options 当前 vue 组件对象下的$options对象
+                                                                                                                                                                                                              * @param {Array} args  当前页面是点击头部返回还是底部返回
+                                                                                                                                                                                                              * 
+                                                                                                                                                                                                              * this 为当前 Router 对象
+                                                                                                                                                                                                              */exports.beforeBackHooks = beforeBackHooks;
+var backApiCallHook = /*#__PURE__*/function () {var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee7(options, args) {var isNext, backLayerC, pages, page;return _regenerator.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.next = 2;return (
+              (0, _util.getPageOnBeforeBack)(args));case 2:isNext = _context7.sent;
+            backLayerC = _config.Global.backLayerC;
+            pages = (0, _util.getPages)();
+            page = null;
+            if (backLayerC > pages.length - 1 || backLayerC == pages.length - 1) {//返回的首页 我们需要显示tabbar拦截
+              page = pages[0];
+            } else {
+              page = pages[pages.length - 2];
+            }
+            backCallHook.call(this, page, options, backLayerC);case 8:case "end":return _context7.stop();}}}, _callee7, this);}));return function backApiCallHook(_x11, _x12) {return _ref7.apply(this, arguments);};}();
+
+/**
+                                                                                                                                                                                                                           * 触发返回事件公共方法
+                                                                                                                                                                                                                           * @param {Object} page	用getPages获取到的页面栈对象
+                                                                                                                                                                                                                           * @param {Object} options 	当前vue页面对象
+                                                                                                                                                                                                                           * @param {Object} backLayerC	需要返回页面的层级
+                                                                                                                                                                                                                             * 
+                                                                                                                                                                                                                           * this 为当前 Router 对象
+                                                                                                                                                                                                                           */exports.backApiCallHook = backApiCallHook;
+var backCallHook = function backCallHook(page, options) {var _this6 = this;var backLayerC = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  var route = (0, _util.APPGetPageRoute)([page]);
+  transitionTo.call(this, { path: route.path, query: route.query }, 'RouterBack', function () {
+    if (startBack) {return false;}; //如果当前处于正在放回的状态
+    startBack = true; //标记开始返回
+    options.onBackPress = [_util2.noop]; //改回uni-app可执行的状态
+    setTimeout(function () {
+      _this6.back(backLayerC);
+      startBack = false; //返回结束
+      (0, _uniNav.pageNavFinish)('bcak', route.path);
+    });
+  });
+};
+/**
+    * 处理tabbar点击拦截事件
+    * @param {Object} path 当前需要跳转的tab页面路径
+    * 
+    * this 为当前 Router 对象
+    */
+var beforeTabHooks = function beforeTabHooks(path) {
+  transitionTo.call(this, { path: "/".concat(path), query: {} }, 'pushTab', function (finalRoute, fnType) {
+    (0, _uniNav.uniPushTo)(finalRoute, fnType);
+  });
+};
+/**
+    * 验证当前 next() 管道函数是否支持下一步
+    * 
+    * @param {Object} Intercept 拦截到的新路由规则
+    * @param {Object} fnType 跳转页面的类型方法 原始的
+    * @param {Object} navCB 回调函数 原始的
+    * 
+    * this 为当前 Router 对象
+    * 
+    */exports.beforeTabHooks = beforeTabHooks;
+var isNext = function isNext(Intercept, fnType, navCB) {var _this7 = this;
+  return new Promise(function (resolve, reject) {
+    if (Intercept == null) {//什么也不做 直接执行下一个钩子
+      return resolve();
+    }
+    if (Intercept === false) {//路由中断
+      return reject('路由终止');
+    }
+    if (Intercept.constructor === String) {//说明 开发者直接传的path 并且没有指定 NAVTYPE 那么采用原来的navType
+      reject(1);
+      return transitionTo.call(_this7, Intercept, fnType, navCB);
+    }
+    if (Intercept.constructor === Object) {//有一系列的配置 包括页面切换动画什么的
+      reject(1);
+      return transitionTo.call(_this7, Intercept, Intercept.NAVTYPE || fnType, navCB);
+    }
+  });
+};
+
+/***/ }),
+
+/***/ 38:
+/*!***************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/uniNav.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.pageNavFinish = exports.uniPushTo = void 0;
+var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ../helpers/util */ 24);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+
+var stop = null;
+
+/**
+                  * @param {Object} finalRoute 格式化后的路由跳转规则
+                  * @param {Object} NAVTYPE 需要调用的跳转方法
+                  */
+var uniPushTo = function uniPushTo(finalRoute, NAVTYPE) {
+  var promise = new Promise(function (resolve) {
+    var query = (0, _util.formatURLQuery)("?".concat(finalRoute.uniRoute.query));
+    var APP = _config.baseConfig.APP;
+    var url = finalRoute.uniRoute.url;
+    stop = setTimeout(function () {
+      resolve(url);
+      resolve = _util.noop; //执行完了就没了 确保不会被下一次执行
+    }, APP.switchPageOutTime);
+
+    uni[_config.methods[NAVTYPE]](_objectSpread({
+      url: url + query },
+    finalRoute.route.animation, {
+      complete: function complete() {
+        clearTimeout(stop);
+        resolve(url);
+        resolve = _util.noop; //执行完了就没了 确保不会被下一次执行
+      } }));
+
+  });
+  promise.then(function (url) {
+    pageNavFinish('NAV', url);
+  });
+  return promise;
+};
+/**
+    * 验证页面是否跳转完成
+    * @param {Object} type 是用怎么样的方式进行跳转的
+    * @param {Object} path 当前切换完成的页面路径
+    */exports.uniPushTo = uniPushTo;
+var pageNavFinish = function pageNavFinish(type, path) {var
+  $holdTab = _config.Global.$holdTab,Router = _config.Global.Router;
+  if (Router.CONFIG.APP.holdTabbar === false) {//没有开启不必处理
+    return false;
+  }
+  var tabbarList = [];
+  if (__uniConfig.tabBar && __uniConfig.tabBar.list) {//有tabbar才触发
+    tabbarList = __uniConfig.tabBar.list;
+  } else {
+    return false;
+  }
+  for (var i = 0; i < tabbarList.length; i++) {var
+    pagePath = tabbarList[i].pagePath;
+    if (pagePath == "".concat(path, ".html") || "/".concat(pagePath) == "".concat(path, ".html")) {//在当前tabbar下
+      return $holdTab.showHoldTab();
+    }
+  }
+  if ($holdTab.isVisible === true) {
+    return $holdTab.hideHoldTab();
+  }
+};exports.pageNavFinish = pageNavFinish;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 39:
+/*!******************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/hooks.js ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.appletsTransitionTo = exports.triggerLifeCycle = exports.appletsProxyIndexHook = exports.proxyLaunchHook = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ./util */ 34);
+var _appletsNav = __webpack_require__(/*! ./appletsNav */ 40);
+var _util2 = __webpack_require__(/*! ../helpers/util */ 24);
+var _warn = __webpack_require__(/*! ../helpers/warn */ 27);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}
+
+
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * 还原并执行所有 拦截下来的生命周期 app.vue 及 index 下的生命周期 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * @param {Boolean} callHome // 是否触发首页的生命周期
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        * this 为当前 page 对象
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
+var callwaitHooks = function callwaitHooks(callHome) {var _this = this;
+  return new Promise( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(resolve) {var variation, appVue, indexVue, onLaunch, onShow, waitHooks, variationFuns, indexCallHooks, app, key, _loop, _key;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+              variation = []; //存储一下在uni-app上的变异生命钩子  奇葩的要死
+              appVue = _config.uniAppHook.appVue, indexVue = _config.uniAppHook.indexVue, onLaunch = _config.uniAppHook.onLaunch, onShow = _config.uniAppHook.onShow, waitHooks = _config.uniAppHook.waitHooks, variationFuns = _config.uniAppHook.variationFuns, indexCallHooks = _config.uniAppHook.indexCallHooks;
+              app = appVue.$options;_context.next = 5;return (
+                onLaunch.fun[onLaunch.fun.length - 1].call(appVue, onLaunch.args));case 5: //确保只执行最后一个 并且强化异步操作
+              onShow.fun[onShow.fun.length - 1].call(appVue, onShow.args); //onshow 不保证异步 直接确保执行最后一个
+              if (callHome) {//触发首页生命周期
+                for (key in waitHooks) {
+                  if (indexCallHooks.includes(key)) {//只有在被包含的情况下才执行
+                    _util.callAppHook.call(_this, waitHooks[key].fun);
+                  }
+                }
+              }
+              if (onLaunch.isHijack) {//还原 onLaunch生命钩子
+                app.onLaunch.splice(app.onLaunch.length - 1, 1, onLaunch.fun[0]);
+              }
+              if (onShow.isHijack) {//继续还原 onShow
+                app.onShow.splice(app.onShow.length - 1, 1, onShow.fun[0]);
+              }_loop = function _loop(
+              _key) {//还原 首页下的生命钩子
+                var item = waitHooks[_key];
+                if (item.isHijack) {
+                  if (variationFuns.includes(_key)) {//变异方法
+                    variation.push({ key: _key, fun: item.fun[0] });
+                  } else {
+                    var indeHooks = indexVue[_key];
+                    //修复 https://github.com/SilurianYang/uni-simple-router/issues/76
+                    setTimeout(function () {//异步延迟还原 不然 uni-app 给给触发了
+                      indeHooks.splice(indeHooks.length - 1, 1, item.fun[0]);
+                    }, 50);
+                  }
+                }};for (_key in waitHooks) {_loop(_key);
+              }
+              resolve(variation);case 12:case "end":return _context.stop();}}}, _callee);}));return function (_x) {return _ref.apply(this, arguments);};}());
+
+};
+/**
+    * 还原剩下的奇葩生命钩子
+    * @param {Object} variation 当前uni-app中的一些变异方法  奇葩生命钩子
+    */
+var callVariationHooks = function callVariationHooks(variation) {
+  for (var i = 0; i < variation.length; i++) {var _variation$i =
+    variation[i],key = _variation$i.key,fun = _variation$i.fun;
+    var indeHooks = _config.uniAppHook.indexVue[key];
+    indeHooks.splice(indeHooks.length - 1, 1, fun);
+  }
+};
+/**
+    * 主要是对app.vue下onLaunch和onShow生命周期进行劫持
+    * 
+    * this 为当前 page 对象
+    */
+var proxyLaunchHook = function proxyLaunchHook() {var _this2 = this;var _this$$options =
+
+
+
+  this.$options,onLaunch = _this$$options.onLaunch,onShow = _this$$options.onShow;
+  _config.uniAppHook.appVue = this; //缓存 当前app.vue组件对象
+  if (onLaunch.length > 1) {//确保有写 onLaunch 可能有其他混入 那也办法
+    _config.uniAppHook.onLaunch.isHijack = true;
+    _config.uniAppHook.onLaunch.fun = onLaunch.splice(onLaunch.length - 1, 1, function (arg) {
+      _config.uniAppHook.onLaunch.args = arg;
+    }); //替换uni-app自带的生命周期
+  }
+  if (onShow.length > 0) {
+    _config.uniAppHook.onShow.isHijack = true;
+    _config.uniAppHook.onShow.fun = onShow.splice(onShow.length - 1, 1, function (arg) {
+      _config.uniAppHook.onShow.args = arg;
+      if (_config.uniAppHook.pageReady) {//因为还有app切前台后台的操作
+        _util.callAppHook.call(_this2, _config.uniAppHook.onShow.fun, arg);
+      }
+    }); //替换替换 都替换
+  }
+};
+/**
+    * 把指定页面的生命钩子函数保存并替换
+    * this 为当前 page 对象
+    */exports.proxyLaunchHook = proxyLaunchHook;
+var appletsProxyIndexHook = function appletsProxyIndexHook(Router) {var
+  needHooks = _config.uniAppHook.needHooks,waitHooks = _config.uniAppHook.waitHooks;
+  var options = this.$options;
+  _config.uniAppHook.indexVue = options;
+  for (var i = 0; i < needHooks.length; i++) {
+    var key = needHooks[i];
+    if (options[key] != null) {//只劫持开发者声明的生命周期
+      var length = options[key].length;
+      var whObject = waitHooks[key] = {};
+      whObject.fun = options[key].splice(length - 1, 1, _util2.noop); //把实际的页面生命钩子函数缓存起来,替换原有的生命钩子
+      whObject.isHijack = true;
+    }
+  }
+  triggerLifeCycle.call(this, Router); //接着 主动我们触发导航守卫
+};
+
+/**
+    * 主动触发导航守卫
+    * @param {Object} Router 当前路由对象
+    * 
+    */exports.appletsProxyIndexHook = appletsProxyIndexHook;
+var triggerLifeCycle = function triggerLifeCycle(Router) {var _this3 = this;
+  var topPage = getCurrentPages()[0];
+  if (topPage == null) {
+    return (0, _warn.warn)('打扰了,当前一个页面也没有 这不是官方的bug是什么??');
+  }var _getPageVmOrMp =
+  (0, _util.getPageVmOrMp)(topPage, false),query = _getPageVmOrMp.query,page = _getPageVmOrMp.page;
+  appletsTransitionTo.call(Router, { path: page.route, query: query }, 'push', /*#__PURE__*/function () {var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(finalRoute, fnType) {var variation;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
+              variation = [];if (!(
+              "/".concat(page.route) == finalRoute.route.path)) {_context2.next = 7;break;} //在首页不动的情况下
+              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
+              _context2.next = 5;return callwaitHooks.call(_this3, true);case 5:_context2.next = 12;break;case 7:_context2.next = 9;return (
+
+                callwaitHooks.call(_this3, false));case 9:variation = _context2.sent;_context2.next = 12;return (
+                (0, _appletsNav.appletsUniPushTo)(finalRoute, fnType));case 12:
+
+              _config.uniAppHook.pageReady = true; //标致着路由已经就绪 可能准备起飞
+              callVariationHooks(variation);case 14:case "end":return _context2.stop();}}}, _callee2);}));return function (_x2, _x3) {return _ref2.apply(this, arguments);};}());
+
+};
+/**
+    * 核心方法 处理一系列的跳转配置
+    * @param {Object} rule 当前跳转规则
+    * @param {Object} fnType 跳转页面的类型方法
+    * @param {Object} navCB:? 回调函数
+    * 
+    * this 为当前 Router 对象
+    * 
+    */exports.triggerLifeCycle = triggerLifeCycle;
+var appletsTransitionTo = /*#__PURE__*/function () {var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(rule, fnType, navCB) {var finalRoute, _from, _to, beforeResult, enterResult;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
+              this.lifeCycle["routerbeforeHooks"][0].call(this));case 2: //触发内部跳转前的生命周期
+            finalRoute = (0, _util.ruleToUniNavInfo)(rule, this.CONFIG.routes); //获得到最终的 route 对象
+            _from = (0, _util.formatFrom)(this.CONFIG.routes); //先根据跳转类型获取 from 数据
+            _to = (0, _util.formatTo)(finalRoute); //再根据跳转类型获取 to 数据
+            _context3.next = 7;return beforeHooks.call(this, _from, _to);case 7:beforeResult = _context3.sent;_context3.prev = 8;_context3.next = 11;return (
+
+              isNext.call(this, beforeResult, fnType, navCB));case 11:_context3.next = 13;return (
+              beforeEnterHooks.call(this, finalRoute, _from, _to));case 13:enterResult = _context3.sent;_context3.next = 16;return (
+              isNext.call(this, enterResult, fnType, navCB));case 16:_context3.next = 21;break;case 18:_context3.prev = 18;_context3.t0 = _context3["catch"](8);return _context3.abrupt("return",
+
+            false);case 21:
+
+            navCB && navCB.call(this, finalRoute, fnType); //执行当前回调生命周期
+            afterEachHooks.call(this, _from, _to);_context3.next = 25;return (
+              this.lifeCycle["routerAfterHooks"][0].call(this));case 25:case "end":return _context3.stop();}}}, _callee3, this, [[8, 18]]);}));return function appletsTransitionTo(_x4, _x5, _x6) {return _ref3.apply(this, arguments);};}();
+
+/**
+                                                                                                                                                                                                                                               * 触发全局beforeHooks 生命钩子
+                                                                                                                                                                                                                                               * @param {Object} _from // from  参数
+                                                                                                                                                                                                                                               * @param {Object} _to  // to 参数
+                                                                                                                                                                                                                                               * 
+                                                                                                                                                                                                                                               * this 为当前 Router 对象
+                                                                                                                                                                                                                                               */exports.appletsTransitionTo = appletsTransitionTo;
+var beforeHooks = function beforeHooks(_from, _to) {var _this4 = this;
+  return new Promise( /*#__PURE__*/function () {var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve) {var beforeHooks;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
+              beforeHooks = _this4.lifeCycle["beforeHooks"][0];if (!(
+              beforeHooks == null)) {_context4.next = 3;break;}return _context4.abrupt("return",
+              resolve());case 3:_context4.next = 5;return (
+
+                beforeHooks.call(_this4, _to, _from, resolve));case 5:case "end":return _context4.stop();}}}, _callee4);}));return function (_x7) {return _ref4.apply(this, arguments);};}());
+
+};
+/**
+    * 触发全局afterEachHooks 生命钩子
+    * @param {Object} _from // from  参数
+    * @param {Object} _to  // to 参数
+    * 
+    * this 为当前 Router 对象
+    */
+var afterEachHooks = function afterEachHooks(_from, _to) {
+  var afterHooks = this.lifeCycle["afterHooks"][0];
+  if (afterHooks != null && afterHooks.constructor === Function) {
+    afterHooks.call(this, _to, _from);
+  }
+};
+/**
+    * 触发全局 beforeEnter 生命钩子
+    * @param {Object} finalRoute 	// 当前格式化后的路由参数
+    * @param {Object} _from // from  参数
+    * @param {Object} _to  // to 参数
+    * 
+    * this 为当前 Router 对象
+    */
+var beforeEnterHooks = function beforeEnterHooks(finalRoute, _from, _to) {var _this5 = this;
+  return new Promise( /*#__PURE__*/function () {var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(resolve) {var beforeEnter;return _regenerator.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:
+              beforeEnter = finalRoute.route.beforeEnter;if (!(
+              beforeEnter == null || beforeEnter.constructor !== Function)) {_context5.next = 3;break;}return _context5.abrupt("return",
+              resolve());case 3:_context5.next = 5;return (
+
+                beforeEnter.call(_this5, _to, _from, resolve));case 5:case "end":return _context5.stop();}}}, _callee5);}));return function (_x8) {return _ref5.apply(this, arguments);};}());
+
+};
+
+/**
+    * 验证当前 next() 管道函数是否支持下一步
+    * 
+    * @param {Object} Intercept 拦截到的新路由规则
+    * @param {Object} fnType 跳转页面的类型方法 原始的
+    * @param {Object} navCB 回调函数 原始的
+    * 
+    * this 为当前 Router 对象
+    * 
+    */
+var isNext = function isNext(Intercept, fnType, navCB) {var _this6 = this;
+  return new Promise(function (resolve, reject) {
+    if (Intercept == null) {//什么也不做 直接执行下一个钩子
+      return resolve();
+    }
+    if (Intercept === false) {//路由中断
+      return reject('路由终止');
+    }
+    if (Intercept.constructor === String) {//说明 开发者直接传的path 并且没有指定 NAVTYPE 那么采用原来的navType
+      reject(1);
+      return appletsTransitionTo.call(_this6, Intercept, fnType, navCB);
+    }
+    if (Intercept.constructor === Object) {//有一系列的配置 包括页面切换动画什么的
+      reject(1);
+      return appletsTransitionTo.call(_this6, Intercept, Intercept.NAVTYPE || fnType, navCB);
+    }
+  });
+};
+
+/***/ }),
+
+/***/ 4:
+/*!***********************************!*\
+  !*** D:/uni/uni_phone/pages.json ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ 40:
+/*!***********************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/appletsNav.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.appletsUniPushTo = void 0;
+var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ../helpers/util */ 24);
+
+
+/**
+                                         * @param {Object} finalRoute 格式化后的路由跳转规则
+                                         * @param {Object} NAVTYPE 需要调用的跳转方法
+                                         */
+var appletsUniPushTo = function appletsUniPushTo(finalRoute, NAVTYPE) {
+  return new Promise(function (resolve) {
+    var query = (0, _util.formatURLQuery)("?".concat(finalRoute.uniRoute.query));
+    var url = finalRoute.uniRoute.url;
+    uni[_config.methods[NAVTYPE]]({
+      url: url + query,
+      complete: function complete() {
+        resolve(url);
+      } });
+
+  });
+};exports.appletsUniPushTo = appletsUniPushTo;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 41:
+/*!**************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/patch/app-patch.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.appMount = void 0; /**
+                                                                                                       * 截止 1.3.5 版本 不做任何操作
+                                                                                                       * @param {element} el dom节点 
+                                                                                                       */
+var appMount = function appMount(Vim, el) {
+  Vim.$mount();
+};exports.appMount = appMount;
+
+/***/ }),
+
+/***/ 42:
+/*!*************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/helpers/mixins.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _config = __webpack_require__(/*! ./config */ 25);
+var _init = __webpack_require__(/*! ../vueRouter/init */ 43);
+var _init2 = __webpack_require__(/*! ../appRouter/init */ 44);
+var _init3 = __webpack_require__(/*! ../appletsRouter/init */ 50);
+var _util = __webpack_require__(/*! ../helpers/util */ 24);
+var _hooks = __webpack_require__(/*! ../appRouter/hooks */ 37);
+var _hooks2 = __webpack_require__(/*! ../appletsRouter/hooks */ 39);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * 获取一些需要在各个平台混入的事件
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @param {Object} Router 当前原始路由对象
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
+var getMixins = function getMixins(Router) {
+  return {
+    H5: {
+      beforeCreate: function beforeCreate() {
+        if (this.$options.router) {
+          (0, _init.init)(Router.$root, this.$options.router, this);
+        }
+      } },
+
+    APP: {
+      onLaunch: function onLaunch() {
+        _config.uniAppHook.onLaunched = true; //标志已经触发了 onLaunch 事件
+        _init2.appInit.call(this, Router.$root);
+      },
+      onLoad: function onLoad() {
+        //第一个页面 拦截所有生命周期
+        if (_config.uniAppHook.onLaunched && !_config.uniAppHook.pageReady) {
+          _config.uniAppHook.onLaunched = false;
+          _hooks.proxyIndexHook.call(this, Router.$root);
+        }
+        (0, _init2.removeBackPressEvent)(this.$mp.page, this.$options); //移除页面的onBackPress事件
+      },
+      onBackPress: function onBackPress() {for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}
+        return _init2.pageIsHeadBack.call(Router.$root, this.$mp.page, this.$options, args);
+      } },
+
+    APPLETS: {
+      onLaunch: function onLaunch() {
+        _config.uniAppHook.onLaunched = true; //标志已经触发了 onLaunch 事件
+        _init3.appletsInit.call(this, Router.$root);
+      },
+      onLoad: function onLoad() {
+        if (_config.uniAppHook.onLaunched && !_config.uniAppHook.pageReady) {//必须是第一个页面
+          _config.uniAppHook.onLaunched = false;
+          _hooks2.appletsProxyIndexHook.call(this, Router.$root);
+        }
+      } } };
+
+
+};
+
+var initMixins = function initMixins(Vue, Router) {
+  Vue.mixin(_objectSpread({},
+  getMixins(Router)[(0, _util.appPlatform)(true)]));
+
+};var _default =
+
+initMixins;exports.default = _default;
+
+/***/ }),
+
+/***/ 426:
+/*!**************************************!*\
+  !*** ./node_modules/buffer/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+
+
+var base64 = __webpack_require__(/*! base64-js */ 427)
+var ieee754 = __webpack_require__(/*! ieee754 */ 428)
+var isArray = __webpack_require__(/*! isarray */ 429)
+
+exports.Buffer = Buffer
+exports.SlowBuffer = SlowBuffer
+exports.INSPECT_MAX_BYTES = 50
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+exports.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer (that, length) {
+  if (kMaxLength() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length)
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer(length)
+    }
+    that.length = length
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe(this, arg)
+  }
+  return from(this, arg, encodingOrOffset, length)
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer._augment = function (arr) {
+  arr.__proto__ = Buffer.prototype
+  return arr
+}
+
+function from (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, encodingOrOffset)
+  }
+
+  return fromObject(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(null, value, encodingOrOffset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
+}
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  } else if (size < 0) {
+    throw new RangeError('"size" argument must not be negative')
+  }
+}
+
+function alloc (that, size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(that, size).fill(fill, encoding)
+      : createBuffer(that, size).fill(fill)
+  }
+  return createBuffer(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(null, size, fill, encoding)
+}
+
+function allocUnsafe (that, size) {
+  assertSize(size)
+  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(null, size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(null, size)
+}
+
+function fromString (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength(string, encoding) | 0
+  that = createBuffer(that, length)
+
+  var actual = that.write(string, encoding)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    that = that.slice(0, actual)
+  }
+
+  return that
+}
+
+function fromArrayLike (that, array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  that = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255
+  }
+  return that
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  array.byteLength // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array)
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset)
+  } else {
+    array = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike(that, array)
+  }
+  return that
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    that = createBuffer(that, len)
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len)
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked (length) {
+  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function compare (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.swap64 = function swap64 () {
+  var len = this.length
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap(this, i, i + 7)
+    swap(this, i + 1, i + 6)
+    swap(this, i + 2, i + 5)
+    swap(this, i + 3, i + 4)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max) str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset = +byteOffset  // Coerce to Number.
+  if (isNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1)
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (Buffer.isBuffer(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF // Search for a byte value [0-255]
+    if (Buffer.TYPED_ARRAY_SUPPORT &&
+        typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i
+  if (dir) {
+    var foundIndex = -1
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex
+        foundIndex = -1
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+}
+
+Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function latin1Write (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function latin1Slice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : utf8ToBytes(new Buffer(val, encoding).toString())
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ 3)))
+
+/***/ }),
+
+/***/ 427:
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function getLens (b64) {
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // Trim off extra bytes after placeholder bytes are found
+  // See: https://github.com/beatgammit/base64-js/issues/42
+  var validLen = b64.indexOf('=')
+  if (validLen === -1) validLen = len
+
+  var placeHoldersLen = validLen === len
+    ? 0
+    : 4 - (validLen % 4)
+
+  return [validLen, placeHoldersLen]
+}
+
+// base64 is 4/3 + up to two characters of the original data
+function byteLength (b64) {
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function _byteLength (b64, validLen, placeHoldersLen) {
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function toByteArray (b64) {
+  var tmp
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+
+  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+  var curByte = 0
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  var len = placeHoldersLen > 0
+    ? validLen - 4
+    : validLen
+
+  var i
+  for (i = 0; i < len; i += 4) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 18) |
+      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+      revLookup[b64.charCodeAt(i + 3)]
+    arr[curByte++] = (tmp >> 16) & 0xFF
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 2) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 2) |
+      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 1) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 10) |
+      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] +
+    lookup[num >> 12 & 0x3F] +
+    lookup[num >> 6 & 0x3F] +
+    lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp =
+      ((uint8[i] << 16) & 0xFF0000) +
+      ((uint8[i + 1] << 8) & 0xFF00) +
+      (uint8[i + 2] & 0xFF)
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(
+      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
+    ))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 2] +
+      lookup[(tmp << 4) & 0x3F] +
+      '=='
+    )
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 10] +
+      lookup[(tmp >> 4) & 0x3F] +
+      lookup[(tmp << 2) & 0x3F] +
+      '='
+    )
+  }
+
+  return parts.join('')
+}
+
+
+/***/ }),
+
+/***/ 428:
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ }),
+
+/***/ 429:
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ }),
+
+/***/ 43:
+/*!*************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/vueRouter/init.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.init = void 0;var _concat = __webpack_require__(/*! ./concat.js */ 31);
+var _util = __webpack_require__(/*! ./util.js */ 28);
+var _warn = __webpack_require__(/*! ../helpers/warn.js */ 27);
+var _proxy = __webpack_require__(/*! ./proxy/proxy.js */ 30);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 重写掉H5端 uni-app原始存在的bug
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @param {Object} Router
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+var rewriteUniFun = function rewriteUniFun(Router) {
+  if (Router.CONFIG.h5.rewriteFun === false) {//不需要重写
+    return false;
+  }
+  uni.reLaunch = function (_ref)
+
+  {var url = _ref.url;
+    if (url === '/') {
+      (0, _warn.warn)("H5\u7AEF uni.reLaunch('/')\u65F6 \u9ED8\u8BA4\u88AB\u91CD\u5199\u4E86! \u4F60\u53EF\u4EE5\u4F7F\u7528 this.$Router.replaceAll() \u6216\u8005 uni.reLaunch('/'?xxx)");
+      if (history.length > 1) {//只有在有历史记录的时候才返回  不然直接返回首页
+        return Router.back();
+      }
+      return Router.replaceAll('/');
+    }
+    var path = url.match(/^[^?]+|(\/)/)[0];
+    try {
+      var query = {};
+      url.replace(/([^?&]+)=([^?&]+)/g, function (s, v, k) {
+        query[v] = decodeURIComponent(k);
+        return k + '=' + v;
+      });
+      Router.replaceAll({
+        path: path,
+        query: query });
+
+    } catch (e) {
+      (0, _warn.err)("".concat(url, "\u89E3\u6790\u5931\u8D25\u4E86....  \u8BD5\u8BD5 this.$Router.replaceAll() \u5427"));
+    }
+  };
+  uni.navigateBack = function (delta) {
+    var backLayer = delta;
+    if (delta.constructor === Object) {//这种可能就只是uni-app自带的返回按钮,还有种可能就是开发者另类传递的
+      backLayer = 1;
+    }
+    Router.back(backLayer, delta);
+  };
+};
+/**
+    * 拦截并注册vueRouter中的生命钩子，路由表解析
+    * @param {Object} Router 
+    * @param {vueRouter} vueRouter 
+    * @param {VueComponent} vueVim
+    */
+var init = function init(Router, vueRouter, vueVim) {
+  var CONFIG = Router.CONFIG.h5;
+  vueRouter.afterHooks = (0, _proxy.proxyEachHooks)(Router, 'afterHooks', _concat.afterHooks);
+  vueRouter.beforeHooks = (0, _proxy.proxyEachHooks)(Router, 'beforeHooks', _concat.beforeHooks);
+  var objVueRoutes = (0, _util.fromatRoutes)(vueRouter.options.routes, false, {}); //返回一个格式化好的routes 键值对的形式
+  var objSelfRoutes = (0, _util.fromatRoutes)(Router.CONFIG.routes, true, CONFIG);
+  Router.vueRoutes = objVueRoutes; //挂载vue-routes到当前的路由下
+  Router.selfRoutes = _objectSpread({}, Router.selfRoutes || {}, {},
+  objSelfRoutes);
+  //挂载self-routes到当前路由下
+  Router.$route = vueRouter; //挂载vue-router到$route
+  rewriteUniFun(Router); //重新掉uniapp上的一些有异常的方法
+  (0, _concat.registerRouter)(Router, vueRouter, CONFIG.vueRouterDev);
+};exports.init = init;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 430:
+/*!*********************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/js-base64/base64.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ *  base64.js
+ *
+ *  Licensed under the BSD 3-Clause License.
+ *    http://opensource.org/licenses/BSD-3-Clause
+ *
+ *  References:
+ *    http://en.wikipedia.org/wiki/Base64
+ */
+;(function (global, factory) {
+   true ?
+  module.exports = factory(global) :
+  undefined;
+})(
+typeof self !== 'undefined' ? self :
+typeof window !== 'undefined' ? window :
+typeof global !== 'undefined' ? global :
+this,
+function (global) {
+  'use strict';
+  // existing version for noConflict()
+  global = global || {};
+  var _Base64 = global.Base64;
+  var version = "2.5.2";
+  // if node.js and NOT React Native, we use Buffer
+  var buffer;
+  if ( true && module.exports) {
+    try {
+      buffer = eval("require('buffer').Buffer");
+    } catch (err) {
+      buffer = undefined;
+    }
+  }
+  // constants
+  var b64chars =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  var b64tab = function (bin) {
+    var t = {};
+    for (var i = 0, l = bin.length; i < l; i++) {t[bin.charAt(i)] = i;}
+    return t;
+  }(b64chars);
+  var fromCharCode = String.fromCharCode;
+  // encoder stuff
+  var cb_utob = function cb_utob(c) {
+    if (c.length < 2) {
+      var cc = c.charCodeAt(0);
+      return cc < 0x80 ? c :
+      cc < 0x800 ? fromCharCode(0xc0 | cc >>> 6) +
+      fromCharCode(0x80 | cc & 0x3f) :
+      fromCharCode(0xe0 | cc >>> 12 & 0x0f) +
+      fromCharCode(0x80 | cc >>> 6 & 0x3f) +
+      fromCharCode(0x80 | cc & 0x3f);
+    } else {
+      var cc = 0x10000 +
+      (c.charCodeAt(0) - 0xD800) * 0x400 + (
+      c.charCodeAt(1) - 0xDC00);
+      return fromCharCode(0xf0 | cc >>> 18 & 0x07) +
+      fromCharCode(0x80 | cc >>> 12 & 0x3f) +
+      fromCharCode(0x80 | cc >>> 6 & 0x3f) +
+      fromCharCode(0x80 | cc & 0x3f);
+    }
+  };
+  var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+  var utob = function utob(u) {
+    return u.replace(re_utob, cb_utob);
+  };
+  var cb_encode = function cb_encode(ccc) {
+    var padlen = [0, 2, 1][ccc.length % 3],
+    ord = ccc.charCodeAt(0) << 16 |
+    (ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8 | (
+    ccc.length > 2 ? ccc.charCodeAt(2) : 0),
+    chars = [
+    b64chars.charAt(ord >>> 18),
+    b64chars.charAt(ord >>> 12 & 63),
+    padlen >= 2 ? '=' : b64chars.charAt(ord >>> 6 & 63),
+    padlen >= 1 ? '=' : b64chars.charAt(ord & 63)];
+
+    return chars.join('');
+  };
+  var btoa = global.btoa ? function (b) {
+    return global.btoa(b);
+  } : function (b) {
+    return b.replace(/[\s\S]{1,3}/g, cb_encode);
+  };
+  var _encode = function _encode(u) {
+    var isUint8Array = Object.prototype.toString.call(u) === '[object Uint8Array]';
+    return isUint8Array ? u.toString('base64') :
+    btoa(utob(String(u)));
+  };
+  var encode = function encode(u, urisafe) {
+    return !urisafe ?
+    _encode(u) :
+    _encode(String(u)).replace(/[+\/]/g, function (m0) {
+      return m0 == '+' ? '-' : '_';
+    }).replace(/=/g, '');
+  };
+  var encodeURI = function encodeURI(u) {return encode(u, true);};
+  // decoder stuff
+  var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+  var cb_btou = function cb_btou(cccc) {
+    switch (cccc.length) {
+      case 4:
+        var cp = (0x07 & cccc.charCodeAt(0)) << 18 |
+        (0x3f & cccc.charCodeAt(1)) << 12 |
+        (0x3f & cccc.charCodeAt(2)) << 6 |
+        0x3f & cccc.charCodeAt(3),
+        offset = cp - 0x10000;
+        return fromCharCode((offset >>> 10) + 0xD800) +
+        fromCharCode((offset & 0x3FF) + 0xDC00);
+      case 3:
+        return fromCharCode(
+        (0x0f & cccc.charCodeAt(0)) << 12 |
+        (0x3f & cccc.charCodeAt(1)) << 6 |
+        0x3f & cccc.charCodeAt(2));
+
+      default:
+        return fromCharCode(
+        (0x1f & cccc.charCodeAt(0)) << 6 |
+        0x3f & cccc.charCodeAt(1));}
+
+
+  };
+  var btou = function btou(b) {
+    return b.replace(re_btou, cb_btou);
+  };
+  var cb_decode = function cb_decode(cccc) {
+    var len = cccc.length,
+    padlen = len % 4,
+    n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0) | (
+    len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0) | (
+    len > 2 ? b64tab[cccc.charAt(2)] << 6 : 0) | (
+    len > 3 ? b64tab[cccc.charAt(3)] : 0),
+    chars = [
+    fromCharCode(n >>> 16),
+    fromCharCode(n >>> 8 & 0xff),
+    fromCharCode(n & 0xff)];
+
+    chars.length -= [0, 0, 2, 1][padlen];
+    return chars.join('');
+  };
+  var _atob = global.atob ? function (a) {
+    return global.atob(a);
+  } : function (a) {
+    return a.replace(/\S{1,4}/g, cb_decode);
+  };
+  var atob = function atob(a) {
+    return _atob(String(a).replace(/[^A-Za-z0-9\+\/]/g, ''));
+  };
+  var _decode = buffer ?
+  buffer.from && Uint8Array && buffer.from !== Uint8Array.from ?
+  function (a) {
+    return (a.constructor === buffer.constructor ?
+    a : buffer.from(a, 'base64')).toString();
+  } :
+  function (a) {
+    return (a.constructor === buffer.constructor ?
+    a : new buffer(a, 'base64')).toString();
+  } :
+  function (a) {return btou(_atob(a));};
+  var decode = function decode(a) {
+    return _decode(
+    String(a).replace(/[-_]/g, function (m0) {return m0 == '-' ? '+' : '/';}).
+    replace(/[^A-Za-z0-9\+\/]/g, ''));
+
+  };
+  var noConflict = function noConflict() {
+    var Base64 = global.Base64;
+    global.Base64 = _Base64;
+    return Base64;
+  };
+  // export Base64
+  global.Base64 = {
+    VERSION: version,
+    atob: atob,
+    btoa: btoa,
+    fromBase64: decode,
+    toBase64: encode,
+    utob: utob,
+    encode: encode,
+    encodeURI: encodeURI,
+    btou: btou,
+    decode: decode,
+    noConflict: noConflict,
+    __buffer__: buffer };
+
+  // if ES5 is available, make Base64.extendString() available
+  if (typeof Object.defineProperty === 'function') {
+    var noEnum = function noEnum(v) {
+      return { value: v, enumerable: false, writable: true, configurable: true };
+    };
+    global.Base64.extendString = function () {
+      Object.defineProperty(
+      String.prototype, 'fromBase64', noEnum(function () {
+        return decode(this);
+      }));
+      Object.defineProperty(
+      String.prototype, 'toBase64', noEnum(function (urisafe) {
+        return encode(this, urisafe);
+      }));
+      Object.defineProperty(
+      String.prototype, 'toBase64URI', noEnum(function () {
+        return encode(this, true);
+      }));
+    };
+  }
+  //
+  // export Base64 to the namespace
+  //
+  if (global['Meteor']) {// Meteor.js
+    Base64 = global.Base64;
+  }
+  // module.exports and AMD are mutually exclusive.
+  // module.exports has precedence.
+  if ( true && module.exports) {
+    module.exports.Base64 = global.Base64;
+  } else
+  if (true) {
+    // AMD. Register as an anonymous module.
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {return global.Base64;}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  }
+  // that's it!
+  return { Base64: global.Base64 };
+});
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../下载/HBuilderX/plugins/uniapp-cli/node_modules/webpack/buildin/global.js */ 3)))
+
+/***/ }),
+
+/***/ 44:
+/*!*************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appRouter/init.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.appInit = exports.pageIsHeadBack = exports.removeBackPressEvent = exports.registerLoddingPage = exports.rewriteUniFun = exports.uniRewritePublicFun = void 0;var _hooks = __webpack_require__(/*! ./hooks */ 37);
+var _config = __webpack_require__(/*! ../helpers/config */ 25);
+var _util = __webpack_require__(/*! ./util */ 33);
+var _uniNav = __webpack_require__(/*! ./uniNav */ 38);
+var _uniHoldTabbar = _interopRequireDefault(__webpack_require__(/*! uni-hold-tabbar */ 45));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * 创建底部菜单拦截
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  * @param {Object} Router  当前路由对象
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  */
+var createdHoldTab = function createdHoldTab(Router) {var
+  holdTabbarStyle = Router.CONFIG.APP.holdTabbarStyle; //获取app所有配置
+  var holdTab = new _uniHoldTabbar.default({
+    style: holdTabbarStyle.call(Router),
+    event: {
+      click: function click(index, _ref) {var pagePath = _ref.pagePath;
+        _hooks.beforeTabHooks.call(Router, pagePath);
+      } } });
+
+
+  _config.Global.$holdTab = holdTab;
+};
+/**
+    * uni-app 重写共用的方法
+    * @param {Object} object 开发者传递的相关参数
+    * @param {Object} callFun 需要执行的uni方法
+    */
+var uniRewritePublicFun = function uniRewritePublicFun(object, finishFun, callFun) {
+  var page = (0, _util.getPages)(-2);
+  var complete = object.complete; //获取到开发者传递的complete事件
+  if (complete) {//有写此函数的时候
+    object.complete = function (arg) {
+      finishFun && finishFun('pageShow', page.route);
+      complete.call(page.$vm, arg);
+    };
+  } else {//没有写次函数
+    object.complete = function (arg) {
+      finishFun && finishFun('pageShow', page.route);
+    };
+  }
+  if (_config.Global.$holdTab.isVisible) {
+    _config.Global.$holdTab.hideHoldTab(); //先隐藏底部tabbar拦截器
+  }
+  callFun && callFun(object);
+};
+
+/**
+    * 重写掉uni-app的 uni.getLocation 和 uni.chooseLocation APi
+    * @param {Boolean}  rewriteFun 是否重写方法
+    */exports.uniRewritePublicFun = uniRewritePublicFun;
+var rewriteUniFun = function rewriteUniFun(rewriteFun) {
+  if (rewriteFun === false) {
+    return false;
+  }
+  var oldChooseLocation = uni.chooseLocation; //打开地图选择位置
+  var oldOpenLocation = uni.openLocation; //打开内置地图
+  uni.chooseLocation = function (object) {
+    uniRewritePublicFun(object, _uniNav.pageNavFinish, oldChooseLocation);
+  };
+  uni.openLocation = function (object) {
+    uniRewritePublicFun(object, function () {
+      var webViews = plus.webview.all();
+      var webview = webViews[webViews.length - 1];
+      webview.addEventListener('close', function () {
+        var page = (0, _util.getPages)(-2);
+        (0, _uniNav.pageNavFinish)('pageShow', page.route);
+      }, false);
+    }, oldOpenLocation);
+  };
+};
+
+/**
+    * 对当前app做一个动画页面 用来过渡首次next 等待时间过长的尴尬
+    * @param {Object} Router 当前路由对象
+    */exports.rewriteUniFun = rewriteUniFun;
+var registerLoddingPage = function registerLoddingPage(Router) {var _Router$CONFIG$APP =
+  Router.CONFIG.APP,loddingPageHook = _Router$CONFIG$APP.loddingPageHook,loddingPageStyle = _Router$CONFIG$APP.loddingPageStyle; //获取app所有配置
+  var view = new plus.nativeObj.View('router-loadding', _objectSpread({
+    top: '0px',
+    left: '0px',
+    height: '100%',
+    width: '100%' },
+  loddingPageStyle.call(Router)));
+
+  loddingPageHook.call(Router, view); //触发等待页面生命周期
+  view.show();
+};
+/**
+    * 移除当前 页面上 非router 声明的 onBackPress 事件
+    * @param {Object} page 当前 vue 组件对象 
+    * @param {Object} options	当前page对象的 $options
+    * 修复 https://github.com/SilurianYang/uni-simple-router/issues/106
+    */exports.registerLoddingPage = registerLoddingPage;
+var removeBackPressEvent = function removeBackPressEvent(page, options) {
+  var isBack = (0, _util.assertCanBack)(page);
+  if (isBack) {//可返回
+    options.onBackPress = [options.onBackPress[0]]; //路由混入的都干掉
+  }
+};
+/**
+    * 判断当前页面是否需要拦截返回
+    * 
+    * @param {Object} page 当前 vue 组件对象 
+    * @param {Object} options 当前 vue 组件对象下的$options对象
+    * @param {Array} args  当前页面是点击头部返回还是底部返回
+    * 修复 https://github.com/SilurianYang/uni-simple-router/issues/66
+    * 
+    * this 为当前 Router 对象
+    */exports.removeBackPressEvent = removeBackPressEvent;
+var pageIsHeadBack = function pageIsHeadBack(page, options, args) {
+  if (args[0].from == 'navigateBack') {//调用api返回 
+    _hooks.backApiCallHook.call(this, options, args);
+    return true;
+  }
+  var isBack = (0, _util.assertCanBack)(page);
+  if (isBack) {//可返回
+    _hooks.beforeBackHooks.call(this, options, args);
+    return true;
+  }
+  return false;
+};
+
+/**
+    * 开始初始化app端路由配置
+    * 
+    * @param {Object} Router
+    * 
+    * this 为当前 page 对象
+    */exports.pageIsHeadBack = pageIsHeadBack;
+var appInit = function appInit(Router) {
+  _hooks.proxyLaunchHook.call(this);var _Router$CONFIG$APP2 =
+  Router.CONFIG.APP,holdTabbar = _Router$CONFIG$APP2.holdTabbar,rewriteFun = _Router$CONFIG$APP2.rewriteFun;
+  if (holdTabbar) {
+    rewriteUniFun(rewriteFun);
+    createdHoldTab(Router);
+  }
+  registerLoddingPage(Router);
+};exports.appInit = appInit;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 45:
+/*!**************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/index.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _createdTab = __webpack_require__(/*! ./init/createdTab */ 46);
+var _util = __webpack_require__(/*! ./util/util */ 49);function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}var
+
+HoldTabbar = /*#__PURE__*/function () {
+  function HoldTabbar() {var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};_classCallCheck(this, HoldTabbar);
+    var isNext = (0, _util.assertTabbar)();
+    if (!isNext) {
+      return false;
+    }
+    config = (0, _util.mergeConfig)(config);
+    this.tabbarView = (0, _createdTab.init)(config, isNext);
+  }_createClass(HoldTabbar, [{ key: "hideHoldTab", value: function hideHoldTab()
+
+
+
+
+
+
+    {
+      this.tabbarView.hide();
+    } }, { key: "showHoldTab", value: function showHoldTab()
+    {
+      this.tabbarView.show();
+    } }, { key: "getTabbarView", get: function get() {return this.tabbarView;} }, { key: "isVisible", get: function get() {return this.tabbarView.isVisible();} }]);return HoldTabbar;}();var _default =
+
+
+HoldTabbar;exports.default = _default;
+
+/***/ }),
+
+/***/ 46:
+/*!************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/init/createdTab.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.init = void 0;var _addEvent = __webpack_require__(/*! ./addEvent */ 47);
+
+/**
+                                                                                                                                         * 通过配置信息创建指定tabbar层
+                                                                                                                                         */
+var createdTab = function createdTab()
+
+
+
+
+
+
+{var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},id = _ref.id,style = _ref.style,beforeMount = _ref.beforeMount,mounted = _ref.mounted,event = _ref.event,registerPageHook = _ref.registerPageHook;var tabList = arguments.length > 1 ? arguments[1] : undefined;
+  var tabbarView = new plus.nativeObj.View(id, style);
+  var isHold = beforeMount(tabbarView, tabList);
+  if (!isHold) {
+    (0, _addEvent.initAddEvents)(event, tabbarView, tabList, registerPageHook);
+    mounted(tabbarView, tabList);
+    tabbarView.show();
+    return tabbarView;
+  }
+};
+/**
+    * 初始化入口
+    * @param {*} config 
+    * @param {*} tabList 
+    */
+var init = function init(config, tabList) {
+  return createdTab(config, tabList);
+};exports.init = init;
+
+/***/ }),
+
+/***/ 47:
+/*!**********************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/init/addEvent.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.initAddEvents = void 0;var _base = __webpack_require__(/*! ../config/base */ 48);
+var _util = __webpack_require__(/*! ../util/util */ 49);
+
+/**
+                                      * 根据坐标获得点击的位置 并传入到开发者声明的回调函数中
+                                      */
+var xyTransformTo = function xyTransformTo(type, _ref, tabList, callBack, isHook) {var pageX = _ref.pageX;var
+  length = tabList.length;
+  var screenWidth = plus.screen.resolutionWidth;
+  var single = (screenWidth / length).toFixed(4);
+  var index = Math.ceil(pageX.toFixed(4) / single) - 1;
+  var tab = tabList[index];var _getActiveTabPage =
+  (0, _util.getActiveTabPage)(),route = _getActiveTabPage.route; //获取当前页面的路径
+  if (route != tab.pagePath) {
+    callBack(index, tab, function () {
+      callPageHook(type, isHook, tab);
+    });
+  } else {
+    callBack(index, tab, function () {});
+    callPageHook(type, isHook, tab);
+  }
+};
+/**
+    * 执行页面生命钩子
+    * @param {Object} type
+    * @param {Object} isHook
+    * @param {Object} tab
+    */
+var callPageHook = function callPageHook(type, isHook, tab) {
+  if (isHook) {//如果有设置页面拦截函数 则调用
+    var page = (0, _util.getActiveTabPage)(tab.pagePath);
+    if (page) {
+      var onTabEvent = page.$vm.$options.onTabEvent;
+      onTabEvent && onTabEvent.call(page.$vm, type, tab);
+    }
+  }
+};
+/**
+    * 绑定一些指定的事件
+    * @param {Object} event 事假json对象
+    * @param {Object} view 当前底部的tabbar遮罩层
+    */
+var initAddEvents = function initAddEvents(event, view, tabList, isHook) {var _loop = function _loop(
+  key) {
+    var callBack = event[key];
+    var type = _base.eventBind[key];
+    view.addEventListener(type, function (e) {
+      xyTransformTo(type, e, tabList, callBack, isHook);
+    });};for (var key in event) {_loop(key);
+  }
+};exports.initAddEvents = initAddEvents;
+
+/***/ }),
+
+/***/ 48:
+/*!********************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/config/base.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.BaseConfig = exports.eventBind = void 0;
+var eventBind = {
+  dbClick: 'doubleclick',
+  click: 'click',
+  touchstart: 'touchstart',
+  touchmove: 'touchmove',
+  touchend: 'touchend' };exports.eventBind = eventBind;
+
+
+var BaseConfig = {
+  registerPageHook: false,
+  id: 'HoldTabbar',
+  style: {
+    width: '100%',
+    height: '50px',
+    opacity: 0,
+    bottom: '0' },
+
+  event: {},
+  beforeMount: function beforeMount() {},
+  mounted: function mounted() {} };exports.BaseConfig = BaseConfig;
+
+/***/ }),
+
+/***/ 49:
+/*!******************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-hold-tabbar/util/util.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.getActiveTabPage = exports.assertTabbar = exports.mergeConfig = void 0;var _base = __webpack_require__(/*! ../config/base */ 48);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+/**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * 合并配置信息 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @param {Object} config 开发者传递的配置信息
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */
+var mergeConfig = function mergeConfig(config) {
+  var CONFIG = {};
+  for (var key in _base.BaseConfig) {
+    var item = _base.BaseConfig[key];
+    if (config[key] == null) {
+      CONFIG[key] = item;
+    } else if (config[key].constructor === Object) {
+      CONFIG[key] = _objectSpread({}, item, {}, config[key]);
+    } else {
+      CONFIG[key] = config[key];
+    }
+  }
+  return CONFIG;
+};
+/**
+    * 断言当前是否有 原生tabbar
+    */exports.mergeConfig = mergeConfig;
+var assertTabbar = function assertTabbar() {
+  if (__uniConfig.tabBar && __uniConfig.tabBar.list && __uniConfig.tabBar.list.length > 0) {
+    var list = JSON.parse(JSON.stringify(__uniConfig.tabBar.list));
+    for (var i = 0; i < list.length; i++) {
+      list[i].pagePath = list[i].pagePath.replace(/\.html$/, '');
+    }
+    return list;
+  } else {
+    console.error('当前没有uni-app自带的原生tabbar 无须进行拦截  告辞!!');
+    return false;
+  }
+};
+/**
+    * 获取当前底部tabbar页面对象
+    * @param {Object} path 当前点击的页面路径
+    */exports.assertTabbar = assertTabbar;
+var getActiveTabPage = function getActiveTabPage(path) {
+  var pages = getCurrentPages();
+  if (path == null) {
+    return pages[0];
+  }
+  for (var i = 0; i < pages.length; i++) {
+    var item = pages[i];
+    if (item.route === path) {
+      return item;
+    }
+  }
+  return false;
+};exports.getActiveTabPage = getActiveTabPage;
+
+/***/ }),
+
+/***/ 50:
+/*!*****************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/uni-simple-router/appletsRouter/init.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.appletsInit = void 0;var _hooks = __webpack_require__(/*! ./hooks */ 39);
+
+/**
+                                                                                                                                          * 开始初始化app端路由配置
+                                                                                                                                          * 
+                                                                                                                                          * @param {Object} Router 	当前Router对象
+                                                                                                                                          * 
+                                                                                                                                          * this 为当前 page 对象
+                                                                                                                                          */
+var appletsInit = function appletsInit(Router) {
+  _hooks.proxyLaunchHook.call(this);
+};exports.appletsInit = appletsInit;
+
+/***/ }),
+
+/***/ 501:
+/*!******************************************************!*\
+  !*** D:/uni/uni_phone/components/uni-icons/icons.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  "pulldown": "\uE588",
+  "refreshempty": "\uE461",
+  "back": "\uE471",
+  "forward": "\uE470",
+  "more": "\uE507",
+  "more-filled": "\uE537",
+  "scan": "\uE612",
+  "qq": "\uE264",
+  "weibo": "\uE260",
+  "weixin": "\uE261",
+  "pengyouquan": "\uE262",
+  "loop": "\uE565",
+  "refresh": "\uE407",
+  "refresh-filled": "\uE437",
+  "arrowthindown": "\uE585",
+  "arrowthinleft": "\uE586",
+  "arrowthinright": "\uE587",
+  "arrowthinup": "\uE584",
+  "undo-filled": "\uE7D6",
+  "undo": "\uE406",
+  "redo": "\uE405",
+  "redo-filled": "\uE7D9",
+  "bars": "\uE563",
+  "chatboxes": "\uE203",
+  "camera": "\uE301",
+  "chatboxes-filled": "\uE233",
+  "camera-filled": "\uE7EF",
+  "cart-filled": "\uE7F4",
+  "cart": "\uE7F5",
+  "checkbox-filled": "\uE442",
+  "checkbox": "\uE7FA",
+  "arrowleft": "\uE582",
+  "arrowdown": "\uE581",
+  "arrowright": "\uE583",
+  "smallcircle-filled": "\uE801",
+  "arrowup": "\uE580",
+  "circle": "\uE411",
+  "eye-filled": "\uE568",
+  "eye-slash-filled": "\uE822",
+  "eye-slash": "\uE823",
+  "eye": "\uE824",
+  "flag-filled": "\uE825",
+  "flag": "\uE508",
+  "gear-filled": "\uE532",
+  "reload": "\uE462",
+  "gear": "\uE502",
+  "hand-thumbsdown-filled": "\uE83B",
+  "hand-thumbsdown": "\uE83C",
+  "hand-thumbsup-filled": "\uE83D",
+  "heart-filled": "\uE83E",
+  "hand-thumbsup": "\uE83F",
+  "heart": "\uE840",
+  "home": "\uE500",
+  "info": "\uE504",
+  "home-filled": "\uE530",
+  "info-filled": "\uE534",
+  "circle-filled": "\uE441",
+  "chat-filled": "\uE847",
+  "chat": "\uE263",
+  "mail-open-filled": "\uE84D",
+  "email-filled": "\uE231",
+  "mail-open": "\uE84E",
+  "email": "\uE201",
+  "checkmarkempty": "\uE472",
+  "list": "\uE562",
+  "locked-filled": "\uE856",
+  "locked": "\uE506",
+  "map-filled": "\uE85C",
+  "map-pin": "\uE85E",
+  "map-pin-ellipse": "\uE864",
+  "map": "\uE364",
+  "minus-filled": "\uE440",
+  "mic-filled": "\uE332",
+  "minus": "\uE410",
+  "micoff": "\uE360",
+  "mic": "\uE302",
+  "clear": "\uE434",
+  "smallcircle": "\uE868",
+  "close": "\uE404",
+  "closeempty": "\uE460",
+  "paperclip": "\uE567",
+  "paperplane": "\uE503",
+  "paperplane-filled": "\uE86E",
+  "person-filled": "\uE131",
+  "contact-filled": "\uE130",
+  "person": "\uE101",
+  "contact": "\uE100",
+  "images-filled": "\uE87A",
+  "phone": "\uE200",
+  "images": "\uE87B",
+  "image": "\uE363",
+  "image-filled": "\uE877",
+  "location-filled": "\uE333",
+  "location": "\uE303",
+  "plus-filled": "\uE439",
+  "plus": "\uE409",
+  "plusempty": "\uE468",
+  "help-filled": "\uE535",
+  "help": "\uE505",
+  "navigate-filled": "\uE884",
+  "navigate": "\uE501",
+  "mic-slash-filled": "\uE892",
+  "search": "\uE466",
+  "settings": "\uE560",
+  "sound": "\uE590",
+  "sound-filled": "\uE8A1",
+  "spinner-cycle": "\uE465",
+  "download-filled": "\uE8A4",
+  "personadd-filled": "\uE132",
+  "videocam-filled": "\uE8AF",
+  "personadd": "\uE102",
+  "upload": "\uE402",
+  "upload-filled": "\uE8B1",
+  "starhalf": "\uE463",
+  "star-filled": "\uE438",
+  "star": "\uE408",
+  "trash": "\uE401",
+  "phone-filled": "\uE230",
+  "compose": "\uE400",
+  "videocam": "\uE300",
+  "trash-filled": "\uE8DC",
+  "download": "\uE403",
+  "chatbubble-filled": "\uE232",
+  "chatbubble": "\uE202",
+  "cloud-download": "\uE8E4",
+  "cloud-upload-filled": "\uE8E5",
+  "cloud-upload": "\uE8E6",
+  "cloud-download-filled": "\uE8E9",
+  "headphones": "\uE8BF",
+  "shop": "\uE609" };exports.default = _default;
+
+/***/ }),
+
+/***/ 51:
+/*!***********************************************!*\
+  !*** D:/uni/uni_phone/util/publicFunction.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.GetQueryString = GetQueryString;exports.getTime = getTime;exports.bottomScrollbar = bottomScrollbar;exports.setUrlDelCode = setUrlDelCode;exports.checkMobile = checkMobile;exports.weChatPayment = weChatPayment;exports.formatDate = void 0; // 获取商户编号 获取 ?name='' 的值
+function GetQueryString(name) {
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  var r;
+  // console.log(window.location.search)
+  if (window.location.search) {
+    r = window.location.search.substr(1).match(reg);
+  } else {
+    var a = window.location.href;
+    if (a.indexOf('query') > -1) {
+      a = decodeA(a);
+      console.log(JSON.stringify(a) + '0000');
+      if (JSON.stringify(a) != '{}') return a[name];
+    } else {
+      var b = a.substr(a.indexOf(name), a.length - 1);
+      r = b.match(reg);
+      if (r != null) return unescape(r[2]);
+    }
+  }
+  return null;
+}
+
+function decodeA(a) {
+  if (a.indexOf('query') > -1) {
+    var queryObj = a.substr(a.indexOf('query') + 6, a.length - 1);
+    // console.log(queryObj)
+    try {
+      var queryObjP = JSON.parse(queryObj);
+      // console.log(queryObjP)
+      if (typeof queryObjP == 'object') {
+        return queryObjP;
+      }
+    } catch (e) {
+      a = decodeURIComponent(a);
+      return decodeA(a);
+    }
+
+  } else {
+    return a;
+  }
+}
+
+function getTime(time, bool, dataBool) {
+  var z = '- -';
+  var date;
+  if (time) {
+    // time.replace(/-/g,"/")
+    date = new Date(time);
+  } else {
+    date = new Date();
+  }
+  if (!isNaN(date) && date !== 0) {
+
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = m < 10 ? '0' + m : m;
+    var d = date.getDate();
+    d = d < 10 ? '0' + d : d;
+    var h = date.getHours();
+    h = h < 10 ? '0' + h : h;
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
+    minute = minute < 10 ? '0' + minute : minute;
+    second = second < 10 ? '0' + second : second;
+    if (bool) {
+      z = y + '-' + m + '-' + d;
+    } else if (dataBool) {
+      z = h + ':' + minute + ':' + second;
+    } else {
+      z = y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+    }
+  }
+
+  return z;
+}
+
+function bottomScrollbar(_this, Dom, faDom) {var bottom = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;var top = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;var _uni$getSystemInfoSyn =
+
+
+
+  uni.getSystemInfoSync(),windowWidth = _uni$getSystemInfoSyn.windowWidth,windowHeight = _uni$getSystemInfoSyn.windowHeight;
+  var faDomHeight = '';
+  var faDomInfo = uni.createSelectorQuery().select(faDom);
+  faDomInfo.boundingClientRect(function (data) {
+    console.log(data.height); // 获取元素宽度
+    faDomHeight = data.height;
+  }).exec();
+  var a = windowHeight - faDomHeight - top - 10;
+
+  if (a <= 0) {
+    uni.createSelectorQuery().select(faDom).boundingClientRect(function (data) {});
+    uni.createSelectorQuery().select(Dom).boundingClientRect(function (data) {});
+    // $(Dom).css('transform', `translateY(0px)`)
+    // $(faDom).css({
+    // 	'marginBottom': 60 + 'px'
+    // })
+  } else {
+      // $('.btnBottom').css('transform', `translateY(${a}px)`)
+      // $(Dom).css({
+      // 	'position': `absolute`,
+      // 	'bottom': bottom + 'px',
+      // 	'width': `96%`
+      // })
+    }
+}
+
+function setUrlDelCode() {
+  var url = document.location.toString();
+  if (!url) {
+    return url;
+  }
+  if (url.indexOf('?') < 0) {
+    return url;
+  }
+  var arrUrl = url.split("?");
+  var para = arrUrl[1];
+  if (para.indexOf('&')) {
+    para = para.split("&"); //获取url的参数
+  }
+  para.forEach(function (D, index) {//删除原本url上的code
+    if (D.indexOf('code') > -1) {
+      para.splice(index, 1);
+    }
+  });
+  para = para.join(',');
+  // let currentUrl = arrUrl[0] + '?' + para
+  return arrUrl[0] + '?' + para;
+}
+
+// export function setImg(img){
+// 	return process.env.VUE_APP_PREFIX + img
+// }
+
+function checkMobile(s) {
+  var regu = /^1[3456789]\d{9}$/;
+  var re = new RegExp(regu);
+  if (re.test(s)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function weChatPayment(that, Data, bool) {
+  if (typeof WeixinJSBridge == "undefined") {
+    if (document.addEventListener) {
+      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+    } else if (document.attachEvent) {
+      document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+      document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+    }
+  } else {
+    onBridgeReady();
+  }
+
+  function onBridgeReady() {
+    WeixinJSBridge.invoke(
+    "getBrandWCPayRequest", {
+      appId: Data.appId,
+      timeStamp: Data.timeStamp,
+      nonceStr: Data.nonceStr,
+      package: Data.package,
+      signType: Data.signType,
+      paySign: Data.paySign },
+
+    function (res) {
+      // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      if (res.err_msg === "get_brand_wcpay_request:ok") {
+        if (bool) {
+          that.$router.push({
+            path: "/home/index" });
+
+        } else {
+          that.$router.push({
+            path: "/home/index" });
+
+        }
+
+        // that.$router.push('/shoppingMall/order/OrderPaySuccess')
+      } else {
+        //失败
+        that.$toast.fail("支付失败");
+
+        setTimeout(function () {
+          if (bool) {
+            that.$router.push({
+              path: "/shoppingMall/order/orderInfo?order_id=" +
+              that.OrderInfo.SID });
+
+          } else {
+            that.$router.push({
+              path: "/home/myOrder",
+              query: {
+                id: "1" } },
+
+            2000);
+          }
+
+        });
+      }
+    });
+
+  }
+}
+
+var formatDate = function formatDate(dateObj) {var fmt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Y-m-d H:i';var empty = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  var months = [
+  '一月', '二月', '三月', '四月', '五月', '六月',
+  '七月', '八月', '九月', '十月', '十一月', '十二月'];
+
+  var lz = function lz(n) {
+    var num = n.toString();
+    if (num.length === 1) return "0".concat(num);
+    return num;
+  };
+  var t = dateObj;
+  // typeof dateObj !== 'string'是为了判断万一传过来的是y-m-d h:i:s格式，会直接执行最后一个else if，格式化为日期格式
+  if (dateObj === null || Number.isNaN(dateObj) && typeof dateObj !== 'string') {
+    if (typeof empty === 'string') return empty;
+    t = new Date();
+  } else if (typeof dateObj === 'number') {
+    t = new Date(dateObj * 1000);
+  } else if (typeof dateObj === 'string') {
+    t = new Date(dateObj.replace(/-/g, '/'));
+  }
+  if (!(t instanceof Date)) {
+    throw new Error('被处理的只能是Date对象');
+  }
+  if (Number.isNaN(t.getTime())) {
+    throw new Error('非法日期对象');
+  }
+  var date = t.getDate();
+  var year = t.getFullYear();
+  var hours = t.getHours();
+  var day = t.getDay();
+  var dayName = days[day];
+  var min = t.getMinutes();
+  var sec = t.getSeconds();
+  var month = t.getMonth();
+  var am = hours < 12 ? 'am' : 'pm';
+  var ms = t.getTime() % 1000;
+  var hours12 = hours % 12;
+  hours12 = hours12 || 12;
+  var fd = new Date(t.getFullYear(), 0, 1);
+  var dayOfYear = Math.round((t - fd) / 8.64e7);
+  var weekNum = Math.ceil(((t - fd) / 8.64e7 + fd.getDay() - 1) / 7);
+  var a = {
+    d: lz(date),
+    D: dayName.substr(0, 3),
+    l: dayName,
+    w: day,
+    j: date,
+    z: dayOfYear,
+    W: weekNum,
+    M: months[month].substr(0, 3),
+    F: months[month],
+    Y: year,
+    a: am,
+    A: am.toUpperCase(),
+    y: year.toString().substr(2, 2),
+    c: t.toISOString(),
+    m: lz(month + 1),
+    U: Math.round(t / 1000),
+    g: hours12,
+    G: lz(hours12),
+    h: hours,
+    H: lz(hours),
+    i: lz(min),
+    s: lz(sec),
+    e: ms };
+
+  var v = [];
+  Object.keys(a).forEach(function (k) {
+    v.push("(\\\\)?".concat(k));
+  });
+  return fmt.replace(new RegExp(v.join('|'), 'g'), function (k) {
+    if (a[k]) return a[k];
+    return k.replace('\\', '');
+  });
+};exports.formatDate = formatDate;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
 /***/ 52:
 /*!****************************************!*\
   !*** D:/uni/uni_phone/config/index.js ***!
@@ -21769,6 +22672,7 @@ var _default = {
   BusinNoMy: uni.getStorageSync('BusinNo'),
   codeMy: 'code' + uni.getStorageSync('BusinNo'),
   url:  true ? "http://192.168.0.106:8001/" : undefined,
+  // url:process.env.NODE_ENV ==='development'? 'http://dingtalk.bak365.cn/WeixinNew/':'../',
   // process.env.NODE_ENV === "development" ? '/' : '../'
   VUE_APP_PREFIX: '../',
   homeRoute: '/bind',
@@ -21910,7 +22814,7 @@ _vue.default.filter('setSex', function (val) {
   }
   var num = Number(val);
   if (num) {
-    return num === 1 ? '先生' : '女士';
+    return num == 0 ? '先生' : '女士';
   } else {
     return num;
   }
@@ -21938,7 +22842,60 @@ _vue.default.filter('setBuyTime', function (val) {
 
 /***/ }),
 
-/***/ 584:
+/***/ 544:
+/*!************************************************************!*\
+  !*** D:/uni/uni_phone/components/a-good-lineBox/public.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.Mixin = void 0;var Mixin = {
+  props: {
+    itemData: {
+      type: Object,
+      default: function _default() {
+        return {};
+      } },
+
+    imgHeight: {
+      type: String,
+      default: '80px' },
+
+    isShoppingCard: {
+      type: Boolean,
+      default: false },
+
+    isOrder: {
+      type: Boolean,
+      default: false },
+
+    isIntegral: {
+      type: Boolean,
+      default: false },
+
+    seckill: {
+      type: Boolean,
+      default: false } },
+
+
+  data: function data() {
+    return {
+      list: [] };
+
+  },
+  methods: {
+    goodBoxCoupon: function goodBoxCoupon(val) {
+      this.$emit('goodBox', val);
+      // this.$router.push({path: '/shoppingMall/couponPage/' + val.SID})
+    },
+    addCart: function addCart() {
+      // 加入购物车
+    } } };exports.Mixin = Mixin;
+
+/***/ }),
+
+/***/ 625:
 /*!******************************************************************!*\
   !*** D:/uni/uni_phone/components/uni-swipe-action-item/mpwxs.js ***!
   \******************************************************************/
@@ -22043,191 +23000,7 @@ _vue.default.filter('setBuyTime', function (val) {
 
 /***/ }),
 
-/***/ 599:
-/*!*************************************************************************************!*\
-  !*** D:/uni/uni_phone/node_modules/adcell/swipe-action/uni-swipe-action-item/mp.js ***!
-  \*************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
-  data: function data() {
-    return {
-      position: [],
-      button: [] };
-
-  },
-  computed: {
-    pos: function pos() {
-      return JSON.stringify(this.position);
-    },
-    btn: function btn() {
-      return JSON.stringify(this.button);
-    } },
-
-  watch: {
-    show: function show(newVal) {
-      if (this.autoClose) return;
-      var valueObj = this.position[0];
-      if (!valueObj) {
-        this.init();
-        return;
-      }
-      valueObj.show = newVal;
-      this.$set(this.position, 0, valueObj);
-    } },
-
-  created: function created() {
-    if (this.swipeaction.children !== undefined) {
-      this.swipeaction.children.push(this);
-    }
-  },
-  mounted: function mounted() {
-    this.init();
-
-  },
-  beforeDestroy: function beforeDestroy() {var _this = this;
-    this.swipeaction.children.forEach(function (item, index) {
-      if (item === _this) {
-        _this.swipeaction.children.splice(index, 1);
-      }
-    });
-  },
-  methods: {
-    init: function init() {var _this2 = this;
-
-      setTimeout(function () {
-        _this2.getSize();
-        _this2.getButtonSize();
-      }, 50);
-    },
-    closeSwipe: function closeSwipe(e) {
-      if (!this.autoClose) return;
-      this.swipeaction.closeOther(this);
-    },
-
-    change: function change(e) {
-      this.$emit('change', e.open);
-      var valueObj = this.position[0];
-      if (valueObj.show !== e.open) {
-        valueObj.show = e.open;
-        this.$set(this.position, 0, valueObj);
-      }
-    },
-    onClick: function onClick(index, item) {
-      this.$emit('click', {
-        content: item,
-        index: index });
-
-    },
-    getSize: function getSize() {var _this3 = this;
-      var views = uni.createSelectorQuery().in(this);
-      views.
-      selectAll('.selector-query-hock').
-      boundingClientRect(function (data) {
-        if (_this3.autoClose) {
-          data[0].show = false;
-        } else {
-          data[0].show = _this3.show;
-        }
-        _this3.position = data;
-      }).
-      exec();
-    },
-    getButtonSize: function getButtonSize() {var _this4 = this;
-      var views = uni.createSelectorQuery().in(this);
-      views.
-      selectAll('.button-hock').
-      boundingClientRect(function (data) {
-        _this4.button = data;
-      }).
-      exec();
-    } } };exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 61:
-/*!*****************************************************!*\
-  !*** D:/uni/uni_phone/pages/shoppingMall/mixins.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _http = __webpack_require__(/*! @/api/http.js */ 17);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var _default =
-{
-  data: function data() {
-    return {
-      location: {} };
-
-  },
-  methods: {
-    getWxConfig: function getWxConfig() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var _this;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (!
-
-                _this2.$store.state.currentLocation.latitude) {_context.next = 3;break;} //判断是否有当前地址
-                _this2.location = _this2.$store.state.currentLocation;return _context.abrupt("return");case 3:
-
-
-                try {
-                  // let { Data } = await vipCard({ Action: "GetJSSDK" }, "UProdOpera");
-                  // console.log(54545)
-                  // wx.config({
-                  //      debug: false,
-                  //      appId: Data.SDK.appId,
-                  //      timestamp: Data.SDK.timestamp,
-                  //      nonceStr: Data.SDK.nonceStr,
-                  //      signature: Data.SDK.signature,
-                  //      jsApiList: ["getLocation"]
-                  // });
-                  // wx.error(function (res) {
-                  //      console.log(res, "获取授权位置失败");
-                  // });
-                  // wx.ready(function () {
-                  //      console.log("获取授权ready");
-                  //      wx.getLocation({
-                  //           success: function (res) {
-                  //                console.log("绝授权获取地理位置成功");
-                  //                this.location.latitude = res.latitude;
-                  //                this.location.longitude = res.longitude;
-                  //           },
-                  //           cancel: function (res) {
-                  //                console.log("绝授权获取地理位置");
-                  //                this.$toast.fail({
-                  //                     message: "拒绝授权位置,部分功能无法使用哦!"
-                  //                });
-                  //                // setTimeout(() => {
-                  //                //      this.$router.push("/shoppingMall/shoppingCart");
-                  //                // }, 1000);
-                  //           }
-                  //      });
-                  // });
-                  _this = _this2;
-                  // uni.getLocation({
-                  //     type: 'wgs84',
-                  //     success: function (res) {
-                  // 		_this.location = {
-                  // 		     longitude: res.longitude,
-                  // 		     latitude: res.latitude
-                  // 		};
-                  //     }
-                  // });
-
-                  _this2.location = {
-                    //记得删除
-                    longitude: 30.47988,
-                    latitude: 114.41739 };
-
-                  _this2.$store.commit("SET_CURRENT_LOCATION", _this2.location);
-                } catch (e) {
-                  // console.log(e, "55555");
-                }case 4:case "end":return _context.stop();}}}, _callee);}))();
-    } } };exports.default = _default;
-
-/***/ }),
-
-/***/ 616:
+/***/ 635:
 /*!***************************************************!*\
   !*** D:/uni/uni_phone/util/qqmap-wx-jssdk.min.js ***!
   \***************************************************/
@@ -22238,7 +23011,7 @@ function _classCallCheck(instance, Constructor) {if (!(instance instanceof Const
 
 /***/ }),
 
-/***/ 624:
+/***/ 643:
 /*!************************************************************************!*\
   !*** D:/uni/uni_phone/components/simple-address/city-data/province.js ***!
   \************************************************************************/
@@ -22392,7 +23165,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 625:
+/***/ 644:
 /*!********************************************************************!*\
   !*** D:/uni/uni_phone/components/simple-address/city-data/city.js ***!
   \********************************************************************/
@@ -23910,7 +24683,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 626:
+/***/ 645:
 /*!********************************************************************!*\
   !*** D:/uni/uni_phone/components/simple-address/city-data/area.js ***!
   \********************************************************************/
@@ -36469,14 +37242,187 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 76:
-/*!****************************************************!*\
-  !*** D:/uni/uni_phone/assets/img/defaule_back.jpg ***!
-  \****************************************************/
+/***/ 672:
+/*!*************************************************************************************!*\
+  !*** D:/uni/uni_phone/node_modules/adcell/swipe-action/uni-swipe-action-item/mp.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "/assets/img/defaule_back.jpg";
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  data: function data() {
+    return {
+      position: [],
+      button: [] };
+
+  },
+  computed: {
+    pos: function pos() {
+      return JSON.stringify(this.position);
+    },
+    btn: function btn() {
+      return JSON.stringify(this.button);
+    } },
+
+  watch: {
+    show: function show(newVal) {
+      if (this.autoClose) return;
+      var valueObj = this.position[0];
+      if (!valueObj) {
+        this.init();
+        return;
+      }
+      valueObj.show = newVal;
+      this.$set(this.position, 0, valueObj);
+    } },
+
+  created: function created() {
+    if (this.swipeaction.children !== undefined) {
+      this.swipeaction.children.push(this);
+    }
+  },
+  mounted: function mounted() {
+    this.init();
+
+  },
+  beforeDestroy: function beforeDestroy() {var _this = this;
+    this.swipeaction.children.forEach(function (item, index) {
+      if (item === _this) {
+        _this.swipeaction.children.splice(index, 1);
+      }
+    });
+  },
+  methods: {
+    init: function init() {var _this2 = this;
+
+      setTimeout(function () {
+        _this2.getSize();
+        _this2.getButtonSize();
+      }, 50);
+    },
+    closeSwipe: function closeSwipe(e) {
+      if (!this.autoClose) return;
+      this.swipeaction.closeOther(this);
+    },
+
+    change: function change(e) {
+      this.$emit('change', e.open);
+      var valueObj = this.position[0];
+      if (valueObj.show !== e.open) {
+        valueObj.show = e.open;
+        this.$set(this.position, 0, valueObj);
+      }
+    },
+    onClick: function onClick(index, item) {
+      this.$emit('click', {
+        content: item,
+        index: index });
+
+    },
+    getSize: function getSize() {var _this3 = this;
+      var views = uni.createSelectorQuery().in(this);
+      views.
+      selectAll('.selector-query-hock').
+      boundingClientRect(function (data) {
+        if (_this3.autoClose) {
+          data[0].show = false;
+        } else {
+          data[0].show = _this3.show;
+        }
+        _this3.position = data;
+      }).
+      exec();
+    },
+    getButtonSize: function getButtonSize() {var _this4 = this;
+      var views = uni.createSelectorQuery().in(this);
+      views.
+      selectAll('.button-hock').
+      boundingClientRect(function (data) {
+        _this4.button = data;
+      }).
+      exec();
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 69:
+/*!*****************************************************!*\
+  !*** D:/uni/uni_phone/pages/shoppingMall/mixins.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 13));var _http = __webpack_require__(/*! @/api/http.js */ 17);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var _default =
+{
+  data: function data() {
+    return {
+      location: {} };
+
+  },
+  methods: {
+    getWxConfig: function getWxConfig() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (!
+
+                _this.$store.state.currentLocation.latitude) {_context.next = 3;break;} //判断是否有当前地址
+                _this.location = _this.$store.state.currentLocation;return _context.abrupt("return");case 3:
+
+
+                try {
+                  //                let { Data } = await vipCard({ Action: "GetJSSDK" }, "UProdOpera");
+                  //                wx.config({
+                  //                     debug: false,
+                  //                     appId: Data.SDK.appId,
+                  //                     timestamp: Data.SDK.timestamp,
+                  //                     nonceStr: Data.SDK.nonceStr,
+                  //                     signature: Data.SDK.signature,
+                  //                     jsApiList: ["getLocation"]
+                  //                });
+                  // console.log(Data.SDK,'-----')
+                  //                wx.error(function (res) {
+                  //                     console.log(res, "获取授权位置失败");
+                  //                });
+                  //                wx.ready(function () {
+                  //                     console.log("获取授权ready");
+                  //                     wx.getLocation({
+                  //                          success: function (res) {
+                  //                               console.log("绝授权获取地理位置成功");
+                  //                               this.location.latitude = res.latitude;
+                  //                               this.location.longitude = res.longitude;
+                  //                          },
+                  //                          cancel: function (res) {
+                  //                               console.log("绝授权获取地理位置");
+                  //                               this.$toast.fail({
+                  //                                    message: "拒绝授权位置,部分功能无法使用哦!"
+                  //                               });
+                  //                               // setTimeout(() => {
+                  //                               //      this.$router.push("/shoppingMall/shoppingCart");
+                  //                               // }, 1000);
+                  //                          }
+                  //                    });
+                  //                });
+                  // let _this = this
+                  // uni.getLocation({
+                  //     type: 'wgs84',
+                  //     success: function (res) {
+                  // 		_this.location = {
+                  // 		     longitude: res.longitude,
+                  // 		     latitude: res.latitude
+                  // 		};
+                  //     }
+                  // });
+
+                  _this.location = {
+                    //记得删除
+                    longitude: 30.47988,
+                    latitude: 114.41739 };
+
+                  _this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+                } catch (e) {
+                  // console.log(e, "55555");
+                }case 4:case "end":return _context.stop();}}}, _callee);}))();
+    } } };exports.default = _default;
 
 /***/ }),
 
@@ -36499,6 +37445,17 @@ module.exports = "/assets/img/defaule_back.jpg";
     return uni.removeStorageSync(val);
   } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 84:
+/*!****************************************************!*\
+  !*** D:/uni/uni_phone/assets/img/defaule_back.jpg ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/assets/img/defaule_back.jpg";
 
 /***/ })
 

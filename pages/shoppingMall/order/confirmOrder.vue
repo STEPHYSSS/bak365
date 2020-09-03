@@ -53,7 +53,7 @@
 			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="姓名" showArrow="false">
 					<input type="text" placeholder="请输入收件名字" v-model="name_user">
-					<text class="iconfont icon-tongxunlu" @click="getOpenAddress"></text>
+					<text class="iconfont icon-tongxunlu"></text>
 				</adCell>
 				<adCell text="手机号码" showArrow="false">
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
@@ -597,10 +597,14 @@
 				// 	let { Data } = await vipCard(obj, "UProdOpera");
 				// 	console.log(Data)
 					
-					
-				this.currentArea = val;
-				let currentStoreInfo = this.currentArea
-				this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				if(this.radioModes === 1){
+					this.currentArea = val;
+					let currentStoreInfo = this.currentArea
+					this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				}else{
+					this.currentArea = val;
+					sessionStorage.setItem('takeOutAddress',JSON.stringify(this.currentArea));
+				}
 				this.showAreaList = false;
 				this.$refs.showAreaList.close()
 				// 	this.resultArea = val.SID;
@@ -712,7 +716,6 @@
 				this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
 			},
 			radioTimeFun(val) {
-				console.log(val, 'shijian')
 				this.radioTime = val.detail.value
 			},
 			setDiscountClick(val) {
@@ -885,82 +888,6 @@
 				}
 			},
 			// 点击icon调用微信共享地址中的通讯录
-			//调微信接口 获取当前位置经纬度
-			// async getLocal() {
-			// 	let self = this;
-			// 	try {
-			// 		let {
-			// 			Data
-			// 		} = await vipCard({
-			// 			Action: "GetJSSDK"
-			// 		}, "UProdOpera");
-			// 		wx.config({
-			// 			debug: false,
-			// 			appId: Data.SDK.appId,
-			// 			timestamp: Data.SDK.timestamp,
-			// 			nonceStr: Data.SDK.nonceStr,
-			// 			signature: Data.SDK.signature,
-			// 			jsApiList: ["getLocation"]
-			// 		});
-			// 		wx.ready(res => {
-			// 			wx.getLocation({
-			// 				type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-			// 				success: function(res) {
-			// 					var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-			// 					var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-			// 					self.latitude = latitude;
-			// 					self.longitude = longitude;
-			// 					self.passLocal(latitude, longitude);
-			// 				},
-			// 				cancel: function(res) {
-			// 					console.log("cancel", res);
-			// 				}
-			// 			});
-			// 			wx.error(function(res) {
-			// 				toast1.clear();
-			// 				let toast2 = this.$toast.fail('获取当前位置失败');
-			// 				// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-			// 				console.log("调用微信接口获取当前位置失败", res);
-			// 			});
-			// 		})
-			// 	} catch (e) {
-			// 		// console.log(e, "55555");
-			// 	}
-			// },
-			// async passLocal(lat,lng){
-			//     let data ={
-			//       Modu: "Common",
-			//       Type: "Shop",
-			//       Token: this.token,
-			//       Handler: "Distance",
-			//       Lat:lat,
-			//       Lng:lng,
-			//       ShopNo:this.shopNoStr
-			//     };
-			//     const res = await serveData(data);
-			//     if(res.data.State == 'OK'){
-			//       this.shopList = res.data.Data;
-			//       this.filterlist = this.shopList;
-			//     }
-			//     toast1.clear();
-			// },
-			// // 点击电话簿
-			// getOpenAddress() {
-			// 	let self = this;
-			// 	wx.openAddress({
-			// 		success: function(res) {
-			// 			let address = '';
-			// 			self.contact = res.userName; // 收货人姓名
-			// 			self.phone = res.telNumber; // 收货人手机号码
-			// 			let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
-			// 			let cityName = res.cityName; // 国标收货地址第二级地址（市）
-			// 			let countryName = res.countryName; // 国标收货地址第三级地址（国家）
-			// 			let detailInfo = res.detailInfo; // 详细收货地址信息
-			// 			address += provinceName + cityName + countryName + detailInfo;
-			// 			self.address = address;
-			// 		}
-			// 	});
-			// },
 		},
 		filters: {
 			setSex2(val) {

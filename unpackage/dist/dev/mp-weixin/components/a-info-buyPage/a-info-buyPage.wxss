@@ -1,9 +1,6 @@
 .goodCoupon {
   margin-bottom: 55px;
 }
-.goodCoupon .icon-fenxiang {
-  color: #3388ffe3;
-}
 .goodCoupon .goods-action {
   position: fixed;
   right: 0;

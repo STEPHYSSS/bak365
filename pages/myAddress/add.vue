@@ -6,7 +6,7 @@
 			<div class="setADcell">
 				<adCell text="收货人" showArrow="false">
 					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
-						<text class="iconfont icon-tongxunlu" style="float: right;" @click="getWxAddress"></text>
+						<text class="iconfont icon-tongxunlu" @click="getWxAddress" style="position: absolute;right: 30px;top: 15px;"></text>
 					</div>
 				</adCell>
 				<adCell text="性别" showArrow="false">
@@ -53,10 +53,9 @@
 	import areaLists from "@/config/area_json/area";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 	import { checkMobile } from "@/util/publicFunction";
-	import wxAddress from "@/pages/myAddress/wxAddress.js";
+	
 	export default{
 		name: "index",
-		wxAddress: [wxAddress],
 		components: {
 			adCell
 		},
@@ -82,12 +81,9 @@
 				edotAddress:this.$Route.query.areaInfo
 			}
 		},
-		// async onLoad(){
-		// 	await this.getWxConfig();
-		// },
 		created() {
+			this.getWxConfig();
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
-			
 			if(this.$Route.query.areaInfo){
 				this.areaInfo = this.edotAddress;
 			}
@@ -131,37 +127,86 @@
 				false
 			);
 			// #endif
+			// // #ifdef H5
+			//             //获取定位经纬度
+			//             if (this.$wechat && this.$wechat.isWechat()) {
+			//                  this.$wechat.location(function (res) {
+			//                      console.log(res)
+			//                     // let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+			//                     // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			//                     // todo
+			//                     let latitude = 31.14979;
+			//                     let longitude = 121.12426;
+			
+			//                     //根据经纬度，解析区域，提示用户输入
+			//                  });
+			//             }
+			//             // #endif
 		},
 		methods:{
+			async getWxConfig() {
+				// 获取当前地址
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK"
+					}, "UProdOpera");
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.nonceStr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation","openAddress"]
+					});
+					wx.ready(res => {
+						alert('获取微信的js',res)
+					    wx.getLocation({
+					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+					        
+					        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+					        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+					        var speed = res.speed; // 速度，以米/每秒计
+					        var accuracy = res.accuracy; // 位置精度
+
+					      },
+					      cancel: function(res) {
+					       alert("cancel", res);
+					      }
+					    });
+						wx.openAddress({
+							success:function(res){
+								alert(JSON.stringify(res))
+							},
+							cancel:function(errMsg){
+								alert(errMsg)
+							}
+						})
+					  wx.error(function(res) {
+					    // toast1.clear();
+					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					    alert("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					// console.log(e, "55555");
+				}
+			},
 			getWxAddress(){
-				uni.chooseAddress({
-				  success(res) {
-					  alert(res.userName);
-				    console.log(res.userName)
-				    console.log(res.postalCode)
-				    console.log(res.provinceName)
-				    console.log(res.cityName)
-				    console.log(res.countyName)
-				    console.log(res.detailInfo)
-				    console.log(res.nationalCode)
-				    console.log(res.telNumber)
-				  }
-				})
+				// alert('dd')
 				// wx.openAddress({
-				//   success: function (res) {
-				//     let address = '';
-				//     self.form.Name = res.userName; // 收货人姓名
-				//     self.form.Mobile = res.telNumber; // 收货人手机号码
-				//     let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
-				//     let cityName = res.cityName; // 国标收货地址第二级地址（市）
-				//     let countryName = res.countryName; // 国标收货地址第三级地址（国家）
-				//     let detailInfo = res.detailInfo; // 详细收货地址信息
-				//     address+=provinceName+cityName+countryName+detailInfo;
-				//     self.address = address;
-				//   }})
+				// 	success:function(res){
+				// 		alert(JSON.stringify(res))
+				// 	},
+				// 	cancel:function(errMsg){
+				// 		alert(errMsg)
+				// 	}
+				// })
 			},
 			clickGo() {
-				debugger
 				if (this.specificAreaHead) {
 					this.specificArea = false;
 					this.specificAreaHead = false
@@ -238,7 +283,9 @@
 					} = await vipCard(obj, "UMemberOpera");
 					this.$toast("新增成功");
 					// this.$emit("saveArea");
-					this.$Router.push({path:'/pages/myAddress/myAddress'})
+					this.$Router.push({path:'/pages/myAddress/myAddress',query:{
+						flag:'towaimai'
+					}})
 					this.disabledLoad = false;
 				} catch (e) {
 					this.disabledLoad = false;

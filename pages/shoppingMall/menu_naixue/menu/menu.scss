@@ -663,7 +663,7 @@
 		.top {
 			background-color: #E8EACF;
 			color: #ADB838;
-			padding: 5px 15px;
+			padding: 10rpx 30rpx;
 			font-size: 12px;
 			text-align: right;
 			z-index: 990;
@@ -673,8 +673,10 @@
 			background-color: #FFFFFF;
 			width: 100%;
 			overflow: hidden;
+			// min-height: 1vh;
+			// max-height: 60vh;
+			max-height: 60%;
 			min-height: 1vh;
-			max-height: 60vh;
 
 			.wrapper {
 				height: 100%;

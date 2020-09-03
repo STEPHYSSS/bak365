@@ -193,10 +193,10 @@
 			// },
 			{
 				"pagePath": "pages/home"
-			},	
-			{
-				"pagePath": "pages/shoppingMall/index"				
-			}
+			}	
+			// {
+			// 	"pagePath": "pages/shoppingMall/index"				
+			// }
 		]
 	}
 }

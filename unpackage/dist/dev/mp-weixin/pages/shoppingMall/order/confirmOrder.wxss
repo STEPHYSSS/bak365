@@ -42,6 +42,9 @@
   bottom: -4px;
   font-size: 28px;
 }
+.setADcell {
+  margin: 5px 0;
+}
 .confirm-order-style {
   margin-bottom: 80px;
   /*margin-left: 10px !important;*/
@@ -65,7 +68,14 @@
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
-  padding: 26rpx 24rpx;
+  padding: 5px 24rpx;
+  margin-top: 5px;
+}
+.confirm-order-style .radio-group-play .payStyle {
+  background: #ffffff;
+  font-size: 14px;
+  color: #5a5b5c;
+  padding: 13px 0px;
 }
 .confirm-order-style .radio-group-play .radio-group-item {
   padding: 6px 0;
@@ -185,6 +195,9 @@
 .confirm-order-style .confirm-area-popup .uni-popup__wrapper-box {
   height: 100%;
   background: #fff;
+}
+.confirm-order-style .confirm-selectTime-popup {
+  height: 50vh;
 }
 .confirm-order-style .confirm-selectTime-popup .leftNavsidebar {
   width: 130px;
