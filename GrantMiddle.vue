@@ -33,14 +33,14 @@
 				return
 			}
 			//   获取code
-			let newBusinNo = Cookie.get("BusinNo");
+			let newAppNo = Cookie.get("AppNo");
 			let code = this.setCode("code");
 			this.myCode = code;
 			if (code && code !== "undefined") {
 				Cookie.remove("UserMACPhone");
 				try {
 					await this.$store.dispatch("get_user", {
-						BusinNo: newBusinNo,
+						AppNo: newAppNo,
 						Code: code
 					});
 					// let seconds = 7200000;

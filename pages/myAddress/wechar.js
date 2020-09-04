@@ -41,7 +41,7 @@ export default {
                      type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                     success: function (res) {
                          // console.log(res);
-                         callback(res)
+                         callback(res,'222')
                      },
                      fail:function(res){
                          console.log(res)

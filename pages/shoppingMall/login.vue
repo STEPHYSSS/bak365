@@ -96,7 +96,7 @@
 		data() {
 			return {
 				homeSlide: [], // 定义值接收轮播图数据
-				myScore:''
+				myScore:'',
 			}
 		},
 		computed: {

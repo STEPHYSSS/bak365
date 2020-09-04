@@ -41,20 +41,19 @@ router.beforeEach((to, from, next) => {
 				getApp().globalData.mainStyle = 'theme2'
 				Cookie.set('mainStyle', 'theme2')
 
-				let GetQuery = GetQueryString('BusinNo')
-				// let newBusinNo = GetQuery ? GetQuery : Cookie.get('BusinNo')
-				let newBusinNo = '1'
+				let GetQuery = GetQueryString('AppNo')
+				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
+				let newAppNo = '001'
 				let UserMACPhone = Cookie.get('UserMACPhone')
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
-
-				if (!to.query.hasOwnProperty('BusinNo') && newBusinNo && to.path !== '/GrantMiddle' && to.path !== '/Grant') {
-					// 给每个页面加?BusinNo
+				if (!to.query.hasOwnProperty('AppNo') && newAppNo && to.path !== '/GrantMiddle' && to.path !== '/Grant') {
+					// 给每个页面加?AppNo
 					let obj = {}
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
-						BusinNo: newBusinNo
+						AppNo: newAppNo
 					})
 					next({
 						path: to.path,
@@ -64,15 +63,15 @@ router.beforeEach((to, from, next) => {
 
 				let currentUrl = setUrlDelCode()
 				
-				if (newBusinNo) {
-					// Cookie.set('BusinNo', newBusinNo)
-					Cookie.set('BusinNo', '1')
+				if (newAppNo) {
+					Cookie.set('AppNo', newAppNo)
+					// Cookie.set('AppNo', '001')
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
 
 						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : dataConfig.BASE_URL_OnLine) +
-							'#/GrantMiddle?BusinNo=' + newBusinNo //调回到固定页面
+							'#/GrantMiddle?AppNo=' + newAppNo //调回到固定页面
 
 						if (UserMACPhone && UserMACPhone !== null && UserMACPhone !== undefined && UserMACPhone !== '') {
 							next()
@@ -82,7 +81,7 @@ router.beforeEach((to, from, next) => {
 							store.commit("SET_HISTORY_URL", {})
 							try {
 								let appId = await store.dispatch('get_user', {
-									BusinNo: newBusinNo
+									AppNo: newAppNo
 								})
 								if (appId) {
 									next({
@@ -107,7 +106,7 @@ router.beforeEach((to, from, next) => {
 										path: '/pages/error/index',
 										query: {
 											redirect_uri: currentUrl,
-											title: '获取appId 失败'
+											title: '获取 appId 失败'
 										}
 									})
 								}
@@ -124,7 +123,7 @@ router.beforeEach((to, from, next) => {
 						path: '/pages/error/index',
 						query: {
 							redirect_uri: currentUrl,
-							title: '商户编号为空'
+							title: '参数错误，请重新进入'
 						}
 					})
 				}

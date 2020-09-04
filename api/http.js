@@ -4,7 +4,7 @@ import router from '../router/index.js'
 import dataConfig from '@/config/index'
 import Vue from 'vue' 
 
-export const vipCard = (data, ViewKay, businNo) => {
+export const vipCard = (data, ViewKay, appNo) => {
 	return new Promise((resolve, reject) => {
 		uni.getProvider({
 			service: 'oauth',
@@ -16,10 +16,9 @@ export const vipCard = (data, ViewKay, businNo) => {
 				} else {
 					// h5
 					let UserMACPhone = Cookies.get('UserMACPhone')
-					let BusinNo = Cookies.get('BusinNo') ? Cookies.get('BusinNo') : businNo
-					// let BusinNo = '1'
+					let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : appNo
 					let urlaspx = 'RenderMobile.aspx'
-					let url = dataConfig.url + urlaspx + '?BusinNo=' + BusinNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
+					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
 
 					uni.showLoading({
@@ -103,9 +102,9 @@ function NOMAC() {
 
 	// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?BusinNo=' + Cookies.get('BusinNo')
 	let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
-		'#/GrantMiddle?BusinNo=' + Cookies.get('BusinNo')
+		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
 	store.dispatch('get_user', {
-		BusinNo: Cookies.get('BusinNo')
+		AppNo: Cookies.get('AppNo')
 	}).then(appId => {
 		if (appId) {
 			router.push({

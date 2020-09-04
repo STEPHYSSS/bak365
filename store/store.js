@@ -44,6 +44,7 @@ const store = new Vuex.Store({
 			// this.$store.state.historyUrl
 			// this.$store.commit("SET_HISTORY_URL",{})
 			state.historyUrl = data
+			console.log(state.historyUrl,'url')
 			Cookies.set('historyUrl', data)
 		}
 	},

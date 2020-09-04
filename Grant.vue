@@ -30,8 +30,10 @@
 				window.location.href = this.strUrl
 			} else {
 				this.redirect_uri = encodeURIComponent(this.redirect_uri);
+				console.log(this.redirect_uri,'redirect_uri')
 				window.location.href =
 					`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&response_type=code&scope=snsapi_userinfo&connect_redirect=1&redirect_uri=${this.redirect_uri}&state=1#wechat_redirect`;
+				console.log(window.location.href,'dizhi')
 			}
 		},
 		mounted() {},

@@ -5,8 +5,8 @@
 		<view class="main">
 			<div class="setADcell">
 				<adCell text="收货人" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
-						<text class="iconfont icon-tongxunlu" @click="getWxAddress" style="position: absolute;right: 30px;top: 15px;"></text>
+					<div class="widthBox" @click="getWxAddress"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
+						<text class="iconfont icon-tongxunlu"  style="position: absolute;right: 30px;top: 15px;"></text>
 					</div>
 				</adCell>
 				<adCell text="性别" showArrow="false">
@@ -53,7 +53,7 @@
 	import areaLists from "@/config/area_json/area";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 	import { checkMobile } from "@/util/publicFunction";
-	
+	import wx from 'weixin-js-sdk'
 	export default{
 		name: "index",
 		components: {
@@ -150,22 +150,24 @@
 					let {
 						Data
 					} = await vipCard({
-						Action: "GetJSSDK"
+						Action: "GetJSSDK",
+						Url: window.location.href
 					}, "UProdOpera");
+					console.log(Data)
 					wx.config({
 						debug: true,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
-						nonceStr: Data.SDK.nonceStr,
+						nonceStr: Data.SDK.noncestr,
 						signature: Data.SDK.signature,
 						jsApiList: ["getLocation","openAddress"]
 					});
+					console.log(wx.config)
 					wx.ready(res => {
-						alert('获取微信的js',res)
 					    wx.getLocation({
 					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
-					        
+					        console.log(res,'gggg')
 					        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
 					        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 					        var speed = res.speed; // 速度，以米/每秒计
@@ -197,14 +199,21 @@
 			},
 			getWxAddress(){
 				// alert('dd')
-				// wx.openAddress({
-				// 	success:function(res){
-				// 		alert(JSON.stringify(res))
-				// 	},
-				// 	cancel:function(errMsg){
-				// 		alert(errMsg)
-				// 	}
-				// })
+				console.log('1111')
+				let self = this;
+				wx.openAddress({
+				  success: function (res) {
+					// let address = '';
+					// self.contact = res.userName; // 收货人姓名
+					// self.phone = res.telNumber; // 收货人手机号码
+					// let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
+					// let cityName = res.cityName; // 国标收货地址第二级地址（市）
+					// let countryName = res.countryName; // 国标收货地址第三级地址（国家）
+					// let detailInfo = res.detailInfo; // 详细收货地址信息
+					// address+=provinceName+cityName+countryName+detailInfo;
+					// self.address = address;
+				  }
+				});
 			},
 			clickGo() {
 				if (this.specificAreaHead) {
