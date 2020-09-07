@@ -536,13 +536,13 @@
 			orderArea() {},
 			getAddress() { //获取共享地址
 				let _this = this;
-				wx.openAddress({
-					success: function(res) {
-							alert(JSON.stringify(res))
-						_this.name_user = res.userName;
-						_this.phone_user = res.telNumber;
-					}
-				});
+				// wx.openAddress({
+				// 	success: function(res) {
+				// 			alert(JSON.stringify(res))
+				// 		_this.name_user = res.userName;
+				// 		_this.phone_user = res.telNumber;
+				// 	}
+				// });
 			},
 			// 自取和外卖的切换按钮，暂时不用了
 			changeMode(val) {

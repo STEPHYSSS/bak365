@@ -302,9 +302,8 @@
 		async onLoad() {
 			this.getWxConfig() // 获取授权地址
 			await this.getCouponList();
-			
+			await this.getList();
 			this.getLunBoImg();
-			
 			if(this.$Route.query.flag =='Deflocation'){
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				this.currentStoreInfo = {
@@ -380,7 +379,7 @@
 					console.log(e);
 				}
 			},
-			// 获取地址
+			// 获取店铺地址
 			async getShopList() {
 				let {
 					Data

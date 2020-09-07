@@ -172,6 +172,7 @@
 					      success: function(res) {
 					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
 					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+									this.$store.commit("SET_CURRENT_LOCATION", this.location);
 					      },
 					      cancel: function(res) {
 					       alert("cancel", res);
