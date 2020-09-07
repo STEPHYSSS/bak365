@@ -5,7 +5,9 @@
 		<view class="main">
 			<div class="setADcell">
 				<adCell text="收货人" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名"></div>
+					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
+						<text class="iconfont icon-tongxunlu"  @click="getWxAddress" style="position: absolute;right: 30px;top: 15px;"></text>
+					</div>
 				</adCell>
 				<adCell text="性别" showArrow="false">
 					<div class="widthBox">
@@ -16,7 +18,8 @@
 					</div>
 				</adCell>
 				<adCell text="手机号" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码"></div>
+					<div class="widthBox"><input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
+					</div>
 				</adCell>
 				<adCell text="收货地址" showArrow="false" @click="tenxButton">
 					<div class="widthBox"><span>{{form.Address?form.Address:'点击选择'}}</span></div>
@@ -29,7 +32,7 @@
 				</adCell>
 			</div>
 			<div style="margin-top:50px;padding:0 20px;">
-				<button type="main" size="large" @click="saveArea" style="color: #fff;" :disabled="disabledLoad">保存</button>
+				<button type="main" size="large" @click="saveArea" style="background-color: #ADB838;color: #fff;" :disabled="disabledLoad">保存</button>
 			</div>
 		</view>
 		<!-- 地址popup -->
@@ -45,29 +48,21 @@
 		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" cancelColor="#999" themeColor="#007AFF"></simple-address>
 	</view>
 </template>
-
 <script>
-	import {
-		vipCard,
-		getSuggestion
-	} from "@/api/http.js";
+	import { vipCard,getSuggestion } from "@/api/http.js";
 	import areaLists from "@/config/area_json/area";
-	import {
-		checkMobile
-	} from "@/util/publicFunction";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-
-	export default {
+	import { checkMobile } from "@/util/publicFunction";
+	import wx from 'weixin-js-sdk'
+	export default{
 		name: "index",
 		components: {
 			adCell
 		},
-		props: {
-			areaInfo: [Object],
-			currentDeliveryType: [String, Number]
-		},
-		data() {
-			return {
+		data(){
+			return{
+				areaInfo: {},
+				currentDeliveryType: '',
 				specificArea: false,
 				logisticsArea: false,
 				isAdd: false,
@@ -82,11 +77,18 @@
 				areaList: areaLists,
 				disabledLoad: false,
 				specificAreaHead: false,
-				cityPickerValueDefault: [0, 0, 1]
-			};
+				cityPickerValueDefault: [0, 0, 1],
+				edotAddress:this.$Route.query.areaInfo,
+				publicName:'',
+				publicMobile:''
+			}
 		},
 		created() {
+			this.getWxConfig();
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
+			if(this.$Route.query.areaInfo){
+				this.areaInfo = this.edotAddress;
+			}
 			if (JSON.stringify(this.areaInfo) !== "{}") {
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
 				this.form.Defaults = this.form.Defaults === "1" ? true : false;
@@ -99,9 +101,10 @@
 			} else {
 				this.location = this.$store.state.currentLocation; //当前的位置
 			}
-
+			console.log(this.location);
+		
 			let _this = this;
-
+		
 			// #ifdef H5
 			window.addEventListener(
 				"message",
@@ -120,55 +123,120 @@
 							_this.$set(_this.form, 'Latitude', loc.latlng.lat)
 							_this.$set(_this.form, 'Longitude', loc.latlng.lng)
 						})
-
+		
 					}
 				},
 				false
 			);
 			// #endif
+			// // #ifdef H5
+			//             //获取定位经纬度
+			//             if (this.$wechat && this.$wechat.isWechat()) {
+			//                  this.$wechat.location(function (res) {
+			//                      console.log(res)
+			//                     // let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+			//                     // let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			//                     // todo
+			//                     let latitude = 31.14979;
+			//                     let longitude = 121.12426;
+			
+			//                     //根据经纬度，解析区域，提示用户输入
+			//                  });
+			//             }
+			//             // #endif
 		},
-		methods: {
+		methods:{
+			async getWxConfig() {
+				// 获取当前地址
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation","openAddress"]
+					});
+					
+					wx.ready(res => {
+						let _this = this;
+					    wx.getLocation({
+					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+					      },
+					      cancel: function(res) {
+					       alert("cancel", res);
+					      }
+					    });
+					  wx.error(function(res) {
+					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					    alert("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					// console.log(e, "55555");
+				}
+			},
+			getWxAddress(){
+				let _this = this;
+				wx.openAddress({
+				  success: function (res) {
+					  alert(JSON.stringify(res))
+					_this.form.Name = res.userName;
+					_this.form.Mobile = res.telNumber;
+				  }
+				});
+			},
 			clickGo() {
 				if (this.specificAreaHead) {
 					this.specificArea = false;
 					this.specificAreaHead = false
 					this.$refs.specificArea.close()
 				} else {
-					this.$emit("clickGo");
+					// this.$emit("clickGo");
+					this.$Router.push({path:'/pages/myAddress/myAddress',query:{
+						flag:'towaimai'
+					}})
 				}
 			},
-			radioChangeSex(val) {
-				this.form.Sex = val.detail.value
-			},
+			// 默认地址
 			switchChange(val) {
 				//true,false
 				this.form.Defaults = val.detail.value
 			},
-			clickGoAddress() {
-
-			},
+			// 点击选择地址按钮
 			tenxButton() {
-				if (Number(this.DeliveryType) === 2) {
+				// if (Number(this.DeliveryType) === 2) {
 					this.specificArea = true;
 					this.$refs.specificArea.open()
 					this.specificAreaHead = true
-				} else {
-					this.logisticsArea = true;
-					this.$refs.logisticsArea.open()
-				}
+				// } else {
+				// 	this.logisticsArea = true;
+				// 	this.$refs.logisticsArea.open()
+				// }
 			},
 			confirmArea(val) {
 				this.logisticsArea = false;
 				this.$refs.logisticsArea.close()
 				this.form.Address = val.label;
 				this.form.Type = 2;
-
+			
 				this.form.Province = val.labelArr[0];
 				this.form.City =  val.labelArr[1];
 				this.form.District =  val.labelArr[2];
 			},
+			// 保存地址
 			async saveArea() {
-				// console.log(this.form, "this.form");
 				if (!this.form.Address) {
 					this.$toast("选择地址");
 					return;
@@ -197,19 +265,24 @@
 						Action: "SetAddress"
 					};
 					Object.assign(obj, this.form);
-
+			
 					// console.log(obj,'obj')
 					obj.Defaults = obj.Defaults === true ? 1 : 0;
-
+			
 					let {
 						Data
 					} = await vipCard(obj, "UMemberOpera");
-					this.$emit("saveArea");
+					this.$toast("新增成功");
+					// this.$emit("saveArea");
+					this.$Router.push({path:'/pages/myAddress/myAddress',query:{
+						flag:'towaimai'
+					}})
 					this.disabledLoad = false;
 				} catch (e) {
 					this.disabledLoad = false;
 				}
 			},
+			
 			bindAddress(val) {
 				let _this = this
 				if (_this.$refs.specificArea) {
@@ -224,21 +297,13 @@
 				})
 			},
 		}
-		
-	};
+	}
 </script>
-
-<style scoped lang="less">
+<style lang="less">
 	/deep/.uni-popup__wrapper-box {
 		width: 100%;
+		height: 100%;
 	}
-
-	.setWidth {
-		/deep/.headView {
-			width: 100px !important;
-		}
-	}
-	.theme2 .setADcell .headView {}
 	.widthBox{
 		width:68%;
 		input{
@@ -254,11 +319,12 @@
 				border: 1px solid #CCCCCC;
 				margin-right: 6px;
 				&.checked {
-					background-color: #8d8bdb;
+					background-color: #ADB838;
 					color: #ffffff;
-					border: 1px solid #8d8bdb;
+					border: 1px solid #ADB838;
 				}
 			}
 		}
 	}
 </style>
+

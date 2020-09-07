@@ -262,6 +262,7 @@
 	import modal from '@/components/modal/modal'
 	import popupLayer from '@/components/popup-layer/popup-layer'
 	import Mixins from "../../mixins.js"
+	import wx from 'weixin-js-sdk'
 	import {
 		vipCard
 	} from '@/api/http.js';
@@ -299,10 +300,11 @@
 			}
 		},
 		async onLoad() {
-			await this.getCouponList();
-			await this.getList();
-			this.getLunBoImg();
 			this.getWxConfig() // 获取授权地址
+			await this.getCouponList();
+			
+			this.getLunBoImg();
+			
 			if(this.$Route.query.flag =='Deflocation'){
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				this.currentStoreInfo = {

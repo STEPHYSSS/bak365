@@ -114,12 +114,12 @@
 					},
 					"UMemberOpera"
 				);
-				this.areaList =  Data.AddressList;
+				this.areaList =  Data.AddressList || [];	
 				let currentStoreInfo = {
-					Name: Data.AddressList[0].Name,	
-					Address: Data.AddressList[0].Address,
-					SID: Data.AddressList[0].SID,
-					Length:Data.AddressList[0].Length
+					Name: this.areaList[0].Name,	
+					Address: this.areaList[0].Address,
+					SID: this.areaList[0].SID,
+					Length:this.areaList[0].Length
 				}
 				sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
 				// this.$store.commit("SET_CURRENT_STORE",this.areaList)
@@ -176,8 +176,8 @@
 				if(this.$Route.query.flag == 'login'){
 					this.$Router.push('/pages/shoppingMall/login')
 				}else if(this.$Route.query.flag == 'towaimai'|| this.$Route.query.flag == 'shop'){
-					// this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
-					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
+					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
 				}else{
 					this.$Router.push('/pages/home')
 				}

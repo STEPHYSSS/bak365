@@ -53,7 +53,7 @@
 			<div class="setADcell" v-if="radioModes === 1">
 				<adCell text="姓名" showArrow="false">
 					<input type="text" placeholder="请输入收件名字" v-model="name_user">
-					<text class="iconfont icon-tongxunlu"></text>
+					<text class="iconfont icon-tongxunlu" @click="getAddress"></text>
 				</adCell>
 				<adCell text="手机号码" showArrow="false">
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
@@ -207,6 +207,7 @@
 		weChatPayment,
 		setUrlDelCode
 	} from "@/util/publicFunction";
+	import wx from 'weixin-js-sdk'
 	import Mixins from "../mixins.js";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 
@@ -217,7 +218,7 @@
 			// receiveAddress
 			adCell
 		},
-		
+
 		data() {
 			return {
 				mainStyle: getApp().globalData.mainStyle,
@@ -290,7 +291,7 @@
 			console.log(this.$store.state.currentStoreInfo)
 			// 获取授权地址
 			await this.getWxConfig();
-
+			
 			let item = this.$store.state.currentCard || [];
 			item.forEach(D => {
 				if (D.SID) {
@@ -366,9 +367,9 @@
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-							if(this.radioModes === 1){
+							if (this.radioModes === 1) {
 								this.areaList = Data.ShopInfoList;
-							}else{
+							} else {
 								this.areaList = res[0];
 							}
 							// this.currentItem.forEach(D => {
@@ -533,6 +534,16 @@
 				}
 			},
 			orderArea() {},
+			getAddress() { //获取共享地址
+				let _this = this;
+				wx.openAddress({
+					success: function(res) {
+							alert(JSON.stringify(res))
+						_this.name_user = res.userName;
+						_this.phone_user = res.telNumber;
+					}
+				});
+			},
 			// 自取和外卖的切换按钮，暂时不用了
 			changeMode(val) {
 				// 1自取，2 外卖
@@ -583,7 +594,7 @@
 						api = "CalcLogistics";
 					}
 				}
-				
+
 				// try {
 				// 	this.loading = true;
 				// 	uni.showLoading()
@@ -596,14 +607,14 @@
 				// 	}
 				// 	let { Data } = await vipCard(obj, "UProdOpera");
 				// 	console.log(Data)
-					
-				if(this.radioModes === 1){
+
+				if (this.radioModes === 1) {
 					this.currentArea = val;
 					let currentStoreInfo = this.currentArea
-					this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
-				}else{
+					this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
+				} else {
 					this.currentArea = val;
-					sessionStorage.setItem('takeOutAddress',JSON.stringify(this.currentArea));
+					sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
 				}
 				this.showAreaList = false;
 				this.$refs.showAreaList.close()
@@ -614,8 +625,8 @@
 				// 	this.freight = Data.Freight;
 				// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 
-					this.loading = false;
-					uni.hideLoading()
+				this.loading = false;
+				uni.hideLoading()
 				// } catch (e) {
 				// 	this.loading = false;
 				// 	uni.hideLoading()
@@ -632,9 +643,12 @@
 			},
 			clickLeft() {
 				if (this.$Route.query.flag) {
-					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{
-						flag :'Deflocation'
-					}})
+					this.$Router.push({
+						path: '/pages/shoppingMall/menu_naixue/menu/menu',
+						query: {
+							flag: 'Deflocation'
+						}
+					})
 				} else {
 					this.$Router.push(this.$store.state.historyUrl)
 				}

@@ -1,12 +1,12 @@
 <template>
-	<view>
+	<view >
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
 		<view class="main">
 			<div class="setADcell">
 				<adCell text="收货人" showArrow="false">
-					<div class="widthBox" @click="getWxAddress"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
-						<text class="iconfont icon-tongxunlu"  style="position: absolute;right: 30px;top: 15px;"></text>
+					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
+						<text class="iconfont icon-tongxunlu"  @click="getWxAddress" style="position: absolute;right: 30px;top: 15px;"></text>
 					</div>
 				</adCell>
 				<adCell text="性别" showArrow="false">
@@ -78,7 +78,9 @@
 				disabledLoad: false,
 				specificAreaHead: false,
 				cityPickerValueDefault: [0, 0, 1],
-				edotAddress:this.$Route.query.areaInfo
+				edotAddress:this.$Route.query.areaInfo,
+				publicName:'',
+				publicMobile:''
 			}
 		},
 		created() {
@@ -153,7 +155,7 @@
 						Action: "GetJSSDK",
 						Url: window.location.href
 					}, "UProdOpera");
-					console.log(Data)
+					
 					wx.config({
 						debug: true,
 						appId: Data.SDK.appId,
@@ -162,32 +164,20 @@
 						signature: Data.SDK.signature,
 						jsApiList: ["getLocation","openAddress"]
 					});
-					console.log(wx.config)
+					
 					wx.ready(res => {
+						let _this = this;
 					    wx.getLocation({
 					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
-					        console.log(res,'gggg')
-					        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-					        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-					        var speed = res.speed; // 速度，以米/每秒计
-					        var accuracy = res.accuracy; // 位置精度
-
+					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
 					      },
 					      cancel: function(res) {
 					       alert("cancel", res);
 					      }
 					    });
-						wx.openAddress({
-							success:function(res){
-								alert(JSON.stringify(res))
-							},
-							cancel:function(errMsg){
-								alert(errMsg)
-							}
-						})
 					  wx.error(function(res) {
-					    // toast1.clear();
 					    let toast2  = this.$toast.fail('获取当前位置失败');
 					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 					    alert("调用微信接口获取当前位置失败", res);
@@ -198,20 +188,12 @@
 				}
 			},
 			getWxAddress(){
-				// alert('dd')
-				console.log('1111')
-				let self = this;
+				let _this = this;
 				wx.openAddress({
 				  success: function (res) {
-					// let address = '';
-					// self.contact = res.userName; // 收货人姓名
-					// self.phone = res.telNumber; // 收货人手机号码
-					// let provinceName = res.provinceName; // 国标收货地址第一级地址（省）
-					// let cityName = res.cityName; // 国标收货地址第二级地址（市）
-					// let countryName = res.countryName; // 国标收货地址第三级地址（国家）
-					// let detailInfo = res.detailInfo; // 详细收货地址信息
-					// address+=provinceName+cityName+countryName+detailInfo;
-					// self.address = address;
+					  alert(JSON.stringify(res))
+					_this.form.Name = res.userName;
+					_this.form.Mobile = res.telNumber;
 				  }
 				});
 			},

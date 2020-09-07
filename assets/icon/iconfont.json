@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1297043",
+      "name": "5购物袋",
+      "font_class": "5gouwudai",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "12771536",
+      "name": "编辑",
+      "font_class": "bianji1",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
       "icon_id": "11875953",
       "name": "定位 位置",
       "font_class": "dingweiweizhi",
