@@ -9,10 +9,6 @@
 					</view>
 				</swiper-item>
 			</swiper>
-			<!-- <view class="intro">
-				<view class="greet">您好</view>
-				<view class="note">一杯奶茶，一口软欧包，在烘焙遇见两种美好</view>
-			</view> -->
 		</view>
 		<view class="content">
 			<view class="entrance">
@@ -146,23 +142,20 @@
 					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
 							  // alert(JSON.stringify(res))
-					        // _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
-					        // _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
 							_this.location = {
-								longitude: res.longitude,
-								latitude: res.latitude
+								longitude: res.longitude,// 纬度
+								latitude: res.latitude// 经度
 							}
 							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
 							sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
-					       alert("cancel", res);
+					       console.log("cancel", res);
 					      }
 					    });
 					  wx.error(function(res) {
-					    let toast2  = this.$toast.fail('获取当前位置失败');
-					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-					    alert("调用微信接口获取当前位置失败", res);
+					    this.$toast.fail('获取当前位置失败');
+					    console.log("调用微信接口获取当前位置失败", res);
 					  });
 					})
 				} catch (e) {

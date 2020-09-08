@@ -85,7 +85,7 @@
 				logisticsArea: false,
 				isAdd: false,
 				form: {
-					Sex: "0"
+					Sex: 0,
 				},
 				location: {},
 				areaList: areaLists,

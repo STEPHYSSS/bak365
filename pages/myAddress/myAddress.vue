@@ -117,13 +117,13 @@
 				);
 				this.areaList =  Data.AddressList || [];	
 				console.log(Data.AddressList,'00000')
-				let currentStoreInfo = {
-					Name: this.areaList[0].Name,	
-					Address: this.areaList[0].Address,
-					SID: this.areaList[0].SID,
-					Length:this.areaList[0].Length
-				}
-				sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
+				// let currentStoreInfo = {
+				// 	Name: this.areaList[0].Name,	
+				// 	Address: this.areaList[0].Address,
+				// 	SID: this.areaList[0].SID,
+				// 	Length:this.areaList[0].Length
+				// }
+				// sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
 				// this.$store.commit("SET_CURRENT_STORE",this.areaList)
 			},
 			// 

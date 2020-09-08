@@ -625,7 +625,7 @@
 			changeGroup(val) {
 				this.resultArea = val.detail.value
 			},
-			// 切换并选择地址
+			// 切换并选择地址  最后提交的时候把这个地方的经纬度传给后台
 			async changeArea(val,index){
 				console.log(val,index,'选择地址这一块')
 				this.showAreaList = true;
@@ -908,6 +908,7 @@
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
 				}
+				console.log(this.currentArea,'选择后的地址信息')
 				let obj = {
 					Action: "OrderPay",
 					DeliveryType: DeliveryType,
@@ -976,15 +977,6 @@
 								IsPass: Data.IsPass
 							}
 						});
-						// let aaa = {
-						// 	Balance: this.CardInfo.Balance,
-						// 	Score: this.CardInfo.Score,
-						// 	PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-						// 	total: Data.SumTotal,
-						// 	PayNo: Data.PayNo,
-						// 	IsPass: Data.IsPass
-						// }
-						// console.log(aaa)
 					} else {
 						// 微信支付
 						this.testData = Data;

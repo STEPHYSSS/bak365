@@ -1,6 +1,6 @@
 <template>
 	<div class="bindMicro" :class="mainStyle">
-		<uni-nav-bar :fixed="true" left-icon="back" :noG0="true" :title="currentRouter?'绑定卡':'申请卡'" :status-bar="true"
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :title="currentRouter?'绑定卡':'申请卡'" :status-bar="true"
 		 :shadow="false"></uni-nav-bar>
 		<h4 class="bindMicroTitle" v-if="!loading">填写会员信息</h4>
 		<div v-if="!loading&&!fail">
@@ -367,6 +367,10 @@
 			},
 			clickPhoneQue() {
 				phoneReg(this);
+			},
+			// 根据状态进行返回
+			clickLeft(){
+				this.$Router.push('/pages/home')
 			}
 		}
 	};

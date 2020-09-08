@@ -122,10 +122,12 @@
 				
 				<div class="cardWei">
 					<div>
-						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='05')" text="绑定实体会员卡"@click="bindEntity(1)"/>
+						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='05')" text="绑定实体会员卡"@click="bindEntity(1)"/> -->
+						<adCell  text="绑定实体会员卡"@click="bindEntity(1)"/>
 					</div>
 					<div>
-						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='05'&&CardType!=='04')" text="申请会员卡" @click="bindEntity(2)"/>
+						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='05'&&CardType!=='04')" text="申请会员卡" @click="bindEntity(2)"/> -->
+						<adCell text="申请会员卡" @click="bindEntity(2)"/>
 					</div>
 				</div>
 				<div class="cardWei" v-if='isMember==="1"'>
