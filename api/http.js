@@ -21,9 +21,9 @@ export const vipCard = (data, ViewKay, appNo) => {
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
 
-					uni.showLoading({
-						title: '加载中'
-					});
+					// uni.showLoading({
+					// 	title: '加载中'
+					// });
 					uni.request({
 						url: url,
 						data: data,

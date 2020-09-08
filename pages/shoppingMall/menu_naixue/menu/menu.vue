@@ -261,13 +261,13 @@
 <script>
 	import modal from '@/components/modal/modal'
 	import popupLayer from '@/components/popup-layer/popup-layer'
-	import Mixins from "../../mixins.js"
-	import wx from 'weixin-js-sdk'
+	// import Mixins from "../../mixins.js"
+	// import wx from 'weixin-js-sdk'
 	import {
 		vipCard
 	} from '@/api/http.js';
 	export default {
-		mixins: [Mixins],
+		// mixins: [Mixins],
 		data() {
 			return {
 				curDes: '', // 多规格  已选信息
@@ -296,11 +296,13 @@
 				currentIndex: 0,
 				currentIndex2: 0,
 				currentStoreInfo:{},//商家地址
+				addresses:{},
+				location:JSON.parse(sessionStorage.getItem('location'))
 
 			}
 		},
 		async onLoad() {
-			this.getWxConfig() // 获取授权地址
+			// this.getWxConfig() // 获取授权地址
 			await this.getCouponList();
 			await this.getList();
 			this.getLunBoImg();

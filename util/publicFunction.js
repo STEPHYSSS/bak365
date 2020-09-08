@@ -169,10 +169,12 @@ export function weChatPayment(that, Data, bool) {
 					if (bool) {
 						that.$router.push({
 							path: "/home/index"
+							// path:"/pages/vip/allMyOrder"
 						});
 					} else {
 						that.$router.push({
 							path: "/home/index"
+							// path:'/pages/vip/allMyOrder'
 						});
 					}
 

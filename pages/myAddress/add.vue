@@ -192,7 +192,7 @@
 				let _this = this;
 				wx.openAddress({
 				  success: function (res) {
-					  alert(JSON.stringify(res))
+					  // alert(JSON.stringify(res))
 					_this.form.Name = res.userName;
 					_this.form.Mobile = res.telNumber;
 				  }

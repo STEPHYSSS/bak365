@@ -1,38 +1,51 @@
 <template>
-	<view>
+	<div>
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
-		<view class="main">
+		<div>
 			<div class="setADcell">
-				<adCell text="收货人" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名"></div>
+				<adCell text="联系人" showArrow="false">
+					<input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">
+					<text class="iconfont icon-tongxunlu"  @click="getWxAddress" style="position: absolute;right: 30px;top: 15px;"></text>
 				</adCell>
+			</div>
+			<div class="setADcell">
 				<adCell text="性别" showArrow="false">
-					<div class="widthBox">
-						<view class="radio-group">
-							<view class="radio" :class="{'checked': !form.Sex}" style="margin-right: 10rpx;" @tap="form.Sex=0">先生</view>
-							<view class="radio" :class="{'checked': form.Sex}" @tap="form.Sex=1">女士</view>
-						</view>
-					</div>
+					<!-- <radio-group v-model="form.Sex" style="text-align:center" @change="radioChangeSex">
+						<radio style="display: inline-flex;margin-right:10px" value="1" :checked="form.Sex==='0'">先生</radio>
+						<radio style="display: inline-flex;" value="2" :checked="form.Sex==='1'">女士</radio>
+					</radio-group> -->
+					<view class="radio-group">
+						<view class="radio" :class="{'checked': !form.Sex}" style="margin-right: 10rpx;" @tap="form.Sex=0">先生</view>
+						<view class="radio" :class="{'checked': form.Sex}" @tap="form.Sex=1">女士</view>
+					</view>
 				</adCell>
+			</div>
+			<div class="setADcell">
 				<adCell text="手机号" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码"></div>
+					<input type="text" v-model="form.Mobile" placeholder="请填写收货人手机号码">
 				</adCell>
-				<adCell text="收货地址" showArrow="false" @click="tenxButton">
-					<div class="widthBox"><span>{{form.Address?form.Address:'点击选择'}}</span></div>
+			</div>
+			<div class="setADcell">
+				<adCell text="收货地址" @click="tenxButton" showArrow="false">
+					<span>{{form.Address?form.Address:'点击选择'}}</span>
 				</adCell>
+			</div>
+			<div class="setADcell">
 				<adCell text="门牌号" showArrow="false">
-					<div class="widthBox"><input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室"></div>
-				</adCell>
+					<input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室">
+				</adcell>
+			</div>
+			
+			<div class="setADcell setWidth">
 				<adCell text="设置为默认地址" showArrow="false">
-					<div class="widthBox" style="width: 40%;"><switch @change="switchChange" style="position: absolute;top: 7px;left: 33%;transform:scale(0.8)"/></div>
+					<switch @change="switchChange" />
 				</adCell>
 			</div>
-			<div style="margin-top:50px;padding:0 20px;">
-				<button type="main" size="large" @click="saveArea" style="color: #fff;" :disabled="disabledLoad">保存</button>
-			</div>
-		</view>
-		<!-- 地址popup -->
+		</div>
+		<div style="margin-top:50px;padding:0 20px;">
+			<button type="main" size="large" @click="saveArea" :disabled="disabledLoad">保存地址</button>
+		</div>
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
 			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0" :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
@@ -43,7 +56,7 @@
 			<!-- #endif -->
 		</uni-popup>
 		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" cancelColor="#999" themeColor="#007AFF"></simple-address>
-	</view>
+	</div>
 </template>
 
 <script>
@@ -56,7 +69,7 @@
 		checkMobile
 	} from "@/util/publicFunction";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-
+	import wx from 'weixin-js-sdk'
 	export default {
 		name: "index",
 		components: {
@@ -72,11 +85,7 @@
 				logisticsArea: false,
 				isAdd: false,
 				form: {
-					Sex: 0,
-					Name:'',
-					Mobile:'',
-					Address:'',
-					House:''
+					Sex: "0"
 				},
 				location: {},
 				areaList: areaLists,
@@ -86,6 +95,7 @@
 			};
 		},
 		created() {
+			this.getWxConfig();
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
 			if (JSON.stringify(this.areaInfo) !== "{}") {
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
@@ -128,6 +138,58 @@
 			// #endif
 		},
 		methods: {
+			async getWxConfig() {
+				// 获取当前地址
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation","openAddress"]
+					});
+					
+					wx.ready(res => {
+						let _this = this;
+					    wx.getLocation({
+					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+									this.$store.commit("SET_CURRENT_LOCATION", this.location);
+					      },
+					      cancel: function(res) {
+					       alert("cancel", res);
+					      }
+					    });
+					  wx.error(function(res) {
+					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					    alert("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					// console.log(e, "55555");
+				}
+			},
+			getWxAddress(){
+				let _this = this;
+				wx.openAddress({
+				  success: function (res) {
+					  // alert(JSON.stringify(res))
+					_this.form.Name = res.userName;
+					_this.form.Mobile = res.telNumber;
+				  }
+				});
+			},
 			clickGo() {
 				if (this.specificAreaHead) {
 					this.specificArea = false;
@@ -224,7 +286,6 @@
 				})
 			},
 		}
-		
 	};
 </script>
 
@@ -235,29 +296,22 @@
 
 	.setWidth {
 		/deep/.headView {
-			width: 100px !important;
+			width: 118px;
 		}
 	}
-	.theme2 .setADcell .headView {}
-	.widthBox{
-		width:68%;
-		input{
-			font-size: 12px;
-		}
-		.radio-group {
-			display: flex;
-			justify-content: flex-start;
-			
-			.radio {
-				padding: 10rpx 30rpx;
-				border-radius: 6rpx;
-				border: 1px solid #CCCCCC;
-				margin-right: 6px;
-				&.checked {
-					background-color: #8d8bdb;
-					color: #ffffff;
-					border: 1px solid #8d8bdb;
-				}
+	.radio-group {
+		display: flex;
+		justify-content: flex-start;
+		
+		.radio {
+			padding: 10rpx 30rpx;
+			border-radius: 6rpx;
+			border: 1px solid #CCCCCC;
+			margin-right: 6px;
+			&.checked {
+				background-color: #ADB838;
+				color: #ffffff;
+				border: 1px solid #ADB838;
 			}
 		}
 	}

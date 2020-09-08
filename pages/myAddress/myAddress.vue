@@ -87,6 +87,7 @@
 				title:'门店详情',
 				ShopAddress:{},//商家地址
 				Name:'',//门店搜索
+				location:JSON.parse(sessionStorage.getItem('location'))
 			}
 		},
 		created() {
@@ -115,6 +116,7 @@
 					"UMemberOpera"
 				);
 				this.areaList =  Data.AddressList || [];	
+				console.log(Data.AddressList,'00000')
 				let currentStoreInfo = {
 					Name: this.areaList[0].Name,	
 					Address: this.areaList[0].Address,
@@ -136,6 +138,7 @@
 					}
 					sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreOut));
 					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
+					this.$store.commit("SET_ORDER_TYPE", 'takeout');
 					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:item.Address}})
 				}else{
 					console.log('555')
@@ -177,6 +180,7 @@
 					this.$Router.push('/pages/shoppingMall/login')
 				}else if(this.$Route.query.flag == 'towaimai'|| this.$Route.query.flag == 'shop'){
 					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+					
 					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
 				}else{
 					this.$Router.push('/pages/home')

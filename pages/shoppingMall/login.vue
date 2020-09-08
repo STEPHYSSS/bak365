@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="container" :class="classHome">
 		<view class="banner">
 			<!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
 			<swiper class="swiper-box" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
@@ -48,9 +48,9 @@
 						<!-- 点击这个地方可以跳转到商城页面 待做 -->
 						<view>
 							<image src="../../static/images/index/csc.png" class="mark-img"></image>
-							<view style="margin-left: 6px;display: inline-block;">烘焙的茶商城</view>
+							<view style="margin-left: 6px;display: inline-block;">烘焙的商城</view>
 						</view>
-						<view style="margin-left: 40rpx;margin-top: 2px; font-size: 20rpx;">优质茶礼盒，网红零食</view>
+						<view style="margin-left: 40rpx;margin-top: 2px; font-size: 20rpx;">优质礼盒，网红零食</view>
 					</view>
 					<view style="height: 80px;">
 						<image src="../../static/images/index/yzclh.png" class="yzclh-img" mode="heightFix"></image>
@@ -60,7 +60,7 @@
 				<view class="right">
 					<view class="rightTop" @tap="invite">
 						<image src="../../static/images/index/mcsb.png"></image>
-						<view style="display: inline-block;position: absolute;top: -2px;">买茶送包</view>
+						<view style="display: inline-block;position: absolute;top: -2px;">买蛋糕送蛋挞</view>
 					</view>
 					<view class="rightBottom">
 						<image src="../../static/images/index/hyjb.png"></image>
@@ -75,8 +75,8 @@
 				</view>
 				<view class="list">
 					<view class="item">
-						<image src="https://img-shop.qmimg.cn/s23107/2020/04/27/0039bf41c9ebd50a2c.jpg"></image>
-						<view class="title">"梅"你不行 | 霸气杨梅清爽回归</view>
+						<image src="@/static/images/index/bottomBanner.jpg"></image>
+						<view class="title">"莓"你不行 | 霸气蓝莓清爽回归</view>
 					</view>
 				</view>
 			</view>
@@ -92,17 +92,24 @@
 	import {
 		vipCard
 	} from '@/api/http.js';
+	import wx from 'weixin-js-sdk'
+	// import wxAddress from '../wxAddress.js'
 	export default {
 		data() {
 			return {
 				homeSlide: [], // 定义值接收轮播图数据
 				myScore:'',
+				location: {},
+				classHome: getApp().globalData.mainStyle,
+				loadding: true
 			}
 		},
 		computed: {
 
 		},
 		async onLoad() {
+			await this.getWxConfig();
+			this.loadding = true
 			await this.getLunBoImg();
 			await this.getScore();
 		},
@@ -114,6 +121,54 @@
 			}
 		},
 		methods: {
+			// 进入首页就获取微信地址
+			async getWxConfig(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation"]
+					});
+					// console.log(wx.config)
+					wx.ready(res => {
+						let _this = this;
+					    wx.getLocation({
+					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+							  // alert(JSON.stringify(res))
+					        // _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+					        // _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+							_this.location = {
+								longitude: res.longitude,
+								latitude: res.latitude
+							}
+							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+							sessionStorage.setItem('location',JSON.stringify(_this.location))							
+					      },
+					      cancel: function(res) {
+					       alert("cancel", res);
+					      }
+					    });
+					  wx.error(function(res) {
+					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					    alert("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					// console.log(e, "55555");
+				}
+			},
 			// 轮播图
 			async getLunBoImg() {
 				try {

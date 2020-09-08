@@ -2,7 +2,6 @@
 	<div class="confirm-order-style" :class="mainStyle">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="确认订单" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
-		<!-- 当点击外卖配送时，选择地址，缓存未做，选择了新地址，返回到点餐页面，地址渲染有问题，电话调用有问题 -->
 		<div v-if="prodList.length>0">
 			<!--2 外卖 ；3物流-->
 			<!-- <div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
@@ -208,12 +207,12 @@
 		setUrlDelCode
 	} from "@/util/publicFunction";
 	import wx from 'weixin-js-sdk'
-	import Mixins from "../mixins.js";
+	// import Mixins from "../mixins.js";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 
 	export default {
 		name: "confirmOrder",
-		mixins: [Mixins],
+		// mixins: [Mixins],
 		components: {
 			// receiveAddress
 			adCell
@@ -276,7 +275,8 @@
 				testData: {},
 				allData: {},
 				totalCurrentScore: 0,
-				currentIndex: 0
+				currentIndex: 0,
+				location:JSON.parse(sessionStorage.getItem('location'))
 			};
 		},
 		async created() {
@@ -288,7 +288,6 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
-			console.log(this.$store.state.currentStoreInfo)
 			// 获取授权地址
 			await this.getWxConfig();
 			
@@ -534,20 +533,67 @@
 				}
 			},
 			orderArea() {},
+			async getWxConfig(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation","openAddress"]
+					});
+					// console.log(wx.config)
+					wx.ready(res => {
+						let _this = this;
+					    wx.getLocation({
+					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+							  // alert(JSON.stringify(res))
+					        // _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+					        // _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+							_this.location = {
+								longitude: res.longitude,
+								latitude: res.latitude
+							}
+							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+							sessionStorage.setItem('location',JSON.stringify(_this.location))							
+					      },
+					      cancel: function(res) {
+					       alert("cancel", res);
+					      }
+					    });
+					  wx.error(function(res) {
+					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					    alert("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					// console.log(e, "55555");
+				}
+			},
 			getAddress() { //获取共享地址
 				let _this = this;
-				// wx.openAddress({
-				// 	success: function(res) {
-				// 			alert(JSON.stringify(res))
-				// 		_this.name_user = res.userName;
-				// 		_this.phone_user = res.telNumber;
-				// 	}
-				// });
+				wx.openAddress({
+					success: function(res) {
+							alert(JSON.stringify(res))
+						_this.name_user = res.userName;
+						_this.phone_user = res.telNumber;
+					}
+				});
 			},
 			// 自取和外卖的切换按钮，暂时不用了
 			changeMode(val) {
 				// 1自取，2 外卖
-				console.log(val, '改变配送方式')
+				// console.log(val, '改变配送方式')
 				this.radioModes = val;
 				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
@@ -580,8 +626,10 @@
 				this.resultArea = val.detail.value
 			},
 			// 切换并选择地址
-			async changeArea(val, index) {
-				this.showAreaList = val.SID
+			async changeArea(val,index){
+				console.log(val,index,'选择地址这一块')
+				this.showAreaList = true;
+				this.$refs.showAreaList.open()
 				let api;
 				if (this.radioModes === 1) {
 					api = "IsPickShop";
@@ -594,44 +642,88 @@
 						api = "CalcLogistics";
 					}
 				}
-
-				// try {
-				// 	this.loading = true;
-				// 	uni.showLoading()
-				// 	let obj = {
-				// 		Action:api,
-				// 		Latitude: val.Latitude || "",
-				// 		Longitude: val.Longitude || "",
-				// 		ShopSID: val.SID,
-				// 		PayType: this.radioPayType
-				// 	}
-				// 	let { Data } = await vipCard(obj, "UProdOpera");
-				// 	console.log(Data)
-
-				if (this.radioModes === 1) {
-					this.currentArea = val;
-					let currentStoreInfo = this.currentArea
-					this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
-				} else {
-					this.currentArea = val;
-					sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
+				try{
+					this.loading = true;
+					uni.showLoading()
+					let obj = {
+						Action:api,
+						Latitude: val.Latitude || "",
+						Longitude: val.Longitude || "",
+						ShopSID: val.SID,
+						PayType: this.radioPayType,
+						ProdList: JSON.stringify(this.currentItem)
+					}
+					let { Data } = await vipCard(obj, "UProdOpera");
+					// 把选择的地址赋值到页面上
+					if (this.radioModes === 1) {
+						this.currentArea = val;
+						let currentStoreInfo = this.currentArea
+						this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
+					} else {
+						this.currentArea = val;
+						this.freight = Data.Freight;
+						sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
+					}
+					this.showAreaList = false;
+					this.$refs.showAreaList.close()
+				}catch(e){
+					console.log(e)
 				}
-				this.showAreaList = false;
-				this.$refs.showAreaList.close()
-				// 	this.resultArea = val.SID;
-				// 	this.areaList.splice(index, 1);
-				// 	this.areaList.unshift(val);
-				// 	//改变位置，重新算运费和总价
-				// 	this.freight = Data.Freight;
-				// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
-
-				this.loading = false;
-				uni.hideLoading()
-				// } catch (e) {
-				// 	this.loading = false;
-				// 	uni.hideLoading()
-				// }
+				
 			},
+			
+			// async changeArea(val, index) {
+			// 	this.showAreaList = val.SID
+			// 	let api;
+			// 	if (this.radioModes === 1) {
+			// 		api = "IsPickShop";
+			// 	} else {
+			// 		if (this.currentDeliveryType.indexOf("2") > -1) {
+			// 			//外卖
+			// 			api = "CalcFreight";
+			// 		} else if (this.currentDeliveryType.indexOf("3") > -1) {
+			// 			//物流
+			// 			api = "CalcLogistics";
+			// 		}
+			// 	}
+
+			// 	// try {
+			// 	// 	this.loading = true;
+			// 	// 	uni.showLoading()
+			// 	// 	let obj = {
+			// 	// 		Action:api,
+			// 	// 		Latitude: val.Latitude || "",
+			// 	// 		Longitude: val.Longitude || "",
+			// 	// 		ShopSID: val.SID,
+			// 	// 		PayType: this.radioPayType
+			// 	// 	}
+			// 	// 	let { Data } = await vipCard(obj, "UProdOpera");
+			// 	// 	console.log(Data)
+
+			// 	if (this.radioModes === 1) {
+			// 		this.currentArea = val;
+			// 		let currentStoreInfo = this.currentArea
+			// 		this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
+			// 	} else {
+			// 		this.currentArea = val;
+			// 		sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
+			// 	}
+			// 	this.showAreaList = false;
+			// 	this.$refs.showAreaList.close()
+			// 	// 	this.resultArea = val.SID;
+			// 	// 	this.areaList.splice(index, 1);
+			// 	// 	this.areaList.unshift(val);
+			// 	// 	//改变位置，重新算运费和总价
+			// 	// 	this.freight = Data.Freight;
+			// 	// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
+
+			// 	this.loading = false;
+			// 	uni.hideLoading()
+			// 	// } catch (e) {
+			// 	// 	this.loading = false;
+			// 	// 	uni.hideLoading()
+			// 	// }
+			// },
 			clickEdit(val) {
 				this.areaInfo = val;
 				this.$refs.addEditArea.open()
@@ -884,6 +976,15 @@
 								IsPass: Data.IsPass
 							}
 						});
+						// let aaa = {
+						// 	Balance: this.CardInfo.Balance,
+						// 	Score: this.CardInfo.Score,
+						// 	PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
+						// 	total: Data.SumTotal,
+						// 	PayNo: Data.PayNo,
+						// 	IsPass: Data.IsPass
+						// }
+						// console.log(aaa)
 					} else {
 						// 微信支付
 						this.testData = Data;

@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "161723",
+      "name": "蛋糕",
+      "font_class": "dangao",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "4268210",
+      "name": "外卖点餐",
+      "font_class": "waimaidiancan",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "5319907",
+      "name": "到店自取",
+      "font_class": "daodianziqu",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "11451211",
+      "name": "外卖",
+      "font_class": "waimai",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "16095130",
+      "name": "location",
+      "font_class": "icon-25",
+      "unicode": "e7f7",
+      "unicode_decimal": 59383
+    },
+    {
       "icon_id": "1297043",
       "name": "5购物袋",
       "font_class": "5gouwudai",
