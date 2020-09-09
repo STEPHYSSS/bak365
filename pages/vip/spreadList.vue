@@ -4,8 +4,8 @@
 		<div class="leaderBox" >
 			<!-- 推广图片， 推广链接 商品名称 -->
 			<div class="good_card_box" style="margin-bottom:10px">
-				<div v-for="(item,index) in spreadArr" :key="index">
-					<image :src="item.SpreadImg" style="width: 35px;height: 35px;border: 1px solid red;"></image>
+				<div v-for="(item,index) in spreadArr" :key="index" class="shareImg">
+					<image :src="item.Img | imgFilter"></image>
 					<p>{{item.Name}}</p>
 				</div>
 			</div>
@@ -31,7 +31,13 @@
 		async onLoad(option) {
 			await this.getList();
 		},
-		
+		filters: {
+			imgFilter(val) {
+				let localUrl = window.location.href;
+				let localToken = localUrl.split("#")[0]
+				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+			}
+		},
 		methods: {
 			// 列表信息
 			async getList() {
@@ -57,33 +63,20 @@
 </script>
 haod
 <style scoped lang="less">
-	.applyLeader{
-		.leaderBox{
-			height: 45px;
-			img{
-				width: 45px;
-				height: 45px;
-				border-radius: 5px;
-				float: right;
-			}
-			span{
-				display: inline-block;
-				position: absolute;
-				left: 13px;
-				top: 22px;
-				color: rgb(94, 94, 94);
-			}
-			#allPay{
-				width: 270px;
-				padding: 7px 0 7px 5px;
-				margin-left: 5px;
-				display: inline-block;
-				border: 1px solid #f7f7f7;
-			}
-			button{
-				    background: #fff;
-				    margin-top: 30px;
-			}
+	.shareImg{
+		display: inline-block;
+		float: left;
+		margin: 10px;
+		background-color: #FFFFFF;
+		width: 27%;
+		height: 30%;
+		image{
+			width: 100%;
+			height: 80px;
+		}
+		p{
+			text-align: center;
+			margin: 5px 0px;
 		}
 	}
 </style>

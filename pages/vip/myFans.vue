@@ -9,8 +9,8 @@
 				</p>
 			</div>
 		</div>
-		<div v-else>暂无数据</div>
-		
+		<!-- <div v-else style="position: absolute;top: 5%;">暂无数据</div> -->
+		<a-nodeData stringVal="暂无数据" v-else></a-nodeData>
 	</div>
 </template>
 

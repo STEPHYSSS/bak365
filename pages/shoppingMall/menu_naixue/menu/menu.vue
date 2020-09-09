@@ -6,14 +6,6 @@
 			<view class="main">
 				<view class="nav">
 					<view class="header">
-						<!-- <view class="nav_left">
-							<text v-if="addressName">{{addressName}} </text>
-							<text v-else @click="toShopAddress">{{currentStoreInfo.Name}}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>
-							<view class="navFlex">
-								<image src='@/static/images/order/location.png' style="width: 30rpx; height: 30rpx;" class="mr-10"></image>
-								<span>距离您{{currentStoreInfo.Length}}</span>
-							</view>
-						</view> -->
 						<view class="nav_left" v-if="$store.state.orderType == 'takein'">
 							<view class="store-name" @click="toShopAddress">
 								<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
@@ -30,9 +22,9 @@
 									{{ addressName.Address }}
 								</view>
 							</view>
-							<view style="color: #919293;">
+							<!-- <view style="color: #919293;">
 								由<text style="margin: 0 10rpx;color: #5A5B5C;">{{ currentStoreInfo.Name }}</text>配送
-							</view>
+							</view> -->
 						</view>
 						<view class="nav_right">
 							<view class="dinein" :class="{active: $store.state.orderType == 'takein'}" @click="toziqu">
@@ -303,6 +295,7 @@
 		},
 		async onLoad() {
 			// this.getWxConfig() // 获取授权地址
+			console.log(this.$store.state.orderType )
 			await this.getCouponList();
 			await this.getList();
 			this.getLunBoImg();
@@ -314,6 +307,7 @@
 					SID: currentStore.data.SID,
 					Length:currentStore.data.Length
 				}
+				// this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 			}else{
 				await this.getShopList()
 			}
@@ -327,7 +321,7 @@
 			if(this.cart.length!=0){
 				this.changeMenuNum();
 				this.changeInfo();
-			}
+			}			
 		},
 		components: {
 			modal
@@ -347,7 +341,10 @@
 			},
 			getCartGoodsPrice() { //计算购物车总价
 				// return this.cart.reduce((acc, cur) => +cur.SalePrice + acc, 0)
-				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * cur.SalePrice, 0)
+				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * Number(cur.SalePrice), 0)
+				// return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * (Math.round(cur.SalePrice * 100)/100).toFixed(2), 0)
+				// (Math.round(5.1699 * 100)/100).toFixed(2)
+				
 			},
 			disabledPay() { //是否达到起送价
 				return this.orderType == 'takeout' && (this.getCartGoodsPrice < this.store.min_price) ? true : false
@@ -387,8 +384,8 @@
 					Data
 				} = await vipCard({
 						Action: "GetShopList",
-						DefLongitude: this.location.longitude,
-						DefLatitude: this.location.latitude
+						Longitude: this.$store.state.currentLocation.longitude,
+						Latitude: this.$store.state.currentLocation.latitude
 					},
 					"UShopOpera"
 				);
@@ -396,7 +393,9 @@
 					Name: Data.ShopList[0].Name,	
 					Address: Data.ShopList[0].Address,
 					SID: Data.ShopList[0].SID,
-					Length:Data.ShopList[0].Length
+					Length:Data.ShopList[0].Length,
+					Longitude:Data.ShopList[0].Longitude,
+					Latitude:Data.ShopList[0].Latitude
 				}
 				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 			},
@@ -805,7 +804,8 @@
 						this.$Router.push({
 							path: '/pages/shoppingMall/order/confirmOrder',
 							query:{
-								flag:'order'
+								flag:'order',
+								
 							}
 						})
 					}

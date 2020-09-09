@@ -4,7 +4,7 @@
 		onLaunch: function() {
 			let mainStyle = getApp().globalData.mainStyle
 			if (mainStyle === 'theme2') {
-				let mainColor = '#8d8bdb'
+				let mainColor = 'rgb(173,184,56)'
 				// uni.setNavigationBarColor({
 				// 	frontColor: '#ffffff',
 				// 	backgroundColor: '#8d8bdb'

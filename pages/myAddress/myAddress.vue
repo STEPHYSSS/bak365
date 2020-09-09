@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="我的地址" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :title="title" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
@@ -67,6 +67,7 @@
 		mixins: [Mixins],
 		data() {
 			return {
+				title:'',
 				scene: 'menu',
 				is_choose: false, //是否选择地址
 				swipeOption: [
@@ -84,7 +85,6 @@
 				areaList: [],	//用来接收地址列表-			
 				areaInfo: {},// 编辑的地址
 				currentDeliveryType: "",//当前的配送类型
-				title:'门店详情',
 				ShopAddress:{},//商家地址
 				Name:'',//门店搜索
 				location:JSON.parse(sessionStorage.getItem('location'))
@@ -92,6 +92,14 @@
 		},
 		created() {
 			this.getWxConfig(); // 获取授权地址
+			if(this.$Route.query.flag == 'shop'){
+				this.title = '门店地址';
+				uni.setNavigationBarTitle({
+				    title: '门店地址'
+				});
+			}else{
+				this.title = '我的地址'
+			}
 			this.getAddressList();
 			this.getShopList();
 		},
@@ -134,7 +142,9 @@
 						Address: item.Address,
 						SID: item.SID,
 						Length:item.Length,
-						Mobile:item.Mobile
+						Mobile:item.Mobile,
+						Longitude:item.Longitude,
+						Latitude:item.Latitude
 					}
 					sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreOut));
 					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
@@ -199,21 +209,23 @@
 					Data
 				} = await vipCard({
 						Action: "GetShopList",
-						DefLongitude: this.location.longitude,
-						DefLatitude: this.location.latitude,
+						Longitude: this.$store.state.currentLocation.longitude,
+						Latitude: this.$store.state.currentLocation.latitude,
 						Name:this.Name
 					},
 					"UShopOpera"
 				);
 				this.ShopAddress = Data.ShopList;
-				this.$store.commit("SET_CURRENT_STORE",this.ShopAddress)
+				// this.$store.commit("SET_CURRENT_STORE",this.ShopAddress)
 			},
 			toDownOrder(item){//选择地址
 				let currentStoreInfo = {
 					Name: item.Name,
 					Address: item.Address,
 					SID: item.SID,
-					Length:item.Length
+					Length:item.Length,
+					Longitude:item.Longitude,
+					Latitude:item.Latitude
 				}				
 				this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
 				this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{

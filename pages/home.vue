@@ -120,16 +120,19 @@
 					</uni-grid>
 				</div>
 				
-				<div class="cardWei">
+				<div class="cardWei" v-if="CardType == 'Manage||Shop'">
+					<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
+					<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 					<div>
-						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='05')" text="绑定实体会员卡"@click="bindEntity(1)"/> -->
-						<adCell  text="绑定实体会员卡"@click="bindEntity(1)"/>
+						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/> -->
+						<!-- <adCell  text="绑定实体会员卡"@click="bindEntity(1)"/> -->
 					</div>
 					<div>
-						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='05'&&CardType!=='04')" text="申请会员卡" @click="bindEntity(2)"/> -->
-						<adCell text="申请会员卡" @click="bindEntity(2)"/>
+						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop' && CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/> -->
+						<!-- <adCell text="申请会员卡" @click="bindEntity(2)"/> -->
 					</div>
 				</div>
+				
 				<div class="cardWei" v-if='isMember==="1"'>
 					<div>
 						<adCell text="微卡充值" @click="$Router.push('/pages/vip/weiFull')" />
@@ -150,7 +153,11 @@
 						<adCell text="收货地址" @click="$Router.push({path:'/pages/myAddress/myAddress',query:{flag:'homeD'}})"  />
 					</div>
 				</div>
-
+				<div class="cardWei">
+					<div>
+						<adCell text="清除缓存" @click="clickClear" />
+					</div>
+				</div>
 				<div style="text-align: center;margin-top:40px" class="callInfo">
 					<div class="logBottom">烘焙365提供技术支持</div>
 					<!--                <van-icon name="fire-o"/>-->
@@ -197,6 +204,7 @@
 			};
 		},
 		async created() {
+			// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 			// console.log(Cookie.get("isMember"), Cookie.get("CardType"))
 			//1 绑定了卡但是不知道绑定的是哪个卡；
 			this.isMember = Cookie.get("isMember");
@@ -213,8 +221,8 @@
 				this.loading = true;
 				try {
 					let data = await vipCard({
-						Action: "GetCardInfo"
-					}, "WeChatCardOpera");
+						Action: "MemberCenter"
+					}, "UMemberOpera");
 					this.ImgUrl =
 						this.$VUE_APP_PREFIX + data.Data.CardImg || this.ImgUrl;
 					this.data = data.Data.CardInfo || {};
@@ -275,7 +283,10 @@
 						id: num
 					}
 				})
-			}
+			},
+			clickClear() {//清除缓存
+				Cookie.remove("UserMACPhone");
+			},
 		}
 	};
 </script>

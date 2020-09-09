@@ -17,7 +17,7 @@ export default {
 				}, "UProdOpera");
 				
 				wx.config({
-					debug: true,
+					debug: false,
 					appId: Data.SDK.appId,
 					timestamp: Data.SDK.timestamp,
 					nonceStr: Data.SDK.noncestr,
@@ -28,9 +28,9 @@ export default {
 				wx.ready(res => {
 					let _this = this;
 				    wx.getLocation({
-				       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+				       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 				      success: function(res) {
-						  alert(JSON.stringify(res))
+						  console.log(JSON.stringify(res))
 						_this.location = {
 							longitude: res.longitude,
 							latitude: res.latitude
@@ -39,12 +39,12 @@ export default {
 						sessionStorage.setItem('location',JSON.stringify(_this.location))							
 				      },
 				      cancel: function(res) {
-				       alert("cancel", res);
+				       console.log("cancel", res);
 				      }
 				    });
 				  wx.error(function(res) {
 				    let toast2  = this.$toast.fail('获取当前位置失败');
-				    alert("调用微信接口获取当前位置失败", res);
+				    console.log("调用微信接口获取当前位置失败", res);
 				  });
 				})
 			} catch (e) {

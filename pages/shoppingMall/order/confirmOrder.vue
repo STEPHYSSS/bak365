@@ -25,10 +25,10 @@
 					</div>
 					<div v-if="currentArea&&JSON.stringify(currentArea) !== '{}'" style="flex: 1">
 						<div>
-							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>
+							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>							
 							<span class="order-area-phone">{{currentArea.Mobile?currentArea.Mobile:currentArea.Tel}}</span>
 						</div>
-						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}</div>
+						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}&nbsp;距离{{currentArea.Length}}</div>
 					</div>
 					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
 						选择{{radioModes ===
@@ -111,7 +111,8 @@
 						</div>
 						<div @click="PayTypeClick('2')" class="radio-group-item" v-if="$Route.query.isIntegral?allData.CardInfo?true:false:true">
 							<div>
-								<img class="wechat" src="/static/assets/img/weixinPay.png" />
+								<!-- <img class="wechat" src="/static/assets/img/weixinPay.png" /> -->
+								<img class="wechat" src="@/static/assets/img/weixinPay.png">
 								<span class="custom-title">微信支付</span>
 							</div>
 							<radio style="flex:1;text-align: right;" slot="right-icon" value="2" :checked="radioPayType == '2'" />
@@ -276,7 +277,8 @@
 				allData: {},
 				totalCurrentScore: 0,
 				currentIndex: 0,
-				location:JSON.parse(sessionStorage.getItem('location'))
+				location:JSON.parse(sessionStorage.getItem('location')),
+				takeDeliveryTpey:''
 			};
 		},
 		async created() {
@@ -308,6 +310,8 @@
 
 			// console.log(item, 7777);
 			this.currentItem = JSON.stringify(item);
+			
+			console.log(this.currentItem,'currentItem')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
 			if (this.$Route.query.isIntegral) {
@@ -319,10 +323,12 @@
 		mounted() {
 			if (this.$store.state.orderType === 'takein') {
 				this.radioModes = 1;
+				this.takeDeliveryTpey = '1'
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				this.currentArea = currentStore.data;
 			} else {
-				this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				this.takeDeliveryTpey = '2'
+				this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))	
 			}
 		},
 		methods: {
@@ -330,6 +336,7 @@
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
+				console.log(this.$store.state.orderType,'那个状态')
 				try {
 					if (!this.location.longitude) {
 						uni.showToast({
@@ -340,13 +347,16 @@
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
-
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
-						DefLongitude: this.location.longitude,
-						DefLatitude: this.location.latitude,
-						DeliveryType: this.currentDeliveryType
+						// Longitude: this.$store.state.currentLocation.longitude,
+						// Latitude: this.$store.state.currentLocation.latitude
+						Longitude: this.currentArea.Longitude,
+						Latitude: this.currentArea.Latitude,
+						DeliveryType:this.takeDeliveryTpey
+						// DeliveryType: this.currentDeliveryType
+						
 					};
 					// console.log(currentItems, "currentItems[0]");
 
@@ -361,11 +371,12 @@
 							// this.areaList = res[0];
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-							console.log(Data, 77765655)
+							// console.log(Data, 77765655)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
+
 							if (this.radioModes === 1) {
 								this.areaList = Data.ShopInfoList;
 							} else {
@@ -543,7 +554,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: true,
+						debug: false,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -554,7 +565,7 @@
 					wx.ready(res => {
 						let _this = this;
 					    wx.getLocation({
-					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
 							  // alert(JSON.stringify(res))
 					        // _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
@@ -567,13 +578,13 @@
 							sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
-					       alert("cancel", res);
+					       console.log("cancel", res);
 					      }
 					    });
 					  wx.error(function(res) {
 					    let toast2  = this.$toast.fail('获取当前位置失败');
 					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-					    alert("调用微信接口获取当前位置失败", res);
+					    console.log("调用微信接口获取当前位置失败", res);
 					  });
 					})
 				} catch (e) {
@@ -649,10 +660,11 @@
 						Action:api,
 						Latitude: val.Latitude || "",
 						Longitude: val.Longitude || "",
-						ShopSID: val.SID,
+						ShopSID: this.radioModes === 1 ? val.SID : "",
 						PayType: this.radioPayType,
 						ProdList: JSON.stringify(this.currentItem)
 					}
+					console.log(obj,'obj')
 					let { Data } = await vipCard(obj, "UProdOpera");
 					// 把选择的地址赋值到页面上
 					if (this.radioModes === 1) {

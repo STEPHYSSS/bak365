@@ -29,7 +29,7 @@ const store = new Vuex.Store({
 		},
 		['SET_CURRENT_LOCATION'](state, data) {
 			state.currentLocation = data
-			console.log(state.currentLocation,'wx地址')
+			console.log(state.currentLocation,'wx门店地址')
 			Cookies.set('currentLocation', data)
 		},
 		['SET_CURRENT_STORE'](state, data) {
@@ -57,12 +57,14 @@ const store = new Vuex.Store({
 			return new Promise(async (resolve, reject) => {
 				try {
 					let response = await vipCard(obj, 'UserSign')
+					console.log(response,'查看Mac')
 					if (response.Data.hasOwnProperty('UserMAC')) {
 						// let seconds = 7200000 //两小时 秒
 						// let expires = new Date(new Date() * 1 + seconds * 1000)
 						Cookies.set('UserMACPhone', response.Data.UserMAC)
 					}
 					if (response.Data.hasOwnProperty('UserBind')) {
+						// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 						Cookies.set('isMember', response.Data.UserBind)
 					}
 					if (response.Data.hasOwnProperty('CardType')) {

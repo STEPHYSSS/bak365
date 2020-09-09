@@ -18,7 +18,7 @@
 				</div>				
 			</div>
 		</div>
-		<div v-else>暂无数据</div>
+		<a-nodeData stringVal="暂无数据" v-else></a-nodeData>
 	
 		
 	</div>

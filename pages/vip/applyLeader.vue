@@ -8,9 +8,9 @@
 			<adCell text="卡 号">{{leaderInfo.CardNo}}</adCell>
 			<adCell text="审核状态" v-if="leaderInfo.Audit" style="color: #00CC33;">通过</adCell>
 			<adCell text="审核状态" v-else style="color: #ff0000;">未通过</adCell>
-			<adCell><p><span>支付宝账号</span><input id="allPay" maxlength="50" v-model="AlipayAccount"></input></p></adCell>			
+			<adCell v-if="!leaderInfo.Audit"><p><span>支付宝账号</span><input id="allPay" maxlength="50" v-model="AlipayAccount"></input></p></adCell>			
 			<div class="btnBox">
-				<button @click="btnApply">申请团长</button>
+				<button @click="btnApply" v-if="!leaderInfo.Audit">申请团长</button>
 			</div>
 		</div>
 		

@@ -149,7 +149,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: true,
+						debug: false,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -160,20 +160,20 @@
 					wx.ready(res => {
 						let _this = this;
 					    wx.getLocation({
-					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
 					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
 					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
 									this.$store.commit("SET_CURRENT_LOCATION", this.location);
 					      },
 					      cancel: function(res) {
-					       alert("cancel", res);
+					       console.log("cancel", res);
 					      }
 					    });
 					  wx.error(function(res) {
 					    let toast2  = this.$toast.fail('获取当前位置失败');
 					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-					    alert("调用微信接口获取当前位置失败", res);
+					    console.log("调用微信接口获取当前位置失败", res);
 					  });
 					})
 				} catch (e) {

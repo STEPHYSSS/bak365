@@ -4,12 +4,12 @@
 		<div class="leaderBox" v-if="footPrintList.length>0">
 			<div v-for="(item,index) in footPrintList" :key="index">
 				<p class="fansBox">
-					<image :src="item.Img"></image>
+					<image :src="item.Img | imgFilter"></image>
 					<span>{{item.Name}}</span>
 				</p>
 			</div>
 		</div>
-		<div v-else>暂无数据</div>
+		<a-nodeData stringVal="暂无数据" v-else></a-nodeData>
 		
 	</div>
 </template>
@@ -47,7 +47,14 @@
 					path: "/pages/home"
 				});
 			}
-		}
+		},
+		filters: {
+			imgFilter(val) {
+				let localUrl = window.location.href;
+				let localToken = localUrl.split("#")[0]
+				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+			}
+		},
 	}
 </script>
 
@@ -64,7 +71,7 @@
 	image{
 		width: 110px;
 		height: 110px;
-		border: 1px solid pink;
+		
 	}
 	span{
 		padding: 5px 0;

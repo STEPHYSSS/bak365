@@ -128,7 +128,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: true,
+						debug: false,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -139,7 +139,7 @@
 					wx.ready(res => {
 						let _this = this;
 					    wx.getLocation({
-					       type: 'wgs84',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
 							  // alert(JSON.stringify(res))
 							_this.location = {
@@ -147,7 +147,7 @@
 								latitude: res.latitude// 经度
 							}
 							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							sessionStorage.setItem('location',JSON.stringify(_this.location))							
+							// sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
 					       console.log("cancel", res);
@@ -179,7 +179,8 @@
 			takein() {
 				// this.$Router.push("/pages/shoppingMall/list/goodsList");
 				// 自取页面
-				this.$Router.push("/pages/shoppingMall/menu_naixue/menu/menu");
+				this.$Router.push({path:"/pages/shoppingMall/menu_naixue/menu/menu"});
+				this.$store.state.orderType = 'takein'
 			},
 			takeout() {
 				this.$Router.push({
