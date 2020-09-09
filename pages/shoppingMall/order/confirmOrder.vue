@@ -277,7 +277,11 @@
 				allData: {},
 				totalCurrentScore: 0,
 				currentIndex: 0,
-				location:JSON.parse(sessionStorage.getItem('location')),
+				// location:JSON.parse(sessionStorage.getItem('location')),
+				location:{
+					longitude: 30.47988,
+					latitude: 114.41739
+				},
 				takeDeliveryTpey:''
 			};
 		},
@@ -292,7 +296,6 @@
 			}
 			// 获取授权地址
 			await this.getWxConfig();
-			
 			let item = this.$store.state.currentCard || [];
 			item.forEach(D => {
 				if (D.SID) {
