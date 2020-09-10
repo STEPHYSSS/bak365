@@ -1,8 +1,8 @@
 <template>
-	<view >
+	<view>
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="specificAreaHead?'选择收货地址':'收货地址'"
 		 :status-bar="true" :shadow="false"></uni-nav-bar>
-		<view class="main">
+		<view class="main" :class="mainStyle">
 			<div class="setADcell">
 				<adCell text="收货人" showArrow="false">
 					<div class="widthBox"><input type="text" v-model="form.Name" placeholder="请填写收货人的姓名">					
@@ -28,7 +28,7 @@
 					<div class="widthBox"><input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室"></div>
 				</adCell>
 				<adCell text="设置为默认地址" showArrow="false">
-					<div class="widthBox" style="width: 40%;"><switch @change="switchChange" style="position: absolute;top: 7px;left: 33%;transform:scale(0.8)"/></div>
+					<div class="widthBox" style="width: 40%;"><switch @change="switchChange" v-model="form.Defaults" style="position: absolute;top: 7px;left: 33%; transform:scale(0.8)"/></div>
 				</adCell>
 			</div>
 			<div style="margin-top:50px;padding:0 20px;">
@@ -45,7 +45,7 @@
 			<a-search-area @bindAddress="bindAddress"></a-search-area>
 			<!-- #endif -->
 		</uni-popup>
-		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" cancelColor="#999" themeColor="#007AFF"></simple-address>
+		<simple-address ref="logisticsArea" :pickerValueDefault="cityPickerValueDefault" @onConfirm="confirmArea" themeColor="#007AFF"></simple-address>
 	</view>
 </template>
 <script>
@@ -61,6 +61,7 @@
 		},
 		data(){
 			return{
+				mainStyle: getApp().globalData.mainStyle,
 				areaInfo: {},
 				currentDeliveryType: '',
 				specificArea: false,
@@ -213,6 +214,7 @@
 			// 默认地址
 			switchChange(val) {
 				//true,false
+				// this.form.Defaults = val.detail.value === true ? 1 : 0;
 				this.form.Defaults = val.detail.value
 			},
 			// 点击选择地址按钮
@@ -304,6 +306,11 @@
 	/deep/.uni-popup__wrapper-box {
 		width: 100%;
 		height: 100%;
+	}
+	/* 覆盖样式修改颜色 */
+	/deep/ uni-switch .uni-switch-input.uni-switch-input-checked{
+	    background-color: #adb838 !important;
+	    border-color: #adb838 !important;
 	}
 	.widthBox{
 		width:68%;

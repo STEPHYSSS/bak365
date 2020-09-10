@@ -39,7 +39,7 @@
 			
 			<div class="setADcell setWidth">
 				<adCell text="设置为默认地址" showArrow="false">
-					<switch @change="switchChange" />
+					<switch @change="switchChange" v-model="form.Defaults"/>
 				</adCell>
 			</div>
 		</div>
@@ -204,7 +204,8 @@
 			},
 			switchChange(val) {
 				//true,false
-				this.form.Defaults = val.detail.value
+				// this.form.Defaults = val.detail.value
+				this.form.Defaults = val.detail.value === true ? 1 : 0;
 			},
 			clickGoAddress() {
 
@@ -293,7 +294,11 @@
 	/deep/.uni-popup__wrapper-box {
 		width: 100%;
 	}
-
+	/* 覆盖样式修改颜色 */
+	/deep/ uni-switch .uni-switch-input.uni-switch-input-checked{
+	    background-color: #adb838 !important;
+	    border-color: #adb838 !important;
+	}
 	.setWidth {
 		/deep/.headView {
 			width: 118px;

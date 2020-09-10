@@ -4,7 +4,7 @@
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
-		 <view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD'">
+		<view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -19,6 +19,7 @@
 									{{item.Name}}
 									<span v-if="item.Sex">{{item.Sex | setSex2}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
 									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
+									<span v-if="item.Defaults == '1'">默认地址</span>
 								</view>
 								<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
 							</view>
@@ -123,8 +124,26 @@
 					},
 					"UMemberOpera"
 				);
-				this.areaList =  Data.AddressList || [];	
-				console.log(Data.AddressList,'00000')
+				this.areaList =  Data.AddressList || [];
+				// 当没有选择地址的时候默认选择第一条
+				for(let i=0;i<this.areaList.length;i++){
+					if(this.areaList[i].Defaults == '1'){
+						return	sessionStorage.setItem('takeOutAddress',JSON.stringify(this.areaList[i]));							
+					}
+					let currentStoreInfo = {
+						Name: this.areaList[0].Name,	
+						Address: this.areaList[0].Address,
+						SID: this.areaList[0].SID,
+						Length:this.areaList[0].Length
+					}
+					sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
+				}
+				// let abc;
+				//  this.areaList.forEach((item,index)=>{
+				// 	item.Defaults == '1' ? abc = item : ''
+				// })
+				// console.log(abc)
+				// sessionStorage.setItem('takeOutAddress',JSON.stringify(abc));
 				// let currentStoreInfo = {
 				// 	Name: this.areaList[0].Name,	
 				// 	Address: this.areaList[0].Address,
@@ -188,9 +207,8 @@
 			clickLeft(){
 				if(this.$Route.query.flag == 'login'){
 					this.$Router.push('/pages/shoppingMall/login')
-				}else if(this.$Route.query.flag == 'towaimai'|| this.$Route.query.flag == 'shop'){
+				}else if(this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'shop'){
 					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
-					
 					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
 				}else{
 					this.$Router.push('/pages/home')

@@ -83,14 +83,13 @@
 				</div>
 				<!-- 会员相关九宫格 -->
 				<div class="backgroundF homeOrderRow">
-					<!-- <adCell text="会员中心"/> -->
 					<adCell2 text="会员中心"/>
 					<uni-grid :column="5"  @change="toGrid" :show-border="false" style="color:#2c3e50">
 					    <uni-grid-item :index="1">
 					        <view class="grid-item-box">
 					        	<div class="iconfont icon-shenqingtuanchang"></div>
 					        	<div v-if="data.LeaderAudit != '1'">申请团长</div>
-								<div v-else>团长信息</div>
+								    <div v-else>团长信息</div>
 					        </view>
 					    </uni-grid-item>
 					    <uni-grid-item :index="2">
@@ -125,12 +124,10 @@
 					<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
 					<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 					<div>
-						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>
-						<!-- <adCell  text="绑定实体会员卡"@click="bindEntity(1)"/> -->
+						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
 					</div>
 					<div>
 						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop' && CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
-						<!-- <adCell text="申请会员卡" @click="bindEntity(2)"/> -->
 					</div>
 				</div>
 				
@@ -424,7 +421,7 @@
 			width: 94%;
 			left: 3%;
 			border-radius: 10px 10px 0 0;
-			color: #e0e0e0;
+			color: #000;
 			text-align: right;
 			padding-right: 15px;
 			line-height: 40px;

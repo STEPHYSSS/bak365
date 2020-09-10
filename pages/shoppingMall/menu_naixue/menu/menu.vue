@@ -43,7 +43,7 @@
 				<!-- 商品 滚动部分 -->
 				<view class="content">
 					<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
-						<view class="wrapper">
+						<view class="wrapper" style="">
 							<view class="menu" :id="`menu-${item.SID}`" :class="{'current': item.SID === currentCateId}" v-for="(item, index) in goods"
 							 :key="index" @tap="handleMenuTap(item.SID,index)">
 								<text>{{ item.Name }}</text>

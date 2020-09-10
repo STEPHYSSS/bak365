@@ -79,7 +79,6 @@
 				</div>
 			</div>
 		</div>
-
 		<error v-if="fail" style="margin-top: -61px;"></error>
 
 		<!-- <uni-calendar ref="calendar" :insert="false" :lunar="true" :start-date="'2019-3-2'" :end-date="'2019-5-20'" @change="change"/> -->
@@ -88,24 +87,16 @@
 			<van-datetime-picker v-model="Birthday" type="date" :min-date="minDate" :max-date="maxDate" @cancel="isShow = false"
 			 @confirm="confirmDate" :item-height="35" />
 		</uni-popup> -->
-
-		<uni-popup ref="popup" type="center" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard" :beforeClose="beforeClose">
-			<div style="background-color: rgb(255, 255, 255);width: 80vw;">
-				<!-- <van-radio-group v-model="CardNoId" >
-					<van-radio label-position="left" v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index" class="EntityCard backgroundColorA">
-						<view class="cardSty" @click="chooseCard">
-							<span class="EntityCardName">卡名：{{item.Name}}</span>
-							<div class="EntityCardBalance">余额：{{item.Balance}}</div>
-							<div class="EntityCardBalance">积分：{{item.Score}}</div>
-						</view>
-					</van-radio>
-				</van-radio-group> -->
+<!-- :beforeClose="beforeClose" -->
+		<uni-popup ref="popup" type="bottom" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard">
+			<div class="popst">
 				<van-radio-group v-model="CardNoId" >
 				  <van-radio v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index">
 					  <view class="cardSty" @click="chooseCard(item.CardNo)">
-					  	<span class="EntityCardName">卡名：{{item.Name}}</span>
-					  	<div class="EntityCardBalance">余额：{{item.Balance}}</div>
-					  	<div class="EntityCardBalance">积分：{{item.Score}}</div>
+					  	<view class="EntityCardNa">卡名：{{item.Name}}</view>
+							<view class="EntityCard">卡号：{{item.CardNo}}</view>
+							<view class="EntityCard">余额：{{item.Balance}}</view>
+							<view class="EntityCard">积分：{{item.Score}}</view>
 					  </view>
 				  </van-radio>
 				</van-radio-group>
@@ -278,8 +269,6 @@
 				if (!phoneReg(this)) {
 					return;
 				}
-
-				// console.log(this.usernameTip, this.dayTip, this.sexTip, this.CodeTip, this.Password, 111)
 				if (this.CodeTip) {
 					return false;
 				} else {
@@ -293,6 +282,12 @@
 								Action: "SetCard"
 							});
 							let data = await vipCard(this.fromData, "WeChatCardOpera");
+							if(data.Success){
+								this.$toast.success("绑定成功");
+								this.$Router.push("/pages/home");
+							}else{
+								this.$toast.success(data.Message);
+							}
 							// 暂时注释
 							// if (data.Data.CardList.length === 0 ) {
 							// 	this.$toast.success("绑定成功");
@@ -403,12 +398,11 @@
 					);
 					if(data.Success){
 						this.bindCardList = data.Data.CardList;
+						this.fromData.CardNo = this.bindCardList[0].CardNo;
 						this.$refs.popup.open();
-						// this.CardNoId = this.bindCardList[0].CardNo;
 					}else{
 						this.$toast.fail(data.Message)
 					}
-					// this.$toast.success("");
 				} catch (e) {
 					this.$toast.fail(e);
 					// this.CodeNum = 0;
@@ -420,9 +414,7 @@
 			},
 			// 点击选择卡
 			chooseCard(val){
-				console.log(val)
 				this.fromData.CardNo = val;
-				console.log(this.fromData.CardNo)
 				this.$refs.popup.close()
 			}
 		}
@@ -512,37 +504,68 @@
 			.van-dialog__header {
 				padding-bottom: 10px;
 			}
-
-			.EntityCard {
-				width: 94%;
-				height: 90px;
-				/*height: 50px;*/
-				/*line-height: 50px;*/
-				border: 1px solid #eee;
-				margin: 5px 3%;
-				border-radius: 15px 15px 10px 10px;
-				padding-left: 20px;
-				box-sizing: border-box;
-				position: relative;
-
-				.van-radio__label {
+			
+			.popst{
+				border-radius: 10px 10px 0 0;
+				background: #fff;
+				max-height: 50vh;
+				overflow-y: scroll;
+				.cardSty{
+					display: inline-block;
+					width: 93%;
+					border: 1px solid;
+					border-radius: 20px;
+					background-color: #c0cc48;
+					margin: 10px;
 					color: #fff;
-					width: 100%;
-				}
-
-				.van-radio__icon {
-					position: absolute;
-					right: 20px;
-				}
-
-				.EntityCardName {
-					line-height: 40px;
-				}
-
-				.EntityCardBalance {
-					font-size: 14px;
+					font-size: 15px;
+					.EntityCardNa{
+						margin: 14px 0 0 14px;
+					}
+					.EntityCard{
+						display:inline-block;
+						margin-right: 10px;
+						height: 30px;
+						margin: 5px 3% 10px;
+						padding-left: 5px;
+						box-sizing: border-box;
+						position: relative;
+						line-height: 30px;
+					}
 				}
 			}
+			
+			
+			// .EntityCard {
+			// 	width: 94%;
+			// 	height: 90px;
+			// 	/*height: 50px;*/
+			// 	/*line-height: 50px;*/
+			// 	border: 1px solid #eee;
+			// 	margin: 5px 3%;
+			// 	border-radius: 15px 15px 10px 10px;
+			// 	padding-left: 20px;
+			// 	box-sizing: border-box;
+			// 	position: relative;
+
+			// 	.van-radio__label {
+			// 		color: #fff;
+			// 		width: 100%;
+			// 	}
+
+			// 	.van-radio__icon {
+			// 		position: absolute;
+			// 		right: 20px;
+			// 	}
+
+			// 	.EntityCardName {
+			// 		line-height: 40px;
+			// 	}
+
+			// 	.EntityCardBalance {
+			// 		font-size: 14px;
+			// 	}
+			// }
 
 			.van-dialog__content {
 				max-height: 60vh;
