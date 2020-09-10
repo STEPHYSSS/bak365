@@ -101,7 +101,7 @@
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
 						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
 							<div>
-								<img class="wechat" src="/static/assets/img/moneyPay.png" slot="right-icon" />
+								<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 								<span class="custom-title">卡支付（余额:{{CardInfo.Balance}}）</span>
 							</div>
 							<div style="flex:1;text-align: right;">
@@ -314,7 +314,7 @@
 			// console.log(item, 7777);
 			this.currentItem = JSON.stringify(item);
 			
-			console.log(this.currentItem,'currentItem')
+			// console.log(this.currentItem,'currentItem')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
 			if (this.$Route.query.isIntegral) {
@@ -339,7 +339,7 @@
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
-				console.log(this.$store.state.orderType,'那个状态')
+				// console.log(this.$store.state.orderType,'那个状态')
 				try {
 					if (!this.location.longitude) {
 						uni.showToast({

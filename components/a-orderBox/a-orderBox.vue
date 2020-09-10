@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<div v-if="dataList.length===0" class="noOder">
-			<img style="width:200px;height:200px" src="/static/assets/img/norder.png" alt />
+			<img style="width:200px;height:200px" src="@/static/assets/img/norder.png" alt />
 			<br />您还没有相关的订单
 			<div style="font-size:12px;margin-top:10px;color:#b9bec5">你可以去看看商城选择想买的</div>
 		</div>

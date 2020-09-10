@@ -1,6 +1,6 @@
 <template>
 	<div class="weiFull" :class="mainStyle">
-		<uni-nav-bar :fixed="true" left-icon="back" :noG0="true" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<div class="surplusTop backgroundColor" v-if="!loading">
 			<div class="surplusD">余额(元)</div>
 			<div class="surplusTopM">{{Balance}}</div>
@@ -94,7 +94,7 @@
 				try {
 					let data = await vipCard({
 						Action: 'GetIncomeList'
-					}, 'CardTransOpera')
+					}, 'UCardTransOpera')
 					// console.log(data.Data, 676676)
 					this.Balance = data.Data.Balance
 					this.IncomeList = data.Data.IncomeList || []
@@ -152,7 +152,7 @@
 						PayAmt: this.submitMoney
 					})
 					this.btnLoading = true
-					let data = await vipCard(obj, 'CardTransOpera')
+					let data = await vipCard(obj, 'UCardTransOpera')
 					this.btnLoading = false
 				} catch (e) {
 					this.btnLoading = false
@@ -162,6 +162,9 @@
 				if (!e.show) {
 					this.show = false
 				}
+			},
+			clickGo(){
+				this.$Router.push('/pages/home')
 			}
 		},
 		watch: {

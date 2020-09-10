@@ -1,16 +1,16 @@
 <template>
 	<div class="applyLeader">
-		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" title="申请团长" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" :title="title" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<div class="leaderBox" >
 			<adCell text="头 像"><img :src="leaderInfo.Img" mode=""></img></adCell>
 			<!-- 卡号  头像 名称 审核状态默认未审核 -->
 			<adCell text="名 字">{{leaderInfo.Name}}</adCell>
 			<adCell text="卡 号">{{leaderInfo.CardNo}}</adCell>
-			<adCell text="审核状态" v-if="leaderInfo.Audit" style="color: #00CC33;">通过</adCell>
+			<adCell text="审核状态" v-if="leaderInfo.Audit == '1'" style="color: #00CC33;">通过</adCell>
 			<adCell text="审核状态" v-else style="color: #ff0000;">未通过</adCell>
-			<adCell v-if="!leaderInfo.Audit"><p><span>支付宝账号</span><input id="allPay" maxlength="50" v-model="AlipayAccount"></input></p></adCell>			
+			<adCell v-if="leaderInfo.Audit == '0'"><p><span>支付宝账号</span><input id="allPay" maxlength="50" v-model="AlipayAccount"></input></p></adCell>			
 			<div class="btnBox">
-				<button @click="btnApply" v-if="!leaderInfo.Audit">申请团长</button>
+				<button @click="btnApply" v-if="leaderInfo.Audit == '0'">申请团长</button>
 			</div>
 		</div>
 		
@@ -29,11 +29,20 @@
 			return {
 				loading: true,
 				leaderInfo:{},
-				AlipayAccount:''//支付宝账号
+				AlipayAccount:'',//支付宝账号
+				title:''
 			}
 		},
 		async onLoad(option) {
 			await this.getList();
+			if(this.leaderInfo.Audit == '0'){
+				this.title = '申请团长'
+			}else{
+				this.title = '团长信息'
+				uni.setNavigationBarTitle({
+				    title: '团长信息'
+				});
+			}
 		},
 		
 		methods: {

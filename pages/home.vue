@@ -48,7 +48,7 @@
 				</div>
 				<div class="backgroundF homeOrderRow">
 					<adCell text="我的订单" detail="查看全部订单" @click="clickAll" />
-					<uni-grid @change="clickGrid" :column="5" :show-border="false" style="color:#2c3e50">
+					<uni-grid @change="clickGrid" :column="4" :show-border="false" style="color:#2c3e50">
 						<uni-grid-item :index="1">
 							<view class="grid-item-box">
 								<div class="iconfont icon-gerenzhongxindingdandaifukuan"></div>
@@ -73,17 +73,18 @@
 								<div>已取消</div>
 							</view>
 						</uni-grid-item>
-						<uni-grid-item :index="55">
+						<!-- <uni-grid-item :index="55">
 							<view class="grid-item-box">
 								<div class="iconfont icon-pingjia"></div>
 								<div>评价</div>
 							</view>
-						</uni-grid-item>
+						</uni-grid-item> -->
 					</uni-grid>
 				</div>
 				<!-- 会员相关九宫格 -->
 				<div class="backgroundF homeOrderRow">
-					<adCell text="会员中心"/>
+					<!-- <adCell text="会员中心"/> -->
+					<adCell2 text="会员中心"/>
 					<uni-grid :column="5"  @change="toGrid" :show-border="false" style="color:#2c3e50">
 					    <uni-grid-item :index="1">
 					        <view class="grid-item-box">
@@ -107,28 +108,28 @@
 					    </uni-grid-item>
 						<uni-grid-item :index="4">
 						    <view class="grid-item-box">
-						    	<div class="iconfont icon-zuji"></div>
+						    	<div class="iconfont icon-zuji" style="color: #bbbcbd;"></div>
 						    	<div>足迹</div>
 						    </view>
 						</uni-grid-item>
 						<uni-grid-item :index="5">
 						    <view class="grid-item-box">
-						    	<div class="iconfont icon-guanggaozhuhuodongtuiguang"></div>
+						    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
 						    	<div>我的推广</div>
 						    </view>
 						</uni-grid-item>
 					</uni-grid>
 				</div>
 				
-				<div class="cardWei" v-if="CardType == 'Manage||Shop'">
+				<div class="cardWei">
 					<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
 					<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 					<div>
-						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/> -->
+						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>
 						<!-- <adCell  text="绑定实体会员卡"@click="bindEntity(1)"/> -->
 					</div>
 					<div>
-						<!-- <adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop' && CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/> -->
+						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop' && CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
 						<!-- <adCell text="申请会员卡" @click="bindEntity(2)"/> -->
 					</div>
 				</div>
@@ -177,6 +178,7 @@
 	} from '@/api/http.js';
 	import Cookie from '@/config/cookie-my/index.js';
 	import adCell from '@/node_modules/adcell/ADCell.vue';
+	import adCell2 from '@/node_modules/adcell/ADCell2.vue';
 	import {
 		bottomScrollbar
 	} from "@/util/publicFunction";
@@ -184,7 +186,8 @@
 	export default {
 		name: "home",
 		components: {
-			adCell
+			adCell,
+			adCell2
 		},
 		data() {
 			return {
@@ -206,11 +209,13 @@
 		async created() {
 			// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 			// console.log(Cookie.get("isMember"), Cookie.get("CardType"))
-			//1 绑定了卡但是不知道绑定的是哪个卡；
-			this.isMember = Cookie.get("isMember");
-			this.CardType = Cookie.get("CardType"); //卡信息 04 申请卡 05绑定卡
+			// //1 绑定了卡但是不知道绑定的是哪个卡；
+			//this.isMember = Cookie.get("isMember");
+			// this.CardType = Cookie.get("CardType"); //卡信息 04 申请卡 05绑定卡
 
 			await this.getInfo();
+			this.CardType = this.data.CardType
+			this.isMember = Cookie.get("isMember");
 			// bottomScrollbar(this, ".callInfo", ".homeFa", 60);
 		},
 		methods: {
@@ -225,7 +230,10 @@
 					}, "UMemberOpera");
 					this.ImgUrl =
 						this.$VUE_APP_PREFIX + data.Data.CardImg || this.ImgUrl;
-					this.data = data.Data.CardInfo || {};
+					this.data = data.Data|| {};
+					if(this.data.CartType != undefined ){						
+						Cookie.set("isMember",'1')
+					}
 					this.loading = false;
 					uni.hideLoading();
 				} catch (e) {
@@ -286,6 +294,7 @@
 			},
 			clickClear() {//清除缓存
 				Cookie.remove("UserMACPhone");
+				this.$toast.fail("清除成功");
 			},
 		}
 	};
@@ -409,7 +418,7 @@
 
 		.homeImgTitle {
 			height: 40px;
-			background: #392f2b;
+			background: #d6d8c3;
 			position: absolute;
 			bottom: 0;
 			width: 94%;

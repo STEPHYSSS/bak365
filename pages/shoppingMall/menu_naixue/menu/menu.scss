@@ -501,7 +501,7 @@
 								align-items: flex-start;
 								justify-content: space-between;
 								padding-right: 14rpx;
-
+							
 								.name {
 									font-size: 15px;
 									margin-bottom: 10rpx;
@@ -676,9 +676,10 @@
 			background-color: #FFFFFF;
 			width: 100%;
 			overflow-y: scroll;
-			min-height: 1vh;
+			min-height: 16vh;
 			// max-height: 40vh;
-			max-height: 40%;
+			max-height: 35%;
+			margin-bottom: 10%;
 
 			.wrapper {
 				height: 100%;
@@ -735,7 +736,29 @@
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
-
+						.iconSty{
+							width: 20px;
+							height: 20px;
+							border-radius: 50%;
+							font-size: 20px;
+							line-height: 19px;
+							font-weight: 600;
+							text-align: center;
+							color: rgb(185, 183, 183);
+							border: 1px solid rgb(185, 183, 183);
+							background: #fff;
+						}
+						.iconStyAdd{
+							display: inline-block;
+							width: 22px;
+							height: 22px;
+							background: #ADB838;
+							border-radius: 50%;
+							font-size: 20px;
+							line-height: 19px;
+							text-align: center;
+							color: #fff;
+						}
 						.btn {
 							width: 46rpx;
 							height: 46rpx;

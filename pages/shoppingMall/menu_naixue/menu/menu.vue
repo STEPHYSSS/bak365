@@ -88,15 +88,22 @@
 													</view>
 													<!-- 常规加商品 -->
 													<view class="btn-group" v-else>
-														<button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
+														<!-- <button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
 														 hover-class="none" @tap="handleReduceFromCart(good)" v-show="good.cartNum">
 															<text class="iconSty">-</text>
-														</button>
+														</button> -->
+														<div @tap="handleReduceFromCart(good)" v-show="good.cartNum">
+															<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
+														</div>
 														<view class="number" v-show="good.cartNum">{{ good.cartNum }}</view>
-														<button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
+														<!-- <button type="primary" class="btn add_btn" style="background-color: #ADB838;" size="min" hover-class="none"
 															 @tap="handleAddToCart(good, 1, '单规格')">
 															 <text class="iconStyAdd">+</text>
-														</button>
+															 <view class="iconfont icon-add-fill"></view>
+														</button> -->
+														<div @tap="handleAddToCart(good, 1, '单规格')">
+															<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
+														</div>
 													</view>
 												</view>
 											</view>
@@ -185,14 +192,21 @@
 						<!-- <button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
 							<text class="iconSty">-</text>
 						</button> -->
-						<button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
+						<!-- <button type="default" plain class="btn reduce_btn" size="mini" style="color: #b9b7b7;border: 1px solid #b9b7b7;"
 						 hover-class="none" @tap="handlePropertyReduce">
 							<text class="iconSty" style="background: #fff;">-</text>
-						</button>
+						</button> -->
+						<div @tap="handlePropertyReduce">
+							<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
+						</div>
 						<view class="number">{{ good.number }}</view>
-						<button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
+						<div @tap="handlePropertyAdd">
+							<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
+						</div>
+						
+						<!-- <button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
 							<text class="iconStyAdd">+</text>
-						</button>
+						</button> -->
 					</view>
 				</view>
 				<view class="add-to-cart-btn" @tap="AddToCartInModal(goodsInfo)">
@@ -216,13 +230,21 @@
 									<text>￥{{ item.SalePrice }}</text>
 								</view>
 								<view class="right">
-									<button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index,item)">
+									<!-- <button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index,item)">
 										-
 									</button>
 									<view class="number">{{ item.BuyCnt }}</view>
 									<button type="primary" class="btn" size="min" style="background-color: #ADB838;" hover-class="none" @tap="handleCartItemAdd(index,item)">
 										+
-									</button>
+									</button> -->
+									<div @tap="handleCartItemReduce(index,item)">
+										<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
+									</div>
+									
+									<view class="number">{{ item.BuyCnt }}</view>
+									<div  @tap="handleCartItemAdd(index,item)">
+										<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
+									</div>
 								</view>
 							</view>
 							<!-- <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
@@ -244,6 +266,7 @@
 							</view> -->
 						</view>
 					</scroll-view>
+					<div style="height: 30px;"></div>
 				</template>
 			</popup-layer>
 		</view>
@@ -289,13 +312,13 @@
 				currentIndex2: 0,
 				currentStoreInfo:{},//商家地址
 				addresses:{},
-				location:JSON.parse(sessionStorage.getItem('location'))
+				location:JSON.parse(sessionStorage.getItem('location')),
 
 			}
 		},
 		async onLoad() {
 			// this.getWxConfig() // 获取授权地址
-			console.log(this.$store.state.orderType )
+			// console.log(this.$store.state.orderType )
 			await this.getCouponList();
 			await this.getList();
 			this.getLunBoImg();
@@ -312,6 +335,9 @@
 				await this.getShopList()
 			}
 			this.currentType = this.goods[0];
+			// if(this.cart.length){
+				
+			// }
 			this.cart = uni.getStorageSync('cart') || [];
 			if(!this.addresses){				
 				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
@@ -321,7 +347,8 @@
 			if(this.cart.length!=0){
 				this.changeMenuNum();
 				this.changeInfo();
-			}			
+			}
+			
 		},
 		components: {
 			modal
@@ -337,14 +364,13 @@
 			},
 			getCartGoodsNumber() { //计算购物车总数
 				// return this.cart.length;
+				if(this.cart.length>0){uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)))}
 				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt, 0)
 			},
 			getCartGoodsPrice() { //计算购物车总价
 				// return this.cart.reduce((acc, cur) => +cur.SalePrice + acc, 0)
-				return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * Number(cur.SalePrice), 0)
-				// return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * (Math.round(cur.SalePrice * 100)/100).toFixed(2), 0)
-				// (Math.round(5.1699 * 100)/100).toFixed(2)
-				
+				// return this.cart.reduce((acc, cur) => acc + cur.BuyCnt * cur.SalePrice, 0)
+				return parseFloat(this.cart.reduce((acc, cur) => acc + cur.BuyCnt * cur.SalePrice, 0).toFixed(2))
 			},
 			disabledPay() { //是否达到起送价
 				return this.orderType == 'takeout' && (this.getCartGoodsPrice < this.store.min_price) ? true : false
@@ -713,12 +739,12 @@
 						if (confirm) {
 							this.cartPopupVisible = false
 							this.cart = []
-							 // uni.removeStorageSync('cart');
-							 try {
-							     uni.removeStorageSync('cart');
-							 } catch (e) {
-							     // error
-							 }
+							 // try {
+							 //     // uni.removeStorageSync('cart');
+								 
+							 // } catch (e) {
+							 //     // error
+							 // }
 							this.changeMenuNum();
 							this.changeInfo();
 						}
@@ -753,6 +779,7 @@
 				this.changeInfo();
 				if (!this.cart.length) {
 					this.cartPopupVisible = false
+					uni.removeStorageSync('cart')
 				}
 			},
 			// 根据购物车变化 改变侧边menu的角标
@@ -765,6 +792,7 @@
 						};
 					})
 					this.$set(val, 'cartNum', num);
+					
 				});
 			},
 			toPay() { //去结算			
@@ -871,18 +899,27 @@
 	}
 	.btn-group{
 		.iconSty{
-			font-size: 30px;
 			width: 20px;
 			height: 20px;
-			display: inline-block;
-			line-height: 16px;
+			border-radius: 50%;
+			font-size: 20px;
+			line-height: 19px;
+			font-weight: 600;
+			text-align: center;
+			color: rgb(185, 183, 183);
+			border: 1px solid rgb(185, 183, 183);
+			background: #fff;
 		}
 		.iconStyAdd{
-			font-size: 21px;
-			width: 21px;
-			height: 20px;
 			display: inline-block;
-			line-height: 18px;
+			width: 22px;
+			height: 22px;
+			background: #ADB838;
+			border-radius: 50%;
+			font-size: 20px;
+			line-height: 19px;
+			text-align: center;
+			color: #fff;
 		}
 	}
 	.iconfont{

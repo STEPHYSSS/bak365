@@ -1,6 +1,6 @@
 <template>
 	<div :class="classHome">
-		<uni-nav-bar :fixed="true" left-icon="back" :noG0="true" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<div class="surplusTop backgroundColor" v-if="!loading">
 			<div class="surplusD">余额(元)</div>
 			<div class="surplusTopM">
@@ -88,7 +88,7 @@
 				try {
 					let data = await vipCard({
 						Action: "CardTransLog"
-					}, "CardTransOpera");
+					}, "UCardTransOpera");
 					this.DataList = data.Data.OrderList || [];
 					this.Balance = data.Data.Balance || 0;
 					this.Score = data.Data.Score || 0;

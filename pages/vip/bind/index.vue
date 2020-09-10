@@ -89,18 +89,31 @@
 			 @confirm="confirmDate" :item-height="35" />
 		</uni-popup> -->
 
-		<!-- <uni-popup v-model="showListCard" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard" :beforeClose="beforeClose">
-			<van-radio-group v-model="CardNoId">
-				<van-radio label-position="left" v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index" class="EntityCard backgroundColorA">
-					<span class="EntityCardName">卡名：{{item.Name}}</span>
-					<div class="EntityCardBalance">余额：{{item.Balance}}</div>
-					<div class="EntityCardBalance">积分：{{item.Score}}</div>
-				</van-radio>
-			</van-radio-group>
-		</uni-popup> -->
-
+		<uni-popup ref="popup" type="center" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard" :beforeClose="beforeClose">
+			<div style="background-color: rgb(255, 255, 255);width: 80vw;">
+				<!-- <van-radio-group v-model="CardNoId" >
+					<van-radio label-position="left" v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index" class="EntityCard backgroundColorA">
+						<view class="cardSty" @click="chooseCard">
+							<span class="EntityCardName">卡名：{{item.Name}}</span>
+							<div class="EntityCardBalance">余额：{{item.Balance}}</div>
+							<div class="EntityCardBalance">积分：{{item.Score}}</div>
+						</view>
+					</van-radio>
+				</van-radio-group> -->
+				<van-radio-group v-model="CardNoId" >
+				  <van-radio v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index">
+					  <view class="cardSty" @click="chooseCard(item.CardNo)">
+					  	<span class="EntityCardName">卡名：{{item.Name}}</span>
+					  	<div class="EntityCardBalance">余额：{{item.Balance}}</div>
+					  	<div class="EntityCardBalance">积分：{{item.Score}}</div>
+					  </view>
+				  </van-radio>
+				</van-radio-group>
+			</div>
+		</uni-popup>
 		<div class="btnfixedBottom" v-if="!loading&&!fail">
-			<button :disabled="btnLoading" class="buttonPage" type="redRaduis" @click="clickSubmit" :loading="btnLoading">提交</button>
+			<!-- <button :disabled="btnLoading" class="buttonPage" type="redRaduis" @click="clickSubmit" :loading="btnLoading">提交</button> -->
+			<button :disabled="btnLoading" class="buttonPage" type="redRaduis" @click="clickSubmit" >提交</button>
 		</div>
 	</div>
 </template>
@@ -128,9 +141,9 @@
 				radio: "",
 				loading: false,
 				fromData: {
-					Phone: "",
+					Phone: "13545160602",
 					Type: "",
-					Code: ""
+					Code: "240839"
 				},
 				exhibitSex: "",
 				Birthday: new Date(),
@@ -171,15 +184,18 @@
 				// 是否输入密码
 				IsPass: false,
 				btnLoading: false,
-				endData: ''
+				endData: '',
+				Type:''
 			};
 		},
 		async created() {
 			this.endData = getTime('', true)
 			if (this.currentRouter) {
 				// 绑定实体卡
+				this.Type = '1'
 			} else {
 				// 申请
+				this.Type = '0'
 				this.getInfo();
 			}
 		},
@@ -221,8 +237,8 @@
 						Action: "SetCard"
 					});
 					await vipCard(this.fromData, "WeChatCardOpera");
-					Cookie.set("isMember", "1");
-					Cookie.set("CardType", "05");
+					// Cookie.set("isMember", "1");
+					// Cookie.set("CardType", "05");
 					this.$toast.success("绑定实体卡成功");
 					this.$Router.push("/home/index");
 				} catch (e) {
@@ -230,7 +246,9 @@
 				}
 				done();
 			},
+			// 提交
 			async clickSubmit() {
+				
 				if (!this.currentRouter) {
 					this.usernameTip = this.bindListMe[0].hasOwnProperty("isShow") ?
 						this.fromData.Username ?
@@ -266,7 +284,7 @@
 					return false;
 				} else {
 					try {
-						this.$refs.btnDom.btnLoading = true;
+						// this.$refs.btnDom.btnLoading = true;
 						if (this.currentRouter) {
 							// 绑定
 							this.fromData.Type = 1;
@@ -275,21 +293,23 @@
 								Action: "SetCard"
 							});
 							let data = await vipCard(this.fromData, "WeChatCardOpera");
-							// console.log(data, 555)
-							if (data.Data.CardList.length === 0) {
-								this.$toast.success("绑定成功");
+							// 暂时注释
+							// if (data.Data.CardList.length === 0 ) {
+							// 	this.$toast.success("绑定成功");
 
-								Cookie.set("isMember", "1");
-								Cookie.set("CardType", "05");
-								this.$Router.push("/pages/home");
-							} else {
-								//如果返回列表 就打开弹框
-								// 显示绑定卡弹框
-								// 默认选中第一个
-								this.bindCardList = data.Data.CardList;
-								this.CardNoId = this.bindCardList[0].CardNo;
-								this.showListCard = true;
-							}
+
+							// 	Cookie.set("isMember", "1");
+							// 	// Cookie.set("CardType", "05");
+							// 	this.$Router.push("/pages/home");
+							// } else {
+							// 	//如果返回列表 就打开弹框
+							// 	// 显示绑定卡弹框
+							// 	// 默认选中第一个
+							// 	this.bindCardList = data.Data.CardList;
+							// 	this.CardNoId = this.bindCardList[0].CardNo;
+							// 	// this.showListCard = true;
+							// 	this.$refs.popup.open()
+							// }
 							// this.$refs.btnDom.btnLoading = false;
 						} else {
 							// 申请卡
@@ -308,7 +328,7 @@
 
 								await vipCard(this.fromData, "WeChatCardOpera");
 								Cookie.set("isMember", "1");
-								Cookie.set("CardType", "04");
+								// Cookie.set("CardType", "04");
 								this.CodeNum = 0;
 								// this.$refs.btnDom.btnLoading = false;
 								this.$Router.push("/pages/home");
@@ -316,7 +336,7 @@
 							}
 						}
 					} catch (e) {
-						this.$refs.btnDom.btnLoading = false;
+						// this.$refs.btnDom.btnLoading = false;
 						this.$toast.fail(e);
 						this.CodeNum = 0;
 					}
@@ -334,15 +354,17 @@
 			},
 			async getCodeFun(event) {
 				if (phoneReg(this)) {
-					this.Timing(event);
+					// this.Timing(event);	
 					// 发送验证码
 					try {
 						await vipCard({
 								Action: "SendCode",
-								Phone: this.fromData.Phone
+								Phone: this.fromData.Phone,
+								Type:this.Type
 							},
 							"WeChatCardOpera"
 						);
+						this.Timing(event);
 						this.$toast.success("发送至您的手机，注意查收");
 					} catch (e) {
 						this.CodeNum = 0;
@@ -350,6 +372,7 @@
 				}
 			},
 			Timing(event) {
+				
 				if (this.CodeNum === 0) {
 					// event.target.removeAttribute('disabled')
 					this.disabledBtn = false;
@@ -366,11 +389,41 @@
 				}
 			},
 			clickPhoneQue() {
+				this.phone()
 				phoneReg(this);
+			},
+			// 失去焦点之后调用手机号码匹配
+			async phone(){
+				try {
+					let data = await vipCard({
+							Action: "VerifyPhone",
+							Phone: this.fromData.Phone
+						},
+						"WeChatCardOpera"
+					);
+					if(data.Success){
+						this.bindCardList = data.Data.CardList;
+						this.$refs.popup.open();
+						// this.CardNoId = this.bindCardList[0].CardNo;
+					}else{
+						this.$toast.fail(data.Message)
+					}
+					// this.$toast.success("");
+				} catch (e) {
+					this.$toast.fail(e);
+					// this.CodeNum = 0;
+				}
 			},
 			// 根据状态进行返回
 			clickLeft(){
 				this.$Router.push('/pages/home')
+			},
+			// 点击选择卡
+			chooseCard(val){
+				console.log(val)
+				this.fromData.CardNo = val;
+				console.log(this.fromData.CardNo)
+				this.$refs.popup.close()
 			}
 		}
 	};
@@ -388,6 +441,7 @@
 			_this.phoneTip = "";
 			return true;
 		}
+		
 	}
 </script>
 

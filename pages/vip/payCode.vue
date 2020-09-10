@@ -6,7 +6,7 @@
 			<view class="vipQR-code">
 				<view class="vipQR-backg">
 					<view class="topRound">
-						<image src="/static/img/vipIcon.png"></image>
+						<image src="@/static/img/vipIcon.png"></image>
 					</view>
 					<view class="vip-strip-line">
 						<view class="vip-title">请向收银员出示二维码完成支付</view>
@@ -60,7 +60,7 @@
 				try {
 					let data = await vipCard({
 						Action: 'PaymentCode'
-					}, 'CardTransOpera')
+					}, 'UCardTransOpera')
 					setTimeout(() => {
 						barcode('barcode', data.Data.CardCode, this.windowWidth, 60);
 						qrcode('qrcode', data.Data.CardCode, 250, 250);
@@ -76,6 +76,8 @@
 			clickLeft(){
 				if(this.$Route.query.flag){
 					this.$Router.push({path: "/pages/shoppingMall/login"});
+				}else{
+					this.$Router.push({path: "/pages/home"});
 				}
 				
 			}

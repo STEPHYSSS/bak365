@@ -33,7 +33,7 @@ export const vipCard = (data, ViewKay, appNo) => {
 							"Content-Type": "application/x-www-form-urlencoded",
 							'Accept': 'application/json',
 							'Access-Control-Allow-Origin':'*',
-							dataType:'json'
+							'dataType':'json'
 						},
 						success: function(response) {
 							// console.log(response, 'response')

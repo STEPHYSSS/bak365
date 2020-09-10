@@ -1,7 +1,7 @@
 <template>
   <div :class="mainStyle">
     <div class="noOder">
-      <image style="width:300rpx;height: 300rpx;" src="/static/assets/img/paySuccess.png" alt />
+      <image style="width:300rpx;height: 300rpx;" src="@/static/assets/img/paySuccess.png" alt />
       <br />
       <div style="margin-top:10px;color:#777">{{$route.query.error?'支付失败':'您已支付成功'}}</div>
       <button @click="clickOrderPage" type="main" style="margin-top:60px">返回订单列表</button>

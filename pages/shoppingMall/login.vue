@@ -22,8 +22,8 @@
 				</view>
 			</view>
 			<view class="info">
-				<view class="integral_section" @tap="integrals">
-					<view class="top">
+				<view class="integral_section" >
+					<view class="top" @tap="integrals">
 						<text class="title">我的积分</text>
 						<text class="value">{{myScore}}</text>
 					</view>
@@ -31,8 +31,7 @@
 						进入积分商城兑换烘焙券及周边好礼
 					</view>
 				</view>
-				<view class="qrcode_section" @tap="memberCode">
-					<!-- <image src="/static/images/index/qrcode.png"></image> -->
+				<view class="qrcode_section" @tap="memberCode" v-if="isMember == '1'">
 					<div class="iconfont icon-huiyuanmaicons"></div>
 					<text>会员码</text>
 				</view>
@@ -97,7 +96,8 @@
 				myScore:'',
 				location: {},
 				classHome: getApp().globalData.mainStyle,
-				loadding: true
+				loadding: true,
+				isMember : localStorage.getItem("isMember")
 			}
 		},
 		computed: {
