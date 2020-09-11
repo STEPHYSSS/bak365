@@ -134,7 +134,8 @@
 						Name: this.areaList[0].Name,	
 						Address: this.areaList[0].Address,
 						SID: this.areaList[0].SID,
-						Length:this.areaList[0].Length
+						Length:this.areaList[0].Length,
+						House:this.areaList[0].House
 					}
 					sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
 				}

@@ -64,8 +64,9 @@
 						</div>
 						<div class="wu-field__error-message">{{phoneTip}}</div>
 					</div>
-				</div>
-				<button size="mini" type="main" @click="getCodeFun" :disabled="disabledBtn">{{getCodeNum}}</button>
+				</div>				
+				<button size="mini" type="main" @click="getCodeFun" :disabled="disabledBtn" v-if="this.$Route.query.id == '2'" style="background-color: #adb838;">{{getCodeNum}}</button>
+				<button size="mini" type="main" @click="getCodeFun" :disabled="disabledBtn" v-if="this.$Route.query.id == '1'" :class="{ active: isActive }">{{getCodeNum}}</button>
 			</div>
 			<div class="wu-cell">
 				<div class="wu-cell__label">
@@ -78,17 +79,55 @@
 					<div class="wu-field__error-message">{{CodeTip}}</div>
 				</div>
 			</div>
+			<div class="wu-cell" v-show="showCardNo">
+				<div class="wu-cell__label">
+					<span>卡号</span>
+				</div>
+				<div class="wu-cell__value">
+					<div class="wu-cell__body">
+						<input class="wu-field__control" :readonly="true" v-model="fromData.CardNo" @click="chooes"/>
+					</div>
+				</div>
+			</div>
 		</div>
 		<error v-if="fail" style="margin-top: -61px;"></error>
-
+		
+		<div class="EntityCardShow">
+			<div class="popst" v-show="showCard">
+				<!-- <van-radio-group v-model="CardNoId" >
+				  <van-radio checked-color="#07c160" v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index">
+					  <view class="cardSty" :class="{}" @click="chooseCard(item.CardNo)">
+					  	<view class="EntityCardNa">卡号：{{item.CardNo}}</view>							
+							<view class="EntityCard" v-if="item.Name != '' ">卡名：{{item.Name}}</view>
+							<view class="EntityCard" v-else>卡名：无</view>
+							<view class="EntityCard">余额：{{item.Balance}}</view>
+							<view class="EntityCard">积分：{{item.Score}}</view>
+					  </view>
+				  </van-radio>
+				</van-radio-group> -->
+				<radio-group @change="radioChange">
+					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in bindCardList" :key="item.value">						
+						<view class="cardSty" style="position: relative;">
+							<view style="position: absolute;right: 5px;top: 32%;">
+								<radio :value="item.CardNo" :checked="index === current" />
+							</view>
+							<view class="EntityCardNa">卡号：{{item.CardNo}}</view>							
+							<view class="EntityCard" v-if="item.Name != '' ">卡名：{{item.Name}}</view>
+							<view class="EntityCard" v-else>卡名：无</view>
+							<view class="EntityCard">余额：{{item.Balance}}</view>
+							<view class="EntityCard">积分：{{item.Score}}</view>
+						</view>
+					</label>
+				</radio-group>
+			</div>
+		</div>
 		<!-- <uni-calendar ref="calendar" :insert="false" :lunar="true" :start-date="'2019-3-2'" :end-date="'2019-5-20'" @change="change"/> -->
 
 		<!-- <uni-popup v-model="isShow" type="bottom">
 			<van-datetime-picker v-model="Birthday" type="date" :min-date="minDate" :max-date="maxDate" @cancel="isShow = false"
 			 @confirm="confirmDate" :item-height="35" />
 		</uni-popup> -->
-<!-- :beforeClose="beforeClose" -->
-		<uni-popup ref="popup" type="bottom" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard">
+		<!-- <uni-popup ref="popup" type="bottom" title="选择要绑定的实体卡" class="EntityCardShow" @confirm="confirmEntityCard" :beforeClose="beforeClose">
 			<div class="popst">
 				<van-radio-group v-model="CardNoId" >
 				  <van-radio v-for="(item,index) in bindCardList" :name="item.CardNo" :key="index">
@@ -101,7 +140,7 @@
 				  </van-radio>
 				</van-radio-group>
 			</div>
-		</uni-popup>
+		</uni-popup> -->
 		<div class="btnfixedBottom" v-if="!loading&&!fail">
 			<!-- <button :disabled="btnLoading" class="buttonPage" type="redRaduis" @click="clickSubmit" :loading="btnLoading">提交</button> -->
 			<button :disabled="btnLoading" class="buttonPage" type="redRaduis" @click="clickSubmit" >提交</button>
@@ -132,9 +171,9 @@
 				radio: "",
 				loading: false,
 				fromData: {
-					Phone: "13545160602",
+					Phone: "",
 					Type: "",
-					Code: "240839"
+					Code: ""
 				},
 				exhibitSex: "",
 				Birthday: new Date(),
@@ -176,7 +215,10 @@
 				IsPass: false,
 				btnLoading: false,
 				endData: '',
-				Type:''
+				Type:'',
+				showCard:false,//用来判断卡列表是否展示
+				showCardNo:false,//选择卡后展示卡号
+				isActive: false,//控制验证码是否置灰
 			};
 		},
 		async created() {
@@ -282,9 +324,12 @@
 								Action: "SetCard"
 							});
 							let data = await vipCard(this.fromData, "WeChatCardOpera");
+							Cookie.set("isMember", "1");
 							if(data.Success){
-								this.$toast.success("绑定成功");
-								this.$Router.push("/pages/home");
+								this.$toast.success("绑定实体卡成功");
+								setTimeout(() => {
+									this.$Router.push("/pages/home");
+								}, 1000)
 							}else{
 								this.$toast.success(data.Message);
 							}
@@ -326,8 +371,11 @@
 								// Cookie.set("CardType", "04");
 								this.CodeNum = 0;
 								// this.$refs.btnDom.btnLoading = false;
-								this.$Router.push("/pages/home");
 								this.$toast.success("申请成功");
+								setTimeout(() => {
+									this.$Router.push("/pages/home");
+								}, 1000)
+								
 							}
 						}
 					} catch (e) {
@@ -367,7 +415,6 @@
 				}
 			},
 			Timing(event) {
-				
 				if (this.CodeNum === 0) {
 					// event.target.removeAttribute('disabled')
 					this.disabledBtn = false;
@@ -384,7 +431,9 @@
 				}
 			},
 			clickPhoneQue() {
-				this.phone()
+				if(this.$Route.query.id == "1"){
+					this.phone()
+				}
 				phoneReg(this);
 			},
 			// 失去焦点之后调用手机号码匹配
@@ -397,9 +446,12 @@
 						"WeChatCardOpera"
 					);
 					if(data.Success){
-						this.bindCardList = data.Data.CardList;
+						this.bindCardList = data.Data.CardList || [];
 						this.fromData.CardNo = this.bindCardList[0].CardNo;
-						this.$refs.popup.open();
+						if(this.Type == '1'){
+							this.showCard = true;
+							this.isActive = true;
+						}						
 					}else{
 						this.$toast.fail(data.Message)
 					}
@@ -413,16 +465,26 @@
 				this.$Router.push('/pages/home')
 			},
 			// 点击选择卡
-			chooseCard(val){
-				this.fromData.CardNo = val;
-				this.$refs.popup.close()
+			// chooseCard(val){
+			// 	this.fromData.CardNo = val;
+			// 	this.showCard = false;
+			// 	this.showCardNo = true;
+			// },value
+			radioChange(val){
+				this.fromData.CardNo = val.detail.value;
+				this.showCard = false;
+				this.showCardNo = true;
+			},
+			// 点击卡号再次选择卡号
+			chooes(){
+				this.showCard = true;
 			}
 		}
 	};
 
 	function phoneReg(_this) {
 		let text = /^1\d{10}$/;
-		console.log(_this.fromData.Phone, '877655')
+		// console.log(_this.fromData.Phone, '877655')
 		if (!_this.fromData.Phone) {
 			_this.phoneTip = "请输入手机号码";
 			return false;
@@ -506,18 +568,17 @@
 			}
 			
 			.popst{
-				border-radius: 10px 10px 0 0;
 				background: #fff;
-				max-height: 50vh;
+				max-height: 56vh;
 				overflow-y: scroll;
+				position: relative;
 				.cardSty{
 					display: inline-block;
 					width: 93%;
-					border: 1px solid;
 					border-radius: 20px;
-					background-color: #c0cc48;
+					border: 1px solid #c0cc48;
+					background-color: #fff;
 					margin: 10px;
-					color: #fff;
 					font-size: 15px;
 					.EntityCardNa{
 						margin: 14px 0 0 14px;
@@ -581,11 +642,14 @@
 		.phoneStyle {
 			background: #fff;
 			position: relative;
-
+			.active{
+				background-color: #adb838;
+			}
 			button {
 				position: absolute;
 				top: 7px;
 				right: 8px;
+				background-color: #ccc;
 			}
 		}
 	}

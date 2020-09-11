@@ -39,7 +39,7 @@
 			
 			<div class="setADcell setWidth">
 				<adCell text="设置为默认地址" showArrow="false">
-					<switch @change="switchChange" v-model="form.Defaults"/>
+					<switch checked  @change="switchChange" v-model="form.Defaults"/>
 				</adCell>
 			</div>
 		</div>
@@ -154,7 +154,7 @@
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
 						signature: Data.SDK.signature,
-						jsApiList: ["getLocation","openAddress"]
+						jsApiList: ["getLocation","openAddress","scanQRCode"]
 					});
 					
 					wx.ready(res => {
@@ -167,11 +167,11 @@
 									this.$store.commit("SET_CURRENT_LOCATION", this.location);
 					      },
 					      cancel: function(res) {
-					       console.log("cancel", res);
+					        this.$toast.fail(res);
 					      }
 					    });
 					  wx.error(function(res) {
-					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    this.$toast.fail(res);
 					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 					    console.log("调用微信接口获取当前位置失败", res);
 					  });
@@ -187,6 +187,9 @@
 					  // alert(JSON.stringify(res))
 					_this.form.Name = res.userName;
 					_this.form.Mobile = res.telNumber;
+				  },
+				  cancel: function(res) {
+					this.$toast.fail(res);
 				  }
 				});
 			},
@@ -204,8 +207,8 @@
 			},
 			switchChange(val) {
 				//true,false
-				// this.form.Defaults = val.detail.value
-				this.form.Defaults = val.detail.value === true ? 1 : 0;
+				this.form.Defaults = val.detail.value
+				// this.form.Defaults = val.detail.value === true ? 1 : 0;
 			},
 			clickGoAddress() {
 

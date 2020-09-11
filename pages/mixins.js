@@ -22,9 +22,8 @@ export default {
 					timestamp: Data.SDK.timestamp,
 					nonceStr: Data.SDK.noncestr,
 					signature: Data.SDK.signature,
-					jsApiList: ["getLocation","openAddress"]
+					jsApiList: ["getLocation","openAddress","scanQRCode"]
 				});
-				console.log(wx.config)
 				wx.ready(res => {
 					let _this = this;
 				    wx.getLocation({
@@ -38,12 +37,12 @@ export default {
 						_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
 						sessionStorage.setItem('location',JSON.stringify(_this.location))							
 				      },
-				      cancel: function(res) {
-				       console.log("cancel", res);
-				      }
+					  cancel: function(res) {
+						this.$toast.fail(res);
+					  }
 				    });
 				  wx.error(function(res) {
-				    let toast2  = this.$toast.fail('获取当前位置失败');
+				     this.$toast.fail('获取当前位置失败');
 				    console.log("调用微信接口获取当前位置失败", res);
 				  });
 				})

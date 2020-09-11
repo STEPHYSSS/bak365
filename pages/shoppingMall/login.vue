@@ -53,7 +53,7 @@
 				</view>
 				<!-- 右边 -->
 				<view class="right">
-					<view class="rightTop" @tap="invite">
+					<view class="rightTop">
 						<image src="../../static/images/index/mcsb.png"></image>
 						<view style="display: inline-block;position: absolute;top: -2px;">买蛋糕送蛋挞</view>
 					</view>
@@ -133,7 +133,7 @@
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
 						signature: Data.SDK.signature,
-						jsApiList: ["getLocation"]
+						jsApiList: ["getLocation","scanQRCode"]
 					});
 					// console.log(wx.config)
 					wx.ready(res => {
@@ -150,7 +150,7 @@
 							// sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
-					       console.log("cancel", res);
+					        this.$toast.fail(res);
 					      }
 					    });
 					  wx.error(function(res) {

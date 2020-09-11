@@ -13,8 +13,8 @@
 						<div @click="clickBalance">
 							<div class="homeBalanceM">
 								<span v-if="data.Balance&&Number(data.Balance)>0">
-									{{data.Balance |spliceNum}}
-									<span>{{String(data.Balance).length>6?'+':''}}</span>
+									{{data.Balance}}
+									<!-- <span>{{String(data.Balance).length>6?'￥':''}}</span> -->
 								</span>
 								<span v-else>0</span>
 							</div>
@@ -124,10 +124,10 @@
 					<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
 					<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 					<div>
-						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
+						<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
 					</div>
 					<div>
-						<adCell v-if="isMember!=='1'||(isMember&&CardType!=='Manage'&&CardType!=='Shop' && CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
+						<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop' && data.CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
 					</div>
 				</div>
 				

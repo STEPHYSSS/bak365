@@ -56,7 +56,12 @@
 	import {
 		vipCard
 	} from '@/api/http.js'
-
+	import {
+		getTime,
+		checkMobile,
+		weChatPayment,
+		setUrlDelCode
+	} from "@/util/publicFunction";
 	export default {
 		components: {},
 		name: "WeiFull",
@@ -75,7 +80,8 @@
 				Balance: 0,
 				submitMoney: '',
 				searchFocus: false,
-				btnLoading: false
+				btnLoading: false,
+				testData: {},//微信支付接收
 			}
 		},
 		async created() {
@@ -152,7 +158,16 @@
 						PayAmt: this.submitMoney
 					})
 					this.btnLoading = true
-					let data = await vipCard(obj, 'UCardTransOpera')
+					let Data = await vipCard(obj, 'UCardTransOpera')
+					this.testData = Data;
+					try {
+						weChatPayment(this, this.testData.Data, false);
+					} catch (e) {
+						that.$toast.fail("微信调起失败");
+						this.loading = false;
+						uni.hideLoading();
+					}
+
 					this.btnLoading = false
 				} catch (e) {
 					this.btnLoading = false

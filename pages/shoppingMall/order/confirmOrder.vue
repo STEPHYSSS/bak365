@@ -28,7 +28,7 @@
 							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>							
 							<span class="order-area-phone">{{currentArea.Mobile?currentArea.Mobile:currentArea.Tel}}</span>
 						</div>
-						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}&nbsp;距离{{currentArea.Length}}</div>
+						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}&nbsp;</div>
 					</div>
 					<div v-else style="flex: 1;margin:auto;font-size:14px;color:#909090">
 						选择{{radioModes ===
@@ -562,7 +562,7 @@
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
 						signature: Data.SDK.signature,
-						jsApiList: ["getLocation","openAddress"]
+						jsApiList: ["getLocation","openAddress","scanQRCode"]
 					});
 					// console.log(wx.config)
 					wx.ready(res => {
@@ -581,11 +581,11 @@
 							sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
-					       console.log("cancel", res);
+					       this.$toast.fail(res);
 					      }
 					    });
 					  wx.error(function(res) {
-					    let toast2  = this.$toast.fail('获取当前位置失败');
+					    this.$toast.fail(res);
 					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 					    console.log("调用微信接口获取当前位置失败", res);
 					  });
@@ -598,9 +598,12 @@
 				let _this = this;
 				wx.openAddress({
 					success: function(res) {
-							alert(JSON.stringify(res))
+						console.log(JSON.stringify(res))
 						_this.name_user = res.userName;
 						_this.phone_user = res.telNumber;
+					},
+					cancel: function(res) {
+						this.$toast.fail(res);
 					}
 				});
 			},
@@ -923,7 +926,7 @@
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
 				}
-				console.log(this.currentArea,'选择后的地址信息')
+				
 				let obj = {
 					Action: "OrderPay",
 					DeliveryType: DeliveryType,

@@ -67,9 +67,9 @@ const store = new Vuex.Store({
 						// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 						Cookies.set('isMember', response.Data.UserBind)
 					}
-					if (response.Data.hasOwnProperty('CardType')) {
-						Cookies.set('CardType', response.Data.CardType)
-					}
+					// if (response.Data.hasOwnProperty('CardType')) {
+					// 	Cookies.set('CardType', response.Data.CardType)
+					// }
 
 					//主题模板
 					getApp().globalData.mainStyle = 'theme2'

@@ -19,7 +19,7 @@
 							<view class="nav_leftAdd">
 								<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
 								<view class="addresName" @click="toAddress">
-									{{ addressName.Address }}
+									{{ addressName.Address }}{{addressName.House}}
 								</view>
 							</view>
 							<!-- <view style="color: #919293;">
