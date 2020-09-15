@@ -39,7 +39,7 @@
 			if (code && code !== "undefined") {
 				Cookie.remove("UserMACPhone");
 				try {
-					await this.$store.dispatch("get_user", {
+					let abc = await this.$store.dispatch("get_user", {
 						AppNo: newAppNo,
 						Code: code
 					});
@@ -50,10 +50,11 @@
 					// });
 					// Cookie.set("isMember", '1');  //1 绑定了卡但是不知道绑定的是哪个卡；
 					// Cookie.set("CardType", '04');  //卡信息 04 申请卡 05绑定卡
-
+					
 					this.url = url;
 					window.location.href = url;
 				} catch (e) {
+					console.log(e,'失败信息打印')
 					// // 	//获取mac失败
 					this.$Router.push({
 						path: "/pages/error/index",
