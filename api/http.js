@@ -36,7 +36,7 @@ export const vipCard = (data, ViewKay, appNo) => {
 							'dataType':'json'
 						},
 						success: function(response) {
-							// console.log(response, 'response')
+							console.log(response, 'response')
 							if (response.data.Message === '请登录') {
 								// return
 								NOMAC()
@@ -111,7 +111,8 @@ function NOMAC() {
 	let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
 		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
 	store.dispatch('get_user', {
-		AppNo: Cookies.get('AppNo')
+		AppNo: Cookies.get('AppNo'),
+		Code:'wxb7a2e9fc043daf1c'
 	}).then(appId => {
 		if (appId) {
 			router.push({

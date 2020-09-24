@@ -3,52 +3,82 @@
 		<uni-popup class="van-popupSku" ref="popupSku" v-model="isShow" type="bottom" @change="closePopup">
 			<div style="background-color: #fff;">
 				<uni-icons type="closeempty" size="24" class="crossIcon" @click="crossIcon"></uni-icons>
-				<div class="skuTop">
-					<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
-						<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex" ></a-up-img>
-						<!-- {{currentNorms.Img |setImgPrex}}
-          <img :src="currentNorms.Img |setImgPrex" alt/>-->
-					</div>
-					<div class="skuTopInfo">
-						<div class="skuTopInfoMoney">
-							¥
-							<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+				<div v-if="skuDataInfo.ProdInfo.ProdType != '1'">
+					<div class="skuTop">
+						<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
+							<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex" ></a-up-img>
 						</div>
-						<div>
-							<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
-							<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
-							<div class="skuTopInfoSurplus">
-								已选 {{currentNorms.Name}}
-								<span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span>
+						<div class="skuTopInfo">
+							<div class="skuTopInfoMoney">
+								¥
+								<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+							</div>
+							<div>
+								<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
+								<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
+								<div class="skuTopInfoSurplus">
+									已选 {{currentNorms.Name}}
+									<span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span>
+								</div>
+							</div>
+					
+							<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
+								购买时间：
+								<span style="color:#ee0a24;font-size:14px">{{objProdInfo.BuyTime |setBuyTime}}</span>
 							</div>
 						</div>
-
-						<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
-							购买时间：
-							<span style="color:#ee0a24;font-size:14px">{{objProdInfo.BuyTime |setBuyTime}}</span>
+					</div>
+						<!-- v-if="skuDataInfo.ProdInfo.ProdType == '1'" -->
+					<div class="skuBottom">
+						<div class="skuTopChoice">
+							<span class="skuTopChoiceTitle">规格</span>
+					
+							<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
+							 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
+					
+							<span class="skuTopChoiceTitle" v-if="flavorList.length!==0">口味</span>
+					
+							<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }" v-for="(item,index) in flavorList" :key="index"
+							 @click="skuTopChoiceFlavor(index)">{{item.Name}}</div>
+					
+							<span class="skuTopChoiceTitle" v-if="partsList.length!==0">配件(单独售价)</span>
+					
+							<div class="partsStyle" v-for="(item,index) in partsList" :key="item.SID">
+								<!-- @click="skuTopChoiceParts(index)" -->
+								<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
+								<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+								 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+							</div>
+						</div>
+						<div class="skuStepper">
+							<uni-number-box class="skuStepperStyle" :value="valueStepper" @change="stepperMain" :min="1" :max="setStepperMax()"
+							 @overlimit="overlimit" />
 						</div>
 					</div>
 				</div>
-
-				<div class="skuBottom">
-					<div class="skuTopChoice">
-						<span class="skuTopChoiceTitle">规格</span>
-
-						<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
-						 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
-
-						<span class="skuTopChoiceTitle" v-if="flavorList.length!==0">口味</span>
-
-						<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }" v-for="(item,index) in flavorList" :key="index"
-						 @click="skuTopChoiceFlavor(index)">{{item.Name}}</div>
-
-						<span class="skuTopChoiceTitle" v-if="partsList.length!==0">配件(单独售价)</span>
-
-						<div class="partsStyle" v-for="(item,index) in partsList" :key="item.SID">
-							<!-- @click="skuTopChoiceParts(index)" -->
-							<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-							<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
-							 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+				<div v-else>
+					<div class="skuTop">
+						<div class="skuTopImg">
+							<a-up-img :key="objProdInfo.Img" :url="objProdInfo.Img |setImgPrex" ></a-up-img>
+						</div>
+						<div class="skuTopInfo">
+							<div class="skuTopInfoMoney">
+								¥
+								<span class="skuTopInfoMoneyNum">{{objProdInfo.SalePrice}}</span>
+							</div>
+							<div>
+								<span class="skuTopInfoSurplus">剩余 {{objProdInfo.StoreQty}} 件</span>
+								<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
+								<div class="skuTopInfoSurplus">
+									已选 {{objProdInfo.Name}}
+									<span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span>
+								</div>
+							</div>
+					
+							<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
+								购买时间：
+								<span style="color:#ee0a24;font-size:14px">{{objProdInfo.BuyTime |setBuyTime}}</span>
+							</div>
 						</div>
 					</div>
 					<div class="skuStepper">
@@ -56,7 +86,6 @@
 						 @overlimit="overlimit" />
 					</div>
 				</div>
-
 				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
 				</uni-goods-nav>
 			</div>
@@ -140,7 +169,7 @@
 		computed: {},
 		methods: {
 			async onClickButton(bool) {
-				console.log(bool,'212')
+				console.log(bool)
 				if (this.isBrowse) {
 					return;
 				}
@@ -229,7 +258,6 @@
 							paramsArr[0].PromotionItemSID = this.currentNorms.SID;
 						}
 						let currentItem = [paramsArr[0]];
-						console.log(currentItem,'------')
 						if (currentItem.length > 0) {
 							this.$store.commit("SET_CURRENT_CARD", currentItem);
 							this.$Router.push("/pages/shoppingMall/order/confirmOrder");
@@ -301,8 +329,10 @@
 				this.valueStepper = val.inputValue
 			},
 			overlimitParts(e) {},
-			setStepperMax() {
-				if (
+			setStepperMax() {//加号
+				if(this.objProdInfo.ProdType == '1' && Number(this.objProdInfo.MaxBuyCnt) < Number(this.objProdInfo.StoreQty) && Number(this.objProdInfo.MaxBuyCnt)){
+					return Number(this.objProdInfo.MaxBuyCnt);
+				}else if (
 					Number(this.objProdInfo.MaxBuyCnt) <
 					Number(this.currentNorms.StoreQty) &&
 					Number(this.objProdInfo.MaxBuyCnt)
@@ -312,14 +342,15 @@
 					return Number(this.currentNorms.StoreQty);
 				}
 			},
-
-			overlimit(e) {
+			overlimit(e) {//减号
 				if (e === "minus") {
 					this.$toast("至少选择一件");
 				}
 				if (e === "plus") {
 					let str = "";
-					if (
+					if(this.objProdInfo.ProdType == '1' && Number(this.objProdInfo.MaxBuyCnt) < Number(this.objProdInfo.StoreQty) && Number(this.objProdInfo.MaxBuyCnt)){
+						str = "每人限购" + this.objProdInfo.MaxBuyCnt + "件";
+					}else if (
 						Number(this.objProdInfo.MaxBuyCnt) <
 						Number(this.currentNorms.StoreQty) &&
 						Number(this.objProdInfo.MaxBuyCnt)
@@ -344,7 +375,6 @@
 					this.$refs.popupSku.open()
 					let skuDataInfo = this.skuDataInfo;
 					this.normsList = [];
-
 					let arr = [];
 					this.objProdInfo = this.skuDataInfo.ProdInfo;
 					if (Number(skuDataInfo.ProdInfo.SpecType) === 1) {

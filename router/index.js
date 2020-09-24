@@ -53,7 +53,8 @@ router.beforeEach((to, from, next) => {
 					let obj = {}
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
-						AppNo: newAppNo
+						AppNo: newAppNo,
+						Code:'wxb7a2e9fc043daf1c'
 					})
 					next({
 						path: to.path,
@@ -81,7 +82,8 @@ router.beforeEach((to, from, next) => {
 							store.commit("SET_HISTORY_URL", {})
 							try {
 								let appId = await store.dispatch('get_user', {
-									AppNo: newAppNo
+									AppNo: newAppNo,
+									Code:'wxb7a2e9fc043daf1c'
 								})
 								if (appId) {
 									next({

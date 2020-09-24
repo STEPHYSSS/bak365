@@ -7,7 +7,7 @@
 	},{
 		"path": "pages/shoppingMall/index",
 		"style": {
-			"navigationBarTitleText": "商城0"
+			"navigationBarTitleText": "商城"
 		}
 	}, {
 		"path": "pages/error/index",
@@ -193,10 +193,13 @@
 			// },
 			{
 				"pagePath": "pages/home"
-			}	
-			// {
-			// 	"pagePath": "pages/shoppingMall/index"				
-			// }
+			},
+			{
+				"pagePath": "pages/shoppingMall/shoppingCart/index"
+			},
+			{
+				"pagePath": "pages/shoppingMall/index"				
+			}
 		]
 	}
 }

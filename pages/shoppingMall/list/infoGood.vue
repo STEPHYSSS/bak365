@@ -51,7 +51,6 @@
 						"UPromotionOpera" :
 						"UProdOpera";
 					let action = this.$Route.query.seckill ? "GetPromotion" : "GetProdInfo";
-
 					let {
 						Data
 					} = await vipCard({
@@ -61,21 +60,23 @@
 						Opera
 					);
 					if (this.$Route.query.seckill) {
-						if (Data.ProdInfo.SpecType === "1") {
-							// 单规格商品
-							Data.ProdInfo.SalePrice = Data.SpecList[0].SalePrice;
-						} else {
-							setSalePrice('SalePrice', Data)
-							setSalePrice('OldPrice', Data)
-						}
-
-						let ProdInfo = Object.assign(Data.ProdInfo, Data.ProdInfo);
-						this.goodList = ProdInfo || {};
-						Data.SpecList.forEach(D => {
-							//可购买的规格的数量，剩余库存
-							D.StoreQty = D.SurplusQty;
-						});
-						Data.SpecList = Data.SpecList;
+						this.title = Data.ProdInfo.Name;
+						// if (Data.ProdInfo.SpecType === "1") {
+						// 	// 单规格商品
+						// 	Data.ProdInfo.SalePrice = Data.SpecList[0].SalePrice;
+						// } else {
+						// 	setSalePrice('SalePrice', Data)
+						// 	setSalePrice('OldPrice', Data)
+						// }
+						
+						// let ProdInfo = Object.assign(Data.ProdInfo, Data.ProdInfo);
+						// this.goodList = ProdInfo || {};
+						// Data.SpecList.forEach(D => {
+						// 	//可购买的规格的数量，剩余库存
+						// 	D.StoreQty = D.SurplusQty;
+						// });
+						// Data.SpecList = Data.SpecList;
+						this.goodList = Data.ProdInfo || {};
 						this.skuDataInfo = Data || {};
 					} else {
 						this.goodList = Data.ProdInfo || {};

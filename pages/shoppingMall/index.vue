@@ -181,7 +181,7 @@
 						Data
 					} = await vipCard({
 							Action: "GetDecorate",
-							Name: "测试2"
+							Name: "测试"
 						},
 						"UShopOpera"
 					);
