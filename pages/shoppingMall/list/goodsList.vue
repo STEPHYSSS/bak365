@@ -101,10 +101,10 @@
 				this.currentIndex = index
 				this.getList(this.sidebarList[index].SID);
 			},
-			goodBox(val) {
+			goodBox(val) {//点击商品跳转到详情页
 				this.$Router.push({
 					path: "/pages/shoppingMall/list/infoGood",
-					query:{SID:val.SID,isGoodList:true}
+					query:{SID:val.SID,isGoodList:true,title:val.Name}
 				});
 			},
 			clickLeft(){
@@ -113,21 +113,27 @@
 				});
 			},
 			async addCart(item) {
-				console.log(item)
-				try {
-					let obj = {
-						Action: "GetProdInfo"
-					};
-					Object.assign(obj, item);
+				if(item.ProdType == '1'){
+					console.log('直接进入详情页')
+					this.$Router.push({
+						path: "/pages/shoppingMall/list/infoGood",
+						query:{SID:item.SID,isGoodList:true,title:val.Name}
+					});
+				}else{								
+					try {
+						let obj = {
+							Action: "GetProdInfo"
+						};
+						Object.assign(obj, item);
 
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
-					this.show = true;
-					this.skuDataInfo = Data;
-					// console.log(this.skuDataInfo,'this.skuDataInfo')
-				} catch (e) {
-					console.log(e);
+						let {
+							Data
+						} = await vipCard(obj, "UProdOpera");
+						this.show = true;
+						this.skuDataInfo = Data;
+					} catch (e) {
+						console.log(e);
+					}
 				}
 			},
 			hideShow() {

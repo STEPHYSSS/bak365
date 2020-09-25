@@ -8,7 +8,7 @@
 				<!-- 商品名称 -->
 				<div class="rightBoxTitle">{{itemData.Name}}</div>
 				<!-- 商品口味：-->
-				<div class="rightBox_tastName" v-if="itemData.TastName">{{itemData.TastName}}</div>
+				<div class="rightBox_tastName" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div>
 				<div class="rightBox_quota" v-if="isShoppingCard&&Number(itemData.MaxBuyCnt)>0&&!isOrder">限购{{itemData.MaxBuyCnt}}件</div>
 		
 				<div class="rightBoxBottom" v-if="!isOrder">¥{{itemData.SalePrice}}</div>

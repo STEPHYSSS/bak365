@@ -96,12 +96,18 @@
 				</view>
 			</view>
 		</div>
-		<div class="goods-action">
+		<div class="goods-action" v-show="this.goods.ProdType == '0'">
 			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart">
-			</uni-goods-nav>
+			</uni-goods-nav>			
 		</div>
-
+		<div class="goods-action" v-show="this.goods.ProdType =='1' ">
+			<uni-view class="isProdType">
+				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>				
+			</uni-view>
+		</div>
+		<!-- 电子券弹窗 -->
 		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill" :isBrowse="isBrowse"></a-shopping-showSku>
+		<showTicket :show="showPop" @hideShow="hidePop" :skuDataInfo="skuDataInfo"></showTicket>
 	</div>
 </template>
 
@@ -114,11 +120,12 @@
 		Base64
 	} from 'js-base64';
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-
+	import showTicket from '@/components/a-shopping-showSku/a-shopping-showTicket'
 	export default {
 		name: "couponPage",
 		components: {
-			adCell
+			adCell,
+			showTicket
 		},
 		props: {
 			goods: {
@@ -172,6 +179,7 @@
 				classHome: getApp().globalData.mainStyle,
 				active: "",
 				show: false,
+				showPop:false,//电子券弹窗
 				// 点击的是购物车
 				isAddCart: true,
 				classA: "",
@@ -275,8 +283,8 @@
 					});
 				}
 			},
-			addCart(val) {
-				if (val.content.text === '立即抢购') {
+			addCart(val) {	
+				if (val.content.text === '立即抢购' ) {
 					this.orderNow()
 				} else {
 					// 点击购物车，出现弹框
@@ -313,14 +321,24 @@
 					this.isAddCart = false;
 				}
 			},
-			hideShow() {
+			
+			hideShow() {				
 				this.show = false;
 			},
+			// 电子券相关的开始
+			buyNow(){
+				this.showPop = true;
+			},
+			hidePop(){
+				this.showPop = false;
+			},
+			// 电子券结束
 			finishTimer() {
 				setTimeout(() => {
 					this.getTimeout();
 				}, 1000)
 			},
+			// 商品成交记录
 			async tradeList() {
 				try {
 					let {
@@ -382,7 +400,19 @@
 			align-items: center;
 			height: 50px;
 			background-color: #fff;
-			display: flex;
+			display: flex;		
+			.isProdType{
+				background-color: rgb(173, 184, 56);
+				color: rgb(255, 255, 255);
+				border-radius: 25px;
+				width: 89%;
+				text-align: center;
+				height: 40px;
+				margin: 0 auto;
+				line-height: 40px;
+				font-size: 16px;
+				letter-spacing: 2px;
+			}
 		}
 
 		.wu-cell {

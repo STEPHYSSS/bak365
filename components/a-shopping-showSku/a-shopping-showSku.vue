@@ -3,7 +3,7 @@
 		<uni-popup class="van-popupSku" ref="popupSku" v-model="isShow" type="bottom" @change="closePopup">
 			<div style="background-color: #fff;">
 				<uni-icons type="closeempty" size="24" class="crossIcon" @click="crossIcon"></uni-icons>
-				<div v-if="skuDataInfo.ProdInfo.ProdType != '1'">
+				<div>
 					<div class="skuTop">
 						<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
 							<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex" ></a-up-img>
@@ -28,7 +28,6 @@
 							</div>
 						</div>
 					</div>
-						<!-- v-if="skuDataInfo.ProdInfo.ProdType == '1'" -->
 					<div class="skuBottom">
 						<div class="skuTopChoice">
 							<span class="skuTopChoiceTitle">规格</span>
@@ -55,37 +54,7 @@
 							 @overlimit="overlimit" />
 						</div>
 					</div>
-				</div>
-				<div v-else>
-					<div class="skuTop">
-						<div class="skuTopImg">
-							<a-up-img :key="objProdInfo.Img" :url="objProdInfo.Img |setImgPrex" ></a-up-img>
-						</div>
-						<div class="skuTopInfo">
-							<div class="skuTopInfoMoney">
-								¥
-								<span class="skuTopInfoMoneyNum">{{objProdInfo.SalePrice}}</span>
-							</div>
-							<div>
-								<span class="skuTopInfoSurplus">剩余 {{objProdInfo.StoreQty}} 件</span>
-								<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
-								<div class="skuTopInfoSurplus">
-									已选 {{objProdInfo.Name}}
-									<span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span>
-								</div>
-							</div>
-					
-							<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
-								购买时间：
-								<span style="color:#ee0a24;font-size:14px">{{objProdInfo.BuyTime |setBuyTime}}</span>
-							</div>
-						</div>
-					</div>
-					<div class="skuStepper">
-						<uni-number-box class="skuStepperStyle" :value="valueStepper" @change="stepperMain" :min="1" :max="setStepperMax()"
-						 @overlimit="overlimit" />
-					</div>
-				</div>
+				</div>				
 				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
 				</uni-goods-nav>
 			</div>
@@ -169,7 +138,6 @@
 		computed: {},
 		methods: {
 			async onClickButton(bool) {
-				console.log(bool)
 				if (this.isBrowse) {
 					return;
 				}
@@ -226,7 +194,7 @@
 						ProdNo: this.currentNorms.ProdNo,
 						ProdType: 0,
 						SpecType: this.skuDataInfo.ProdInfo.SpecType,
-						TastName: currentTastArr,
+						ParamInfo: currentTastArr,//商品口味
 						BuyCnt: this.valueStepper,
 						PartsList: PartsArr ? JSON.stringify(PartsArr) : "",
 						PartsNo: PartsNoArr,
@@ -264,7 +232,7 @@
 						}
 					}
 				} catch (e) {
-					console.log(e);
+					this.$toast.error(e);
 				}
 			},
 			closePopup(bool) {
@@ -288,7 +256,7 @@
 					Number(this.skuDataInfo.ProdInfo.SpecType) === 2 ||
 					Number(this.skuDataInfo.ProdInfo.SpecType) === 3
 				) {
-					let arr = this.skuDataInfo.SpecList[i].TastName.split(",");
+					let arr = this.skuDataInfo.SpecList[i].ParamInfo.split(",");
 					this.flavorList = setTast(arr, this);
 				}
 
@@ -330,9 +298,7 @@
 			},
 			overlimitParts(e) {},
 			setStepperMax() {//加号
-				if(this.objProdInfo.ProdType == '1' && Number(this.objProdInfo.MaxBuyCnt) < Number(this.objProdInfo.StoreQty) && Number(this.objProdInfo.MaxBuyCnt)){
-					return Number(this.objProdInfo.MaxBuyCnt);
-				}else if (
+				if (
 					Number(this.objProdInfo.MaxBuyCnt) <
 					Number(this.currentNorms.StoreQty) &&
 					Number(this.objProdInfo.MaxBuyCnt)
@@ -348,9 +314,7 @@
 				}
 				if (e === "plus") {
 					let str = "";
-					if(this.objProdInfo.ProdType == '1' && Number(this.objProdInfo.MaxBuyCnt) < Number(this.objProdInfo.StoreQty) && Number(this.objProdInfo.MaxBuyCnt)){
-						str = "每人限购" + this.objProdInfo.MaxBuyCnt + "件";
-					}else if (
+					if (
 						Number(this.objProdInfo.MaxBuyCnt) <
 						Number(this.currentNorms.StoreQty) &&
 						Number(this.objProdInfo.MaxBuyCnt)
@@ -385,16 +349,16 @@
 						// } else {
 							this.normsList.push(skuDataInfo.ProdInfo);
 						// }
-						arr = skuDataInfo.ProdInfo.TastName.split(",") || [];
+						arr = skuDataInfo.ProdInfo.ParamInfo.split(",") || [];
 					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 2) {
 						// 多规格商品
 						this.normsList = skuDataInfo.SpecList;
 						
-						arr = skuDataInfo.SpecList[0].TastName.split(",") || [];
+						arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];
 					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 3) {
 						// 单规格商品-不同总类
 						this.normsList = skuDataInfo.SpecList;
-						arr = skuDataInfo.SpecList[0].TastName.split(",") || [];
+						arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];
 					}
 					this.partsList = skuDataInfo.PartsList || [];
 					this.partsList.forEach(D => {

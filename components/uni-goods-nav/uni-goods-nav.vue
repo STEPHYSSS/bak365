@@ -22,7 +22,7 @@
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
 					<view class="disabled-style" v-if="item.disabled"></view>
 				</view>
-				<!-- <view class="flex uni-tab__cart-button-right uni-tab__color-y ">立即购买</view> -->
+				<!-- <view class="flex uni-tab__cart-button-right uni-tab__color-y " >立即购买</view> -->
 			</view>
 		</view>
 	</view>
@@ -80,6 +80,9 @@
 			fill: {
 				type: Boolean,
 				default: false
+			},
+			goods:{
+				type: Object,
 			}
 		},
 		methods: {
@@ -128,7 +131,7 @@
 		background-color: #fff;
 		z-index: 900;
 	}
-
+	
 	.uni-tab__cart-sub-left {
 		padding: 0 5px;
 	}

@@ -181,10 +181,10 @@
 				<view class="action">
 					<view class="left">
 						<view class="price">￥{{ goodsInfo.SalePrice }}</view>
-						<view class="props" v-if="goodsInfo.SpecType==='2'">
+						<!-- <view class="props" v-if="goodsInfo.SpecType==='2'">
 							{{ this.normsList && this.normsList.length && `${this.normsList[this.currentIndex].Name}
-							${this.normsList[this.currentIndex].TastName.split(',')[currentIndex2]}` }}
-						</view>
+							${this.normsList[this.currentIndex].ParamInfo.split(',')[currentIndex2]}` }}
+						</view> -->
 						<view class="props" v-if="goodsInfo.SpecType==='1'">
 						</view>
 					</view>
@@ -559,9 +559,9 @@
 						this.normsList.forEach(val => {
 							this.$set(val, 'type', 2);
 						});
-						this.kouwei = this.normsList[0].TastName.split(',');					
+						// this.kouwei = this.normsList[0].ParamInfo.split(',');		//暂时注释			
 					}else if(this.goodsInfo.SpecType === '1'){
-						this.kouwei2 = this.goodsInfo.TastName;
+						this.kouwei2 = this.goodsInfo.ParamInfo;
 					}
 					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
 						number: 1
@@ -581,7 +581,7 @@
 				this.currentIndex = i;
 				this.currentIndex2 = 0;
 				// this.kouwei = item.TastName;
-				this.kouwei = item.TastName.split(',');
+				// this.kouwei = item.ParamInfo.split(',');//暂时注释	
 			},
 			//切换口味
 			skuTopChoicekw(i){
@@ -597,7 +597,7 @@
 				}
 				// this.publicGoodsInfo(good,Buy);
 				const index = this.cart.findIndex(item => {
-					if (good.TastName) {
+					if (good.ParamInfo) {
 						return (item.SID === good.SID) && (item.Describe === good.Describe)
 					} else {
 						return item.SID === good.SID
@@ -610,7 +610,7 @@
 						CateSID: shopType === '多规格' ? this.goodsInfo.CateSID : good.CateSID,
 						ProdNo: good.ProdNo,
 						SpecType: shopType === '多规格' ? this.goodsInfo.SpecType : good.SpecType,
-						TastName: good.TastName,
+						ParamInfo: good.ParamInfo,
 						BuyCnt: num,
 						PartsList: '',
 						ProdSID: good[good.type === 2 ? 'ProdSID' : 'SID'],

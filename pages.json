@@ -74,6 +74,11 @@
 		"style": {
 			"navigationBarTitleText": "确定订单"
 		}
+	},{//电子券的订单页
+		"path": "pages/shoppingMall/order/confirmOrderTic",
+		"style": {
+			"navigationBarTitleText": "确定订单"
+		}
 	}, {
 		"path": "pages/shoppingMall/order/paySuccess",
 		"style": {
