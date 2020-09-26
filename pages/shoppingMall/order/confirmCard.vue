@@ -55,7 +55,8 @@
 				password: "",
 				loading: false,
 				Score: "",
-				IsPass: ""
+				IsPass: "",
+				OrderType:''
 			};
 		},
 		created() {
@@ -69,6 +70,7 @@
 			this.PayNo = this.$Route.query.PayNo;
 			this.Balance = this.$Route.query.Balance;
 			this.Score = this.$Route.query.Score || "";
+			this.OrderType=this.$Route.query.OrderType;
 			this.PayScore = Number(this.$Route.query.PayScore) || "";
 			if (this.PayScore&&this.PayScore>0) {
 				this.total =
@@ -104,7 +106,8 @@
 				let obj = {
 					Action: "CartPay",
 					PayNo: this.PayNo,
-					PassWord: this.password
+					PassWord: this.password,
+					OrderType:this.$Route.query.OrderType
 				};
 				try {
 					let Opera = this.PayScore ? "UIntOrderOpera" : "UOrderOpera";

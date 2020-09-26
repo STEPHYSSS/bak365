@@ -41,7 +41,7 @@
 			this.active = Number(this.$Route.query.id) || 0;
 			// if (sessionStorage.getItem("orderBoxNav")) {
 			// 	this.active = sessionStorage.getItem("orderBoxNav")
-			// }
+			// }			
 			this.getList();
 		},
 		methods: {
@@ -50,11 +50,15 @@
 			},
 			async getList() {
 				try {
+					let OrderType = ''
+					if(this.active == '3'){
+						OrderType = 2
+					} 
 					let {
 						Data
 					} = await vipCard({
 							Action: "GetOrderList",
-							OrderType: 2
+							OrderType:OrderType
 						},
 						"UOrderOpera"
 					);
@@ -89,7 +93,6 @@
 	};
 
 	function setFilter(num, _this) {
-		console.log(num,_this)
 		let arr = [];
 		if (!_this.allfromData || _this.allfromData.length === 0) {
 			_this.fromData = []

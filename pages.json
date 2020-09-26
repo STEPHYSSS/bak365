@@ -175,6 +175,9 @@
         ,{
             "path" : "pages/shoppingMall/menu_naixue/invite",
             "style" : {"navigationBarTitleText": "活动助力"}
+        },{
+            "path" : "pages/shoppingMall/makeGroup/makeGroup",
+            "style" : {"navigationBarTitleText": "拼团活动"}
         }
     ],
 	"globalStyle": {

@@ -117,7 +117,7 @@
 					console.log('直接进入详情页')
 					this.$Router.push({
 						path: "/pages/shoppingMall/list/infoGood",
-						query:{SID:item.SID,isGoodList:true,title:val.Name}
+						query:{SID:item.SID,isGoodList:true,title:item.Name}
 					});
 				}else{								
 					try {

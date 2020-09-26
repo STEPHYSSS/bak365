@@ -1,7 +1,8 @@
 <template>
 	<div>
-		<div class="orderBox" v-if="dataList&&dataList.length!==0">
-			<div v-for="(item,index) in dataList" @click="panelOrder(item.SID)" :key="index" class="van-panel van-hairline--top-bottom">
+		<!-- v-if="dataList&&dataList.length!==0" -->
+		<div class="orderBox" >
+			<div v-for="(item,index) in dataList" @click="panelOrder(item)" :key="index" class="van-panel van-hairline--top-bottom">
 				<div slot="header" class="orderBoxHead">
 					<span>订单：</span>
 					<span class="orderBoxNum" :style="{color:mainColor}">{{item.SID}}</span>
@@ -14,10 +15,10 @@
 					</div>
 					<div class="orderBoxTitle">{{setTitle(item.ProdList)}}</div>
 				</div>
-				<div class="boxAllNum" v-if="item.OrderType!=='1'">
+				<!-- <div class="boxAllNum" v-if="item.OrderType=='2'">
 					<span v-if="item.ProdList.length>0">共{{setGoodNum(item.ProdList)}}件商品</span>
-				</div>
-				<div :style="{color:mainColor}" style="width:100%" v-if="item.OrderType==='1'">微卡充值</div>
+				</div> -->
+				<!-- <div :style="{color:mainColor}" style="width:100%" v-if="item.OrderType==='1'">微卡充值</div> -->
 				<div class="van-panel__footer van-hairline--top">
 					总价：
 					<span v-if="item.PayAmt>0">¥{{item.PayAmt}}</span>
@@ -28,11 +29,11 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="dataList.length===0" class="noOder">
+		<!-- <div v-if="dataList.length===0" class="noOder">
 			<img style="width:200px;height:200px" src="@/static/assets/img/norder.png" alt />
 			<br />您还没有相关的订单
 			<div style="font-size:12px;margin-top:10px;color:#b9bec5">你可以去看看商城选择想买的</div>
-		</div>
+		</div> -->
 		<!-- 状态等于3 代表订单超时或者已取消 -->
 		<!-- <div v-if="dataList.length===0" class="noOder">
 			<img style="width:200px;height:200px" src="/static/assets/img/norder.png" alt />
@@ -69,11 +70,12 @@
 			// 获取接口返回的区分id
 		},
 		methods: {
-			panelOrder(sid) {
+			panelOrder(val) {
 				this.$Router.push({
 					path: "/pages/shoppingMall/order/orderInfo",
 					query: {
-						order_id: sid
+						order_id: val.SID,
+						OrderType:val.OrderType						
 					}
 				});
 			},

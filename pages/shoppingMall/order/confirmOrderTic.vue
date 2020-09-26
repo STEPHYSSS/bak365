@@ -9,11 +9,6 @@
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
 				</div>
 			</div>
-
-			<adCell text="商品总价格" showArrow="false" showBottomLine="false">
-				<span>¥{{ProdTotal}}</span>
-			</adCell>
-
 			<div class="total-style">
 				<span>
 					小计：
@@ -50,9 +45,9 @@
 					</div>
 				</radio-group>
 			</div>
-
-			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore"
-			 :cardInfo="allData.CardInfo" @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
+			<button @click="submitMoney">结算</button>
+			<!-- <a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore"
+			 :cardInfo="allData.CardInfo" @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit> -->
 		</div>
 	</div>
 </template>
@@ -156,34 +151,12 @@
 				// window.history.go(-1);
 			}
 			let item = this.$store.state.currentCard || [];
-			console.log(item)
-			// item.forEach(D => {
-			// 	if (D.SID) {
-			// 		this.cardSids.push(D.SID);
-			// 	}
-			// 	if (D.PartsNo instanceof Array) {
-			// 		let arr = [];
-			// 		let newArr = JSON.parse(JSON.stringify(D.PartsNo));
-			// 		newArr.forEach(data => {
-			// 			arr.push(data.ProdNo);
-			// 		});
-			// 		D.PartsNo = arr.join(",");
-			// 	}
-			// });
-
-			// this.currentItem = JSON.stringify(item);
 			this.currentItem = item;
-			// console.log(this.currentItem,'currentItem')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
-
-			if (this.$Route.query.isIntegral) {
-				await this.getInfoIntegral();
-			} else {
-				await this.getInfo();
-			}
+			await this.getInfo();
 		},
 		methods: {
-			// 从商品下单的信息
+			// 电子券下单的信息
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
@@ -193,39 +166,36 @@
 						Action: "TicketBuy",
 						ProdList:this.currentItem          
 					  }, "UProdOpera")
-					  console.log(data,'电子券信息列表')
+					  this.prodList = data.Data.ProdList;
+					  this.CardInfo =data.Data.hasOwnProperty("CardInfo") ?
+					  	data.Data.CardInfo : {};
+					  
+					  if (JSON.stringify(this.CardInfo) !== "{}") {
+					  	if (Number(data.Data.CardInfo.Balance) < Number(data.Data.SumTotal)) {
+					  		//余额不足默认微信支付
+					  		this.radioPayType = "2";
+					  	}
+					  } else {
+					  	this.radioPayType = "2";
+					  }
 				} catch (e) {
 					console.log(e);
 				}
 			},
-			async getInfoIntegral() {
-				try {
-					uni.showLoading()
-					let {
-						Data
-					} = await vipCard({
-							Action: "SettlePay",
-							ProdList: this.currentItem
-						},
-						"UIntegralOpera"
-					);
-					this.prodList = Data.ProdList;
-					this.allData = Data;
-					this.CardInfo = Data.CardInfo;
-					this.currentItem = JSON.parse(JSON.stringify(this.prodList));
-					this.totalCurrent = parseFloat(Number(Data.SalePriceTotal).toFixed(2));
-					if (Data.ScoreTotal) {
-						this.totalCurrentScore =
-							parseFloat(Number(Data.ScoreTotal).toFixed(2)) || 0;
-					}
-					this.loading = false;
-					uni.hideLoading()
-				} catch (e) {
-					this.loading = false;
-					uni.hideLoading()
+			// 支付方式点击按钮
+			PayTypeClick(item) {
+				if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
+					return;
 				}
+				this.radioPayType = item;
 			},
-			orderArea() {},
+			radioPayChange(val) {
+				if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
+					return;
+				}
+				this.radioPayType = val.detail.value
+			},
+			// 调用微信接口
 			async getWxConfig(){
 				try {
 					let {
@@ -272,111 +242,8 @@
 				} catch (e) {
 					// console.log(e, "55555");
 				}
-			},
-			getAddress() { //获取共享地址
-				let _this = this;
-				wx.openAddress({
-					success: function(res) {
-						console.log(JSON.stringify(res))
-						_this.name_user = res.userName;
-						_this.phone_user = res.telNumber;
-					},
-					cancel: function(res) {
-						this.$toast.fail(res);
-					}
-				});
-			},
-			// 自取和外卖的切换按钮，暂时不用了
-			changeMode(val) {
-				// 1自取，2 外卖
-				// console.log(val, '改变配送方式')
-				this.radioModes = val;
-				// this.$store.state.orderType === 'takein'
-				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
-				this.currentArea = this.areaList[0];
-
-				if (val === 1) {
-					this.totalCurrent = this.total - this.freight;
-					// this.currentArea = {};
-				} else {
-					this.totalCurrent = this.total;
-					if (this.takeOver.filter(D => D.Defaults === '1').length > 0) {
-						this.currentArea = this.takeOver.filter(D => D.Defaults === '1')[0]
-					}
-					this.resultArea = this.currentArea.SID;
-				}
-				this.totalCurrent = parseFloat(Number(this.totalCurrent).toFixed(2));
-			},
-			radioChange() {
-				// 控制地址的展示
-				this.showAreaList = true;
-				this.$refs.showAreaList.open()
-			},
-			radioPayChange(val) {
-				if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
-					return;
-				}
-				this.radioPayType = val.detail.value
-			},
-			changeGroup(val) {
-				this.resultArea = val.detail.value
-			},
-			// 切换并选择地址  最后提交的时候把这个地方的经纬度传给后台
-			async changeArea(val,index){
-				console.log(val,index,'选择地址这一块')
-				this.showAreaList = true;
-				this.$refs.showAreaList.open()
-				let api;
-				if (this.radioModes === 1) {
-					api = "IsPickShop";
-				} else {
-					if (this.currentDeliveryType.indexOf("2") > -1) {
-						//外卖
-						api = "CalcFreight";
-					} else if (this.currentDeliveryType.indexOf("3") > -1) {
-						//物流
-						api = "CalcLogistics";
-					}
-				}
-				try{
-					this.loading = true;
-					uni.showLoading()
-					let obj = {
-						Action:api,
-						Latitude: val.Latitude || "",
-						Longitude: val.Longitude || "",
-						ShopSID: this.radioModes === 1 ? val.SID : "",
-						PayType: this.radioPayType,
-						ProdList: JSON.stringify(this.currentItem)
-					}
-					console.log(obj,'obj')
-					let { Data } = await vipCard(obj, "UProdOpera");
-					// 把选择的地址赋值到页面上
-					if (this.radioModes === 1) {
-						this.currentArea = val;
-						let currentStoreInfo = this.currentArea
-						this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
-					} else {
-						this.currentArea = val;
-						this.freight = Data.Freight;
-						sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
-					}
-					this.showAreaList = false;
-					this.$refs.showAreaList.close()
-				}catch(e){
-					console.log(e)
-				}
-				
-			},
-			clickEdit(val) {
-				this.areaInfo = val;
-				this.$refs.addEditArea.open()
-				this.addEditArea = true;
-			},
-			clickGo() {
-				this.$refs.addEditArea.close()
-				this.addEditArea = false;
-			},
+			},			
+			// 返回控制
 			clickLeft() {
 				if (this.$Route.query.flag) {
 					this.$Router.push({
@@ -390,209 +257,52 @@
 				}
 
 			},
-			clickDataTime() {
-				console.log('吊起时间')
-				this.selectTime = true;
-				this.$refs.selectTime.open()
-			},
-			clickUserDiscount() {
-				this.discountProgram = true;
-				this.$refs.discountProgram.open()
-			},
-			clickTime() {},
-			async saveAreaSet() {
-				this.$refs.addEditArea.close()
-				this.addEditArea = false;
-				this.loading = true;
-				uni.showLoading()
-				let listArea = await this.saveArea(false);
-				this.areaList = listArea;
-				this.takeOver = listArea;
-				this.loading = false;
-				uni.hideLoading()
-			},
-			async saveArea(bool) {
-				try {
-					let type;
-					if (this.currentDeliveryType.indexOf("2") > -1) {
-						type = 1;
-					} else if (this.currentDeliveryType.indexOf("3") > -1) {
-						type = 2;
-					}
-					let {
-						Data
-					} = await vipCard({
-							Action: "GetAddressList",
-							Type: type
-						},
-						"UMemberOpera"
-					);
-					if (bool) {
-						uni.showLoading()
-					}
-					return Data.AddressList;
-				} catch (e) {
-					return [];
-				}
-			},
-			PayTypeClick(item) {
-				if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
-					return;
-				}
-				this.radioPayType = item;
-			},
-			changeSider(index) {
-				this.currentIndex = index
-				this.activeKey = index
-				if (this.RecordTime.index === index) {
-					this.radioTime = this.RecordTime.radioTime;
-				} else {
-					this.radioTime = "";
-				}
-				if (index !== 0) {
-					this.rightTimeList = this.allTimeSlot;
-				} else {
-					this.rightTimeList = this.todayTimeSlot;
-				}
-			},
-			rightTimeClick(item) {
-				this.RecordTime = {
-					radioTime: item,
-					index: this.activeKey
-				};
-				this.radioTime = item;
-				this.selectTime = false;
-				this.$refs.selectTime.close()
-				this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
-			},
-			radioTimeFun(val) {
-				this.radioTime = val.detail.value
-			},
-			setDiscountClick(val) {
-				this.radioDiscount = val.detail.value
-			},
-			async DiscountClick(item) {
-				let PrefNo = item.PrefNo;
-				if (item === "undefined") {
-					PrefNo = "";
-				}
-				this.discountProgram = false;
-				this.$refs.discountProgram.close()
-				try {
-					let obj = {
-						Action: "SelectDisc",
-						PrefNo: PrefNo,
-						ProdList: this.currentItem,
-						PayType: this.radioPayType,
-						Latitude: this.currentArea.Latitude,
-						Longitude: this.currentArea.Longitude
-					};
-					this.loading = true;
-					uni.showLoading();
-					let {
-						Data
-					} = await vipCard(obj, "UProdOpera");
-					
-					this.totalCurrent = parseFloat(Number(Data.Total ? Data.Total : Data.SumTotal).toFixed(2));
-					this.loading = false;
-
-					uni.hideLoading();
-				} catch (e) {
-					this.loading = false;
-					uni.hideLoading();
-				}
-			},
-			areaSet() {
-				this.areaInfo = {};
-				this.addEditArea = true;
-				this.$refs.addEditArea.open()
-			},
-			async submitMoney() {
-				
+			async submitMoney() {				
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}
-				
-				let obj = {
-					Action: "TicketPay",
-					ProdList: this.currentItem,
-				};
-
+				try {
+					let Data = await vipCard(
+					  {
+						Action: "TicketPay",
+						ProdList:JSON.stringify(this.prodList),
+						PayType:'1'
+					  }, "UOrderOpera")
+					  if (this.radioPayType === "1") {
+					  	//微卡支付
+						console.log(Data.Data.SumTotal)
+					  	this.$Router.push({
+					  		path: "/pages/shoppingMall/order/confirmCard",
+					  		query: {
+					  			Balance: this.CardInfo.Balance,
+					  			Score: this.CardInfo.Score,
+					  			PayScore: Data.Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
+					  			total: Data.Data.SumTotal,
+					  			PayNo: Data.Data.PayNo,
+					  			IsPass: Data.Data.IsPass,
+								OrderType:Data.Data.OrderType //订单类型
+					  		}
+					  	});
+					  } else {
+					  	// 微信支付
+					  	this.testData = Data;
+					  	try {
+					  		weChatPayment(this, Data, false);
+					  	} catch (e) {
+					  		that.$toast.fail("微信调起失败");
+					  		this.loading = false;
+					  		uni.hideLoading();
+					  	}
+					  }
+				} catch (e) {
+					this.$toast.error(e)
+				}
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
 					// 活动
 					obj.PromotionItemSID = JSON.parse(this.currentItem)[0].PromotionItemSID;
 				}
-				if (this.$Route.query.isIntegral) {
-					let currentItems = JSON.parse(this.currentItem);
-					obj = currentItems[0];
-					obj.Action = "OrderPay";
-					obj.PayType = this.radioPayType;
-					obj.UserRemarks = this.UserRemarks;
-					obj.DeliveryType = 1;
-					//积分
-					if (!this.CardInfo) {
-						this.$toast.fail("未绑定微卡");
-						return;
-					}
-				}
-				let Opera = this.$Route.query.isIntegral ?
-					"UIntOrderOpera" :
-					"UOrderOpera";
-
-				// console.log(JSON.stringify(obj), "objobj");
-				// return;
-				this.loading = true;
-				uni.showLoading();
-				try {
-					let {
-						Data
-					} = await vipCard(obj, Opera);
-					this.loading = false;
-					uni.hideLoading();
-					this.$store.commit("SET_CURRENT_CARD", []); //清掉购物车
-
-					uni.removeStorageSync("alreadyPaid"); //清点之前标记的已经下单的字段
-					if (this.radioPayType === "1") {
-						//微卡支付
-						this.$Router.push({
-							path: "/pages/shoppingMall/order/confirmCard",
-							query: {
-								Balance: this.CardInfo.Balance,
-								Score: this.CardInfo.Score,
-								PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-								total: Data.SumTotal,
-								PayNo: Data.PayNo,
-								IsPass: Data.IsPass
-							}
-						});
-					} else {
-						// 微信支付
-						this.testData = Data;
-						try {
-							weChatPayment(this, Data, false);
-						} catch (e) {
-							that.$toast.fail("微信调起失败");
-							this.loading = false;
-							uni.hideLoading();
-						}
-					}
-				} catch (e) {
-					// that.$toast.fail("微信调起失败");
-					this.loading = false;
-					uni.hideLoading();
-				}
-			},
-			// 点击icon调用微信共享地址中的通讯录
-		},
-		filters: {
-			setSex2(val) {
-				if (val == 0) {
-					return '先生'
-				} else if (val == 1) {
-					return '女士'
-				}
-			}
-		},
+			}	
+		}
 	};
 
 	function setChangeData(num, aceTime) {

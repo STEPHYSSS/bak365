@@ -140,6 +140,10 @@ const other = [
 			title: '秒杀活动',
 		}
 	},{
+		path:'/pages/shoppingMall/makeGroup/makeGroup',
+		name:'makeGroup',
+		meta:{title:'拼团活动'}
+	},{
 		path: '/pages/integralMall/index',
 		name: 'integralMall',
 		meta: {

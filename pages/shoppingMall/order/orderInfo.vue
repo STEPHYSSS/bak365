@@ -129,7 +129,8 @@
 			this.$store.commit("SET_HISTORY_URL", {
 				path: '/pages/shoppingMall/order/orderInfo',
 				query: {
-					order_id: this.$Route.query.order_id
+					order_id: this.$Route.query.order_id,
+					OrderType:this.$Route.query.OrderType
 				}
 			})
 		},
@@ -141,7 +142,8 @@
 						Data
 					} = await vipCard({
 							Action: "GetOrderInfo",
-							SID: this.$Route.query.order_id
+							SID: this.$Route.query.order_id,
+							OrderType:this.$Route.query.OrderType
 						},
 						"UOrderOpera"
 					);
@@ -212,7 +214,8 @@
 					} = await vipCard({
 							Action: "PayMoney",
 							SID: this.OrderInfo.SID,
-							PayType: num
+							PayType: num,
+							OrderType:this.$Route.query.OrderType
 						},
 						Opera
 					);
@@ -222,6 +225,7 @@
 							query: {
 								Balance: this.CardInfo.Balance,
 								Score: this.CardInfo.Score,
+								OrderType:this.$Route.query.OrderType,
 								PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
 								total: Data.SumTotal,
 								PayNo: Data.PayNo,

@@ -18,6 +18,7 @@
 			<button type="default" size="mini" @click="clickGoods">商品横向</button>
 			<button type="default" size="mini" @click="integralMall">积分商城</button>
 			<button type="default" size="mini" @click="seckill">秒杀</button>
+			<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 			<br>
 			<button @click="clickClear" size="mini">去除usermac</button>
 
@@ -138,6 +139,9 @@
 			// 秒杀活动
 			seckill() {
 				this.$Router.push("/pages/shoppingMall/seckill/index");
+			},
+			makeUpGroup(){//拼团活动
+			this.$Router.push("pages/shoppingMall/makeGroup/makeGroup")
 			},
 			setVoice() {},
 			voicePlay(obj) {

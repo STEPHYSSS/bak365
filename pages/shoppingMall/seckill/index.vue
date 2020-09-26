@@ -32,6 +32,7 @@
 			
 		},
 		methods: {
+			// 活动类型（1秒杀，2爆款，3套餐，4买赠，5团购，6满赠）
 			async getlist() {
 				uni.showLoading()
 				try {

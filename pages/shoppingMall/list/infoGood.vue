@@ -29,10 +29,10 @@
 		created() {	
 			// await this.getWxConfig();
 			this.getInfo();
-			this.isIntegral = this.$Route.query.isIntegral || "";
-			this.seckill = this.$Route.query.seckill || "";
+			this.isIntegral = this.$Route.query.isIntegral || "";//积分商城
+			this.seckill = this.$Route.query.seckill || "";//秒杀
 			this.isBrowse = this.$Route.query.isBrowse || "";
-
+			// this.makeUpGroup = this.$Route.query.makeUpGroup || "";//拼团
 			this.$store.commit("SET_HISTORY_URL", {
 				path: '/pages/shoppingMall/list/infoGood',
 				query: {
@@ -80,6 +80,7 @@
 						this.skuDataInfo = Data || {};
 					} else {
 						this.goodList = Data.ProdInfo || {};
+						this.title = Data.ProdInfo.Name;
 						this.skuDataInfo = Data || {};
 					}
 				} catch (e) {
@@ -98,7 +99,11 @@
 				} else if (this.$Route.query.admin) {
 					//从首页点击进来
 					this.$Router.push('/pages/shoppingMall/index')
-				} else {
+				}
+				// else if(this.$Route.query.makeUpGroup){
+				// 	this.$Router.push('/pages/shoppingMall/makeUpGroup/index')
+				// }
+				else {
 					this.$Router.back(1)
 				}
 			}
