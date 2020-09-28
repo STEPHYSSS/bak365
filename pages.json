@@ -179,6 +179,10 @@
             "path" : "pages/shoppingMall/makeGroup/makeGroup",
             "style" : {"navigationBarTitleText": "拼团活动"}
         }
+        ,{
+            "path" : "pages/vip/myCoupon/myCoupon",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

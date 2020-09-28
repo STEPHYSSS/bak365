@@ -117,6 +117,12 @@
 						    	<div>我的推广</div>
 						    </view>
 						</uni-grid-item>
+						<uni-grid-item :index="6">
+						    <view class="grid-item-box">
+						    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
+						    	<div>优惠券</div>
+						    </view>
+						</uni-grid-item>
 					</uni-grid>
 				</div>
 				
@@ -279,6 +285,8 @@
 					this.$router.push('/pages/vip/FootPrint')
 				}else if(id=='5'){
 					this.$router.push('/pages/vip/SpreadOrder')
+				}else if(id=='6'){
+					this.$router.push('/pages/vip/myCoupon/myCoupon')
 				}		
 			},
 			bindEntity(num){

@@ -992,7 +992,8 @@
 								PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
 								total: Data.SumTotal,
 								PayNo: Data.PayNo,
-								IsPass: Data.IsPass
+								IsPass: Data.IsPass,
+								OrderType:Data.Data.OrderType //订单类型
 							}
 						});
 					} else {

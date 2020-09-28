@@ -68,6 +68,12 @@ const other = [
 			title: '会员申请提现',
 		}
 	},{
+		path:'/pages/vip/myCoupon/myCoupon',
+		name:'myCoupon',
+		meta:{
+			title:'我的优惠券'
+		}
+	},{
 		path: '/pages/shoppingMall/order/orderInfo',
 		name: 'orderInfo',
 		meta: {

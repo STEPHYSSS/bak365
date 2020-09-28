@@ -72,8 +72,8 @@
 									<view class="items">
 										<!-- 商品 begin -->
 										<view class="good" v-for="(good, key) in goods_list" :key="key">
-											<image :src="good.Img | imgFilter" class="image" @tap="addCart(good)"></image>
-											<view class="right">
+											<image :src="good.Img | imgFilter" class="image" @tap="addCart(good)" v-if="good.ProdType == '0'"></image>
+											<view class="right" v-if="good.ProdType == '0'">
 												<text class="name">{{ good.Name }}</text>
 												<text class="tips">{{ good.Describe }}</text>
 												<view class="price_and_action">

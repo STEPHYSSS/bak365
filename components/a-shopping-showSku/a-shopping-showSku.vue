@@ -256,7 +256,8 @@
 					Number(this.skuDataInfo.ProdInfo.SpecType) === 2 ||
 					Number(this.skuDataInfo.ProdInfo.SpecType) === 3
 				) {
-					let arr = this.skuDataInfo.SpecList[i].ParamInfo.split(",");
+					// let arr = this.skuDataInfo.SpecList[i].ParamInfo.split(",");//暂时注释
+					let arr = this.skuDataInfo.SpecList[i];
 					this.flavorList = setTast(arr, this);
 				}
 
@@ -349,16 +350,18 @@
 						// } else {
 							this.normsList.push(skuDataInfo.ProdInfo);
 						// }
-						arr = skuDataInfo.ProdInfo.ParamInfo.split(",") || [];
+						arr=[]
+						// arr = skuDataInfo.ProdInfo.ParamInfo.split(",") || [];//暂时注释
 					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 2) {
 						// 多规格商品
 						this.normsList = skuDataInfo.SpecList;
-						
-						arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];
+						// arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];//暂时注释
+						arr = skuDataInfo.SpecList[0] || [];//暂时注释
 					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 3) {
 						// 单规格商品-不同总类
-						this.normsList = skuDataInfo.SpecList;
-						arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];
+						this.normsList = skuDataInfo.SpecList;						
+						// arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];//暂时注释
+						arr = skuDataInfo.SpecList[0] || [];
 					}
 					this.partsList = skuDataInfo.PartsList || [];
 					this.partsList.forEach(D => {

@@ -125,14 +125,13 @@
 		},
 		created() {
 			this.getInfo();
-
-			this.$store.commit("SET_HISTORY_URL", {
-				path: '/pages/shoppingMall/order/orderInfo',
-				query: {
-					order_id: this.$Route.query.order_id,
-					OrderType:this.$Route.query.OrderType
-				}
-			})
+			// this.$store.commit("SET_HISTORY_URL", {
+			// 	path: '/pages/shoppingMall/order/orderInfo',
+			// 	query: {
+			// 		order_id: this.$Route.query.order_id,
+			// 		OrderType:this.$Route.query.OrderType
+			// 	}
+			// })
 		},
 		computed: {},
 		methods: {
@@ -221,18 +220,21 @@
 					);
 					if (num === 1) {
 						this.$Router.push({
-							path: "/pages/shoppingMall/order/confirmCard",
-							query: {
-								Balance: this.CardInfo.Balance,
-								Score: this.CardInfo.Score,
-								OrderType:this.$Route.query.OrderType,
-								PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-								total: Data.SumTotal,
-								PayNo: Data.PayNo,
-								sid: this.OrderInfo.SID,
-								IsPass: Data.IsPass
-							}
-						});
+							path: "/pages/shoppingMall/order/confirmCard"
+						})
+						// this.$Router.push({
+						// 	path: "/pages/shoppingMall/order/confirmCard",
+						// 	query: {
+						// 		Balance: this.CardInfo.Balance,
+						// 		Score: this.CardInfo.Score,
+						// 		OrderType:this.$Route.query.OrderType,
+						// 		PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
+						// 		total: Data.SumTotal,
+						// 		PayNo: Data.PayNo,
+						// 		sid: this.OrderInfo.SID,
+						// 		IsPass: Data.IsPass
+						// 	}
+						// });
 					} else {
 						try {
 							weChatPayment(this, Data, true);

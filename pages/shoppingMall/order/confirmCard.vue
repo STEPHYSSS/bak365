@@ -60,6 +60,7 @@
 			};
 		},
 		created() {
+			console.log(this.$Route.query,'454545')
 			// console.log(this.$Router,'confirm')
 			if (uni.getStorageSync('alreadyPaid')) {
 				//支付过，订单已经形成
@@ -144,7 +145,7 @@
 					// window.history.go(-2);
 					// this.$Routerr.back(2)
 					// uni.navigateBack()
-					this.$Router.push(this.$store.state.historyUrl)
+					// this.$Router.push(this.$store.state.historyUrl)
 				}
 			}
 		},

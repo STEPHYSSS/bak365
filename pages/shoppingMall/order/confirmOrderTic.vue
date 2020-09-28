@@ -13,19 +13,15 @@
 				<span>
 					小计：
 					<span class="total-style__color">
-						<span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
-						<span v-if="totalCurrent>0 && radioModes === 1">¥{{ProdTotal |spliceNum}}</span>
-						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
+						<span>¥{{SumTotal}}</span>
 					</span>
 				</span>
 			</div>
-
-			<div class="radio-group-play">
-				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
+			<div class="radio-group-play">				
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
-					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
-						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
+					<div>
+						<div class="radio-group-item" @click="PayTypeClick('1')">
 							<div>
 								<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 								<span class="custom-title">卡支付（余额:{{CardInfo.Balance}}）</span>
@@ -64,29 +60,19 @@
 		setUrlDelCode
 	} from "@/util/publicFunction";
 	import wx from 'weixin-js-sdk'
-	// import Mixins from "../mixins.js";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 
 	export default {
 		name: "confirmOrder",
-		// mixins: [Mixins],
 		components: {
-			// receiveAddress
 			adCell
 		},
-
 		data() {
 			return {
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
 				loading: true,
-				currentItem: [],
-				UserRemarks: "",
-				UserTime: "",
-				UserDiscount: "",
-				UserDiscountName: "请选择方案",
-				// 当前选择的地址
-				currentArea: {},
+				currentItem: [],//用来接收下单商品
 				radioModes: 2,
 				prodList: [],
 				showAreaList: false,
@@ -133,12 +119,8 @@
 				allData: {},
 				totalCurrentScore: 0,
 				currentIndex: 0,
-				// item:JSON.parse(sessionStorage.getItem('currentCard')),
-				location:{
-					longitude: 30.47988,
-					latitude: 114.41739
-				},
-				takeDeliveryTpey:''
+				takeDeliveryTpey:'',
+				SumTotal:''
 			};
 		},
 		async created() {
@@ -148,7 +130,6 @@
 			) {
 				this.$Router.back(2)
 				this.$Router.back(100)
-				// window.history.go(-1);
 			}
 			let item = this.$store.state.currentCard || [];
 			this.currentItem = item;
@@ -167,6 +148,7 @@
 						ProdList:this.currentItem          
 					  }, "UProdOpera")
 					  this.prodList = data.Data.ProdList;
+					  this.SumTotal = data.Data.SumTotal;//总价
 					  this.CardInfo =data.Data.hasOwnProperty("CardInfo") ?
 					  	data.Data.CardInfo : {};
 					  
@@ -257,20 +239,16 @@
 				}
 
 			},
-			async submitMoney() {				
-				if (this.radioDiscount === "undefined") {
-					this.radioDiscount = "";
-				}
+			async submitMoney() {
 				try {
 					let Data = await vipCard(
 					  {
 						Action: "TicketPay",
 						ProdList:JSON.stringify(this.prodList),
-						PayType:'1'
+						PayType:this.radioPayType
 					  }, "UOrderOpera")
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
-						console.log(Data.Data.SumTotal)
 					  	this.$Router.push({
 					  		path: "/pages/shoppingMall/order/confirmCard",
 					  		query: {
