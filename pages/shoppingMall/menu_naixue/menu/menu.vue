@@ -138,6 +138,7 @@
 					<image :src="good.Img|imgFilter" class="image"></image>
 					<view class="btn-group2">
 						<!-- <image src="/static/images/menu/share-good.png"></image> -->
+						<view class="iconfont icon-fenxiang1" id="share" @click="share"></view>
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
 					</view>
 				</view>
@@ -277,7 +278,8 @@
 	import modal from '@/components/modal/modal'
 	import popupLayer from '@/components/popup-layer/popup-layer'
 	// import Mixins from "../../mixins.js"
-	// import wx from 'weixin-js-sdk'
+	import wx from 'weixin-js-sdk'
+	
 	import {
 		vipCard
 	} from '@/api/http.js';
@@ -316,9 +318,7 @@
 
 			}
 		},
-		async onLoad() {
-			// this.getWxConfig() // 获取授权地址
-			// console.log(this.$store.state.orderType )
+		async onLoad() {			
 			await this.getCouponList();
 			await this.getList();
 			this.getLunBoImg();
@@ -330,14 +330,10 @@
 					SID: currentStore.data.SID,
 					Length:currentStore.data.Length
 				}
-				// this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 			}else{
 				await this.getShopList()
 			}
 			this.currentType = this.goods[0];
-			// if(this.cart.length){
-				
-			// }
 			this.cart = uni.getStorageSync('cart') || [];
 			if(!this.addresses){				
 				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
@@ -349,6 +345,9 @@
 				this.changeInfo();
 			}
 			
+		},
+		mounted() {
+			this.getWxShare();
 		},
 		components: {
 			modal
@@ -841,6 +840,91 @@
 					console.log(e);
 				}
 				uni.hideLoading()
+			},
+			// 微信分享
+			async getWxShare(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["onMenuShareAppMessage","onMenuShareTimeline"]
+					});
+					wx.ready(res => {
+						console.log(res)
+						// var title = "魔法妈咪学院入学啦！好妈咪快进来！";
+						// var myurl = "http://diy-haier.highset.cn/index.jsp";		
+						// //分享给朋友
+						// wx.onMenuShareAppMessage({
+						// 	title : title, // 分享标题
+						// 	desc : '海尔定制母婴家电，让你魔法加身，搞定养娃的大问题！', // 分享描述
+						// 	link : myurl, // 分享链接
+						// 	imgUrl : 'http://diy-haier.highset.cn/fx.jpg', // 分享图标
+						// 	type : 'link', // 分享类型,music、video或link，不填默认为link
+						// 	success : function() {
+						// 		// 用户确认分享后执行的回调函数
+						// 	},
+						// 	cancel : function() {
+						// 		// 用户取消分享后执行的回调函数
+						// 	}
+						// });
+						// wx.onMenuShareTimeline({
+						// 	title : title, // 分享标题
+						// 	link : myurl, // 分享链接
+						// 	imgUrl : 'http://diy-haier.highset.cn/fx.jpg', // 分享图标
+						// 	success : function() {
+						// 		// 用户确认分享后执行的回调函数
+						// 	},
+						// 	cancel : function() {
+						// 		// 用户取消分享后执行的回调函数
+						// 	}
+						// });
+					})
+					wx.error(function(res) {
+						console.log(res.errMsg);
+					});
+				} catch (e) {
+				}
+			},
+			share(){
+				var title = "魔法妈咪学院入学啦！好妈咪快进来！";
+				var myurl = "http://diy-haier.highset.cn/index.jsp";		
+				//分享给朋友
+				wx.onMenuShareAppMessage({
+					title : title, // 分享标题
+					desc : '海尔定制母婴家电，让你魔法加身，搞定养娃的大问题！', // 分享描述
+					link : myurl, // 分享链接
+					imgUrl : 'http://diy-haier.highset.cn/fx.jpg', // 分享图标
+					type : 'link', // 分享类型,music、video或link，不填默认为link
+					success : function() {
+						// 用户确认分享后执行的回调函数
+						console.log('success')
+					},
+					cancel : function() {
+						console.log('error')
+						// 用户取消分享后执行的回调函数
+					}
+				});
+				wx.onMenuShareTimeline({
+					title : title, // 分享标题
+					link : myurl, // 分享链接
+					imgUrl : 'http://diy-haier.highset.cn/fx.jpg', // 分享图标
+					success : function() {
+						// 用户确认分享后执行的回调函数
+					},
+					cancel : function() {
+						// 用户取消分享后执行的回调函数
+					}
+				});
 			}
 		},
 		filters:{

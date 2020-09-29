@@ -54,29 +54,18 @@
 				// 查看详情
 				showInfo: false,
 				activeUser: 0,
-				dataList: [ {BackDate: "",
-							CodeNo: "BC273786384",
-							Discount: "",
-							KindName: "5元",
-							KindNo: "ZQ1",
-							MinUseAmt: "20.00",
-							PreValue: "5",
-							SaleDate: "2020-09-21 22:30:12",
-							StartDate: "2020-09-19",
-							Text: "项目负责人：~印刷数量：~起始号码：~小包装数量：~大包装数量：~~/--使用记录--/~×年×月×日：~",
-							Type: "1",
-							ValidDate: "2020-10-01"},
-							{BackDate: "",
-							CodeNo: "BC221846444",
-							Discount: "",
-							KindName: "5元",
-							KindNo: "ZQ1",
-							MinUseAmt: "20.00",
-							PreValue: "5",
-							SaleDate: "2020-09-21",
-							StartDate: "2020-09-19",
-							Text: "项目负责人：~印刷数量：~起始号码：~小包装数量：~大包装数量：~~/--使用记录--/~×年×月×日：~",
-							Type: "1"}],
+				dataList: [{
+					BackDate: "",
+					CodeNo: "BC273786384",
+					KindName: "5元优惠券",
+					Discount: "",					
+					KindNo: "ZQ1",
+					MinUseAmt: "20.00",//满多少可使用
+					PreValue: "50",//金额
+					SaleDate: "2020-09-21 22:30:12",//购买时间
+					StartDate: "2020-09-19 22:30:12",//开始时间
+					Type: "1",
+					ValidDate: "2020-10-08 22:30:12"}],//结束时间
 				isOrder: false,
 				// 当前显示的详情弹框内容
 				currentShowStr: '',

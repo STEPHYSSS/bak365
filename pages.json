@@ -194,15 +194,11 @@
 		"backgroundColor": "#fff",
 		"borderStyle": "white",
 		"list": [{
-				// "pagePath": "pages/shoppingMall/index"
 				"pagePath":"pages/shoppingMall/login"
 			},
 			{
 				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu"		
 			},
-			// {
-			// 	"pagePath": "pages/shoppingMall/shoppingCart/index"
-			// },
 			{
 				"pagePath": "pages/home"
 			},

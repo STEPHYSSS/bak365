@@ -34,14 +34,21 @@
 				width: 130px;
 				height: 130px;
 				border: 1px solid #CCCCCC;
+				margin-top: 10px;
 			}
 
 			.btn-group2 {
 				position: absolute;
 				right: 10rpx;
 				top: 20rpx;
-
-				image {
+				#share{
+					display: inline-block;
+					position: absolute;
+					font-size: 18px;
+					left: -27px;
+					top: 8px;
+				}
+				image {					
 					width: 35px;
 					height: 35px;
 				}

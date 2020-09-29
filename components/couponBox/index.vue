@@ -1,4 +1,4 @@
-<template>
+<template>	
 	<!-- <wxs module="dateFr" src="../../../../filter/index.wxs"></wxs> -->
 	<view style="padding:0px 10px 10px">
 		<radio-group :value="currentCodeNo">
@@ -13,6 +13,7 @@
 				<view class="radio-coupon-style">
 					<view class="radio-center-style">
 						<view class="radio-title-style">{{item.KindName}}</view>
+						<view class="radio-title-style">￥{{item.PreValue}}</view>
 						<view v-if="activeUser != 1" class="radio-time-style">
 							有效期 {{item.StartDate}}至{{item.ValidDate}}
 						</view>
@@ -22,10 +23,11 @@
 					</view>
 
 					<view v-if="!isOrder" class="my-default-btn user-coupon-style">
-						<navigator :url="'/pages/indexVip/couponQRCode/index?item='+ encodeURIComponent(JSON.stringify(item))"
+						<!-- <navigator :url="'/pages/indexVip/couponQRCode/index?item='+ encodeURIComponent(JSON.stringify(item))"
 						 hover-class="none">
 							<button hover-class="btn-hover" class="user-coupon-btn">立即使用</button>
-						</navigator>
+						</navigator> -->
+						<button hover-class="btn-hover" class="user-coupon-btn">立即使用</button>
 					</view>
 
 					<view style="flex:1;text-align: right;" v-if="isOrder">
@@ -37,23 +39,7 @@
 			</view>
 		</radio-group>
 		<no-data v-if="dataList.length===0"></no-data>
-		<!-- <view class="listCoupon"> -->
-		<!-- <uni-popup :show="showInfo" @change="onCloseInfo" class="showInfo-style">
-			<view>
-				<view class="show-head-style">详细信息</view>
-				<view class="show-center-style">
-					<text>{{currentShowStr}}</text>
-				</view>
-				<view :class="'btnMy'+itemColor">
-					<button @click="onCloseInfo({show:false})">
-						我知道了
-					</button>
-				</view>
-			</view>
-		</uni-popup> -->
-		<!-- </view> -->
 	</view>
-	<!-- </template> -->
 </template>
 
 <script>
