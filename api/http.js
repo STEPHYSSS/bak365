@@ -36,7 +36,6 @@ export const vipCard = (data, ViewKay, appNo) => {
 							'dataType':'json'
 						},
 						success: function(response) {
-							console.log(response, 'response')
 							if (response.data.Message === '请登录') {
 								// return
 								NOMAC()
@@ -48,7 +47,7 @@ export const vipCard = (data, ViewKay, appNo) => {
 									uni.hideLoading();
 									return resolve(response.data)
 								} else {
-									console.log(response.data.Message)
+									// console.log(response.data.Message)
 									uni.showToast({
 										title: response.data.Message,
 										icon: 'none'

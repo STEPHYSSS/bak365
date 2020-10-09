@@ -170,10 +170,10 @@
 							</view>							
 						</view>
 						<view class="properties" v-else-if="kouwei2">
-							<view class="favo" v-for="(item,index) in kouwei2" :key="index">
-								<view class="titleSty">{{item.Name}}</view>
+							<view class="favo">
+								<view class="titleSty">口味</view>
 								<view class="teast" >
-									<view class="testBoxCheck">{{item.Attribute}}</view>									
+									<view class="testBoxCheck">{{kouwei2}}</view>									
 								</view>
 							</view>
 						</view>
@@ -555,14 +555,12 @@
 					this.goodsInfo = Data.ProdInfo;
 					if (this.goodsInfo.SpecType === '2') {
 						this.normsList = Data.SpecList;
-						console.log(this.normsList)
 						this.normsList.forEach(val => {
 							this.$set(val, 'type', 2);
 						});
 						// this.kouwei = this.normsList[0].ParamInfo.split(',');		//暂时注释			
 					}else if(this.goodsInfo.SpecType === '1'){
-						this.kouwei2 = this.skuDataInfo.AttributeList;
-						// this.kouwei2 = this.goodsInfo.ParamInfo;
+						this.kouwei2 = this.goodsInfo.ParamInfo;
 					}
 					this.good = JSON.parse(JSON.stringify({ ...this.goodsInfo,
 						number: 1
@@ -596,6 +594,7 @@
 				const Buy = {
 					BuyCnt: num
 				}
+				// this.publicGoodsInfo(good,Buy);
 				const index = this.cart.findIndex(item => {
 					if (good.ParamInfo) {
 						return (item.SID === good.SID) && (item.Describe === good.Describe)
@@ -676,7 +675,25 @@
 					this.cart.splice(index, 1)					
 				}
 			},
-			
+			// 点击加号和图片和规格调用的商品信息
+			async publicGoodsInfo(good,Buy){
+				try {
+					let obj = {
+						Action: "GetProdInfo"
+					};
+					Object.assign(obj, good, Buy);
+				
+					let {
+						Data
+					} = await vipCard(obj, "UProdOpera");
+					this.skuDataInfo = Data;
+					this.goodsInfo = Data.ProdInfo;
+					this.normsList = Data.SpecList;
+					// this.flavorList = this.goodsInfo.TastName.split(',')
+				} catch (e) {
+					console.log(e);
+				}
+			},
 			// 点击图片或者选择规格时弹窗里的加入购物车按钮
 			async AddToCartInModal(good) {
 				// 点击的时候会把商品信息带入，数量buycut，价格
