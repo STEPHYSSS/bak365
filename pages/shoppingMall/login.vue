@@ -128,7 +128,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: false,
+						debug: true,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -147,7 +147,7 @@
 								latitude: res.latitude// 经度
 							}
 							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							// sessionStorage.setItem('location',JSON.stringify(_this.location))							
+							sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
 					      cancel: function(res) {
 					        this.$toast.fail(res);

@@ -350,13 +350,14 @@
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
+					// 自取的时候传递的经纬度是授权的经纬度，如果是外卖的时候传递的经纬度就是收货地址的经纬度
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
-						// Longitude: this.$store.state.currentLocation.longitude,
-						// Latitude: this.$store.state.currentLocation.latitude
-						Longitude: this.currentArea.Longitude,
-						Latitude: this.currentArea.Latitude,
+						Longitude: this.$store.state.currentLocation.longitude,
+						Latitude: this.$store.state.currentLocation.latitude,
+						// Longitude: this.currentArea.Longitude,
+						// Latitude: this.currentArea.Latitude,
 						DeliveryType:this.takeDeliveryTpey
 						// DeliveryType: this.currentDeliveryType
 						
