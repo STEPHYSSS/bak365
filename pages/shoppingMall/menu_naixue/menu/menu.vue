@@ -74,6 +74,7 @@
 												<view class="price_and_action">
 													<text class="price">￥{{ good.SalePrice }}</text>
 													<!-- 当SpecType等于2的时候是多规格商品 -->
+													<!--  -->
 													<view class="btn-group" v-if="good.SpecType == '2'">
 														<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
 														 @tap="showGoodDetailModal(item, good)">
@@ -151,8 +152,8 @@
 										<text class="name">{{ item.Name }}</text>
 									</view>
 									<view class="specBox">
-										<view class="static" :class="{'isActive2': currentIndex2 === index }" v-for="(value, key) in item.Value" :key="index" >
-											<view @click="skuTopChoice2(index,item)">
+										<view class="static" v-for="(value, index2) in item.Value" :key="value.Name" :class="isActiveName(value.Name)" @click="clickStatic(item, value,index2)">
+											<view>
 												{{value.Name}}
 											</view>											
 										</view>
@@ -175,6 +176,7 @@
 						<view class="price">￥{{ good.SalePrice }}</view>
 						<view class="props" v-if="norms">
 							{{ cooName }}
+							<test style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}</test>
 						</view>
 					</view>
 					<view class="btn-group">
@@ -187,8 +189,9 @@
 						</div>
 					</view>
 				</view>
-				<view class="add-to-cart-btn" @tap="handleAddToCartInModal">
-					<view>加入购物车</view>
+				<view class="add-to-cart-btn" @tap="handleAddToCartInModal">					
+					<view v-if="isStock">{{isStock}}</view>
+					<view v-else>加入购物车</view>
 				</view>
 			</modal>
 			<!-- 商品详情模态框 end -->
@@ -261,13 +264,25 @@
 				currentIndex2:0,
 				cooName:{},
 				sizeSID:"",//多规格时商品SID
-				sizeProdNo:""//多规格时商品prodNo
+				sizeProdNo:"",//多规格时商品prodNo
+				checkStatic:{}, //选择的口味
+				isStock:'',//用来记录是否售罄
 			}
 		},
 		async onLoad(){
 			await this.init();
 		},
 		computed:{
+			isActiveName () {
+				return function (name) {
+					for (let i of this.checkStatic) {
+						if (name === i.Value.Name) {
+							return 'isActive2'
+						}
+					}
+					return ''
+				}
+			},
 			goodCartNum() {	//计算单个饮品添加到购物车的数量
 				return (id) => this.cart.reduce((acc, cur) => {
 						if(cur.SID === id) {
@@ -440,8 +455,26 @@
 						SID:good.SID}, 
 					"UProdOpera");
 					let goodsInfo = Data.ProdInfo;
+					if(goodsInfo.State !='1'){
+						this.isStock = '已下架'
+					}else if(goodsInfo.StockType != '0'){//判断库存数量
+						if(goodsInfo.StoreQty <= '0'){
+							this.isStock = '已售罄'
+						}
+					}					
 					if(Data.SpecList){ this.norms = Data.SpecList || [] };
-					if(Data.AttributeList){ this.attribute = Data.AttributeList || [] };		
+					if(Data.AttributeList){
+						this.attribute = Data.AttributeList || []
+						this.checkStatic = this.attribute.map(item => {
+							return {
+								Name: item.Name,
+								Value: {
+									Name: item.Value[0].Name,
+									Price: item.Value[0].Price
+								}
+							}
+						})
+					};		
 					this.good = JSON.parse(JSON.stringify({ ...goodsInfo,number: 1}))
 					this.category = JSON.parse(JSON.stringify(item))
 					this.goodDetailModalVisible = true
@@ -472,9 +505,9 @@
 				this.good.number -= 1
 			},
 			handleAddToCartInModal() {//模态框（商品详情）加入购物车按钮
-				const product = Object.assign({}, this.good, {Describe: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
-				this.handleAddToCart(this.category, product, this.good.number)
-				this.closeGoodDetailModal()
+				// const product = Object.assign({}, this.good, {Describe: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
+				// this.handleAddToCart(this.category, product, this.good.number)
+				// this.closeGoodDetailModal()
 			},
 			openCartPopup(){//打开/关闭购物车列表popup
 				this.cartPopupVisible = !this.cartPopupVisible
@@ -577,6 +610,15 @@
 				}
 				this.currentIndex2 = i;
 			},
+			
+			clickStatic(item, value,key){
+				console.log(item, value,key)
+				for (let i of this.checkStatic) {
+					if (item.Name === i.Name) {
+						i.Value = value
+					}
+				}
+			}
 		},
 		
 		filters:{

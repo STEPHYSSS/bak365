@@ -15,7 +15,8 @@ export const vipCard = (data, ViewKay, appNo) => {
 					return reject();
 				} else {
 					// h5
-					let UserMACPhone = Cookies.get('UserMACPhone')
+					// let UserMACPhone = Cookies.get('UserMACPhone')
+					let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
 					let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : appNo
 					let urlaspx = 'RenderMobile.aspx'
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
@@ -111,7 +112,8 @@ function NOMAC() {
 		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
 	store.dispatch('get_user', {
 		AppNo: Cookies.get('AppNo'),
-		Code:'wxb7a2e9fc043daf1c'
+		// Code:'wxb7a2e9fc043daf1c'
+		Code:''
 	}).then(appId => {
 		if (appId) {
 			router.push({

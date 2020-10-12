@@ -34,15 +34,16 @@
 			}
 			//   获取code
 			let newAppNo = Cookie.get("AppNo");
-			// let code = this.setCode("code");
-			let code = 'wxb7a2e9fc043daf1c';
+			let code = this.setCode("code");
+			// let code = 'wxb7a2e9fc043daf1c';
 			this.myCode = code;
 			if (code && code !== "undefined") {
 				Cookie.remove("UserMACPhone");
 				try {
 					let abc = await this.$store.dispatch("get_user", {
 						AppNo: newAppNo,
-						Code:'wxb7a2e9fc043daf1c'
+						// Code:'wxb7a2e9fc043daf1c'
+						Code:''
 					});
 					// let seconds = 7200000;
 					// let expires = new Date(new Date() * 1 + seconds * 1000);
