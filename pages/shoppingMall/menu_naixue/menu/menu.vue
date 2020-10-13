@@ -67,30 +67,39 @@
 									<view class="items">
 										<!-- 商品 begin -->
 										<view class="good" v-for="(good, key) in item.children" :key="key">
-											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'"></image>
+											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'"></image>											
 											<view class="right" v-if="good.ProdType == '0'">
 												<text class="name">{{ good.Name }}</text>
 												<text class="tips">{{ good.Describe }}</text>
 												<view class="price_and_action">
 													<text class="price">￥{{ good.SalePrice }}</text>
 													<!-- 当SpecType等于2的时候是多规格商品 -->
-													<!--  -->
-													<view class="btn-group" v-if="good.SpecType == '2'">
-														<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
-														 @tap="showGoodDetailModal(item, good)">
-															选规格
-														</button>
-														<view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+													<!-- 当库存type!=0的时候判断库存数量是否小于等于0，小于的话展示售罄-->
+													<view class="" v-if="good.StockType != '0'&& good.StoreQty <= '0'">
+														<view class="btn-group">
+															<button class="btn property_btn" style="background-color: #ffdfb9;color: #fff;" hover-class="none" size="mini">
+																已售罄
+															</button>
+														</view>
 													</view>
-													<view class="btn-group" v-else>
-														<div @tap="handleReduceFromCart(item, good)" v-show="goodCartNum(good.SID)">
-															<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
-														</div>
-														<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>													
-														<div @tap="handleAddToCart(item, good, 1)">
-															<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
-														</div>
-													</view>
+													<view v-else>
+														<view class="btn-group" v-if="good.SpecType == '2'">
+															<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
+															 @tap="showGoodDetailModal(item, good)">
+																选规格
+															</button>
+															<view class="dot" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>
+														</view>
+														<view class="btn-group" v-else>
+															<div @tap="handleReduceFromCart(item, good)" v-show="goodCartNum(good.SID)">
+																<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
+															</div>
+															<view class="number" v-show="goodCartNum(good.SID)">{{ goodCartNum(good.SID) }}</view>													
+															<div @tap="handleAddToCart(item, good, 1)">
+																<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
+															</div>
+														</view>
+													</view>													
 												</view>
 											</view>
 										</view>
@@ -154,7 +163,7 @@
 									<view class="specBox">
 										<view class="static" v-for="(value, index2) in item.Value" :key="value.Name" :class="isActiveName(value.Name)" @click="clickStatic(item, value,index2)">
 											<view>
-												{{value.Name}}
+												{{value.Name}} ￥{{value.Price}}
 											</view>											
 										</view>
 									</view>
@@ -176,7 +185,7 @@
 						<view class="price">￥{{ good.SalePrice }}</view>
 						<view class="props" v-if="norms">
 							{{ cooName }}
-							<test style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}</test>
+							<text style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}</text>
 						</view>
 					</view>
 					<view class="btn-group">
@@ -189,9 +198,11 @@
 						</div>
 					</view>
 				</view>
-				<view class="add-to-cart-btn" @tap="handleAddToCartInModal">					
-					<view v-if="isStock">{{isStock}}</view>
-					<view v-else>加入购物车</view>
+				<view class="add-to-cart-btn" v-if="isStock">					
+					<view>{{isStock}}</view>
+				</view>
+				<view class="add-to-cart-btn" @tap="handleAddToCartInModal" v-else>
+					<view>加入购物车</view>
 				</view>
 			</modal>
 			<!-- 商品详情模态框 end -->
@@ -269,7 +280,7 @@
 				isStock:'',//用来记录是否售罄
 			}
 		},
-		async onLoad(){
+		async onLoad(){			
 			await this.init();
 		},
 		computed:{
@@ -317,9 +328,19 @@
 			async init(){//页面初始化
 				this.loading = true;
 				// 获取门店列表
-				if(this.$store.state.orderType === 'takein'){
-					await this.getShopList();
-				}
+				if(this.$Route.query.flag =='Deflocation'){
+					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+					this.currentStoreInfo = {
+						Name: currentStore.data.Name,
+						Address: currentStore.data.Address,
+						SID: currentStore.data.SID,
+						Length:currentStore.data.Length
+					}
+				}else{
+					if(this.$store.state.orderType === 'takein'){
+						await this.getShopList();
+					}
+				}				
 				// 获取商品列表
 				await this.getTreeGoods();
 				//获取轮播图列表
@@ -330,7 +351,7 @@
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}else{
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-				}
+				}				
 			},
 			async getShopList() {// 获取门店
 				let { Data } = await vipCard({
@@ -418,18 +439,37 @@
 				if(index > -1) {
 					this.cart[index].BuyCnt += num
 				} else {
-					if(this.sizeProdNo == ''){
-						this.sizeProdNo = this.norms[0].ProdNo
-					}
-					this.cart.push({
+					// this.cart.push({
+					// 	CateSID: good.CateSID,
+					// 	// ProdNo: good.SpecType === '2'? this.sizeProdNo: good.ProdNo,//暂时注释
+					// 	ProdNo:good.ProdNo,
+					// 	SpecType:good.SpecType,
+					// 	ParamInfo: good.ParamInfo,
+					// 	BuyCnt: num,
+					// 	PartsList: '',
+					// 	ProdSID: good[good.SpecType === 2 ? 'ProdSID' : 'SID'],
+					// 	// SpecSID:this.sizeSID != '' ? this.sizeSID : this.norms[0].SID,//暂时注释
+					// 	// SpecSID:good.SpecType === '2' ? this.sizeSID : '',//多规格的时候需要传规格里面商品sid
+					// 	Name: good.Name,
+					// 	SalePrice: good.SalePrice,
+					// 	Img: good.Img,
+					// 	Describe: good.Describe,
+					// 	DeliveryType: '2,1',
+					// 	ProdType: 0,
+					// 	PromotionSID: "",
+					// })
+					// console.log(this.cart)
+					const obj = {
 						CateSID: good.CateSID,
-						ProdNo: good.SpecType === '2'? this.sizeProdNo: good.ProdNo,
+						// ProdNo: good.SpecType === '2'? this.sizeProdNo: good.ProdNo,//暂时注释
+						ProdNo:good.ProdNo,
 						SpecType:good.SpecType,
 						ParamInfo: good.ParamInfo,
 						BuyCnt: num,
 						PartsList: '',
 						ProdSID: good[good.SpecType === 2 ? 'ProdSID' : 'SID'],
-						SpecSID:this.sizeSID != '' ? this.sizeSID : this.norms[0].SID,
+						// SpecSID:this.sizeSID != '' ? this.sizeSID : this.norms[0].SID,//暂时注释
+						// SpecSID:good.SpecType === '2' ? this.sizeSID : '',//多规格的时候需要传规格里面商品sid
 						Name: good.Name,
 						SalePrice: good.SalePrice,
 						Img: good.Img,
@@ -437,11 +477,25 @@
 						DeliveryType: '2,1',
 						ProdType: 0,
 						PromotionSID: "",
-					})
+					}
+					if(this.cart.length === 0){
+						this.cart.push(obj);
+					}else{
+						let isHave = this.cart.some(val => {
+							return obj.ProdSID === val.ProdSID;
+						})
+						if (isHave) { // 如果购物车已存在此商品
+							// 找出购物车中已存在的商品  在BuyCnt进行加一
+							const a = this.cart.findIndex(val => val.ProdSID === obj.ProdSID);
+							this.cart[a].BuyCnt=this.cart[a].BuyCnt + 1
+						} else {
+							// 当购物车中不存在要添加的商品
+							this.cart.push(obj);
+						}
+					}
 				}
 			},
 			handleReduceFromCart(item,good){//普通商品--减按钮
-				console.log(item,good,'减按钮')
 				const index = this.cart.findIndex(item => item.SID === good.SID)
 				this.cart[index].BuyCnt -= 1
 				if(this.cart[index].BuyCnt <= 0) {
@@ -454,6 +508,7 @@
 						Action: "GetProdInfo",
 						SID:good.SID}, 
 					"UProdOpera");
+					console.log(good)
 					let goodsInfo = Data.ProdInfo;
 					if(goodsInfo.State !='1'){
 						this.isStock = '已下架'
@@ -464,7 +519,8 @@
 					}					
 					if(Data.SpecList){ this.norms = Data.SpecList || [] };
 					if(Data.AttributeList){
-						this.attribute = Data.AttributeList || []
+						this.attribute = Data.AttributeList || [];
+						console.log(this.attribute,'----')
 						this.checkStatic = this.attribute.map(item => {
 							return {
 								Name: item.Name,
@@ -505,9 +561,9 @@
 				this.good.number -= 1
 			},
 			handleAddToCartInModal() {//模态框（商品详情）加入购物车按钮
-				// const product = Object.assign({}, this.good, {Describe: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
-				// this.handleAddToCart(this.category, product, this.good.number)
-				// this.closeGoodDetailModal()
+				const product = Object.assign({}, this.good, {Describe: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})
+				this.handleAddToCart(this.category, product, this.good.number)
+				this.closeGoodDetailModal()
 			},
 			openCartPopup(){//打开/关闭购物车列表popup
 				this.cartPopupVisible = !this.cartPopupVisible
@@ -601,18 +657,11 @@
 				}
 				this.currentIndex = i;
 			},
-			skuTopChoice2(i, item) {
-				// this.cooName= item.Name;
-				// this.sizeSID = item.SID;
-				// this.sizeProdNo = item.ProdNo;
-				if (this.currentIndex2 === i) {
-					return;
-				}
-				this.currentIndex2 = i;
-			},
 			
 			clickStatic(item, value,key){
 				console.log(item, value,key)
+				this.sizeSID = item.SID;
+				this.sizeProdNo = item.ProdNo;
 				for (let i of this.checkStatic) {
 					if (item.Name === i.Name) {
 						i.Value = value
@@ -639,7 +688,7 @@
 			display: inline-block;
 			border-radius: 4px;
 			background-color: #F5F5F5;
-			padding: 8px 15px;
+			padding: 8px 7px;
 			font-size: 13px;
 			color: #919293;
 			margin-right: 8px;

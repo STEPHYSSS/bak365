@@ -15,8 +15,8 @@ export const vipCard = (data, ViewKay, appNo) => {
 					return reject();
 				} else {
 					// h5
-					// let UserMACPhone = Cookies.get('UserMACPhone')
-					let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
+					let UserMACPhone = Cookies.get('UserMACPhone')
+					// let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
 					let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : appNo
 					let urlaspx = 'RenderMobile.aspx'
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +

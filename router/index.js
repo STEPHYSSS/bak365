@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
 				let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = '001'
-				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
+				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				// let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -55,8 +55,8 @@ router.beforeEach((to, from, next) => {
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
 						AppNo: newAppNo,
-						// Code:'wxb7a2e9fc043daf1c'
-						Code:''
+						Code:'wxb7a2e9fc043daf1c'
+						// Code:''
 					})
 					next({
 						path: to.path,
@@ -65,9 +65,11 @@ router.beforeEach((to, from, next) => {
 				}
 
 				let currentUrl = setUrlDelCode()
-				
+				// let domain = window.location.host;
+				// newAppNo = domain//获取域名存放给AppNo,暂时注释
 				if (newAppNo) {
 					Cookie.set('AppNo', newAppNo)
+					// sessionStorage.setItem('AppNo', newAppNo)
 					// Cookie.set('AppNo', '001')
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
@@ -85,8 +87,8 @@ router.beforeEach((to, from, next) => {
 							try {
 								let appId = await store.dispatch('get_user', {
 									AppNo: newAppNo,
-									// Code:'wxb7a2e9fc043daf1c'
-									Code:''
+									Code:'wxb7a2e9fc043daf1c'
+									// Code:''
 								})
 								if (appId) {
 									next({

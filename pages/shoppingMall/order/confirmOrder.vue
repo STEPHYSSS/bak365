@@ -311,7 +311,6 @@
 				}
 			});
 
-			// console.log(item, 7777);
 			this.currentItem = JSON.stringify(item);
 			
 			// console.log(this.currentItem,'currentItem')
@@ -344,24 +343,29 @@
 					if (!this.location.longitude) {
 						uni.showToast({
 							title: '地址获取失败',
-							duration: 2000
+							icon: 'none'
 						});
 						throw "地址获取失败";
 					}
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
+					let shopLong ="";
+					let shopLat = "";
+					if(this.$store.state.orderType === 'takein'){
+						shopLong = this.$store.state.currentLocation.longitude?this.$store.state.currentLocation.longitude:'';
+						shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
+					}
 					// 自取的时候传递的经纬度是授权的经纬度，如果是外卖的时候传递的经纬度就是收货地址的经纬度
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
-						Longitude: this.$store.state.currentLocation.longitude,
-						Latitude: this.$store.state.currentLocation.latitude,
-						// Longitude: this.currentArea.Longitude,
-						// Latitude: this.currentArea.Latitude,
+						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
+						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 						DeliveryType:this.takeDeliveryTpey
 						// DeliveryType: this.currentDeliveryType
 						
 					};
+					console.log(obj,'56666')
 					// console.log(currentItems, "currentItems[0]");
 
 					if (currentItems[0].hasOwnProperty("PromotionItemSID")) {
@@ -372,10 +376,15 @@
 					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							// this.areaList = res[0];
+							if(res[1].Success == false){
+								uni.showToast({
+									title: res[1].message,
+									icon: 'none' 
+								});
+							}
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-							// console.log(Data, 77765655)
+							console.log(Data)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
