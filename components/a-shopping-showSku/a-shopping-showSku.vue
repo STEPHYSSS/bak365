@@ -228,7 +228,8 @@
 						let currentItem = [paramsArr[0]];
 						if (currentItem.length > 0) {
 							this.$store.commit("SET_CURRENT_CARD", currentItem);
-							this.$Router.push("/pages/shoppingMall/order/confirmOrder");
+							// this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
+							this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom")
 						}
 					}
 				} catch (e) {

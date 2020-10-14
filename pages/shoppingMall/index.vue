@@ -44,7 +44,8 @@
 
 			</div>
 		</div>
-		<div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div>
+		<!-- <div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div> -->
+		<div v-if="loadding&&JSON.stringify(location)==='{}'">数据加载中</div>
 	</div>
 </template>
 

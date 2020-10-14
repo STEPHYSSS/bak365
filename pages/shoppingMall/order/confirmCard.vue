@@ -122,14 +122,14 @@
 					}, 600);
 				} catch (e) {
 					uni.setStorageSync('alreadyPaid', true)
-					setTimeout(() => {
-						this.$Router.push({
-							path: "/pages/shoppingMall/order/paySuccess",
-							query: {
-								error: "error"
-							}
-						});
-					}, 2000);
+					// setTimeout(() => {
+					// 	this.$Router.push({
+					// 		path: "/pages/shoppingMall/order/paySuccess",
+					// 		query: {
+					// 			error: "error"
+					// 		}
+					// 	});
+					// }, 2000);
 					this.loading = false;
 				}
 			},

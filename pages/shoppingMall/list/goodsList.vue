@@ -3,7 +3,7 @@
 		<!--        横-->
 		<div v-if="!loading">
 			<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-				<uni-search-bar cancelButton="none" :disabledMy="true" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+				<uni-search-bar cancelButton="none" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
 				<div slot="right">
 					<div class="headRight"></div>
 				</div>

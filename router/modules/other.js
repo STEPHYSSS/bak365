@@ -98,6 +98,12 @@ const other = [
 			title: '确定订单',
 		}
 	},{
+		path: '/pages/shoppingMall/order/confirmOrderCustom',
+		name: 'confirmOrder3',
+		meta: {
+			title: '确定订单',
+		}
+	},{
 		path: '/pages/shoppingMall/order/confirmOrderTic',
 		name: 'confirmOrder2',
 		meta: {

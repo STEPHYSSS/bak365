@@ -149,7 +149,8 @@
 					console.log(currentItem,9999)
 					// return;
 					this.$store.commit("SET_CURRENT_CARD", currentItem);
-					this.$Router.push("/pages/shoppingMall/order/confirmOrder");
+					// this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
+					this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom");
 				} else {}
 			},
 			async delButton() {

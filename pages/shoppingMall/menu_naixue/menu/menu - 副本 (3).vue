@@ -280,8 +280,7 @@
 				sizeProdNo:"",//多规格时商品prodNo
 				checkStatic:{}, //选择的口味
 				isStock:'',//用来记录是否售罄
-				name:'',
-				checkParts:{}, //选择的配件
+				name:''
 			}
 		},
 		async onLoad(){			
@@ -468,6 +467,7 @@
 							ProdType: 0,
 							PromotionSID: "",
 						}
+						console.log(obj,'typw2')
 					}else{
 						obj = {
 							CateSID: good.CateSID,							
@@ -509,12 +509,7 @@
 						this.cart.push(obj);
 					}else{
 						let isHave = this.cart.some(val => {
-							if(obj.SpecType == '2'){
-								return obj.ProdNo === val.ProdNo
-							}else{
-								return obj.ProdSID === val.ProdSID;
-							}
-							
+							return obj.ProdSID === val.ProdSID;
 						})
 						if (isHave) { // 如果购物车已存在此商品
 							// 找出购物车中已存在的商品  在BuyCnt进行加一
@@ -549,10 +544,10 @@
 							this.isStock = '已售罄'
 						}
 					}					
-					if(Data.SpecList){ //规格
+					if(Data.SpecList){ 
 						this.norms = Data.SpecList || [];
 					};
-					if(Data.AttributeList){//商品属性
+					if(Data.AttributeList){
 						this.attribute = Data.AttributeList || [];
 						this.checkStatic = this.attribute.map(item => {
 							return {
@@ -563,10 +558,7 @@
 								}
 							}
 						})
-					};
-					if(Data.PartsList){
-						this.checkParts = Data.partsList || [];
-					}	
+					};		
 					this.good = JSON.parse(JSON.stringify({ ...goodsInfo,number: 1}))
 					this.category = JSON.parse(JSON.stringify(item))
 					this.goodDetailModalVisible = true
