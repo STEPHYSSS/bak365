@@ -189,6 +189,7 @@
 						flag: 'login'
 					}
 				});
+				this.$store.state.orderType = 'takeOut'
 			},
 			// 获取积分
 			async getScore() {

@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
 				let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = '001'
-				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				// let UserMACPhone = 'deb85948a1c9e3f03fdcde1ec63f6cd3u';
+				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				let UserMACPhone = '8d968363942f4ada9e3ae108b6a0bb62u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -54,9 +54,9 @@ router.beforeEach((to, from, next) => {
 					let obj = {}
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
-						AppNo: newAppNo,
-						Code:'wxb7a2e9fc043daf1c'
-						// Code:''
+						AppNo: '001',
+						// Code:'wxb7a2e9fc043daf1c'
+						Code:'11112121'
 					})
 					next({
 						path: to.path,
@@ -67,17 +67,16 @@ router.beforeEach((to, from, next) => {
 				let currentUrl = setUrlDelCode()
 				// let domain = window.location.host;
 				// newAppNo = domain//获取域名存放给AppNo,暂时注释
+				// Cookie.set('AppNo', '001');
 				if (newAppNo) {
 					Cookie.set('AppNo', newAppNo)
 					// sessionStorage.setItem('AppNo', newAppNo)
-					// Cookie.set('AppNo', '001')
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
 
 						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : dataConfig.BASE_URL_OnLine) +
 							'#/GrantMiddle?AppNo=' + newAppNo //调回到固定页面
-
 						if (UserMACPhone && UserMACPhone !== null && UserMACPhone !== undefined && UserMACPhone !== '') {
 							next()
 						} else {

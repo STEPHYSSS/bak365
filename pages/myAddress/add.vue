@@ -159,7 +159,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: false,
+						debug: true,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -172,8 +172,8 @@
 					    wx.getLocation({
 					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
-					        _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
-					        _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+					        _this.location.latitude = res.lat;// 纬度，浮点数，范围为90 ~ -90
+					        _this.location.longitude = res.lng;// 经度，浮点数，范围为180 ~ -180。
 									this.$store.commit("SET_CURRENT_LOCATION", this.location);
 					      },
 					      cancel: function(res) {

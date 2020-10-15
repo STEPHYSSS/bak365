@@ -159,7 +159,7 @@
 							<view v-if="checkParts.length > 0">
 								<view class="titleSty">配件</view>
 								<view class="specBox">
-									<view class="static" :class="{'isActive3': currentIndex2 == index }" v-for="(item, index) in checkParts " :key="index" @click="clickPart(index, item)">
+									<view class="static" :class="{'isActive3': currentIndex2 }" v-for="(item, index) in checkParts " :key="index" @click="clickPart(index, item)">
 										<view class="title">
 											<text class="name">{{ item.Name }}</text>
 										</view>
@@ -281,7 +281,7 @@
 				attribute:[],//属性值
 				norms:[],//规格
 				currentIndex: 0,//规格默认
-				currentIndex2:-1,//默认配件
+				currentIndex2:0,//默认配件
 				cooName:"",
 				cooName2:"",
 				sizeSID:"",//多规格时商品SID
@@ -290,7 +290,6 @@
 				isStock:'',//用来记录是否售罄
 				name:'',
 				checkParts:[], //选择的配件
-				ParamStr:"",//选中的属性
 			}
 		},
 		async onLoad(){			
@@ -309,8 +308,7 @@
 			},
 			goodCartNum() {	//计算单个饮品添加到购物车的数量
 				return (id) => this.cart.reduce((acc, cur) => {
-						if(cur.ProdSID === id) {
-							
+						if(cur.SID === id) {							
 							return acc += cur.BuyCnt
 						}
 						return acc
@@ -444,8 +442,8 @@
 				})
 				this.sizeCalcState = true
 			},			
-			handleAddToCart(cate,good,num){ // 单规格商品--加按钮 添加到购物车
-				console.log(cate,good)
+			handleAddToCart(cate,good,num){ // 单规格商品--加按钮 添加到购物车		
+				console.log(cate,good,num,'-----')
 				const Buy = {
 					BuyCnt: num
 				}
@@ -483,7 +481,7 @@
 							CateSID: good.CateSID,							
 							ProdNo:good.ProdNo,
 							SpecType:good.SpecType,
-							ParamInfo:good.ParamInfo,
+							ParamInfo: good.ParamInfo,
 							BuyCnt: num,
 							PartsList: '',
 							ProdSID: good[good.SpecType === 2 ? 'ProdSID' : 'SID'],							
@@ -493,7 +491,8 @@
 							Describe: good.Describe,
 							DeliveryType: '2,1',
 							ProdType: 0,
-							PromotionSID: "",							
+							PromotionSID: "",
+							
 						}
 					}
 					if(this.cart.length === 0){
@@ -587,7 +586,7 @@
 				// this.handleAddToCart(this.category, product, this.good.number)
 				// this.closeGoodDetailModal()
 				if(good.SpecType === '1'){
-					this.handleAddToCart(this.category,good, this.good.number)					
+					this.handleAddToCart(this.category,good, this.good.number)
 				}else{
 					this.handleAddToCart(good,this.norms[this.currentIndex], this.good.number)
 				}
@@ -654,13 +653,7 @@
 			// 点击自取和外卖时状态改变
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');	
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				this.currentStoreInfo = {
-					Name: currentStore.data.Name,
-					Address: currentStore.data.Address,
-					SID: currentStore.data.SID,
-					Length:currentStore.data.Length
-				}
+				this.getShopList();
 			},
 			// 点击跳转到门店地址列表
 			toShopAddress(){
@@ -692,33 +685,28 @@
 				this.currentIndex = i;
 			},
 			clickPart(i,item){//切换选中配件
+				console.log(i,item)
 				this.cooName2 = item.Name;
 				if (this.currentIndex2 === i) {
-					return this.currentIndex2 = -1;
+					return;
 				}
 				this.currentIndex2 = i;
 			},
 			clickStatic(item, value,key){//属性
+				console.log(item, value,key)
+				// this.sizeSID = item.SID;
+				// this.sizeProdNo = item.ProdNo;
 				for (let i of this.checkStatic) {
+					console.log(item.Name,i.Name)
 					if (item.Name === i.Name) {
 						if(i.Value.Name === value.Name){
 							i.Value = {}
 						}else {
-							i.Value = value;
+							i.Value = value
 						}
 					}
 				}
-				// console.log(this.checkStatic,'------')
-				let ParamInfo = ""
-				this.checkStatic.forEach((item,index)=>{
-					if(item.Value.Price === 0){
-						ParamInfo +=item.Value.Name
-					}else{
-						ParamInfo +=item.Value.Name+'￥'+item.Value.Price+","
-					}		
-				})
-				this.ParamStr = ParamInfo.substring(0,ParamInfo.length-1)
-				console.log(this.ParamStr)
+				console.log(this.checkStatic,'------')
 			}
 		},
 		

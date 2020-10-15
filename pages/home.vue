@@ -299,6 +299,7 @@
 			},
 			clickClear() {//清除缓存
 				Cookie.remove("UserMACPhone");
+				sessionStorage.removeItem('takeOutAddress')
 				this.$toast.fail("清除成功");
 			},
 		}
