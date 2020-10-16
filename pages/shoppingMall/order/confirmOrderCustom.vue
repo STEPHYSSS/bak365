@@ -37,6 +37,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- 商品信息 -->
 			<div class="good_card_box">
 				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>

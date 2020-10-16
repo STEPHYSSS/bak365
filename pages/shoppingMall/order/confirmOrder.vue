@@ -3,20 +3,6 @@
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="确认订单" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
 		<div v-if="prodList.length>0">
-			<!--2 外卖 ；3物流-->
-			<!-- <div class="indexTop colorStyle" v-if="!$Route.query.isIntegral">
-				<div :class="['changeMode','changeModeLeft',radioModes === 2?'borderColor':'']" @click="changeMode(2)" v-if="currentDeliveryType.indexOf('2')>-1||currentDeliveryType.indexOf('3')>-1">
-					<span v-if="radioModes === 2" class="iconfont icon-xuanzhong changeTopIcon"></span>
-					<image class="changeModeImg" src="/static/assets/img/Pack.png" />
-					
-					<span>{{currentDeliveryType.indexOf('2')>-1?'外卖配送':'物流配送'}}</span>
-				</div>
-				<div :class="['changeMode','changeModeRight',radioModes === 1?'borderColor':'']" @click="changeMode(1)" v-if="currentDeliveryType.indexOf('1')>-1">
-					<span v-if="radioModes === 1" class="iconfont icon-xuanzhong changeTopIcon"></span>
-					<image class="changeModeImg" src="/static/assets/img/Eat.png" />
-					到店自取
-				</div>
-			</div> -->
 			<!-- 展示地址的位置 -->
 			<div @click="radioChange" v-if="!$Route.query.isIntegral">
 				<div class="order-area">
@@ -38,13 +24,7 @@
 			</div>
 
 
-			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />
-
-			<!-- <adCell @click="clickDataTime" :text="radioModes === 1?'选择自取时间':'选择收货时间'" showArrow="false" v-if="prodList[0].DeliveryType&&!(prodList[0].DeliveryType.indexOf('3')>-1&&radioModes === 2)">
-				<view class="customView">
-					{{UserTime}}
-				</view>
-			</adCell> -->
+			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />			
 
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
 				<view>{{UserDiscount}}</view>
@@ -69,6 +49,11 @@
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
 				</adCell>
 			</div>
+			<adCell @click="clickDataTime" :text="radioModes === 1?'选择自取时间':'选择收货时间'" showArrow="false" v-if="prodList[0].DeliveryType&&!(prodList[0].DeliveryType.indexOf('3')>-1&&radioModes === 2)">
+				<view class="customView">
+					{{UserTime}}
+				</view>
+			</adCell>
 			<!-- 商品信息 -->
 			<div class="good_card_box">
 				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
@@ -159,7 +144,7 @@
 			 :currentDeliveryType="currentDeliveryType"></a-receive-address>
 		</uni-popup>
 		<!-- 选择时间 -->
-		<!-- <uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
+		<uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
 			<div class="confirm-selectTime-popup">
 				<div class="leftNavsidebar">
 					<view :class="['homepageLeftFixed']" style="width:130px">
@@ -179,7 +164,7 @@
 					</div>
 				</radio-group>
 			</div>
-		</uni-popup> -->
+		</uni-popup>
 		<uni-popup ref="discountProgram" type="bottom">
 			<radio-group @change="setDiscountClick">
 				<ad-cell text="暂不使用" @click="DiscountClick('undefined')" showArrow="false">
@@ -355,13 +340,15 @@
 						shopLong = this.$store.state.currentLocation.longitude?this.$store.state.currentLocation.longitude:'';
 						shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
 					}
+					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 					// 自取的时候传递的经纬度是授权的经纬度，如果是外卖的时候传递的经纬度就是收货地址的经纬度
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
 						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
 						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
-						DeliveryType:this.takeDeliveryTpey
+						DeliveryType:this.takeDeliveryTpey,
+						ShopSID:currentStore.data.SID
 						// DeliveryType: this.currentDeliveryType						
 					};
 
@@ -392,6 +379,7 @@
 							} else {
 								this.areaList = res[0];
 							}
+							
 							// this.currentItem.forEach(D => {
 							// 	if (typeof D.PartsNo !== "string") {
 							// 		D.PartsNo.forEach((data, index) => {
@@ -405,21 +393,20 @@
 							// 		D.PartsList = JSON.stringify(D.PartsList);
 							// 	}
 							// });
-
-							// // console.log(this.currentItem,'this.currentItem')
-							// this.currentItem = JSON.stringify(this.currentItem);
-							// //提前预约时间
-							// let advanceTime = 0;
-							// if (this.prodList.length > 0) {
-							// 	this.prodList.forEach((D, index) => {
-							// 		if (D.DeliveryType && D.DeliveryType !== "") {
-							// 			D.DeliveryType = D.DeliveryType.split(",");
-							// 		}
-							// 		if (D.FinHour > advanceTime) {
-							// 			advanceTime = D.FinHour;
-							// 		}
-							// 	});
-							// }
+							console.log(this.currentItem,'this.currentItem')
+							this.currentItem = JSON.stringify(this.currentItem);
+							//提前预约时间
+							let advanceTime = 0;
+							if (this.prodList.length > 0) {
+								this.prodList.forEach((D, index) => {
+									if (D.DeliveryType && D.DeliveryType !== "") {
+										D.DeliveryType = D.DeliveryType.split(",");
+									}
+									if (D.FinHour > advanceTime) {
+										advanceTime = D.FinHour;
+									}
+								});
+							}
 
 							this.freight = Data.Freight;
 							// this.DiscountList = Data.DiscList || [];
@@ -469,50 +456,49 @@
 							// this.currentArea = DefaultsArea ? DefaultsArea : {};
 							// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
 
-							// let num = Number(Data.ShopBase.ScopeDay);
+							let num = Number(Data.ShopBase.ScopeDay);
 
-							// let dayAdvance = 0;
-							// let tAdvance = 0;
-							// if (Number(advanceTime) / 24 >= 1) {
-							// 	//   // 按天数提前
-							// 	dayAdvance = Number(advanceTime) / 24;
-							// 	tAdvance = 0;
-							// } else {
-							// 	//   // 提前的时间+当前的时间>下班时间
-							// 	let endTime = countDown(Data.ShopBase.EndTime);
-							// 	let cutTime = countDown(getTime(false, false, true));
-							// 	let acTime = Number(advanceTime) * 60 * 60;
+							let dayAdvance = 0;
+							let tAdvance = 0;
+							if (Number(advanceTime) / 24 >= 1) {
+								//   // 按天数提前
+								dayAdvance = Number(advanceTime) / 24;
+								tAdvance = 0;
+							} else {
+								//   // 提前的时间+当前的时间>下班时间
+								let endTime = countDown(Data.ShopBase.EndTime);
+								let cutTime = countDown(getTime(false, false, true));
+								let acTime = Number(advanceTime) * 60 * 60;
 
-							// 	if ((acTime + cutTime).toFixed(2) > endTime) {
-							// 		// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
-							// 		tAdvance = Number(advanceTime);
-							// 		dayAdvance = dayAdvance + 1;
-							// 	} else {
-							// 		tAdvance = Number(advanceTime);
-							// 		dayAdvance = 0;
-							// 	}
-							// }
-							// // setChangeData(num); //左侧的天数
-							// this.sidebarList = setChangeData(num, dayAdvance);
-							// let {
-							// 	arr,
-							// 	arrToday
-							// } = setChangeTime(
-							// 	Data.ShopBase,
-							// 	tAdvance,
-							// 	dayAdvance
-							// );
-							// this.allTimeSlot = arr; //总的右侧时间间隔
-							// this.todayTimeSlot = arrToday; //今天的右侧时间间隔
-							// this.rightTimeList = arrToday; //当前页面的右侧时间间隔
-							// this.radioTime = arrToday[0];
-							// this.RecordTime = {
-							// 	radioTime: arrToday[0],
-							// 	index: 0
-							// };
+								if ((acTime + cutTime).toFixed(2) > endTime) {
+									// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
+									tAdvance = Number(advanceTime);
+									dayAdvance = dayAdvance + 1;
+								} else {
+									tAdvance = Number(advanceTime);
+									dayAdvance = 0;
+								}
+							}
+							// setChangeData(num); //左侧的天数
+							this.sidebarList = setChangeData(num, dayAdvance);
+							let {
+								arr,
+								arrToday
+							} = setChangeTime(
+								Data.ShopBase,
+								tAdvance,
+								dayAdvance
+							);
+							this.allTimeSlot = arr; //总的右侧时间间隔
+							this.todayTimeSlot = arrToday; //今天的右侧时间间隔
+							this.rightTimeList = arrToday; //当前页面的右侧时间间隔
+							this.radioTime = arrToday[0];
+							this.RecordTime = {
+								radioTime: arrToday[0],
+								index: 0
+							};
 
-							// this.UserTime =
-							// 	this.sidebarList[this.activeKey] + " " + this.radioTime;
+							this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
 
 							this.loading = false;
 							uni.hideLoading()
@@ -772,7 +758,6 @@
 
 			},
 			clickDataTime() {
-				console.log('吊起时间')
 				this.selectTime = true;
 				this.$refs.selectTime.open()
 			},

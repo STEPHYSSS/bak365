@@ -85,7 +85,7 @@
 														</view>
 													</view>
 													<view v-else>
-														<view class="btn-group" v-if="good.SpecType == '2'">
+														<view class="btn-group" v-if="good.SpecType == '2'|| good.SpecType == '3'">
 															<button class="btn property_btn" style="background-color: #ADB838;color: #fff;" hover-class="none" size="mini"
 															 @tap="showGoodDetailModal(item, good)">
 																选规格
@@ -158,13 +158,18 @@
 							</view>
 							<view v-if="checkParts.length > 0">
 								<view class="titleSty">配件</view>
-								<view class="specBox">
+								<!-- <view class="specBox">
 									<view class="static" :class="{'isActive3': currentIndex2 == index }" v-for="(item, index) in checkParts " :key="index" @click="clickPart(index, item)">
 										<view class="title">
 											<text class="name">{{ item.Name }}</text>
 										</view>
 									</view>
-								</view>
+								</view> -->
+								<div class="partsStyle" v-for="(item,index) in checkParts" :key="item.SID">
+									<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
+									<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+									 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+								</div>
 							</view>
 							<!-- 商品属性 -->
 							<view class="" v-if="attribute.length >0 ">
@@ -189,6 +194,9 @@
 				<view class="action">
 					<view class="left">
 						<view class="price">￥{{ good.SalePrice }}</view>
+						<view class="price" v-if="good.SpecType !== 1">
+							{{goodsPrice}}
+						</view>
 						<view class="props">
 							<text v-if="cooName.length>0">{{ cooName }}</text>
 							<text v-if="cooName.length>0">{{ cooName2 }}</text>
@@ -291,6 +299,8 @@
 				name:'',
 				checkParts:[], //选择的配件
 				ParamStr:"",//选中的属性
+				currentParts: [],
+				goodsPrice:"",//选择规格尺寸的时候价格
 			}
 		},
 		async onLoad(){			
@@ -460,12 +470,11 @@
 					this.cart[index].BuyCnt += num
 				} else {
 					let obj = {}
-					if(cate.SpecType == '2'){
+					if(cate.SpecType == '2' || cate.SpecType == '3'){
 						obj = {
 							CateSID: cate.CateSID,							
 							ProdNo:good.ProdNo,
 							SpecType:cate.SpecType,
-							ParamInfo: cate.ParamInfo,
 							BuyCnt: num,
 							PartsList: '',
 							ProdSID: good.ProdSID,
@@ -477,6 +486,9 @@
 							DeliveryType: '2,1',
 							ProdType: 0,
 							PromotionSID: "",
+							PartsNo:"0101001,0102001",//配件编号
+							PartsList:[{ ProdNo:"0101001",BuyCnt:"1" }],//配件数组
+							ParamInfo:"另加糖,黑巧克力￥20"
 						}
 					}else{
 						obj = {
@@ -486,7 +498,7 @@
 							ParamInfo:good.ParamInfo,
 							BuyCnt: num,
 							PartsList: '',
-							ProdSID: good[good.SpecType === 2 ? 'ProdSID' : 'SID'],							
+							ProdSID: SID,							
 							Name: good.Name,
 							SalePrice: good.SalePrice,
 							Img: good.Img,
@@ -496,6 +508,7 @@
 							PromotionSID: "",							
 						}
 					}
+					console.log(obj,'geuige')
 					if(this.cart.length === 0){
 						this.cart.push(obj);
 					}else{
@@ -527,9 +540,12 @@
 			},
 			async showGoodDetailModal(item,good){//点击图片和选规格按钮时打开的模态框（商品详情）
 				try {			
+					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 					let { Data } = await vipCard({
 						Action: "GetProdInfo",
-						SID:good.SID}, 
+						SID:good.SID,
+						ShopSID:currentStore.data.SID
+					}, 
 					"UProdOpera");
 					console.log(good)
 					let goodsInfo = Data.ProdInfo;
@@ -655,6 +671,8 @@
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');	
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				// console.log(currentStore.data.SID,'currentStoreInfo')
+				
 				this.currentStoreInfo = {
 					Name: currentStore.data.Name,
 					Address: currentStore.data.Address,
@@ -672,7 +690,7 @@
 				})
 			},
 			toAddress() {
-				if(this.$store.state.orderType == 'takeout') return
+				// if(this.$store.state.orderType == 'takeout') return
 				this.$store.commit("SET_ORDER_TYPE", 'takeout');
 				this.$Router.push({
 					path: '/pages/myAddress/myAddress',
@@ -683,6 +701,7 @@
 			},
 			// 切换选中规格
 			skuTopChoice(i, item) {
+				this.goodsPrice = item.SalePrice;
 				this.cooName= item.Name;
 				this.sizeSID = item.SID;
 				this.sizeProdNo = item.ProdNo;
@@ -691,13 +710,29 @@
 				}
 				this.currentIndex = i;
 			},
-			clickPart(i,item){//切换选中配件
-				this.cooName2 = item.Name;
-				if (this.currentIndex2 === i) {
-					return this.currentIndex2 = -1;
+			// clickPart(i,item){//切换选中配件
+			// 	this.cooName2 = item.Name;
+			// 	if (this.currentIndex2 === i) {
+			// 		return this.currentIndex2 = -1;
+			// 	}
+			// 	this.currentIndex2 = i;
+			// },
+			skuTopChoiceParts(e, i) {
+				if (e.inputValue > 0) {
+					this.$set(this.checkParts[i], "isActive", true);
+				} else {
+					this.$set(this.checkParts[i], "isActive", false);
 				}
-				this.currentIndex2 = i;
+				let arr = this.checkParts
+				arr.forEach(D => {
+					arr[i].Stepper = e.inputValue;
+				});
+				let newarr = arr.filter(D => {
+					return Number(D.Stepper) !== 0;
+				});
+				this.currentParts = sortArr("parts", newarr);
 			},
+			overlimitParts(e) {},
 			clickStatic(item, value,key){//属性
 				for (let i of this.checkStatic) {
 					if (item.Name === i.Name) {
@@ -714,11 +749,11 @@
 					if(item.Value.Price === 0){
 						ParamInfo +=item.Value.Name
 					}else{
-						ParamInfo +=item.Value.Name+'￥'+item.Value.Price+","
+						ParamInfo +=item.Value.Name+'￥'+item.Value.Price+","						
 					}		
 				})
 				this.ParamStr = ParamInfo.substring(0,ParamInfo.length-1)
-				console.log(this.ParamStr)
+				// console.log(this.ParamStr,'------')
 			}
 		},
 		
@@ -729,6 +764,30 @@
 				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
 			}
 		}
+	}
+	function sortArr(type, Arr) {
+		function compare(type) {
+			let property = null;
+			if (type === "parts") {
+				//配件
+				property = "ProdNo";
+				return function(a, b) {
+					let value1 = a[property];
+					let value2 = b[property];
+					return value1 - value2;
+				};
+			} else {
+				property = "Name";
+				return function(a, b) {
+					return a[property].localeCompare(b[property], "zh-CN");
+				};
+			}
+		}
+	
+		// 目前是以 id属性排序 ProdNo
+		Arr = Arr.sort(compare(type));
+		// console.log(Arr, "Arr");
+		return Arr;
 	}
 </script>
 
@@ -805,5 +864,40 @@
 		font-size: 13px;
 		padding-left: 5px;
 		color: #868181;
+	}
+	.skuTopChoiceItem {
+		display: inline-block;
+		/*min-width: 40px;*/
+		margin: 0 12px 12px 0;
+		overflow: hidden;
+		color: #323233;
+		font-size: 13px;
+		line-height: 16px;
+		vertical-align: middle;
+		border-radius: 4px;
+		padding: 8px;
+		background: #f7f8fa;
+	}
+	
+	.partsStyle {
+		display: flex;
+	
+		.partsStepper {
+			flex: 1;
+			justify-content: flex-end;
+		}
+	
+		.skuTopChoiceItem {
+			display: inline-block;
+			margin: 0 12px 12px 0;
+			overflow: hidden;
+			color: #323233;
+			font-size: 13px;
+			line-height: 16px;
+			vertical-align: middle;
+			border-radius: 4px;
+			padding: 8px;
+			background: #f7f8fa;
+		}
 	}
 </style>

@@ -141,12 +141,12 @@
 				if (this.isBrowse) {
 					return;
 				}
-				// console.log(this.currentNorms, 11);
-				// console.log(this.normsList, 555);
-				// console.log(this.currentTast, 22)
-				// console.log(this.currentParts, 33);
-				// console.log(this.valueStepper, 44)
-				// console.log(this.skuDataInfo, 6666);
+				console.log(this.currentNorms, 11);
+				console.log(this.normsList, 555);
+				console.log(this.currentTast, 22)
+				console.log(this.currentParts, 33);
+				console.log(this.valueStepper, 44)
+				console.log(this.skuDataInfo, 6666);
 				if (Number(this.currentNorms.StoreQty) < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;

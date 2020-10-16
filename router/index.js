@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
 				let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = '001'
-				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				let UserMACPhone = '8d968363942f4ada9e3ae108b6a0bb62u';
+				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				// let UserMACPhone = '8d968363942f4ada9e3ae108b6a0bb62u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -55,8 +55,7 @@ router.beforeEach((to, from, next) => {
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
 						AppNo: '001',
-						// Code:'wxb7a2e9fc043daf1c'
-						Code:'11112121'
+						Code:'wxb7a2e9fc043daf1c'
 					})
 					next({
 						path: to.path,
@@ -67,10 +66,8 @@ router.beforeEach((to, from, next) => {
 				let currentUrl = setUrlDelCode()
 				// let domain = window.location.host;
 				// newAppNo = domain//获取域名存放给AppNo,暂时注释
-				// Cookie.set('AppNo', '001');
 				if (newAppNo) {
 					Cookie.set('AppNo', newAppNo)
-					// sessionStorage.setItem('AppNo', newAppNo)
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
