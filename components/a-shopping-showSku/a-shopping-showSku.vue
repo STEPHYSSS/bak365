@@ -34,11 +34,16 @@
 					
 							<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
 							 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
-					
-							<span class="skuTopChoiceTitle" v-if="flavorList.length!==0">口味</span>
-					
-							<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }" v-for="(item,index) in flavorList" :key="index"
-							 @click="skuTopChoiceFlavor(index)">{{item.Name}}</div>
+							
+							<div v-for="(item, index) in flavorList" :key="index + 'a'">
+								<span class="skuTopChoiceTitle">{{item.Name}}</span>
+						
+								<div :class="{'isActive': item1.isActive, 'skuTopChoiceItem': true }"
+								v-for="(item1,index1) in item.Value" :key="index1"
+								 @click="skuTopChoiceFlavor(index, index1)">{{item1.Name}}
+									<span v-if="item1.Price && item1.Price != 0">￥{{item1.Price}}</span>
+								 </div>
+							 </div>
 					
 							<span class="skuTopChoiceTitle" v-if="partsList.length!==0">配件(单独售价)</span>
 					
@@ -176,10 +181,23 @@
 				let currentTastArr = [];
 				if (this.currentTast.length > 0) {
 					// 口味
-					this.currentTast.forEach(D => {
-						currentTastArr.push(D.Name);
-					});
+					for (let i of this.flavorList) {
+						for (let y of i.Value) {
+							if (y.isActive) {
+								if (y.Price && y.Price != 0) {
+									let name = y.Name + '￥' + y.Price
+									currentTastArr.push(name)
+								}else {
+										currentTastArr.push(y.Name)
+								}
+							}
+						}
+					}
+					// this.currentTast.forEach(D => {
+					// 	currentTastArr.push(D.Name);
+					// });
 					currentTastArr = currentTastArr.join(",");
+					console.log(currentTastArr,'------')
 				} else {
 					currentTastArr = "";
 				}
@@ -265,18 +283,32 @@
 				this.currentNorms = this.normsList[i];
 				this.currentTast = [];
 			},
-			skuTopChoiceFlavor(i) {
-				this.$set(this.flavorList[i], "isActive", !this.flavorList[i].isActive);
-
-				if (this.flavorList[i].isActive) {
-					this.currentTast.push(this.flavorList[i]);
-				} else {
-					this.currentTast.forEach((D, j) => {
-						if (!D.isActive) {
-							this.currentTast.splice(j, 1);
+			skuTopChoiceFlavor(i, i1) {
+				this.flavorList[i].Value.forEach((item, index) => {
+					if (index === i1) {
+						this.$set(item, 'isActive', true)
+					}else {
+						this.$set(item, 'isActive', false)
+					}
+				})
+				// this.$set(this.flavorList[i].Value[i1], "isActive", !this.flavorList[i].Value[i1].isActive);
+				this.currentTast = []
+				for (let i of this.flavorList) {
+					for (let y of i.Value) {
+						if (y.isActive) {
+							this.currentTast.push(y)
 						}
-					});
+					}
 				}
+				// if (this.flavorList[i].Value[i1].isActive) {
+				// 	this.currentTast.push(this.flavorList[i].Value[i1].isActive);
+				// } else {
+				// 	this.currentTast.forEach((D, j) => {
+				// 		if (!D.isActive) {
+				// 			this.currentTast.splice(j, 1);
+				// 		}
+				// 	});
+				// }
 				this.currentTast = sortArr("flavor", this.currentTast);
 			},
 			skuTopChoiceParts(e, i) {
@@ -360,16 +392,19 @@
 						arr = skuDataInfo.SpecList[0] || [];//暂时注释
 					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 3) {
 						// 单规格商品-不同总类
-						this.normsList = skuDataInfo.SpecList;						
+						console.log(skuDataInfo)
+							this.normsList.push(skuDataInfo.ProdInfo);
 						// arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];//暂时注释
-						arr = skuDataInfo.SpecList[0] || [];
+						arr = skuDataInfo.AttributeList || [];
 					}
 					this.partsList = skuDataInfo.PartsList || [];
 					this.partsList.forEach(D => {
 						this.$set(D, "Stepper", 0);
 					});
 					
-					this.flavorList = setTast(arr, this);
+					this.flavorList = arr
+					// this.flavorList = setTast(arr, this);
+					console.log(arr)
 					this.currentNorms = this.normsList[0];
 
 					this.disabledPay = this.skuDataInfo.IsBuy === "0" ? true : false; //是否可以立即购买

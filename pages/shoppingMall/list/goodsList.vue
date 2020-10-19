@@ -3,7 +3,7 @@
 		<!--        横-->
 		<div v-if="!loading">
 			<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-				<uni-search-bar cancelButton="none" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+				<uni-search-bar cancelButton="none" v-model="name" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
 				<div slot="right">
 					<div class="headRight"></div>
 				</div>
@@ -51,7 +51,8 @@
 				currentIndex: 0,
 				imgHeight: '',
 				imgHeightLine: '',
-				loading:true
+				loading:true,
+				name:''
 			};
 		},
 		async created() {
@@ -63,31 +64,33 @@
 		},
 		mounted() {},
 		methods: {
-			async getCouponList() {
+			// async getCouponList() {
+			// 	try {
+			// 		let {
+			// 			Data
+			// 		} = await vipCard({
+			// 			Action: "GetCateList"
+			// 		}, "UProdOpera");
+			// 		this.sidebarList = Data.ProdCateList;
+			// 	} catch (e) {
+			// 		console.log(e);
+			// 	}
+			// },
+			async getCouponList(){//获取商品树列表
 				try {
-					let {
-						Data
-					} = await vipCard({
-						Action: "GetCateList"
+					let { Data } = await vipCard({
+						Action: "GetTreeProdList",
+						// SID:this.currentStoreInfo.SID,//门店id
+						Name:this.name
 					}, "UProdOpera");
-					this.sidebarList = Data.ProdCateList;
+					this.sidebarList = Data.CateList;
 				} catch (e) {
 					console.log(e);
 				}
 			},
 			async getList(val) {
 				try {
-					let params = val ? val : this.sidebarList[0].SID;
-					let {
-						Data
-					} = await vipCard({
-							Action: "GetProdInfoList",
-							CateSID: params
-						},
-						"UProdOpera"
-					);
-
-					this.list = Data.Prod_InfoList;
+					this.list = val ? val : this.sidebarList[0].children;
 					this.list.forEach(D => {
 						D.ImgList = D.ImgList ? D.ImgList.split(",") : [];
 					});
@@ -99,7 +102,7 @@
 			},
 			sidebarChange(index) {
 				this.currentIndex = index
-				this.getList(this.sidebarList[index].SID);
+				this.getList(this.sidebarList[index].children);
 			},
 			goodBox(val) {//点击商品跳转到详情页
 				this.$Router.push({

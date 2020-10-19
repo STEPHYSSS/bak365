@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
 				let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = '001'
-				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				// let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
+				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
