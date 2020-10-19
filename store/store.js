@@ -59,6 +59,7 @@ const store = new Vuex.Store({
 					let response = await vipCard(obj, 'UserSign')
 					console.log(response,'查看Mac')
 					if (response.Data.hasOwnProperty('UserMAC')) {
+						
 						// let seconds = 7200000 //两小时 秒
 						// let expires = new Date(new Date() * 1 + seconds * 1000)
 						Cookies.set('UserMACPhone', response.Data.UserMAC)
@@ -72,6 +73,9 @@ const store = new Vuex.Store({
 							}
 						});
 					}
+					if(response.Data.hasOwnProperty('ShopRadio')){
+						Cookies.set('ShopRadio', response.Data.ShopRadio)
+					}//缓存商城模式
 					if (response.Data.hasOwnProperty('UserBind')) {
 						// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 						Cookies.set('isMember', response.Data.UserBind)

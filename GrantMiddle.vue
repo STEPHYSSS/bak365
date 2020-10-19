@@ -41,9 +41,10 @@
 				Cookie.remove("UserMACPhone");
 				try {
 					let abc = await this.$store.dispatch("get_user", {
-						AppNo: newAppNo,
-						// Code:'wxb7a2e9fc043daf1c'
-						Code:'1111222'
+						// AppNo: newAppNo,
+						// Code:''
+						AppNo: '001',
+						Code:'11112222'
 					});
 					// let seconds = 7200000;
 					// let expires = new Date(new Date() * 1 + seconds * 1000);

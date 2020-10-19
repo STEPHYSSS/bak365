@@ -105,8 +105,9 @@
 				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>				
 			</uni-view>
 		</div>
-		<!-- 电子券弹窗 -->
+		<!-- 购物车详情 -->
 		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill" :isBrowse="isBrowse"></a-shopping-showSku>
+		<!-- 电子券弹窗 -->
 		<showTicket :show="showPop" @hideShow="hidePop" :skuDataInfo="skuDataInfo"></showTicket>
 	</div>
 </template>

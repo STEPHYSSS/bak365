@@ -44,8 +44,8 @@ router.beforeEach((to, from, next) => {
 				let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = '001'
-				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				let UserMACPhone = '93ee4f8a2a64babb5ef00603548d7c9au';
+				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				// let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
 					Object.assign(obj, {
 						AppNo: '001',
 						// Code:'wxb7a2e9fc043daf1c',
-						Code:''
+						Code:'11112222'
 					})
 					next({
 						path: to.path,
@@ -83,9 +83,10 @@ router.beforeEach((to, from, next) => {
 							store.commit("SET_HISTORY_URL", {})
 							try {
 								let appId = await store.dispatch('get_user', {
-									AppNo: newAppNo,
+									// AppNo: newAppNo,
 									// Code:'wxb7a2e9fc043daf1c'
-									Code:''
+									AppNo:'001',
+									Code:'11112222'
 								})
 								if (appId) {
 									next({

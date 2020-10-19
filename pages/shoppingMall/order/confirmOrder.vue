@@ -23,7 +23,6 @@
 				</div>
 			</div>
 
-
 			<adCell text="门店自取" showArrow="false" v-if="$Route.query.isIntegral" />			
 
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
@@ -38,11 +37,6 @@
 					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
 				</adCell>
 			</div>
-			<!-- <div class="setADcell" v-if="radioModes === 1">
-				<adCell text="手机号码" showArrow="false">
-					<input type="text" placeholder="请输入手机号码" v-model="phone_user">
-				</adCell>
-			</div> -->
 
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
@@ -67,14 +61,22 @@
 			<adCell v-if="radioModes === 2" text="运费" showArrow="false" showBottomLine="false">
 				<span>{{freight=='0'?'免运费':'¥'+freight}}</span>
 			</adCell>
-
+			<div class="total-style">
+				<span>
+					优惠：
+					<span class="total-style__color">
+						<span>{{DiscPrice}}</span>
+					</span>
+				</span>
+			</div>
 			<div class="total-style">
 				<span>
 					小计：
 					<span class="total-style__color">
-						<span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
+						<span>{{total}}</span>
+						<!-- <span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
 						<span v-if="totalCurrent>0 && radioModes === 1">¥{{ProdTotal |spliceNum}}</span>
-						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span>
+						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span> -->
 					</span>
 				</span>
 			</div>
@@ -84,7 +86,7 @@
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
-						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
+						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="DiscountClick('1',2)">
 							<div>
 								<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 								<span class="custom-title">卡支付（余额:{{CardInfo.Balance}}）</span>
@@ -94,7 +96,7 @@
 								<span class="summaryNum" style="color:#777" v-else>余额不足</span>
 							</div>
 						</div>
-						<div @click="PayTypeClick('2')" class="radio-group-item" v-if="$Route.query.isIntegral?allData.CardInfo?true:false:true">
+						<div @click="DiscountClick('2',2)" class="radio-group-item" v-if="$Route.query.isIntegral?allData.CardInfo?true:false:true">
 							<div>
 								<!-- <img class="wechat" src="/static/assets/img/weixinPay.png" /> -->
 								<img class="wechat" src="@/static/assets/img/weixinPay.png">
@@ -106,7 +108,7 @@
 				</radio-group>
 			</div>
 
-			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore"
+			<a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="total" :scoreTatal="totalCurrentScore"
 			 :cardInfo="allData.CardInfo" @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit>
 		</div>
 
@@ -171,7 +173,7 @@
 					<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
 				</ad-cell>
 				<div v-for="(item,index) in DiscountList" :key="index">
-					<adCell :text="item.PrefName" showArrow="false" showBottomLine="false" @click="DiscountClick(item)">
+					<adCell :text="item.PrefName" showArrow="false" showBottomLine="false" @click="DiscountClick(item,1)">
 						<span style="margin-right: 20px">-¥{{item.DiscPrice || 0}}</span>
 						<radio :value="item.PrefNo" :checked="item.PrefNo === radioDiscount" />
 					</adCell>
@@ -267,7 +269,9 @@
 					longitude: 30.47988,
 					latitude: 114.41739
 				},
-				takeDeliveryTpey:''
+				takeDeliveryTpey:'',
+				DiscPrice:'',//优惠价格
+				PrefNo:'',//点击优惠方案编号
 			};
 		},
 		async created() {
@@ -297,8 +301,6 @@
 			});
 
 			this.currentItem = JSON.stringify(item);
-			
-			// console.log(this.currentItem,'currentItem')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
 			if (this.$Route.query.isIntegral) {
@@ -348,7 +350,8 @@
 						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
 						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 						DeliveryType:this.takeDeliveryTpey,
-						ShopSID:currentStore.data.SID
+						ShopSID:currentStore.data.SID,
+						PayType:this.radioPayType
 						// DeliveryType: this.currentDeliveryType						
 					};
 
@@ -368,32 +371,30 @@
 							}
 							this.takeOver = res[0];
 							let Data = res[1].Data;
-							console.log(Data)
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-
-							if (this.radioModes === 1) {
+							if (this.radioModes === 1) {								
 								this.areaList = Data.ShopInfoList;
 							} else {
-								this.areaList = res[0];
+								// this.areaList = res[0];
+								this.areaList = Data.AddressList
 							}
 							
-							// this.currentItem.forEach(D => {
-							// 	if (typeof D.PartsNo !== "string") {
-							// 		D.PartsNo.forEach((data, index) => {
-							// 			D.arr = [];
-							// 			D.arr.push(data.ProdNo);
-							// 		});
-							// 		D.PartsNo = D.arr ? D.arr.join(",") : "";
-							// 		delete D.arr;
-							// 	}
-							// 	if (D.PartsList) {
-							// 		D.PartsList = JSON.stringify(D.PartsList);
-							// 	}
-							// });
-							console.log(this.currentItem,'this.currentItem')
+							this.currentItem.forEach(D => {
+								if (typeof D.PartsNo !== "string") {
+									D.PartsNo.forEach((data, index) => {
+										D.arr = [];
+										D.arr.push(data.ProdNo);
+									});
+									D.PartsNo = D.arr ? D.arr.join(",") : "";
+									delete D.arr;
+								}
+								if (D.PartsList) {
+									D.PartsList = JSON.stringify(D.PartsList);
+								}
+							});
 							this.currentItem = JSON.stringify(this.currentItem);
 							//提前预约时间
 							let advanceTime = 0;
@@ -409,16 +410,17 @@
 							}
 
 							this.freight = Data.Freight;
-							// this.DiscountList = Data.DiscList || [];
-							//     [
-							// 	{DiscPrice: 20, PrefName: '方案q', PrefNo: 11},
-							// 	{DiscPrice: 30, PrefName: '方案xx', PrefNo: 22}
-							// ]
-							// if (this.DiscountList.length > 0) {
-							// 	this.radioDiscount = this.DiscountList[0].PrefNo;
-							// 	this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
-							// 	this.UserDiscountName = this.DiscountList[0].PrefName;
-							// }
+							this.DiscPrice = Data.DiscPrice;
+							this.DiscountList = Data.DiscList || [];
+							    [
+								{DiscPrice: 20, PrefName: '方案q', PrefNo: 11},
+								{DiscPrice: 30, PrefName: '方案xx', PrefNo: 22}
+							]
+							if (this.DiscountList.length > 0) {
+								this.radioDiscount = this.DiscountList[0].PrefNo;
+								this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
+								this.UserDiscountName = this.DiscountList[0].PrefName;
+							}
 							this.total = Data.SumTotal;
 							this.ProdTotal = Data.ProdTotal;
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
@@ -435,6 +437,7 @@
 							}
 
 							this.DeliveryAreaList = Data.ShopInfoList;
+							// AddressList
 							// if(this.$store.state.orderType === 'takein'){
 							// 	let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
 							// }
@@ -512,7 +515,7 @@
 					uni.hideLoading()
 				}
 			},
-			async getInfoIntegral() {
+			async getInfoIntegral() {//积分活动商品信息
 				try {
 					uni.showLoading()
 					let {
@@ -640,6 +643,7 @@
 				console.log(val,index,'选择地址这一块')
 				this.showAreaList = true;
 				this.$refs.showAreaList.open()
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))				
 				let api;
 				if (this.radioModes === 1) {
 					api = "IsPickShop";
@@ -652,6 +656,7 @@
 						api = "CalcLogistics";
 					}
 				}
+				
 				try{
 					this.loading = true;
 					uni.showLoading()
@@ -660,11 +665,14 @@
 						Latitude: val.Latitude || "",
 						Longitude: val.Longitude || "",
 						ShopSID: this.radioModes === 1 ? val.SID : "",
-						PayType: this.radioPayType,
-						ProdList: JSON.stringify(this.currentItem)
+						PrefNo:this.PrefNo,
+						// PayType: this.radioPayType,
+						// ProdList: JSON.stringify(this.currentItem)
+						ProdList:this.currentItem
 					}
 					console.log(obj,'obj')
 					let { Data } = await vipCard(obj, "UProdOpera");
+					console.log(Data,'deffffffff')
 					// 把选择的地址赋值到页面上
 					if (this.radioModes === 1) {
 						this.currentArea = val;
@@ -672,7 +680,7 @@
 						this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
 					} else {
 						this.currentArea = val;
-						this.freight = Data.Freight;
+						// this.freight = Data.Freight;
 						sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
 					}
 					this.showAreaList = false;
@@ -837,19 +845,30 @@
 			setDiscountClick(val) {
 				this.radioDiscount = val.detail.value
 			},
-			async DiscountClick(item) {
+			async DiscountClick(item,type) {
+				this.PrefNo = item.PrefNo;
 				let PrefNo = item.PrefNo;
 				if (item === "undefined") {
 					PrefNo = "";
+				}
+				if(type === 1){
+					
+				}else{
+					if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
+						return;
+					}
+					this.radioPayType = item;
 				}
 				this.discountProgram = false;
 				this.$refs.discountProgram.close()
 				try {
 					let obj = {
 						Action: "SelectDisc",
-						PrefNo: PrefNo,
-						ProdList: this.currentItem,
-						PayType: this.radioPayType,
+						ProdList: this.currentItem,						
+						// PrefNo: PrefNo,//选择优惠方法 传入PrefNo （优惠方案编号）不需要传入PayType
+						// PayType: this.radioPayType,//选择支付方式 传入PayType （支付类型）不需要传入PrefNo
+						PrefNo:type===1?PrefNo:"",
+						PayType:type === 2?item:"",
 						Latitude: this.currentArea.Latitude,
 						Longitude: this.currentArea.Longitude
 					};
@@ -864,6 +883,7 @@
 						item === "undefined" ? "暂不使用" : "¥" + item.DiscPrice;
 					this.radioDiscount = item === "undefined" ? item : item.PrefNo;
 					this.totalCurrent = parseFloat(Number(Data.Total ? Data.Total : Data.SumTotal).toFixed(2));
+					
 					this.loading = false;
 
 					uni.hideLoading();

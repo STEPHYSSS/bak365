@@ -60,7 +60,7 @@
 			};
 		},
 		created() {
-			console.log(this.$Route.query,'454545')
+			// console.log(this.$Route.query,'454545')
 			// console.log(this.$Router,'confirm')
 			if (uni.getStorageSync('alreadyPaid')) {
 				//支付过，订单已经形成

@@ -155,7 +155,6 @@
 										</view>
 									</view>
 								</view>								
-								<view class="price">￥{{ goodsPrice }}</view>
 							</view>
 							<view v-if="partsList.length > 0">
 								<view class="titleSty">配件</view>
@@ -186,13 +185,17 @@
 				</scroll-view>
 				<view class="action">
 					<view class="left">						
-						<view class="price" v-if="norms.length >0 || goodsPrice">{{goodsPrice}}</view>
+						<view class="price" v-if="norms.length >0 || goodsPrice">￥{{goodsPrice}}</view>
 						<view class="price" v-else>￥{{ good.SalePrice }}</view>
 						<view class="props">
-							<text v-if="cooName.length>0">{{ cooName }}</text>
-							<text v-if="cooName.length>0">{{ cooName2 }}</text>
-							<text style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}
+							<text v-if="cooName.length>0">已选：{{ cooName }}</text>
+							<!-- <text v-if="cooName.length>0">{{ cooName2 }}</text> -->
+							<!-- <text style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}
 								<text v-if="item.Value.Price !=0 " >{{item.Value.Price}}</text>
+							</text> -->
+							<text style="margin-left: 5px;" v-for="(item,index) in checkStatic" :key="index + 'a'">
+								<text v-if="index > 0"></text>{{item.Value.Name}}
+								<text v-if="item.Value.Price !=0">￥{{item.Value.Price}}</text>
 							</text>
 						</view>
 					</view>
@@ -288,13 +291,13 @@
 				sizeProdNo:"",//多规格时商品prodNo
 				checkStatic:{}, //选择的口味
 				isStock:'',//用来记录是否售罄
-				name:'',
-				partsList:[], //选择的配件
-				ParamStr:"",//选中的属性
+				name:'',//搜索
+				partsList:[], //获取商品详情时接收的配件数组
 				currentParts: [],
 				goodsPrice:"",//选择规格尺寸的时候价格
-				PartsArr : [],//
-				PartsNoArr : []//
+				PartsArr : [],//用来接收选中的配件和数量数组
+				PartsNoArr : [],//用来接收配件编号的
+				currentTastArr:[]//用来接收选中的属性
 			}
 		},
 		async onLoad(){			
@@ -465,40 +468,33 @@
 				} else {
 					let obj = {}
 					if(cate.SpecType == '2' || cate.SpecType == '3'){
-						obj = {
-							CateSID: cate.CateSID,							
+						const goodName = cate.Name +`-`+good.Name;
+						obj = {						
 							ProdNo:good.ProdNo,
 							SpecType:cate.SpecType,
 							BuyCnt: num,
 							ProdSID: good.ProdSID,
 							SpecSID:good.SID,//多规格的时候需要传规格里面商品sid
-							Name: cate.Name,
+							Name: goodName,
 							SalePrice: good.SalePrice,
 							Img: cate.Img,
-							Describe: good.Describe,
-							DeliveryType: '2,1',
-							ProdType: 0,
-							PromotionSID: "",
+							ProdType: 0,//0是商品，1是电子券
 							PartsNo:this.PartsNoArr,//配件编号
-							PartsList:this.PartsArr ? JSON.stringify(this.PartsArr) : "",//配件数组
-							ParamInfo:""
+							PartsList:this.PartsArr ? JSON.stringify(this.PartsArr) : [],//配件数组
+							ParamInfo:this.currentTastArr
 						}
 					}else{
-						obj = {
-							CateSID: good.CateSID,							
+						obj = {						
 							ProdNo:good.ProdNo,
 							SpecType:good.SpecType,
-							ParamInfo:good.ParamInfo,
+							ParamInfo:this.currentTastArr,
 							BuyCnt: num,
 							PartsList: '',
 							ProdSID: good.SID,							
 							Name: good.Name,
 							SalePrice: good.SalePrice,
 							Img: good.Img,
-							Describe: good.Describe,
-							DeliveryType: '2,1',
-							ProdType: 0,
-							PromotionSID: "",							
+							ProdType: 0,						
 						}
 					}
 					console.log(obj,'geuige')
@@ -506,8 +502,12 @@
 						this.cart.push(obj);
 					}else{
 						let isHave = this.cart.some(val => {
+							console.log(obj,val)
+							// return obj.ProdSID === val.ProdSID;
 							if(obj.SpecType == '2'){
 								return obj.ProdNo === val.ProdNo
+							}else if(obj.SpecType == '3'){
+								return 
 							}else{
 								return obj.ProdSID === val.ProdSID;
 							}
@@ -552,6 +552,7 @@
 					if(Data.SpecList){ //规格
 						this.norms = Data.SpecList || [];
 						this.goodsPrice = this.norms[0].SalePrice;//默认第一个商品价格
+						this.cooName = this.norms[0].Name;//
 					};
 					if(Data.AttributeList){//商品属性
 						this.attribute = Data.AttributeList || [];
@@ -590,18 +591,12 @@
 				if(this.good.number === 1) return
 				this.good.number -= 1
 			},
-			handleAddToCartInModal(good) {//模态框（商品详情）加入购物车按钮		
-					console.log(good,'0000')
+			handleAddToCartInModal(good) {//模态框（商品详情）加入购物车按钮
 				// const product = Object.assign({}, this.good, {Describe: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id')})				
 				// product.ProdNo = this.norms[0].ProdNo;
 				// product.SpecSID = this.norms[0].SID;
 				// this.handleAddToCart(this.category, product, this.good.number)
-				// this.closeGoodDetailModal()
-				if(good.SpecType === '1'){
-					this.handleAddToCart(this.category,good, this.good.number)					
-				}else{
-					this.handleAddToCart(good,this.norms[this.currentIndex], this.good.number)
-				}
+				// this.closeGoodDetailModal()				
 				if (Number(this.good.StoreQty) < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;
@@ -628,7 +623,13 @@
 					this.PartsArr = "";
 					this.PartsNoArr = "";
 				}
-				// this.closeGoodDetailModal()
+				if(good.SpecType === '1'){
+					this.handleAddToCart(this.category,good, this.good.number)					
+				}else{
+					// console.log(good,this.norms[this.currentIndex])
+					this.handleAddToCart(good,this.norms[this.currentIndex], this.good.number)
+				}
+				this.closeGoodDetailModal()
 			},
 			openCartPopup(){//打开/关闭购物车列表popup
 				this.cartPopupVisible = !this.cartPopupVisible
@@ -670,6 +671,7 @@
 						Action: "SetShopCart"
 					};
 					obj.ProdList = JSON.parse(JSON.stringify(this.cart));
+					console.log(obj.ProdList)
 					let currentItem = this.cart;
 					if (currentItem.length > 0) {
 						this.$store.commit("SET_CURRENT_CARD", currentItem);
@@ -731,13 +733,6 @@
 				}
 				this.currentIndex = i;
 			},
-			// clickPart(i,item){//切换选中配件
-			// 	this.cooName2 = item.Name;
-			// 	if (this.currentIndex2 === i) {
-			// 		return this.currentIndex2 = -1;
-			// 	}
-			// 	this.currentIndex2 = i;
-			// },
 			bindChange(e,i) {//选中配件
 				if (e.inputValue > 0) {
 					this.$set(this.partsList[i], "isActive", true);
@@ -761,33 +756,36 @@
 							i.Value = {}
 						}else {
 							i.Value = value;
-						}
+						}	
 					}
 				}
-				// let ParamInfo = "";
-				// let price = 0;
-				// this.checkStatic.forEach((item,index)=>{
-				// 	if(item.Value.Price === 0){
-				// 		ParamInfo +=item.Value.Name
-				// 	}else{
-				// 		ParamInfo +=item.Value.Name+'￥'+item.Value.Price+","		
-				// 		price += item.Value.Price;
-				// 	}		
-				// })
-				// this.goodsPrice = Number(this.good.SalePrice)+Number(price)
-				// this.ParamStr = ParamInfo.substring(0,ParamInfo.length-1)
-				let currentTastArr = [];
-				if (this.checkStatic.length > 0) {
-					// 口味
-					this.checkStatic.forEach(D => {
-						console.log(D)
-						currentTastArr.push(D.Value.Name);
-					});
-					currentTastArr = currentTastArr.join(",");
-					console.log(currentTastArr,'------')
-				} else {
-					currentTastArr = "";
-				}
+				console.log(this.checkStatic)
+				if (this.checkStatic.length > 0) {
+		          this.currentTastArr = "";
+		          let sumPrice = 0 // 合计金额
+		          let arr = []
+		          this.checkStatic.forEach(item => {
+		            sumPrice += Number(item.Value.Price)
+					if (item.Value.Name) {
+						arr.push(item.Value.Name)
+					}
+		            
+		            // this.currentTastArr.push(item.Value.Name+`￥`+item.Value.Price);
+		          });
+					
+		          this.currentTastArr = arr.join(",");
+		          this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
+		          console.log(this.currentTastArr,'------')
+		        }
+				// if (this.checkStatic.length > 0) {
+				// 	this.checkStatic.forEach(item => {
+				// 		this.currentTastArr.push(item.Value.Name+`￥`+item.Value.Price);
+				// 	});
+				// 	this.currentTastArr = this.currentTastArr.join(",");
+				// 	console.log(this.currentTastArr,'------')
+				// } else {
+				// 	this.currentTastArr = "";
+				// }
 			}
 		},
 		

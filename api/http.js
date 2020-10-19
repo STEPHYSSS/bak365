@@ -15,10 +15,10 @@ export const vipCard = (data, ViewKay, appNo) => {
 					return reject();
 				} else {
 					// h5
-					// let UserMACPhone = Cookies.get('UserMACPhone')
-					let UserMACPhone = '93ee4f8a2a64babb5ef00603548d7c9au';
+					let UserMACPhone = Cookies.get('UserMACPhone')
+					// let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
 					let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : appNo;
-					// console.log(AppNo,Cookies.get('AppNo'),'-------')
+					console.log(AppNo,Cookies.get('AppNo'),'-------888')
 					let urlaspx = 'RenderMobile.aspx'
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
@@ -107,14 +107,15 @@ function NOMAC() {
 	para = para.join(',')
 	let currentUrl = arrUrl[0] + '?' + para
 	Cookies.set('currentUrl', currentUrl)
-
+	// console.log(Cookies.get('AppNo'),'555555')
 	// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?BusinNo=' + Cookies.get('BusinNo')
 	let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
-		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
+		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')//暂时注释
 	store.dispatch('get_user', {
-		AppNo: Cookies.get('AppNo'),
+		// AppNo: Cookies.get('AppNo'),//这个地方发送请求
 		// Code:'wxb7a2e9fc043daf1c'
-		Code:''
+		AppNo:'001',
+		Code:'111122220'
 	}).then(appId => {
 		if (appId) {
 			router.push({
