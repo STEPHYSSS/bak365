@@ -485,7 +485,6 @@
 							Describe: good.Describe,
 							DeliveryType: '2,1',
 							ProdType: 0,
-							PromotionSID: "",
 							PartsNo:"0101001,0102001",//配件编号
 							PartsList:[{ ProdNo:"0101001",BuyCnt:"1" }],//配件数组
 							ParamInfo:"另加糖,黑巧克力￥20"

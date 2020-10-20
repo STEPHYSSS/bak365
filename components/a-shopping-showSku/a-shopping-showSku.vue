@@ -5,37 +5,64 @@
 				<uni-icons type="closeempty" size="24" class="crossIcon" @click="crossIcon"></uni-icons>
 				<div>
 					<div class="skuTop">
-						<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
-							<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex" ></a-up-img>
-						</div>
-						<div class="skuTopInfo">
-							<div class="skuTopInfoMoney">
-								¥
-								<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+						<div v-if="goodsInfo.SpecType==='1'">
+							<div class="skuTopImg" @click="viewImg(goodsInfo.Img)">
+								<a-up-img :key="goodsInfo.Img" :url="goodsInfo.Img |setImgPrex"></a-up-img>
 							</div>
-							<div>
-								<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
-								<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
-								<div class="skuTopInfoSurplus">
-									已选 {{currentNorms.Name}}
-									<span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span>
+							<div class="skuTopInfo">
+								<div class="skuTopInfoMoney">
+									¥
+									<span class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
+								</div>
+								<div>
+									<span class="skuTopInfoSurplus">剩余 {{goodsInfo.StoreQty}} 件</span>
+									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
+									<div class="skuTopInfoSurplus">
+										已选 {{goodsInfo.Name}}
+										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
+									</div>
+								</div>
+
+								<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
+									购买时间：
+									<span style="color:#ee0a24;font-size:14px">{{goodsInfo.BuyTime |setBuyTime}}</span>
 								</div>
 							</div>
-					
-							<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
-								购买时间：
-								<span style="color:#ee0a24;font-size:14px">{{objProdInfo.BuyTime |setBuyTime}}</span>
+						</div>
+						<div v-else>
+							<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
+								<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex"></a-up-img>
+							</div>
+							<div class="skuTopInfo">
+								<div class="skuTopInfoMoney">
+									¥
+									<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+								</div>
+								<div>
+									<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
+									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
+									<div class="skuTopInfoSurplus">
+										已选 {{goodsInfo.Name}}{{currentNorms.Name}}
+										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
+									</div>
+								</div>
+
+								<div class="skuTopInfoSurplus" v-if="skuDataInfo.IsBuy === '0'">
+									购买时间：
+									<span style="color:#ee0a24;font-size:14px">{{goodsInfo.BuyTime |setBuyTime}}</span>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="skuBottom">
 						<div class="skuTopChoice">
-							<span class="skuTopChoiceTitle">规格</span>
-					
-							<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
-							 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
-							
-							<div v-for="(item, index) in flavorList" :key="index + 'a'">
+							<div v-if="normsList.length>0">
+								<span class="skuTopChoiceTitle">规格</span>
+								<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
+								 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
+							</div>
+
+							<!-- <div v-for="(item, index) in flavorList" :key="index + 'a'">
 								<span class="skuTopChoiceTitle">{{item.Name}}</span>
 						
 								<div :class="{'isActive': item1.isActive, 'skuTopChoiceItem': true }"
@@ -43,15 +70,36 @@
 								 @click="skuTopChoiceFlavor(index, index1)">{{item1.Name}}
 									<span v-if="item1.Price && item1.Price != 0">￥{{item1.Price}}</span>
 								 </div>
-							 </div>
-					
-							<span class="skuTopChoiceTitle" v-if="partsList.length!==0">配件(单独售价)</span>
-					
-							<div class="partsStyle" v-for="(item,index) in partsList" :key="item.SID">
-								<!-- @click="skuTopChoiceParts(index)" -->
-								<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-								<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
-								 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+							 </div> -->
+							<div v-if="PartsList.length!==0">
+								<span class="skuTopChoiceTitle">配件(单独售价)</span>
+								<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
+									<!-- @click="skuTopChoiceParts(index)" -->
+									<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
+									<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+									 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+								</div>
+							</div>
+
+							<!-- 商品属性 -->
+							<div v-if="attributeList.length >0 ">
+								<!-- <div class="skuTopChoiceTitle" v-for="(item, index) in attributeList" :key="index">
+									{{ item.Name }}
+									<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(value, index2) in item.Value" :key="value.Name"
+									 @click="skuTopChoice(index)">{{value.Name}}<text v-if="value.Price !='0'">￥{{value.Price}}</text></div>
+								</div>			 -->
+								<view class="property" v-for="(item, index) in attributeList" :key="index">
+									<view class="skuTopChoiceTitle">
+										<text class="name">{{ item.Name }}</text>
+									</view>
+									<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name" :class="isActiveName(value.Name)"
+									 @click="clickStatic(item, value,index2)">
+										<view class="skuTopChoiceItem">
+											{{value.Name}}
+											<text v-if="value.Price !='0'">￥{{value.Price}}</text>
+										</view>
+									</view>
+								</view>
 							</div>
 						</div>
 						<div class="skuStepper">
@@ -59,7 +107,7 @@
 							 @overlimit="overlimit" />
 						</div>
 					</div>
-				</div>				
+				</div>
 				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
 				</uni-goods-nav>
 			</div>
@@ -105,12 +153,12 @@
 				currentIndex: 0,
 				valueStepper: 1,
 				objProdInfo: {},
-				normsList: [],
-				flavorList: [],
-				partsList: [],
-				currentNorms: {},
-				currentTast: [],
-				currentParts: [],
+				// normsList: [],
+				// flavorList: [],
+				// partsList: [],
+				// currentNorms: {},
+				// currentTast: [],
+				// currentParts: [],
 				images: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2174909441,2495215020&fm=26&gp=0.jpg",
 				//是否让立即购买
 				disabledPay: false,
@@ -127,7 +175,15 @@
 						color: '#fff',
 						borderRadius: '0 25px 25px 0'
 					}
-				]
+				],
+				normsList: [],
+				PartsList: [],
+				attributeList: [],
+				goodsInfo: {},
+				currentNorms: {}, //用来默认存放规格选中的第一个数据
+				checkStatic: {}, //属性选中
+				currentParts: [],
+				currentTastArr:[]
 			};
 		},
 		created() {
@@ -140,19 +196,31 @@
 				}]
 			}
 		},
-		computed: {},
+		computed: {
+			isActiveName() {
+				return function(name) {
+					for (let i of this.checkStatic) {
+						if (name === i.Value.Name) {
+							return 'isActive'
+						}
+					}
+					return ''
+				}
+			},
+		},
 		methods: {
 			async onClickButton(bool) {
+				debugger
 				if (this.isBrowse) {
 					return;
 				}
-				console.log(this.currentNorms, 11);
-				console.log(this.normsList, 555);
-				console.log(this.currentTast, 22)
-				console.log(this.currentParts, 33);
-				console.log(this.valueStepper, 44)
-				console.log(this.skuDataInfo, 6666);
-				if (Number(this.currentNorms.StoreQty) < Number(this.valueStepper)) {
+				// console.log(this.currentNorms, 11);
+				// console.log(this.normsList, 555);
+				// console.log(this.currentTast, 22)
+				// console.log(this.currentParts, 33);
+				// console.log(this.valueStepper, 44)
+				// console.log(this.skuDataInfo, 6666);
+				if (Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;
 				}
@@ -178,56 +246,72 @@
 					PartsArr = "";
 					PartsNoArr = "";
 				}
-				let currentTastArr = [];
-				if (this.currentTast.length > 0) {
-					// 口味
-					for (let i of this.flavorList) {
-						for (let y of i.Value) {
-							if (y.isActive) {
-								if (y.Price && y.Price != 0) {
-									let name = y.Name + '￥' + y.Price
-									currentTastArr.push(name)
-								}else {
-										currentTastArr.push(y.Name)
-								}
-							}
-						}
-					}
-					// this.currentTast.forEach(D => {
-					// 	currentTastArr.push(D.Name);
-					// });
-					currentTastArr = currentTastArr.join(",");
-					console.log(currentTastArr,'------')
-				} else {
-					currentTastArr = "";
-				}
+				// let currentTastArr = [];
+				// if (this.currentTast.length > 0) {
+				// 	// 口味
+				// 	for (let i of this.flavorList) {
+				// 		for (let y of i.Value) {
+				// 			if (y.isActive) {
+				// 				if (y.Price && y.Price != 0) {
+				// 					let name = y.Name + '￥' + y.Price
+				// 					currentTastArr.push(name)
+				// 				} else {
+				// 					currentTastArr.push(y.Name)
+				// 				}
+				// 			}
+				// 		}
+				// 	}
+				// 	// this.currentTast.forEach(D => {
+				// 	// 	currentTastArr.push(D.Name);
+				// 	// });
+				// 	currentTastArr = currentTastArr.join(",");
+				// 	console.log(currentTastArr, '------')
+				// } else {
+				// 	currentTastArr = "";
+				// }
 				try {
 					let obj = {
 						ProdList: [],
 						Action: "SetShopCart"
 					};
 					let paramsArr = []; //第一个为商品，后面的都是配件
-
+					let ProdNo = ''
+					// if(this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3'){
+					// 	ProdNo = this.currentNorms.ProdNo						
+					// }
 					paramsArr[0] = {
-						ProdNo: this.currentNorms.ProdNo,
-						ProdType: 0,
-						SpecType: this.skuDataInfo.ProdInfo.SpecType,
-						ParamInfo: currentTastArr,//商品口味
+						ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
+						SpecType:this.goodsInfo.SpecType,
 						BuyCnt: this.valueStepper,
-						PartsList: PartsArr ? JSON.stringify(PartsArr) : "",
-						PartsNo: PartsNoArr,
-						ProdSID: this.skuDataInfo.ProdInfo.SID,
-						DeliveryType: this.skuDataInfo.ProdInfo.DeliveryType,
-						SpecSID: this.skuDataInfo.ProdInfo.SpecType !== "1" ?
-							this.currentNorms.SpecSID ?
-							this.currentNorms.SpecSID :
-							this.currentNorms.SID : this.currentNorms.SpecSID || "",
-
-						PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
-							this.currentNorms.PromotionSID : ""
+						ProdSID: this.goodsInfo.SID,
+						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.SID : "",
+						ProdType: 0,//0是商品，1是电子券
+						PartsNo:PartsNoArr,//配件编号
+						PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
+						ParamInfo:this.currentTastArr, //商品口味
+						// PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
+						// 	this.currentNorms.PromotionSID : ""
 					};
+					// paramsArr[0] = {
+					// 	ProdNo: this.currentNorms.ProdNo,
+					// 	ProdType: 0,
+					// 	SpecType: this.skuDataInfo.ProdInfo.SpecType,
+					// 	ParamInfo: currentTastArr, //商品口味
+					// 	BuyCnt: this.valueStepper,
+					// 	PartsList: PartsArr ? JSON.stringify(PartsArr) : "",
+					// 	PartsNo: PartsNoArr,
+					// 	ProdSID: this.skuDataInfo.ProdInfo.SID,
+					// 	DeliveryType: this.skuDataInfo.ProdInfo.DeliveryType,
+					// 	SpecSID: this.skuDataInfo.ProdInfo.SpecType !== "1" ?
+					// 		this.currentNorms.SpecSID ?
+					// 		this.currentNorms.SpecSID :
+					// 		this.currentNorms.SID : this.currentNorms.SpecSID || "",
+
+					// 	PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
+					// 		this.currentNorms.PromotionSID : ""
+					// };
 					obj.ProdList = JSON.stringify(paramsArr);
-					// console.log(obj);
+					console.log(obj,'888888888');
 					// return;
 					if (bool.index === 0 && !this.seckill) {
 						// 加入购物车
@@ -246,8 +330,8 @@
 						let currentItem = [paramsArr[0]];
 						if (currentItem.length > 0) {
 							this.$store.commit("SET_CURRENT_CARD", currentItem);
-							// this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
-							this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom")
+							this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
+							// this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom")
 						}
 					}
 				} catch (e) {
@@ -263,61 +347,73 @@
 			crossIcon() {
 				this.$refs.popupSku.close()
 			},
-			skuTopChoice(i) {
+			skuTopChoice(i) {//选择规格
 				if (this.currentIndex === i) {
-					// eslint-disable-next-line no-mixed-spaces-and-tabs
 					return;
 				}
 				this.currentIndex = i;
-
-				// 切换口味
-				if (
-					Number(this.skuDataInfo.ProdInfo.SpecType) === 2 ||
-					Number(this.skuDataInfo.ProdInfo.SpecType) === 3
-				) {
-					// let arr = this.skuDataInfo.SpecList[i].ParamInfo.split(",");//暂时注释
-					let arr = this.skuDataInfo.SpecList[i];
-					this.flavorList = setTast(arr, this);
-				}
-
 				this.currentNorms = this.normsList[i];
-				this.currentTast = [];
 			},
-			skuTopChoiceFlavor(i, i1) {
-				this.flavorList[i].Value.forEach((item, index) => {
-					if (index === i1) {
-						this.$set(item, 'isActive', true)
-					}else {
-						this.$set(item, 'isActive', false)
-					}
-				})
-				// this.$set(this.flavorList[i].Value[i1], "isActive", !this.flavorList[i].Value[i1].isActive);
-				this.currentTast = []
-				for (let i of this.flavorList) {
-					for (let y of i.Value) {
-						if (y.isActive) {
-							this.currentTast.push(y)
+			// skuTopChoiceFlavor(i, i1) {
+			// 	this.flavorList[i].Value.forEach((item, index) => {
+			// 		if (index === i1) {
+			// 			this.$set(item, 'isActive', true)
+			// 		} else {
+			// 			this.$set(item, 'isActive', false)
+			// 		}
+			// 	})
+			// 	// this.$set(this.flavorList[i].Value[i1], "isActive", !this.flavorList[i].Value[i1].isActive);
+			// 	this.currentTast = []
+			// 	for (let i of this.flavorList) {
+			// 		for (let y of i.Value) {
+			// 			if (y.isActive) {
+			// 				this.currentTast.push(y)
+			// 			}
+			// 		}
+			// 	}
+			// 	// if (this.flavorList[i].Value[i1].isActive) {
+			// 	// 	this.currentTast.push(this.flavorList[i].Value[i1].isActive);
+			// 	// } else {
+			// 	// 	this.currentTast.forEach((D, j) => {
+			// 	// 		if (!D.isActive) {
+			// 	// 			this.currentTast.splice(j, 1);
+			// 	// 		}
+			// 	// 	});
+			// 	// }
+			// 	this.currentTast = sortArr("flavor", this.currentTast);
+			// },
+			clickStatic(item, value, key) { //选择属性
+				for (let i of this.checkStatic) {
+					if (item.Name === i.Name) {
+						if (i.Value.Name === value.Name) {
+							i.Value = {}
+						} else {
+							i.Value = value;
 						}
 					}
 				}
-				// if (this.flavorList[i].Value[i1].isActive) {
-				// 	this.currentTast.push(this.flavorList[i].Value[i1].isActive);
-				// } else {
-				// 	this.currentTast.forEach((D, j) => {
-				// 		if (!D.isActive) {
-				// 			this.currentTast.splice(j, 1);
-				// 		}
-				// 	});
-				// }
-				this.currentTast = sortArr("flavor", this.currentTast);
-			},
-			skuTopChoiceParts(e, i) {
-				if (e.inputValue > 0) {
-					this.$set(this.partsList[i], "isActive", true);
-				} else {
-					this.$set(this.partsList[i], "isActive", false);
+				if (this.checkStatic.length > 0) {
+					this.currentTastArr = "";
+					let sumPrice = 0 // 合计金额
+					let arr = []
+					this.checkStatic.forEach(item => {
+						sumPrice += Number(item.Value.Price)
+						if (item.Value.Name) {
+							arr.push(item.Value.Name)
+						}
+					});					
+					this.currentTastArr = arr.join(",");
+					this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
+					console.log(this.currentTastArr, '------')
 				}
-				let arr = this.partsList
+			},
+			skuTopChoiceParts(e, i) {//选择配件
+				if (e.inputValue > 0) {
+					this.$set(this.PartsList[i], "isActive", true);
+				} else {
+					this.$set(this.PartsList[i], "isActive", false);
+				}
+				let arr = this.PartsList
 				arr.forEach(D => {
 					arr[i].Stepper = e.inputValue;
 				});
@@ -327,33 +423,32 @@
 				this.currentParts = sortArr("parts", newarr);
 			},
 			stepperMain(val) {
-				// console.log(val.inputValue,'valval')
 				this.valueStepper = val.inputValue
 			},
 			overlimitParts(e) {},
-			setStepperMax() {//加号
+			setStepperMax() { //加号
 				if (
-					Number(this.objProdInfo.MaxBuyCnt) <
-					Number(this.currentNorms.StoreQty) &&
-					Number(this.objProdInfo.MaxBuyCnt)
+					Number(this.goodsInfo.MaxBuyCnt) <
+					Number(this.goodsInfo.StoreQty) &&
+					Number(this.goodsInfo.MaxBuyCnt)
 				) {
-					return Number(this.objProdInfo.MaxBuyCnt);
+					return Number(this.goodsInfo.MaxBuyCnt);
 				} else {
-					return Number(this.currentNorms.StoreQty);
+					return Number(this.goodsInfo.StoreQty);
 				}
 			},
-			overlimit(e) {//减号
+			overlimit(e) { //减号
 				if (e === "minus") {
 					this.$toast("至少选择一件");
 				}
 				if (e === "plus") {
 					let str = "";
 					if (
-						Number(this.objProdInfo.MaxBuyCnt) <
-						Number(this.currentNorms.StoreQty) &&
-						Number(this.objProdInfo.MaxBuyCnt)
+						Number(this.goodsInfo.MaxBuyCnt) <
+						Number(this.goodsInfo.StoreQty) &&
+						Number(this.goodsInfo.MaxBuyCnt)
 					) {
-						str = "每人限购" + this.objProdInfo.MaxBuyCnt + "件";
+						str = "每人限购" + this.goodsInfo.MaxBuyCnt + "件";
 					} else {
 						str = "该规格商品库存不足";
 					}
@@ -372,49 +467,41 @@
 				if (val) {
 					this.$refs.popupSku.open()
 					let skuDataInfo = this.skuDataInfo;
-					this.normsList = [];
-					let arr = [];
-					this.objProdInfo = this.skuDataInfo.ProdInfo;
-					if (Number(skuDataInfo.ProdInfo.SpecType) === 1) {
-						// 单规格商品
-						// if (this.seckill) {
-						// 	// 秒杀
-						// 	this.normsList = skuDataInfo.SpecList;
-						// } else {
-							this.normsList.push(skuDataInfo.ProdInfo);
-						// }
-						arr=[]
-						// arr = skuDataInfo.ProdInfo.ParamInfo.split(",") || [];//暂时注释
-					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 2) {
-						// 多规格商品
-						this.normsList = skuDataInfo.SpecList;
-						// arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];//暂时注释
-						arr = skuDataInfo.SpecList[0] || [];//暂时注释
-					} else if (Number(skuDataInfo.ProdInfo.SpecType) === 3) {
-						// 单规格商品-不同总类
-						console.log(skuDataInfo)
-							this.normsList.push(skuDataInfo.ProdInfo);
-						// arr = skuDataInfo.SpecList[0].ParamInfo.split(",") || [];//暂时注释
-						arr = skuDataInfo.AttributeList || [];
+					this.goodsInfo = skuDataInfo.ProdInfo; //商品详情
+					this.normsList = []; //规格
+					this.PartsList = []; //规格
+					this.attributeList = []; //规格
+					if (skuDataInfo.SpecList) {
+						this.normsList = skuDataInfo.SpecList || [];
+						this.currentNorms = this.normsList[0]
 					}
-					this.partsList = skuDataInfo.PartsList || [];
-					this.partsList.forEach(D => {
+					if (skuDataInfo.PartsList) {
+						this.PartsList = skuDataInfo.PartsList || [];
+					}
+					if (skuDataInfo.AttributeList) {
+						this.attributeList = skuDataInfo.AttributeList || [];
+						this.checkStatic = this.attributeList.map(item => {
+							return {
+								Name: item.Name,
+								Value: {
+									Name: "",
+									Price: ""
+								}
+							}
+						})
+					}
+					this.disabledPay = this.skuDataInfo.IsBuy === "0" ? true : false; //是否可以立即购买
+					this.PartsList = skuDataInfo.PartsList || [];
+					this.PartsList.forEach(D => {
 						this.$set(D, "Stepper", 0);
 					});
-					
-					this.flavorList = arr
-					// this.flavorList = setTast(arr, this);
-					console.log(arr)
-					this.currentNorms = this.normsList[0];
-
-					this.disabledPay = this.skuDataInfo.IsBuy === "0" ? true : false; //是否可以立即购买
 
 					this.currentIndex = 0;
 				} else {
 					this.$refs.popupSku.close()
-					this.flavorList = [];
-					this.currentTast = [];
-					this.currentParts = [];
+					this.normsList = [];
+					this.PartsList = [];
+					this.attributeList = [];
 					this.partsList.forEach(D => {
 						this.$set(D, "isActive", false);
 					});
@@ -565,7 +652,7 @@
 
 			.partsStyle {
 				display: flex;
-
+				
 				.partsStepper {
 					flex: 1;
 					justify-content: flex-end;

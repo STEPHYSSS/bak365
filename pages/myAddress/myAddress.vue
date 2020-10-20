@@ -105,7 +105,7 @@
 				this.title = '我的地址'
 			}
 			// 自取时调用门店接口，外卖时调用地址接口
-			if(this.$store.state.orderType === 'takeout' || this.$Route.query.flag == 'homeD'){			
+			if(this.$store.state.orderType === 'takeout' || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'){			
 				this.getAddressList();
 			}else{
 				this.getShopList();

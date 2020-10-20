@@ -32,7 +32,7 @@
 							</view>
 						</view>
 					</view>
-					<input  @confirm="serch" v-model="name"/>
+					<!-- <input  @confirm="serch" v-model="name"/> -->
 					<view class="coupon">
 						<text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
 						<view class="iconfont iconarrow-right"></view>
@@ -160,7 +160,7 @@
 								<view class="titleSty">配件</view>
 								<div class="partsStyle" v-for="(item,index) in partsList" :key="item.SID">
 									<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-									<uni-number-box :min="0" :max="Number(item.StoreQty)" @overlimit="overlimitParts(item.Stepper,index)" @change="bindChange($event,index)"></uni-number-box>
+									<uni-number-box :min="0" :max="Number(item.StoreQty)" :value="item.Stepper" @overlimit="overlimitParts(item.Stepper,index)" @change="bindChange($event,index)"></uni-number-box>
 								</div>
 							</view>
 							<!-- 商品属性 -->
@@ -540,7 +540,7 @@
 						ShopSID:currentStore.data.SID
 					}, 
 					"UProdOpera");
-					console.log(good,'商品详情')
+					// console.log(good,'商品详情')
 					let goodsInfo = Data.ProdInfo;
 					if(goodsInfo.State !='1'){
 						this.isStock = '已下架'
@@ -568,7 +568,11 @@
 					};
 					if(Data.PartsList){//配件
 						this.partsList = Data.PartsList || [];
-					}	
+						this.partsList.forEach(D => {
+							this.$set(D, "Stepper", 0);
+						});
+					}
+						
 					this.good = JSON.parse(JSON.stringify({ ...goodsInfo,number: 1}))
 					this.category = JSON.parse(JSON.stringify(item))
 					this.goodDetailModalVisible = true

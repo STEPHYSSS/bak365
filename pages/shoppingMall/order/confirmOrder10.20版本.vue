@@ -39,7 +39,7 @@
 			</adCell>
 			<!-- 优惠方案 -->
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
-				<!-- <view>{{UserDiscount}}</view> -->
+				<view>{{UserDiscount}}</view>
 			</adCell>			
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
@@ -79,7 +79,7 @@
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
-						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="PayTypeClick('1')">
+						<div v-if="allData.hasOwnProperty('CardInfo')" class="radio-group-item" @click="DiscountClick('1',2)">
 							<div>
 								<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 								<span class="custom-title">卡支付（余额:{{CardInfo.Balance}}）</span>
@@ -89,7 +89,7 @@
 								<span class="summaryNum" style="color:#777" v-else>余额不足</span>
 							</div>
 						</div>
-						<div @click="PayTypeClick('2')" class="radio-group-item" v-if="$Route.query.isIntegral?allData.CardInfo?true:false:true">
+						<div @click="DiscountClick('2',2)" class="radio-group-item" v-if="$Route.query.isIntegral?allData.CardInfo?true:false:true">
 							<div>
 								<img class="wechat" src="@/static/assets/img/weixinPay.png">
 								<span class="custom-title">微信支付</span>
@@ -132,7 +132,7 @@
 				</div>
 			</uni-popup>
 		</div>
-		<!-- 编辑地址 -->
+		<!-- 地址编辑 -->
 		<uni-popup ref="addEditArea" v-model="addEditArea" position="bottom" class="confirm-area-popup">
 			<a-receive-address v-if="addEditArea" @clickGo="clickGo" :radioModes="radioModes" :areaInfo="areaInfo" @saveArea="saveAreaSet"
 			 :currentDeliveryType="currentDeliveryType"></a-receive-address>
@@ -166,7 +166,7 @@
 				</ad-cell>
 				<div v-for="(item,index) in DiscountList" :key="index">
 					<adCell :text="item.PrefName" showArrow="false" showBottomLine="false" @click="DiscountClick(item,1)">
-						<!-- <span style="margin-right: 20px">-¥{{item.DiscPrice || 0}}</span> -->
+						<span style="margin-right: 20px">-¥{{item.DiscPrice || 0}}</span>
 						<radio :value="item.PrefNo" :checked="item.PrefNo === radioDiscount" />
 					</adCell>
 				</div>
@@ -293,7 +293,6 @@
 			});
 
 			this.currentItem = JSON.stringify(item);
-			console.log(this.currentItem,'444444')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
 			if (this.$Route.query.isIntegral) {
@@ -318,6 +317,7 @@
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
+				// console.log(this.$store.state.orderType,'那个状态')
 				try {
 					if (!this.location.longitude) {
 						uni.showToast({
@@ -351,6 +351,8 @@
 						// 活动
 						obj.PromotionItemSID = currentItems[0].PromotionItemSID;
 					}
+					// console.log(obj, "obj");
+					// return;
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
 							if(res[1].Success == false){
@@ -368,6 +370,7 @@
 							if (this.radioModes === 1) {								
 								this.areaList = Data.ShopInfoList;
 							} else {
+								// this.areaList = res[0];
 								this.areaList = Data.AddressList
 							}
 							
@@ -398,12 +401,16 @@
 								});
 							}
 
-							this.freight = Data.Freight;//运费
-							this.DiscPrice = Data.DiscPrice;//优惠价格
-							this.DiscountList = Data.DiscList || [];//优惠方案列表
+							this.freight = Data.Freight;
+							this.DiscPrice = Data.DiscPrice;
+							this.DiscountList = Data.DiscList || [];
+							    [
+								{DiscPrice: 20, PrefName: '方案q', PrefNo: 11},
+								{DiscPrice: 30, PrefName: '方案xx', PrefNo: 22}
+							]
 							if (this.DiscountList.length > 0) {
 								this.radioDiscount = this.DiscountList[0].PrefNo;
-								// this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
+								this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
 								this.UserDiscountName = this.DiscountList[0].PrefName;
 							}
 							this.total = Data.SumTotal;
@@ -799,9 +806,7 @@
 					return;
 				}
 				this.radioPayType = item;
-				this.Discount(item)
 			},
-			
 			changeSider(index) {
 				this.currentIndex = index
 				this.activeKey = index
@@ -832,39 +837,51 @@
 			setDiscountClick(val) {
 				this.radioDiscount = val.detail.value
 			},
-			DiscountClick(item,type) {
+			async DiscountClick(item,type) {
 				this.PrefNo = item.PrefNo;
-				let PrefNo = item.PrefNo;				
+				let PrefNo = item.PrefNo;
 				if (item === "undefined") {
 					PrefNo = "";
-					this.UserDiscountName = "优惠券方案"
+				}
+				if(type === 1){
+					
 				}else{
-					this.UserDiscountName = item.PrefName;
+					if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
+						return;
+					}
+					this.radioPayType = item;
 				}
 				this.discountProgram = false;
-				this.Discount(item);
-				this.$refs.discountProgram.close();
-			},
-			// 方案事件
-			async Discount(item){
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				let shopLong ="";
-				let shopLat = "";
-				try{
-					let obj={
+				this.$refs.discountProgram.close()
+				try {
+					let obj = {
 						Action: "SelectDisc",
 						ProdList: this.currentItem,						
-						PrefNo:item.PrefNo,
-						PayType:item,
-						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
-						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
-						DeliveryType:this.takeDeliveryTpey,
-						ShopSID:currentStore.data.SID,
-					}
-					let { Data } =await vipCard(obj, "UProdOpera");
-				}catch(e){
-					console.log(e)
-					//TODO handle the exception
+						// PrefNo: PrefNo,//选择优惠方法 传入PrefNo （优惠方案编号）不需要传入PayType
+						// PayType: this.radioPayType,//选择支付方式 传入PayType （支付类型）不需要传入PrefNo
+						PrefNo:type===1?PrefNo:"",
+						PayType:type === 2?item:"",
+						Latitude: this.currentArea.Latitude,
+						Longitude: this.currentArea.Longitude
+					};
+					this.loading = true;
+					uni.showLoading();
+					let {
+						Data
+					} = await vipCard(obj, "UProdOpera");
+					this.UserDiscountName =
+						item === "undefined" ? "优惠券方案" : item.PrefName;
+					this.UserDiscount =
+						item === "undefined" ? "暂不使用" : "¥" + item.DiscPrice;
+					this.radioDiscount = item === "undefined" ? item : item.PrefNo;
+					this.totalCurrent = parseFloat(Number(Data.Total ? Data.Total : Data.SumTotal).toFixed(2));
+					
+					this.loading = false;
+
+					uni.hideLoading();
+				} catch (e) {
+					this.loading = false;
+					uni.hideLoading();
 				}
 			},
 			areaSet() {
@@ -1281,7 +1298,7 @@
 		}
 
 		.confirm-selectTime-popup {
-			// height: 50vh;
+			height: 50vh;
 
 			.leftNavsidebar {
 				width: 130px;

@@ -75,7 +75,9 @@
 		globalData: {
 			// getApp().globalData.mainStyle   主模板
 			mainStyle: '',
-			mainColor: Cookie.get('mainColor')
+			mainColor: Cookie.get('mainColor'),
+			ShopRadio: Cookie.get('ShopRadio'),//商城模式
+			
 		}
 	};
 </script>

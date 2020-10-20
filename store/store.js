@@ -64,6 +64,10 @@ const store = new Vuex.Store({
 						// let expires = new Date(new Date() * 1 + seconds * 1000)
 						Cookies.set('UserMACPhone', response.Data.UserMAC)
 					}
+					if(response.Data.hasOwnProperty('ShopRadio')){
+						// 1代表商城模式,2代表自定义模式
+						Cookies.set('ShopRadio', response.Data.ShopRadio)
+					}//缓存商城模式
 					if(response.Message == '未授权'){
 						this.$Router.push({
 							path: "/pages/error/index",
@@ -73,9 +77,7 @@ const store = new Vuex.Store({
 							}
 						});
 					}
-					if(response.Data.hasOwnProperty('ShopRadio')){
-						Cookies.set('ShopRadio', response.Data.ShopRadio)
-					}//缓存商城模式
+					
 					if (response.Data.hasOwnProperty('UserBind')) {
 						// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 						Cookies.set('isMember', response.Data.UserBind)

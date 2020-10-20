@@ -3,7 +3,7 @@
 		<!--        横-->
 		<div v-if="!loading">
 			<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-				<uni-search-bar cancelButton="none" v-model="name" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+				<uni-search-bar cancelButton="none" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
 				<div slot="right">
 					<div class="headRight"></div>
 				</div>
@@ -76,6 +76,13 @@
 			// 		console.log(e);
 			// 	}
 			// },
+			serch(val){
+				this.name = val.value;
+				this.getCouponList()
+			},
+			cancels(){
+				this.getCouponList()
+			},
 			async getCouponList(){//获取商品树列表
 				try {
 					let { Data } = await vipCard({
@@ -117,7 +124,7 @@
 			},
 			async addCart(item) {
 				if(item.ProdType == '1'){
-					console.log('直接进入详情页')
+					// console.log('直接进入详情页')
 					this.$Router.push({
 						path: "/pages/shoppingMall/list/infoGood",
 						query:{SID:item.SID,isGoodList:true,title:item.Name}
