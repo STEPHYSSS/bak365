@@ -173,7 +173,7 @@
 										<view class="static" v-for="(value, index2) in item.Value" :key="value.Name" :class="isActiveName(value.Name)" @click="clickStatic(item, value,index2)">
 											<view>
 												{{value.Name}}
-												<text v-if="value.Price !='0'">￥{{value.Price}}</text>
+												<text v-if="value.Price && value.Price !='0'">￥{{value.Price}}</text>
 											</view>											
 										</view>
 									</view>
@@ -195,7 +195,7 @@
 							</text> -->
 							<text style="margin-left: 5px;" v-for="(item,index) in checkStatic" :key="index + 'a'">
 								<text v-if="index > 0"></text>{{item.Value.Name}}
-								<text v-if="item.Value.Price !=0">￥{{item.Value.Price}}</text>
+								<text v-if="item.Value.Price && item.Value.Price !=0">￥{{item.Value.Price}}</text>
 							</text>
 						</view>
 					</view>
@@ -468,14 +468,14 @@
 				} else {
 					let obj = {}
 					if(cate.SpecType == '2' || cate.SpecType == '3'){
-						const goodName = cate.Name +`-`+good.Name;
+						// const goodName = cate.Name +`-`+good.Name;
 						obj = {						
 							ProdNo:good.ProdNo,
 							SpecType:cate.SpecType,
 							BuyCnt: num,
 							ProdSID: good.ProdSID,
 							SpecSID:good.SID,//多规格的时候需要传规格里面商品sid
-							Name: goodName,
+							Name: good.Name,
 							SalePrice: good.SalePrice,
 							Img: cate.Img,
 							ProdType: 0,//0是商品，1是电子券

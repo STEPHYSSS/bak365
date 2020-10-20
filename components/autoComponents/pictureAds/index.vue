@@ -177,7 +177,8 @@
 				n = Number(n);
 				this.changeClientWidth = (this.clientWidth - n * 2).toFixed(2);
 			}
-		}
+		},
+		
 	};
 </script>
 

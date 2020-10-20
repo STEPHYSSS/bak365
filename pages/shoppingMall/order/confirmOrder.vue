@@ -799,7 +799,7 @@
 					return;
 				}
 				this.radioPayType = item;
-				this.Discount(item)
+				this.Discount(item,2)
 			},
 			
 			changeSider(index) {
@@ -842,11 +842,11 @@
 					this.UserDiscountName = item.PrefName;
 				}
 				this.discountProgram = false;
-				this.Discount(item);
+				this.Discount(item,1);
 				this.$refs.discountProgram.close();
 			},
 			// 方案事件
-			async Discount(item){
+			async Discount(item,type){
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				let shopLong ="";
 				let shopLat = "";
@@ -854,17 +854,18 @@
 					let obj={
 						Action: "SelectDisc",
 						ProdList: this.currentItem,						
-						PrefNo:item.PrefNo,
-						PayType:item,
+						PrefNo: type===1 ? item.PrefNo:'',
+						PayType:type === 2? item:1,
 						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
 						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 						DeliveryType:this.takeDeliveryTpey,
 						ShopSID:currentStore.data.SID,
 					}
 					let { Data } =await vipCard(obj, "UProdOpera");
+					this.DiscountList = Data.DiscList || [];//优惠方案列表
 				}catch(e){
 					console.log(e)
-					//TODO handle the exception
+					
 				}
 			},
 			areaSet() {

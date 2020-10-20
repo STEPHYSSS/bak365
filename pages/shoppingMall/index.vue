@@ -1,5 +1,32 @@
 <template>
 	<div class="shoppingCart_style" :class="classHome">
+		<view class="header">
+			<view class="nav_left" v-if="$store.state.orderType == 'takein'">
+				<view class="store-name" @click="toShopAddress">
+					<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
+				</view>
+				<view class="store-location">
+					<!-- <image src='/static/images/order/location.png'></image> -->
+					<!-- <text style="color: #919293;">距离您 {{ currentStoreInfo.Length }}</text> -->
+				</view>
+			</view>
+			<view class="nav_left overflow-hidden" v-else>
+				<view class="nav_leftAdd">
+					<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
+					<view class="addresName" @click="toAddress">
+						{{ addressName.Address }}{{addressName.House}}
+					</view>
+				</view>
+			</view>
+			<view class="nav_right">
+				<view class="dinein" :class="{active: $store.state.orderType == 'takein'}" @click="toziqu">
+					<text>自取</text>
+				</view>
+				<view class="takeout" :class="{active: $store.state.orderType == 'takeout'}" @click="toAddress">
+					<text>外卖</text>
+				</view>
+			</view>
+		</view>
 		<!-- <uni-nav-bar :status-bar="true" :shadow="false">
 			<div slot="left">
 				<ms-dropdown-menu style="background:transparent">
@@ -15,12 +42,12 @@
 		<br /> -->
 		<div v-if="!loadding">
 			<!-- <button type="default" size="mini" @click="clickCoupon">优惠券</button> -->
-			<button type="default" size="mini" @click="clickGoods">商品横向</button>
+			<!-- <button type="default" size="mini" @click="clickGoods">商品横向</button>
 			<button type="default" size="mini" @click="integralMall">积分商城</button>
 			<button type="default" size="mini" @click="seckill">秒杀</button>
 			<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 			<br>
-			<button @click="clickClear" size="mini">去除usermac</button>
+			<button @click="clickClear" size="mini">去除usermac</button> -->
 
 			<div>
 				<div v-for="(item,index) in listMode" :key="index">
@@ -89,7 +116,9 @@
 				filterDropdownValue: {},
 				innerAudio: null,
 				oldAudioObj: {},
-				loadding: true
+				loadding: true,
+				currentStoreInfo:{},//用来接收门店信息
+				addressName: {}, //地址名称
 			};
 		},
 		async created() {
@@ -103,24 +132,27 @@
 			await this.getAutoMode();
 		},
 		mounted() {},
+		
 		methods: {
-			async getShopList() {
+			async getShopList() {//获取门店
 				let {
 					Data
 				} = await vipCard({
 						Action: "GetShopList",
-						DefLongitude: this.location.longitude,
-						DefLongitude: this.location.latitude
+						// DefLongitude: this.location.longitude,
+						// DefLongitude: this.location.latitude
+						Longitude: this.$store.state.currentLocation.longitude,//获取授权的经纬度
+						Latitude: this.$store.state.currentLocation.latitude
 					},
 					"UShopOpera"
 				);
-				let currentStoreInfo = {
+				this.currentStoreInfo = {
 					Name: Data.ShopList[0].Name,
 					Address: Data.ShopList[0].Address,
 					SID: Data.ShopList[0].SID
 				}
 				// console.log(currentStoreInfo)
-				this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
+				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 			},
 			clickClear() {
 				Cookie.remove("UserMACPhone");
@@ -186,18 +218,17 @@
 						Data
 					} = await vipCard({
 							Action: "GetDecorate",
-							// Name: "测试",
-							Type:'0'
+							Type:'0',//
 						},
 						"UShopOpera"
 					);
-					let timeS = this.location.longitude ? 0 : 3000
+					let timeS = this.location.longitude ? 0 : 1000
 					setTimeout(() => {
 						uni.hideLoading()
 						this.loadding = false
 						this.listMode = Data.Decorate.HtmlInfo || [];
 					}, timeS)
-					// console.log(this.listMode,888888)
+					console.log(this.listMode,888888)
 
 					// let arrVoice = []
 					// uni.getStorageSync('arrVoice');
@@ -219,7 +250,38 @@
 				} catch (e) {
 					console.log(e);
 				}
-			}
+			},
+			toziqu() {
+				this.$store.commit("SET_ORDER_TYPE", 'takein');	
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				// console.log(currentStore.data.SID,'currentStoreInfo')
+				
+				this.currentStoreInfo = {
+					Name: currentStore.data.Name,
+					Address: currentStore.data.Address,
+					SID: currentStore.data.SID,
+					Length:currentStore.data.Length
+				}
+			},
+			// 点击跳转到门店地址列表
+			toShopAddress(){
+				this.$Router.push({
+					path: '/pages/myAddress/myAddress',
+					query: {
+						flag: 'shop'
+					}
+				})
+			},
+			toAddress() {
+				// if(this.$store.state.orderType == 'takeout') return
+				this.$store.commit("SET_ORDER_TYPE", 'takeout');
+				this.$Router.push({
+					path: '/pages/myAddress/myAddress',
+					query: {
+						flag: 'towaimai'
+					}
+				})
+			},
 		}
 	};
 </script>
@@ -245,6 +307,133 @@
 
 		.van-dropdown-menu {
 			height: 54px;
+		}
+		.header {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 20rpx;
+			background-color: #ffffff;
+			height: 140rpx;
+			box-sizing: border-box;
+		
+			.dot {
+				position: absolute;
+				width: 34rpx;
+				height: 34rpx;
+				line-height: 34rpx;
+				font-size: 22rpx;
+				background-color: yellow;
+				color: #ffffff;
+				top: 16rpx;
+				right: 10rpx;
+				border-radius: 100%;
+				text-align: center;
+			}
+		
+			.nav_left {
+				// display: flex;
+				// flex-direction: column;
+				// font-size: 16px;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				.store-name {
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					font-size: 17px;
+					margin-bottom: 10rpx;
+				
+					.iconfont {
+						margin-left: 10rpx;
+						line-height: 100%;
+					}
+				}
+				.store-location {
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					color: #919293;
+					font-size: 13px;
+					.iconfont {
+						vertical-align: middle;
+						display: table-cell;
+						// color: $color-primary;
+						line-height: 100%;
+					}
+					image{
+						padding-right: 5px;
+						width: 30rpx;
+						height: 30rpx;
+					}
+				}
+				.nav_leftAdd{
+					display: inline-block;
+					// margin-bottom: 5px;
+					.addresName{
+						font-size: 15px;
+						font-weight: 700;
+						display: inline-block;
+						margin-left: 5px;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						white-space: nowrap;
+						width: 200px;
+					}
+				}
+			}
+		
+			.nav_right {
+				display: flex;
+				height: 30px;
+				background-color: #F5F5F5;
+				border-radius: 19px;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				font-size: 12px;
+				padding: 0 19px;
+				color: #919293;
+				.dinein {
+					position: relative;
+					display: flex;
+					align-items: center;
+					&.active {
+						padding: 6px 19px;
+						color: #ffffff;
+						background-color: #ADB838;
+						border-radius: 38rpx;
+					}
+				}
+				
+				.takeout {
+					margin-left: 20rpx;
+					height: 100%;
+					line-height: 30px;
+					align-items: center;
+					flex: 1;
+					padding: 14rpx 0;
+					&.active {
+						padding: 0px 19px;
+						color: #ffffff;
+						background-color: #ADB838;
+						border-radius: 38rpx;
+					}
+				}
+				
+				.dinein.active {
+					margin-left: -38rpx;
+				}
+				
+				.takeout.active {
+					margin-right: -38rpx;
+				}
+			}
 		}
 	}
 </style>

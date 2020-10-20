@@ -210,7 +210,6 @@
 		},
 		methods: {
 			async onClickButton(bool) {
-				debugger
 				if (this.isBrowse) {
 					return;
 				}
