@@ -172,6 +172,7 @@
 				}
 			}
 		},
+		// filters:
 		watch: {
 			"currentObj.pageGap"(n) {
 				n = Number(n);

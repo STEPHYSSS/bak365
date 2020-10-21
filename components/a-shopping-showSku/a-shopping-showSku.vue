@@ -5,7 +5,7 @@
 				<uni-icons type="closeempty" size="24" class="crossIcon" @click="crossIcon"></uni-icons>
 				<div>
 					<div class="skuTop">
-						<div v-if="goodsInfo.SpecType==='1'">
+						<div v-if="goodsInfo.SpecType==='1'" style="display: flex;">
 							<div class="skuTopImg" @click="viewImg(goodsInfo.Img)">
 								<a-up-img :key="goodsInfo.Img" :url="goodsInfo.Img |setImgPrex"></a-up-img>
 							</div>
@@ -29,7 +29,7 @@
 								</div>
 							</div>
 						</div>
-						<div v-else>
+						<div v-else style="display: flex;">
 							<div class="skuTopImg" @click="viewImg(currentNorms.Img)">
 								<a-up-img :key="currentNorms.Img" :url="currentNorms.Img |setImgPrex"></a-up-img>
 							</div>
@@ -55,7 +55,7 @@
 						</div>
 					</div>
 					<div class="skuBottom">
-						<div class="skuTopChoice">
+						<div class="skuTopChoice" v-if="goodsInfo.SpecType!='1'">
 							<div v-if="normsList.length>0">
 								<span class="skuTopChoiceTitle">规格</span>
 								<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"

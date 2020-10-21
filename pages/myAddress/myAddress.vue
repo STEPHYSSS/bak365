@@ -4,7 +4,7 @@
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
-		<view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD'">
+		<view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD' || $Route.query.flag == 'AutoWaimai'">
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>
@@ -33,11 +33,11 @@
 				<button type="primary" size="default" @tap="add">新增地址</button>
 			</view>
 		</view>
-		<view class="shopAddress" v-if="$Route.query.flag == 'shop'">
+		<!-- 门店地址 -->
+		<view class="shopAddress" v-if="$Route.query.flag == 'shop' || $Route.query.flag == 'shopAuto' ">
 			<view class="search" style="width: 96%;">
 				<uni-search-bar cancelButton="none" :disabledMy="false" style="width:100%" @confirm="confirm" placeholder="请输入搜索关键词"
 				 v-model="Name" :radius="50"></uni-search-bar>
-				<!-- <uni-search-bar placeholder="请输入内容" @input="input"></uni-search-bar> -->
 			</view>
 			<view class="addressList">
 				<view v-for="(item,index) in ShopAddress" :key="index" class="ShopAddress">
@@ -96,7 +96,7 @@
 		},
 		created() {
 			this.getWxConfig(); // 获取授权地址
-			if (this.$Route.query.flag == 'shop') {
+			if (this.$Route.query.flag == 'shop' || this.$Route.query.flag == 'shopAuto') {
 				this.title = '门店地址';
 				uni.setNavigationBarTitle({
 					title: '门店地址'
@@ -104,6 +104,7 @@
 			} else {
 				this.title = '我的地址'
 			}
+			
 			// 自取时调用门店接口，外卖时调用地址接口
 			if(this.$store.state.orderType === 'takeout' || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'){			
 				this.getAddressList();
@@ -163,7 +164,7 @@
 			},
 			// 
 			async chooseAddress(item) {
-				if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login') {
+				if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login' || this.$Route.query.flag == 'AutoWaimai') {
 					let currentStoreOut = {
 						Name: item.Name,
 						Address: item.Address,
@@ -184,8 +185,12 @@
 					}
 					this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
 					sessionStorage.setItem('takeOutAddress', JSON.stringify(currentStoreOut));
-					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
 					this.$store.commit("SET_ORDER_TYPE", 'takeout');
+					if(this.$Route.query.flag == 'AutoWaimai'){
+						return this.$Router.push('/pages/shoppingMall/index')
+					}
+					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
+					
 				} else {
 					console.log('555')
 				}
@@ -234,8 +239,9 @@
 					this.$Router.push('/pages/shoppingMall/login')
 				} else if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'shop') {
 					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
-					// this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu',query:{addressName:this.areaList[0].Address}})
-				} else {
+				}else if(this.$Route.query.flag == 'shopAuto' || this.$Route.query.flag == 'AutoWaimai'){					
+					this.$Router.push('/pages/shoppingMall/index')
+				}else {
 					this.$Router.push('/pages/home')
 				}
 
@@ -271,6 +277,9 @@
 					Latitude: item.Latitude
 				}
 				this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
+				if(this.$Route.query.flag == 'shopAuto'){
+					return this.$Router.push({path:"/pages/shoppingMall/index",query:{flag: 'Deflocation'}})
+				}
 				this.$Router.push({
 					path: '/pages/shoppingMall/menu_naixue/menu/menu',
 					query: {

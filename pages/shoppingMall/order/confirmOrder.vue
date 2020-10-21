@@ -293,7 +293,6 @@
 			});
 
 			this.currentItem = JSON.stringify(item);
-			console.log(this.currentItem,'444444')
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
 			if (this.$Route.query.isIntegral) {
@@ -655,9 +654,9 @@
 						// ProdList: JSON.stringify(this.currentItem)
 						ProdList:this.currentItem
 					}
-					console.log(obj,'obj')
+					// console.log(obj,'obj')
 					let { Data } = await vipCard(obj, "UProdOpera");
-					console.log(Data,'deffffffff')
+					// console.log(Data,'deffffffff')
 					// 把选择的地址赋值到页面上
 					if (this.radioModes === 1) {
 						this.currentArea = val;
@@ -665,7 +664,7 @@
 						this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
 					} else {
 						this.currentArea = val;
-						// this.freight = Data.Freight;
+						this.freight = Data.Freight;
 						sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
 					}
 					this.showAreaList = false;
@@ -675,59 +674,6 @@
 				}
 				
 			},
-			
-			// async changeArea(val, index) {
-			// 	this.showAreaList = val.SID
-			// 	let api;
-			// 	if (this.radioModes === 1) {
-			// 		api = "IsPickShop";
-			// 	} else {
-			// 		if (this.currentDeliveryType.indexOf("2") > -1) {
-			// 			//外卖
-			// 			api = "CalcFreight";
-			// 		} else if (this.currentDeliveryType.indexOf("3") > -1) {
-			// 			//物流
-			// 			api = "CalcLogistics";
-			// 		}
-			// 	}
-
-			// 	// try {
-			// 	// 	this.loading = true;
-			// 	// 	uni.showLoading()
-			// 	// 	let obj = {
-			// 	// 		Action:api,
-			// 	// 		Latitude: val.Latitude || "",
-			// 	// 		Longitude: val.Longitude || "",
-			// 	// 		ShopSID: val.SID,
-			// 	// 		PayType: this.radioPayType
-			// 	// 	}
-			// 	// 	let { Data } = await vipCard(obj, "UProdOpera");
-			// 	// 	console.log(Data)
-
-			// 	if (this.radioModes === 1) {
-			// 		this.currentArea = val;
-			// 		let currentStoreInfo = this.currentArea
-			// 		this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
-			// 	} else {
-			// 		this.currentArea = val;
-			// 		sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
-			// 	}
-			// 	this.showAreaList = false;
-			// 	this.$refs.showAreaList.close()
-			// 	// 	this.resultArea = val.SID;
-			// 	// 	this.areaList.splice(index, 1);
-			// 	// 	this.areaList.unshift(val);
-			// 	// 	//改变位置，重新算运费和总价
-			// 	// 	this.freight = Data.Freight;
-			// 	// 	this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
-
-			// 	this.loading = false;
-			// 	uni.hideLoading()
-			// 	// } catch (e) {
-			// 	// 	this.loading = false;
-			// 	// 	uni.hideLoading()
-			// 	// }
-			// },
 			clickEdit(val) {
 				this.areaInfo = val;
 				this.$refs.addEditArea.open()
@@ -862,7 +808,27 @@
 						ShopSID:currentStore.data.SID,
 					}
 					let { Data } =await vipCard(obj, "UProdOpera");
-					this.DiscountList = Data.DiscList || [];//优惠方案列表
+					if(type === 2){
+						this.DiscountList = Data.DiscList || [];//优惠方案列表
+						this.freight = Data.Freight;//运费
+						this.DiscPrice = Data.DiscPrice;//优惠价格
+						if (this.DiscountList.length > 0) {
+							this.radioDiscount = this.DiscountList[0].PrefNo;
+							this.UserDiscountName = this.DiscountList[0].PrefName;
+						}
+						this.total = Data.SumTotal;//合计和小计
+						this.ProdTotal = Data.ProdTotal;//商品总价格
+						this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计				
+						
+						if (JSON.stringify(this.CardInfo) !== "{}") {
+							if (Number(Data.CardInfo.Balance) < Number(Data.SumTotal)) {
+								//余额不足默认微信支付
+								this.radioPayType = "2";
+							}
+						} else {
+							this.radioPayType = "2";
+						}
+					}
 				}catch(e){
 					console.log(e)
 					

@@ -127,8 +127,25 @@
 			uni.showLoading({
 				title: '加载中'
 			});
-
-			await this.getShopList()
+			if(!this.addresses){
+				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+			}else{
+				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+			}
+			if(this.$Route.query.flag =='Deflocation'){
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				this.currentStoreInfo = {
+					Name: currentStore.data.Name,
+					Address: currentStore.data.Address,
+					SID: currentStore.data.SID,
+					Length:currentStore.data.Length
+				}
+			}else{
+				if(this.$store.state.orderType === 'takein'){
+					await this.getShopList();
+				}
+			}				
+			// await this.getShopList()
 			await this.getAutoMode();
 		},
 		mounted() {},
@@ -268,7 +285,7 @@
 				this.$Router.push({
 					path: '/pages/myAddress/myAddress',
 					query: {
-						flag: 'shop'
+						flag: 'shopAuto'
 					}
 				})
 			},
@@ -278,7 +295,7 @@
 				this.$Router.push({
 					path: '/pages/myAddress/myAddress',
 					query: {
-						flag: 'towaimai'
+						flag: 'AutoWaimai'
 					}
 				})
 			},
@@ -315,7 +332,6 @@
 			justify-content: space-between;
 			padding: 20rpx;
 			background-color: #ffffff;
-			height: 140rpx;
 			box-sizing: border-box;
 		
 			.dot {
