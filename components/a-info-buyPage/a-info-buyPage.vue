@@ -4,10 +4,10 @@
 			<swiper class="goodCouponSwipe" :style="classA">
 				<swiper-item v-for="thumb in goods.ImgList" :key="thumb">
 					<!-- #ifndef H5-->
-					<image :src="thumb |setImgPrex" />
+					<image :src="thumb |fmtImgUrl" />
 					<!-- #endif -->
 					<!-- #ifdef H5 -->
-					<img :src="thumb |setImgPrex" />
+					<img :src="thumb |fmtImgUrl" />
 					<!-- #endif -->
 				</swiper-item>
 			</swiper>

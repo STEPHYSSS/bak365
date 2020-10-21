@@ -8,6 +8,7 @@ export default {
 	// process.env.NODE_ENV === "development" ? '/' : '../'
 	VUE_APP_PREFIX: '../',
 	homeRoute: '/bind',
-	BASE_URL_OnLine: 'http://dingtalk.bak365.cn/WeixinNew/Dist/'
+	// BASE_URL_OnLine: 'http://dingtalk.bak365.cn/WeixinNew/Dist/'//暂时注释
+	BASE_URL_OnLine: 'http://dingtalk.bak365.cn/WeixinNew/'
 	// BASE_URL: 'http://192.168.0.101:8001'
 }

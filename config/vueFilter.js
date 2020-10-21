@@ -96,6 +96,13 @@ Vue.filter('setImgPrex', (val) => {
 		return ''
 	}
 })
+Vue.filter('fmtImgUrl', (val) => {
+     if (val) {
+          return dataConfig.BASE_URL_OnLine + val
+     } else {
+          return ''
+     }
+})
 
 Vue.filter('payTypeOrder', (val) => {
 	let num = Number(val)
