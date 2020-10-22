@@ -1,78 +1,83 @@
 <template>
-	<div class="shoppingCart_style" :class="classHome">
-		<view class="header">
-			<view class="nav_left" v-if="$store.state.orderType == 'takein'">
-				<view class="store-name" @click="toShopAddress">
-					<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
+	<div>
+		<div class="shoppingCart_style" :class="classHome">
+			<view class="header">
+				<view class="nav_left" v-if="$store.state.orderType == 'takein'">
+					<view class="store-name" @click="toShopAddress">
+						<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
+					</view>
+					<view class="store-location">
+						<!-- <image src='/static/images/order/location.png'></image> -->
+						<!-- <text style="color: #919293;">距离您 {{ currentStoreInfo.Length }}</text> -->
+					</view>
 				</view>
-				<view class="store-location">
-					<!-- <image src='/static/images/order/location.png'></image> -->
-					<!-- <text style="color: #919293;">距离您 {{ currentStoreInfo.Length }}</text> -->
+				<view class="nav_left overflow-hidden" v-else>
+					<view class="nav_leftAdd">
+						<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
+						<view class="addresName" @click="toAddress">
+							{{ addressName.Address }}{{addressName.House}}
+						</view>
+					</view>
 				</view>
-			</view>
-			<view class="nav_left overflow-hidden" v-else>
-				<view class="nav_leftAdd">
-					<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
-					<view class="addresName" @click="toAddress">
-						{{ addressName.Address }}{{addressName.House}}
+				<view class="nav_right">
+					<view class="dinein" :class="{active: $store.state.orderType == 'takein'}" @click="toziqu">
+						<text>自取</text>
+					</view>
+					<view class="takeout" :class="{active: $store.state.orderType == 'takeout'}" @click="toAddress">
+						<text>外卖</text>
 					</view>
 				</view>
 			</view>
-			<view class="nav_right">
-				<view class="dinein" :class="{active: $store.state.orderType == 'takein'}" @click="toziqu">
-					<text>自取</text>
-				</view>
-				<view class="takeout" :class="{active: $store.state.orderType == 'takeout'}" @click="toAddress">
-					<text>外卖</text>
-				</view>
-			</view>
-		</view>
-		<!-- <uni-nav-bar :status-bar="true" :shadow="false">
-			<div slot="left">
-				<ms-dropdown-menu style="background:transparent">
-					<ms-dropdown-item v-model="value1" :list="list"></ms-dropdown-item>
-				</ms-dropdown-menu>
-			</div>
-
-			<uni-search-bar cancelButton="none" :disabledMy="true" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
-			<div slot="right">
-				<div class="headRight"></div>
-			</div>
-		</uni-nav-bar>
-		<br /> -->
-		<div v-if="!loadding">
-			<!-- <button type="default" size="mini" @click="clickCoupon">优惠券</button> -->
-			<!-- <button type="default" size="mini" @click="clickGoods">商品横向</button>
-			<button type="default" size="mini" @click="integralMall">积分商城</button>
-			<button type="default" size="mini" @click="seckill">秒杀</button>
-			<button type="default" size="mini" @click="makeUpGroup">拼团</button>
-			<br>
-			<button @click="clickClear" size="mini">去除usermac</button> -->
-
-			<div>
-				<div v-for="(item,index) in listMode" :key="index">
-					<!-- <shopinfoma v-if="item.viewComponets === 'shopinfoma'" :propsObj="item.props"></shopinfoma> -->
-					<enterShops v-if="item.viewComponets === 'enterShops'" :propsObj="item.props"></enterShops>
-					<searchBox v-if="item.viewComponets === 'searchBox'" :propsObj="item.props"></searchBox>
-					<notice v-if="item.viewComponets === 'notice'" :propsObj="item.props"></notice>
-					<guide v-if="item.viewComponets === 'guide'" :propsObj="item.props"></guide>
-					<auxiliaryBlank v-if="item.viewComponets === 'auxiliaryBlank'" :propsObj="item.props"></auxiliaryBlank>
-					<pictureAds v-if="item.viewComponets === 'pictureAds'" :propsObj="item.props"></pictureAds>
-					<magicCube v-if="item.viewComponets === 'magicCube'" :propsObj="item.props"></magicCube>
-					<imgNav v-if="item.viewComponets === 'imgNav'" :propsObj="item.props"></imgNav>
-					<textBox v-if="item.viewComponets === 'textBox'" :propsObj="item.props"></textBox>
-					<switchStores v-if="item.viewComponets === 'switchStores'" :propsObj="item.props"></switchStores>
-					<richText v-if="item.viewComponets === 'richText'" :propsObj="item.props"></richText>
-					<goods v-if="item.viewComponets === 'goods'" :propsObj="item.props"></goods>
-					<goodsGroup v-if="item.viewComponets === 'goodGroup'" :propsObj="item.props"></goodsGroup>
-					<titleBox v-if="item.viewComponets === 'titleBox'" :propsObj="item.props"></titleBox>
-					<!-- <component :is="item.viewComponets" ref="setModeRef" :propsObj="item.props"></component> -->
+			<!-- <uni-nav-bar :status-bar="true" :shadow="false">
+				<div slot="left">
+					<ms-dropdown-menu style="background:transparent">
+						<ms-dropdown-item v-model="value1" :list="list"></ms-dropdown-item>
+					</ms-dropdown-menu>
 				</div>
-
+		
+				<uni-search-bar cancelButton="none" :disabledMy="true" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
+				<div slot="right">
+					<div class="headRight"></div>
+				</div>
+			</uni-nav-bar>
+			<br /> -->
+			<div v-if="!loadding">
+				<!-- <button type="default" size="mini" @click="clickCoupon">优惠券</button> -->
+				<!-- <button type="default" size="mini" @click="clickGoods">商品横向</button>
+				<button type="default" size="mini" @click="integralMall">积分商城</button>
+				<button type="default" size="mini" @click="seckill">秒杀</button>
+				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
+				<br>
+				<button @click="clickClear" size="mini">去除usermac</button> -->
+		
+				<div>
+					<div v-for="(item,index) in listMode" :key="index">
+						<!-- <shopinfoma v-if="item.viewComponets === 'shopinfoma'" :propsObj="item.props"></shopinfoma> -->
+						<enterShops v-if="item.viewComponets === 'enterShops'" :propsObj="item.props"></enterShops>
+						<searchBox v-if="item.viewComponets === 'searchBox'" :propsObj="item.props"></searchBox>
+						<notice v-if="item.viewComponets === 'notice'" :propsObj="item.props"></notice>
+						<guide v-if="item.viewComponets === 'guide'" :propsObj="item.props"></guide>
+						<auxiliaryBlank v-if="item.viewComponets === 'auxiliaryBlank'" :propsObj="item.props"></auxiliaryBlank>
+						<pictureAds v-if="item.viewComponets === 'pictureAds'" :propsObj="item.props"></pictureAds>
+						<magicCube v-if="item.viewComponets === 'magicCube'" :propsObj="item.props"></magicCube>
+						<imgNav v-if="item.viewComponets === 'imgNav'" :propsObj="item.props"></imgNav>
+						<textBox v-if="item.viewComponets === 'textBox'" :propsObj="item.props"></textBox>
+						<switchStores v-if="item.viewComponets === 'switchStores'" :propsObj="item.props"></switchStores>
+						<richText v-if="item.viewComponets === 'richText'" :propsObj="item.props"></richText>
+						<goods v-if="item.viewComponets === 'goods'" :propsObj="item.props"></goods>
+						<goodsGroup v-if="item.viewComponets === 'goodGroup'" :propsObj="item.props"></goodsGroup>
+						<titleBox v-if="item.viewComponets === 'titleBox'" :propsObj="item.props"></titleBox>
+						<!-- <component :is="item.viewComponets" ref="setModeRef" :propsObj="item.props"></component> -->
+					</div>
+				</div>
 			</div>
+			<!-- <div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div> -->
+			<div v-if="loadding&&JSON.stringify(location)==='{}'">数据加载中</div>
+			
 		</div>
-		<!-- <div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div> -->
-		<div v-if="loadding&&JSON.stringify(location)==='{}'">数据加载中</div>
+		<view>
+			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+		</view>	
 	</div>
 </template>
 
@@ -305,7 +310,7 @@
 
 <style scoped lang="less" scoped>
 	.shoppingCart_style {
-		// padding-bottom: 50px;
+		padding-bottom: 50px;
 
 		/deep/.uni-navbar__header-btns-left {
 			width: 160rpx;

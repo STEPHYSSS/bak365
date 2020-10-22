@@ -9,13 +9,13 @@
 				<div class="cap-cube" :style="{'margin': -(currentObj.imgGap/2).toFixed(2)+'px','height': bigBoxH+'px','width':bigBoxW+'px'}">
 					<div v-for="(item,index) in listBox" :key="index" class="cap-cube__item" :style="{'left': item.Dleft+'px','top': item.Dtop+'px','height': item.Dheight+'px','width': item.Dwidth+'px',
               'margin': (currentObj.imgGap/2).toFixed(2)+'px'
-            ,'background-image':`url(${item.img})`}"
+            ,'background-image':`url(${setImgPrex(item.img)})`}"
 					 @click="clickLink(item)">
 						<!-- #ifndef H5-->
-						<image class="cap-cube__table-image--invisible" :src="item.img |setImgPrex" alt="loaded" />
+						<image class="cap-cube__table-image--invisible" :src="item.img |fmtImgUrl" alt="loaded" />
 						<!-- #endif -->
 						<!-- #ifdef H5 -->
-						<img class="cap-cube__table-image--invisible" :src="item.img |setImgPrex" alt="loaded" />
+						<img class="cap-cube__table-image--invisible" :src="item.img |fmtImgUrl" alt="loaded" />
 						<!-- #endif -->
 					</div>
 				</div>
@@ -76,6 +76,18 @@
 			this.changeBox();
 		},
 		methods: {
+			setImgPrex(val) {
+				if (
+					val &&
+					this.listBox &&
+					this.listBox.length > 0
+				) {
+					return this.$VUE_APP_PREFIX2 + val;
+					// return 'http://192.168.0.105:8001/' + val;
+				} else {
+					return val;
+				}
+			},
 			clickLink(item) {
 				// 点击跳转
 				if (item.urlObj && item.urlObj.url) {

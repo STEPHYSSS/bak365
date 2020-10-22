@@ -9,6 +9,8 @@ import dataConfig from '@/config/index'
 import './config/vueFilter'
 
 import './assets/icon/iconfont.css'
+import tabBar from "@/components/AutoTabBar.vue"
+Vue.component('tabBar',tabBar)
 
 //挂载公用组件
 import shopInformation from "@/components/autoComponents/shopInformation/"
@@ -50,6 +52,8 @@ Vue.config.productionTip = false
 App.mpType = 'app'
 Vue.prototype.$store = store
 Vue.prototype.$VUE_APP_PREFIX = dataConfig.VUE_APP_PREFIX
+Vue.prototype.$VUE_APP_PREFIX2 = dataConfig.BASE_URL_OnLine //用于图片路径
+
 Vue.prototype.$toast = (val) => {
 	uni.showToast({
 		title: val,

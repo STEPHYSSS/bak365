@@ -122,10 +122,10 @@
 			this.changeClientWidth = this.clientWidth;
 			this.currentObj.changeMode = Number(this.currentObj.changeMode);
 			this.currentObj.imgNum = Number(this.currentObj.imgNum);
-
 			this.currentObj.imgList.forEach(D => {
 				if (D.img) {
-					D.img = this.$VUE_APP_PREFIX + D.img
+					D.img = this.$VUE_APP_PREFIX2 + D.img
+					// D.img = 'http://192.168.0.105:8001/'+D.img
 				}
 
 			})
@@ -172,14 +172,12 @@
 				}
 			}
 		},
-		// filters:
 		watch: {
 			"currentObj.pageGap"(n) {
 				n = Number(n);
 				this.changeClientWidth = (this.clientWidth - n * 2).toFixed(2);
 			}
-		},
-		
+		}
 	};
 </script>
 

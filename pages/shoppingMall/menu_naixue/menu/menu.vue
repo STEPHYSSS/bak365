@@ -248,6 +248,9 @@
 			</popup-layer>
 			<!-- 购物车详情popup -->
 		</view>
+		<view>
+			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+		</view>
 	</view>
 </template>
 

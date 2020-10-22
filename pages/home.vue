@@ -1,177 +1,182 @@
 <template>
-	<div class="home">
-		<!-- #ifndef H5 -->
-		<uni-nav-bar :status-bar="true" :shadow="false" title="会员中心"></uni-nav-bar>
-		<!-- #endif -->
-		<div v-if="!loading" class="homeFa">
-			<div class="homeImg" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
-				<span class="homeImgTitle">{{data.CardNo}}</span>
-			</div>
-			<div class="homeInfo">
-				<div class="homeBalanceRow backgroundF">
-					<div class="homeBalance" style="width:50%">
-						<div @click="clickBalance">
-							<div class="homeBalanceM">
-								<span v-if="data.Balance&&Number(data.Balance)>0">
-									{{data.Balance}}
-									<!-- <span>{{String(data.Balance).length>6?'￥':''}}</span> -->
-								</span>
-								<span v-else>0</span>
+	<div>
+		<div class="home">
+			<!-- #ifndef H5 -->
+			<uni-nav-bar :status-bar="true" :shadow="false" title="会员中心"></uni-nav-bar>
+			<!-- #endif -->
+			<div v-if="!loading" class="homeFa">
+				<div class="homeImg" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
+					<span class="homeImgTitle">{{data.CardNo}}</span>
+				</div>
+				<div class="homeInfo">
+					<div class="homeBalanceRow backgroundF">
+						<div class="homeBalance" style="width:50%">
+							<div @click="clickBalance">
+								<div class="homeBalanceM">
+									<span v-if="data.Balance&&Number(data.Balance)>0">
+										{{data.Balance}}
+										<!-- <span>{{String(data.Balance).length>6?'￥':''}}</span> -->
+									</span>
+									<span v-else>0</span>
+								</div>
+								<span class="homeBalanceB">余额</span>
 							</div>
-							<span class="homeBalanceB">余额</span>
+						</div>
+						<div class="homeBalance" style="width:50%">
+							<div @click="clickBalance">
+								<div class="homeBalanceM">
+									<span v-if="data.Score&&Number(data.Score)>0">
+										{{data.Score |spliceNum}}
+										<span>{{String(data.Score).length>6?'+':''}}</span>
+									</span>
+									<span v-else>0</span>
+								</div>
+								<span class="homeBalanceB">积分</span>
+							</div>
+						</div>
+						<!-- <van-col span="6" class="homeBalance" v-if="false">
+							<router-link to="/home/redPacket">
+								<div class="homeBalanceM">0.00</div>
+								<span class="homeBalanceB">红包</span>
+							</router-link>
+						</van-col>
+						<van-col span="6" class="homeBalance" v-if="false">
+							<router-link to="/home/electron">
+								<div class="homeBalanceM">0.00</div>
+								<span class="homeBalanceB">劵</span>
+							</router-link>
+						</van-col> -->
+					</div>
+					<div class="backgroundF homeOrderRow">
+						<adCell text="我的订单" detail="查看全部订单" @click="clickAll" />
+						<uni-grid @change="clickGrid" :column="4" :show-border="false" style="color:#2c3e50">
+							<uni-grid-item :index="1">
+								<view class="grid-item-box">
+									<div class="iconfont icon-gerenzhongxindingdandaifukuan"></div>
+									<div>待付款</div>
+								</view>
+							</uni-grid-item>
+							<uni-grid-item :index="2">
+								<view class="grid-item-box">
+									<div class="iconfont icon-yifukuan-xianxing"></div>
+									<div>已付款</div>
+								</view>
+							</uni-grid-item>
+							<uni-grid-item :index="3">
+								<view class="grid-item-box">
+									<div class="iconfont icon-yitihuo"></div>
+									<div>已提货</div>
+								</view>
+							</uni-grid-item>
+							<uni-grid-item :index="4">
+								<view class="grid-item-box">
+									<div class="iconfont icon-pingjia"></div>
+									<div>已取消</div>
+								</view>
+							</uni-grid-item>
+							<!-- <uni-grid-item :index="55">
+								<view class="grid-item-box">
+									<div class="iconfont icon-pingjia"></div>
+									<div>评价</div>
+								</view>
+							</uni-grid-item> -->
+						</uni-grid>
+					</div>
+					<!-- 会员相关九宫格 -->
+					<div class="backgroundF homeOrderRow">
+						<adCell2 text="会员中心"/>
+						<uni-grid :column="5"  @change="toGrid" :show-border="false" style="color:#2c3e50">
+						    <uni-grid-item :index="1">
+						        <view class="grid-item-box">
+						        	<div class="iconfont icon-shenqingtuanchang"></div>
+						        	<div v-if="data.LeaderAudit != '1'">申请团长</div>
+									    <div v-else>团长信息</div>
+						        </view>
+						    </uni-grid-item>
+						    <uni-grid-item :index="2">
+						       <view class="grid-item-box"  >
+						       	<div class="iconfont icon-fenxiang1"></div>
+						       	<div>我的分享</div>
+						       </view>
+						    </uni-grid-item>
+						    <uni-grid-item :index="3">
+						        <view class="grid-item-box">
+						        	<div class="iconfont icon-fensi"></div>
+						        	<div>我的粉丝</div>
+									<!-- <div>申请提现</div> -->
+						        </view>
+						    </uni-grid-item>
+							<uni-grid-item :index="4">
+							    <view class="grid-item-box">
+							    	<div class="iconfont icon-zuji" style="color: #bbbcbd;"></div>
+							    	<div>足迹</div>
+							    </view>
+							</uni-grid-item>
+							<uni-grid-item :index="5">
+							    <view class="grid-item-box">
+							    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
+							    	<div>我的推广</div>
+							    </view>
+							</uni-grid-item>
+							<uni-grid-item :index="6">
+							    <view class="grid-item-box">
+							    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
+							    	<div>优惠券</div>
+							    </view>
+							</uni-grid-item>
+						</uni-grid>
+					</div>
+					
+					<div class="cardWei">
+						<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
+						<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
+						<div>
+							<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
+						</div>
+						<div>
+							<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop' && data.CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
 						</div>
 					</div>
-					<div class="homeBalance" style="width:50%">
-						<div @click="clickBalance">
-							<div class="homeBalanceM">
-								<span v-if="data.Score&&Number(data.Score)>0">
-									{{data.Score |spliceNum}}
-									<span>{{String(data.Score).length>6?'+':''}}</span>
-								</span>
-								<span v-else>0</span>
-							</div>
-							<span class="homeBalanceB">积分</span>
+					
+					<div class="cardWei" v-if='isMember==="1"'>
+						<div>
+							<adCell text="微卡充值" @click="$Router.push('/pages/vip/weiFull')" />
+						</div>
+						<div>
+							<adCell text="付款码" @click="$Router.push('/pages/vip/payCode')" />
 						</div>
 					</div>
-					<!-- <van-col span="6" class="homeBalance" v-if="false">
-						<router-link to="/home/redPacket">
-							<div class="homeBalanceM">0.00</div>
-							<span class="homeBalanceB">红包</span>
-						</router-link>
-					</van-col>
-					<van-col span="6" class="homeBalance" v-if="false">
-						<router-link to="/home/electron">
-							<div class="homeBalanceM">0.00</div>
-							<span class="homeBalanceB">劵</span>
-						</router-link>
-					</van-col> -->
-				</div>
-				<div class="backgroundF homeOrderRow">
-					<adCell text="我的订单" detail="查看全部订单" @click="clickAll" />
-					<uni-grid @change="clickGrid" :column="4" :show-border="false" style="color:#2c3e50">
-						<uni-grid-item :index="1">
-							<view class="grid-item-box">
-								<div class="iconfont icon-gerenzhongxindingdandaifukuan"></div>
-								<div>待付款</div>
-							</view>
-						</uni-grid-item>
-						<uni-grid-item :index="2">
-							<view class="grid-item-box">
-								<div class="iconfont icon-yifukuan-xianxing"></div>
-								<div>已付款</div>
-							</view>
-						</uni-grid-item>
-						<uni-grid-item :index="3">
-							<view class="grid-item-box">
-								<div class="iconfont icon-yitihuo"></div>
-								<div>已提货</div>
-							</view>
-						</uni-grid-item>
-						<uni-grid-item :index="4">
-							<view class="grid-item-box">
-								<div class="iconfont icon-pingjia"></div>
-								<div>已取消</div>
-							</view>
-						</uni-grid-item>
-						<!-- <uni-grid-item :index="55">
-							<view class="grid-item-box">
-								<div class="iconfont icon-pingjia"></div>
-								<div>评价</div>
-							</view>
-						</uni-grid-item> -->
-					</uni-grid>
-				</div>
-				<!-- 会员相关九宫格 -->
-				<div class="backgroundF homeOrderRow">
-					<adCell2 text="会员中心"/>
-					<uni-grid :column="5"  @change="toGrid" :show-border="false" style="color:#2c3e50">
-					    <uni-grid-item :index="1">
-					        <view class="grid-item-box">
-					        	<div class="iconfont icon-shenqingtuanchang"></div>
-					        	<div v-if="data.LeaderAudit != '1'">申请团长</div>
-								    <div v-else>团长信息</div>
-					        </view>
-					    </uni-grid-item>
-					    <uni-grid-item :index="2">
-					       <view class="grid-item-box"  >
-					       	<div class="iconfont icon-fenxiang1"></div>
-					       	<div>我的分享</div>
-					       </view>
-					    </uni-grid-item>
-					    <uni-grid-item :index="3">
-					        <view class="grid-item-box">
-					        	<div class="iconfont icon-fensi"></div>
-					        	<div>我的粉丝</div>
-								<!-- <div>申请提现</div> -->
-					        </view>
-					    </uni-grid-item>
-						<uni-grid-item :index="4">
-						    <view class="grid-item-box">
-						    	<div class="iconfont icon-zuji" style="color: #bbbcbd;"></div>
-						    	<div>足迹</div>
-						    </view>
-						</uni-grid-item>
-						<uni-grid-item :index="5">
-						    <view class="grid-item-box">
-						    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
-						    	<div>我的推广</div>
-						    </view>
-						</uni-grid-item>
-						<uni-grid-item :index="6">
-						    <view class="grid-item-box">
-						    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
-						    	<div>优惠券</div>
-						    </view>
-						</uni-grid-item>
-					</uni-grid>
-				</div>
-				
-				<div class="cardWei">
-					<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
-					<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
-					<div>
-						<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
+					<div class="cardWei">
+						<div>
+							<adCell text="交易记录" @click="$Router.push('/pages/vip/surplus')" />
+						</div>
+						<!--                    <van-cell title="积分记录" is-link to="/home/integral"/>-->
 					</div>
-					<div>
-						<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop' && data.CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
+					<div class="cardWei">
+						<div>
+							<!-- <adCell text="收货地址" to="/home/myAddress" /> -->
+							<adCell text="收货地址" @click="$Router.push({path:'/pages/myAddress/myAddress',query:{flag:'homeD'}})"  />
+						</div>
 					</div>
-				</div>
-				
-				<div class="cardWei" v-if='isMember==="1"'>
-					<div>
-						<adCell text="微卡充值" @click="$Router.push('/pages/vip/weiFull')" />
+					<div class="cardWei">
+						<div>
+							<adCell text="清除缓存" @click="clickClear" />
+						</div>
 					</div>
-					<div>
-						<adCell text="付款码" @click="$Router.push('/pages/vip/payCode')" />
-					</div>
-				</div>
-				<div class="cardWei">
-					<div>
-						<adCell text="交易记录" @click="$Router.push('/pages/vip/surplus')" />
-					</div>
-					<!--                    <van-cell title="积分记录" is-link to="/home/integral"/>-->
-				</div>
-				<div class="cardWei">
-					<div>
-						<!-- <adCell text="收货地址" to="/home/myAddress" /> -->
-						<adCell text="收货地址" @click="$Router.push({path:'/pages/myAddress/myAddress',query:{flag:'homeD'}})"  />
-					</div>
-				</div>
-				<div class="cardWei">
-					<div>
-						<adCell text="清除缓存" @click="clickClear" />
-					</div>
-				</div>
-				<div style="text-align: center;margin-top:40px" class="callInfo">
-					<div class="logBottom">烘焙365提供技术支持</div>
-					<!--                <van-icon name="fire-o"/>-->
-					<div class="phoneStyle">
-						<uni-icons type="phone" size="10"></uni-icons>
-						<span @click="callClick">027-85750188</span>
+					<div style="text-align: center;margin-top:40px" class="callInfo">
+						<div class="logBottom">烘焙365提供技术支持</div>
+						<!--                <van-icon name="fire-o"/>-->
+						<div class="phoneStyle">
+							<uni-icons type="phone" size="10"></uni-icons>
+							<span @click="callClick">027-85750188</span>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<view>
+			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+		</view>	
 	</div>
 </template>
 
@@ -210,7 +215,7 @@
 			};
 		},
 		async created() {
-			// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
+			// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡(会员卡) ，mang||shop 实体卡
 			// console.log(Cookie.get("isMember"), Cookie.get("CardType"))
 			// //1 绑定了卡但是不知道绑定的是哪个卡；
 			//this.isMember = Cookie.get("isMember");
@@ -218,6 +223,7 @@
 
 			await this.getInfo();
 			this.CardType = this.data.CardType
+			sessionStorage.setItem('CardType',this.CardType)
 			this.isMember = Cookie.get("isMember");
 			// bottomScrollbar(this, ".callInfo", ".homeFa", 60);
 		},

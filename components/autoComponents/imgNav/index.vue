@@ -15,7 +15,7 @@
 									<!-- :href="item.urlObj?item.urlObj:''" -->
 									<div class="cap-image-ad__image" :style="{'height':currentObj.isScroll==1?widthBox+'px':HeightBoxHid+'px',
                     'width':currentObj.isScroll==1?widthBox+'px':'100%',
-                     'background-image':`url(${item.img?item.img:'https://img.yzcdn.cn//public_files/2018/03/08/837f3d12e14b299778ae5fea5c05a3a3.png'})`}"></div>
+                     'background-image':`url(${setImgPrex(item.url)})`}"></div>
 									<h3 class="cap-image-ad__nav-title">{{item.name}}</h3>
 								</a>
 							</div>
@@ -72,7 +72,18 @@
 		mounted() {
 			this.setWidth();
 		},
-		methods: {
+		methods: {			
+			setImgPrex(val) {
+				if (
+					val &&
+					this.propsObj.listNav &&
+					this.propsObj.listNav.length > 0
+				) {
+					return 'http://192.168.0.105:8001/' + val;
+				} else {
+					return val;
+				}
+			},
 			setWidth() {
 				//手机端记得把320改成clientWidth
 				let clientWidth = uni.getSystemInfoSync().windowWidth;

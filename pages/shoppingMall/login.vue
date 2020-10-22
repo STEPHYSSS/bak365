@@ -1,80 +1,85 @@
 <template>
-	<view class="container" :class="classHome">
-		<view class="banner">
-			<!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
-			<swiper class="swiper-box" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
-				<swiper-item v-for="(item, index) in homeSlide" :key="index">
-					<view class="swiper-item">
-						<image :src="item.Img | imgFilter" class="bg" mode="aspectFill" />
-					</view>
-				</swiper-item>
-			</swiper>
-		</view>
-		<view class="content">
-			<view class="entrance">
-				<view class="item" @tap="takein">
-					<image src="../../static/images/index/zq.png" class="icon"></image>
-					<view class="title">自取</view>
-				</view>
-				<view class="item" @tap="takeout">
-					<image src="../../static/images/index/wm.png" class="icon"></image>
-					<view class="title">外卖</view>
-				</view>
-			</view>
-			<view class="info">
-				<view class="integral_section" >
-					<view class="top" @tap="integrals">
-						<text class="title">我的积分</text>
-						<text class="value">{{myScore}}</text>
-					</view>
-					<view class="bottom" style="color: #919293;">
-						进入积分商城兑换烘焙券及周边好礼
-					</view>
-				</view>
-				<view class="qrcode_section" @tap="memberCode" v-if="isMember == '1'">
-					<div class="iconfont icon-huiyuanmaicons"></div>
-					<text>会员码</text>
-				</view>
-			</view>
-			<!--  -->
-			<view class="centerBox">
-				<view class="left">
-					<view>
-						<!-- 点击这个地方可以跳转到商城页面 待做 -->
-						<view>
-							<image src="../../static/images/index/csc.png" class="mark-img"></image>
-							<view style="margin-left: 6px;display: inline-block;">烘焙的商城</view>
+	<view class="">
+		<view class="container" :class="classHome">
+			<view class="banner">
+				<!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
+				<swiper class="swiper-box" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
+					<swiper-item v-for="(item, index) in homeSlide" :key="index">
+						<view class="swiper-item">
+							<image :src="item.Img | imgFilter" class="bg" mode="aspectFill" />
 						</view>
-						<view style="margin-left: 40rpx;margin-top: 2px; font-size: 20rpx;">优质礼盒，网红零食</view>
+					</swiper-item>
+				</swiper>
+			</view>
+			<view class="content">
+				<view class="entrance">
+					<view class="item" @tap="takein">
+						<image src="../../static/images/index/zq.png" class="icon"></image>
+						<view class="title">自取</view>
 					</view>
-					<view style="height: 80px;">
-						<image src="../../static/images/index/yzclh.png" class="yzclh-img" mode="heightFix"></image>
+					<view class="item" @tap="takeout">
+						<image src="../../static/images/index/wm.png" class="icon"></image>
+						<view class="title">外卖</view>
 					</view>
 				</view>
-				<!-- 右边 -->
-				<view class="right">
-					<view class="rightTop">
-						<image src="../../static/images/index/mcsb.png"></image>
-						<view style="display: inline-block;position: absolute;top: -2px;">买蛋糕送蛋挞</view>
+				<view class="info">
+					<view class="integral_section" >
+						<view class="top" @tap="integrals">
+							<text class="title">我的积分</text>
+							<text class="value">{{myScore}}</text>
+						</view>
+						<view class="bottom" style="color: #919293;">
+							进入积分商城兑换烘焙券及周边好礼
+						</view>
 					</view>
-					<view class="rightBottom">
-						<image src="../../static/images/index/hyjb.png"></image>
-						<view style="display: inline-block;position: absolute;top: -2px;">会员劵包</view>
+					<view class="qrcode_section" @tap="memberCode" v-if="isMember == '1'">
+						<div class="iconfont icon-huiyuanmaicons"></div>
+						<text>会员码</text>
+					</view>
+				</view>
+				<!--  -->
+				<view class="centerBox">
+					<view class="left">
+						<view>
+							<!-- 点击这个地方可以跳转到商城页面 待做 -->
+							<view>
+								<image src="../../static/images/index/csc.png" class="mark-img"></image>
+								<view style="margin-left: 6px;display: inline-block;">烘焙的商城</view>
+							</view>
+							<view style="margin-left: 40rpx;margin-top: 2px; font-size: 20rpx;">优质礼盒，网红零食</view>
+						</view>
+						<view style="height: 80px;">
+							<image src="../../static/images/index/yzclh.png" class="yzclh-img" mode="heightFix"></image>
+						</view>
+					</view>
+					<!-- 右边 -->
+					<view class="right">
+						<view class="rightTop">
+							<image src="../../static/images/index/mcsb.png"></image>
+							<view style="display: inline-block;position: absolute;top: -2px;">买蛋糕送蛋挞</view>
+						</view>
+						<view class="rightBottom">
+							<image src="../../static/images/index/hyjb.png"></image>
+							<view style="display: inline-block;position: absolute;top: -2px;">会员劵包</view>
+						</view>
+					</view>
+				</view>
+				<view class="member-news">
+					<view class="header">
+						<view class="title">会员新鲜事</view>
+						<view class="iconfont iconRightbutton"></view>
+					</view>
+					<view class="list">
+						<view class="item">
+							<image src="@/static/images/index/bottomBanner.jpg"></image>
+							<view class="title">"莓"你不行 | 霸气蓝莓清爽回归</view>
+						</view>
 					</view>
 				</view>
 			</view>
-			<view class="member-news">
-				<view class="header">
-					<view class="title">会员新鲜事</view>
-					<view class="iconfont iconRightbutton"></view>
-				</view>
-				<view class="list">
-					<view class="item">
-						<image src="@/static/images/index/bottomBanner.jpg"></image>
-						<view class="title">"莓"你不行 | 霸气蓝莓清爽回归</view>
-					</view>
-				</view>
-			</view>
+		</view>
+		<view>
+			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
 		</view>
 	</view>
 </template>

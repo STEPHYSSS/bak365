@@ -219,9 +219,18 @@
 				showCard:false,//用来判断卡列表是否展示
 				showCardNo:false,//选择卡后展示卡号
 				isActive: false,//控制验证码是否置灰
+				isMember :Cookie.get("isMember"),
+				CardType:sessionStorage.getItem("cardType")
 			};
 		},
 		async created() {
+			// 判断是否有卡，有卡并且是会员卡（微卡）的话，就可以绑定卡，否则跳回到个人中心
+			if(this.CardType === 'Manage'|| this.CardType==='Shop' ){
+				this.$Router.push("/pages/home")
+			}
+			if(this.isMember === 1 ){
+				this.$Router.push("/pages/home")
+			}
 			this.endData = getTime('', true)
 			if (this.currentRouter) {
 				// 绑定实体卡

@@ -249,7 +249,7 @@
 					this.currentObj._Prod_Data &&
 					this.currentObj._Prod_Data.length > 0
 				) {
-					return this.$VUE_APP_PREFIX + val;
+					return this.$VUE_APP_PREFIX2 + val;
 				} else {
 					return val;
 				}

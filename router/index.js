@@ -41,11 +41,11 @@ router.beforeEach((to, from, next) => {
 				getApp().globalData.mainStyle = 'theme2'
 				Cookie.set('mainStyle', 'theme2')
 
-				let GetQuery = GetQueryString('AppNo')
+				// let GetQuery = GetQueryString('AppNo')
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
-				let newAppNo = '001'
-				// let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
+				let newAppNo = ''
+				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
+				// let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -54,9 +54,9 @@ router.beforeEach((to, from, next) => {
 					let obj = {}
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
-						AppNo: '001',
+						//AppNo: '001',
 						// Code:'wxb7a2e9fc043daf1c',
-						Code:'11112222'
+						//Code:'11112222'
 					})
 					next({
 						path: to.path,
@@ -65,10 +65,20 @@ router.beforeEach((to, from, next) => {
 				}
 
 				let currentUrl = setUrlDelCode()
-				// let domain = window.location.host;
-				// newAppNo = domain//获取域名存放给AppNo,暂时注释
+				if(dataConfig.Bak365_Dev===0)
+				{
+					newAppNo='001';
+				}
+				else
+				{
+					let domain = window.location.host;
+					newAppNo=domain.split('.')[0];
+				}
+				Cookie.set('AppNo', newAppNo)
+				 // let domain = window.location.host;
+				 // console.log(domain,'-----domain-----')
+				 // newAppNo = domain;//获取域名存放给AppNo,暂时注释
 				if (newAppNo) {
-					Cookie.set('AppNo', newAppNo)
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
@@ -83,9 +93,8 @@ router.beforeEach((to, from, next) => {
 							store.commit("SET_HISTORY_URL", {})
 							try {
 								let appId = await store.dispatch('get_user', {
-									// AppNo: newAppNo,
+									 AppNo: newAppNo,
 									// Code:'wxb7a2e9fc043daf1c'
-									AppNo:'001',
 									Code:'11112222'
 								})
 								if (appId) {

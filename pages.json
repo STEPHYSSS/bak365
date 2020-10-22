@@ -194,32 +194,33 @@
 		"navigationBarTitleText": "商城",
 		"navigationBarBackgroundColor": "#fff",
 		"navigationStyle": "custom"
-	},
-	"tabBar": {
-		"backgroundColor": "#fff",
-		"borderStyle": "white",
-		// "list":[{
-		// 	"pagePath":"pages/shoppingMall/index"
-		// },{
-		// 	"pagePath":"pages/shoppingMall/shoppingCart/index"
-		// },{
-		// 	"pagePath":"pages/home"
-		// }]
-		"list": [{
-				"pagePath":"pages/shoppingMall/login"
-			},
-			{
-				"pagePath": "pages/shoppingMall/menu_naixue/menu/menu"		
-			},
-			{
-				"pagePath": "pages/home"
-			},
-			{
-				"pagePath": "pages/shoppingMall/shoppingCart/index"
-			},
-			{
-				"pagePath": "pages/shoppingMall/index"				
-			}
-		]
 	}
+	// ,
+	// "tabBar": {
+	// 	"backgroundColor": "#fff",
+	// 	"borderStyle": "white",
+	// 	// "list":[{
+	// 	// 	"pagePath":"pages/shoppingMall/index"
+	// 	// },{
+	// 	// 	"pagePath":"pages/shoppingMall/shoppingCart/index"
+	// 	// },{
+	// 	// 	"pagePath":"pages/home"
+	// 	// }]
+	// 	"list": [{
+	// 			"pagePath":"pages/shoppingMall/login"
+	// 		},
+	// 		{
+	// 			"pagePath": "pages/shoppingMall/menu_naixue/menu/menu"		
+	// 		},
+	// 		{
+	// 			"pagePath": "pages/home"
+	// 		},
+	// 		{
+	// 			"pagePath": "pages/shoppingMall/shoppingCart/index"
+	// 		},
+	// 		{
+	// 			"pagePath": "pages/shoppingMall/index"				
+	// 		}
+	// 	]
+	// }
 }

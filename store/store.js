@@ -66,7 +66,7 @@ const store = new Vuex.Store({
 					}
 					if(response.Data.hasOwnProperty('ShopRadio')){
 						// 1代表商城模式,2代表自定义模式
-						Cookies.set('ShopRadio', response.Data.ShopRadio)
+						sessionStorage.setItem('ShopRadio', response.Data.ShopRadio)
 					}//缓存商城模式
 					if(response.Message == '未授权'){
 						this.$Router.push({

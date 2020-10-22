@@ -1,46 +1,51 @@
 <template>
-	<div class="shopping-cart-style" :class="classHome">
-		<!-- #ifndef H5 -->
-		<uni-nav-bar :status-bar="true" :shadow="false" title="购物车"></uni-nav-bar>
-		<!-- #endif -->
-		<div v-if="!loading">
-			<div class="top-cart backgroundColor">
-				<div class="top-cart__title">购物车</div>
-				<div class="top-cart__num">共{{dataList.length}}件宝贝</div>
-				<span class="top-cart__batch" @click="clickBatch">{{batchState?'完成':'管理'}}</span>
-			</div>
-			<div class="bottom-cart">
-				<checkbox-group @change="changeGroup">
-					<div v-for="(item,index) in dataList" :key="index" class="bottom-cart__box">
-						<checkbox :value="item.SID" class="checkbox-my" :checked="result.some(D=>D === item.SID)" :disabled="item.IsBuy==='0'&&!batchState"></checkbox>
-						<a-good-lineBox :itemData="item" :isShoppingCard="true" class="bottom-cart__cardBox" @goodBox="goodBox"
-						 @changeStepper="changeStepper($event,index,item.SID)" @changePartsNum="changePartsNum($event,item,index)"></a-good-lineBox>
-					</div>
-				</checkbox-group>
-			</div>
-			<a-nodeData v-if="dataList.length===0" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
-
-			<a-bottomSubmit :batchState="batchState" @checkAll="checkAll" @submitMoney="submitMoney" @delButton="delButton"
-			 :allMoney="allMoney" style="margin-bottom: 50px;" :allResult="allResult"></a-bottomSubmit>
-
-			<uni-popup class="uni-popupSku" ref="setParts" type="bottom" @change="setPartsChange">
-				<div class="uni-popupSku-box">
-					<div style="height: 33px;">
-						<uni-icons type="closeempty" size="24" class="crossIcon" @click="$refs.setParts.close()"></uni-icons>
-					</div>
-					<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
-						<div class="skuTopChoiceItem">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-						<uni-number-box class="skuStepperStyle partsStepper" v-model="item.Stepper" :min="0" :max="Number(item.StoreQty)"
-						 @change="skuTopChoiceParts($event,index)" :value="item.Stepper" />
-					</div>
-
-					<div style="margin-top:15px;">
-						<!-- linear-gradient(to right, #ffd01e, #ff8917)" -->
-						<button class="buttonPage" type="main" @click="changeNumParts">确 定</button>
-					</div>
+	<div>
+		<div class="shopping-cart-style" :class="classHome">
+			<!-- #ifndef H5 -->
+			<uni-nav-bar :status-bar="true" :shadow="false" title="购物车"></uni-nav-bar>
+			<!-- #endif -->
+			<div v-if="!loading">
+				<div class="top-cart backgroundColor">
+					<div class="top-cart__title">购物车</div>
+					<div class="top-cart__num">共{{dataList.length}}件宝贝</div>
+					<span class="top-cart__batch" @click="clickBatch">{{batchState?'完成':'管理'}}</span>
 				</div>
-			</uni-popup>
+				<div class="bottom-cart">
+					<checkbox-group @change="changeGroup">
+						<div v-for="(item,index) in dataList" :key="index" class="bottom-cart__box">
+							<checkbox :value="item.SID" class="checkbox-my" :checked="result.some(D=>D === item.SID)" :disabled="item.IsBuy==='0'&&!batchState"></checkbox>
+							<a-good-lineBox :itemData="item" :isShoppingCard="true" class="bottom-cart__cardBox" @goodBox="goodBox"
+							 @changeStepper="changeStepper($event,index,item.SID)" @changePartsNum="changePartsNum($event,item,index)"></a-good-lineBox>
+						</div>
+					</checkbox-group>
+				</div>
+				<a-nodeData v-if="dataList.length===0" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
+		
+				<a-bottomSubmit :batchState="batchState" @checkAll="checkAll" @submitMoney="submitMoney" @delButton="delButton"
+				 :allMoney="allMoney" style="margin-bottom: 50px;" :allResult="allResult"></a-bottomSubmit>
+		
+				<uni-popup class="uni-popupSku" ref="setParts" type="bottom" @change="setPartsChange">
+					<div class="uni-popupSku-box">
+						<div style="height: 33px;">
+							<uni-icons type="closeempty" size="24" class="crossIcon" @click="$refs.setParts.close()"></uni-icons>
+						</div>
+						<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
+							<div class="skuTopChoiceItem">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
+							<uni-number-box class="skuStepperStyle partsStepper" v-model="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+							 @change="skuTopChoiceParts($event,index)" :value="item.Stepper" />
+						</div>
+		
+						<div style="margin-top:15px;">
+							<!-- linear-gradient(to right, #ffd01e, #ff8917)" -->
+							<button class="buttonPage" type="main" @click="changeNumParts">确 定</button>
+						</div>
+					</div>
+				</uni-popup>
+			</div>
 		</div>
+		<view>
+			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+		</view>	
 	</div>
 </template>
 
