@@ -1,7 +1,6 @@
 const home = [{
-		// path: '/pages/shoppingMall/index',
 		path:'/pages/shoppingMall/login',	
-		aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
+		// aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
 		name: 'login',
 		meta: {
 			title: '首页',
@@ -51,6 +50,14 @@ const home = [{
 	}, {
 		path: '/GrantMiddle',
 		name: 'GrantMiddle',
+		meta: {
+			title: '授权页面',
+		}
+	},
+	{
+		path: '/pages/homePage/homePage',
+		name: 'homePage',
+		aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
 		meta: {
 			title: '授权页面',
 		}

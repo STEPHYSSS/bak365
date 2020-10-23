@@ -79,7 +79,7 @@
 			</view>
 		</view>
 		<view>
-			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+			<tabBar :pagePath="'/pages/shoppingMall/login'"></tabBar>
 		</view>
 	</view>
 </template>
@@ -246,8 +246,9 @@
 	/* #endif */
 	.container {
 		/deep/.uni-swiper-dots-horizontal {
-			bottom: 45px;
+			bottom: 45px;			
 		}
+		margin-bottom: 50px;
 	}
 
 	.banner {

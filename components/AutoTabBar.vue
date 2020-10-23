@@ -38,19 +38,22 @@
 						"pagePath": "/pages/shoppingMall/index",
 						"text": '自定义首页',
 						"iconPath": 'static/img/home.png',
-						"selectedIconPath": 'static/img/select-home1.png'
+						"selectedIconPath": 'static/img/select-home1.png',
+						"fontIcon": "static/img/home.png"
 					},
                     {
                         "pagePath": "/pages/shoppingMall/shoppingCart/index",
                         "text": '购物车',
                         "iconPath": 'static/img/gouwuche.png',
-                        "selectedIconPath": 'static/img/select-gouwuche1.png'
+                        "selectedIconPath": 'static/img/select-gouwuche1.png',
+						"fontIcon": "icon-shouye"
                     },
 					{
 					    "pagePath": "/pages/home",
 					    "iconPath": 'static/img/home.png',
 					    "selectedIconPath": 'static/img/select-home1.png',
 					    "text": "个人中心",
+						"fontIcon": "icon-shouye"
 					}
                 )
             }else{
@@ -102,7 +105,7 @@
         height: 98upx;
         padding: 16upx 0;
         box-sizing: border-box;
-        border-top: solid 1upx #ccc;
+        // border-top: solid 1upx #ccc;
         background-color: #fff;
         box-shadow: 0px 0px 17upx 1upx rgba(206, 206, 206, 0.32);
         .uni-tabbar__item {

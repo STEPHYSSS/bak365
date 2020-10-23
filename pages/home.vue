@@ -175,7 +175,7 @@
 			</div>
 		</div>
 		<view>
-			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+			<tabBar :pagePath="'/pages/home'"></tabBar>
 		</view>	
 	</div>
 </template>
@@ -312,6 +312,9 @@
 	};
 </script>
 <style lang="less">
+	.home{
+		margin-bottom: 50px;
+	}
 	// #ifdef H5
 	.cardWei>:last-child {
 		/deep/.bottomLine {

@@ -1,0 +1,34 @@
+<template>
+	<view>
+		此页面用来判断商城模式 1:商城模式， 2：自定义模式
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				ShopRadio:sessionStorage.getItem("ShopRadio")
+			}
+		},
+		created() {
+			if(this.ShopRadio === '1'){
+				// this.$router.push('/pages/shoppingMall/login')
+				uni.navigateTo({
+				   url: '/pages/shoppingMall/login'
+				});
+			}else{				
+				uni.navigateTo({
+				   url: '/pages/shoppingMall/index'
+				});
+			}
+		},
+		methods: {
+			
+		}
+	}
+</script>
+
+<style>
+
+</style>

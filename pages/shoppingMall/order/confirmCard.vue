@@ -142,8 +142,8 @@
 						}
 					});
 				} else {
-					// window.history.go(-2);
-					// this.$Routerr.back(2)
+					// window.history.go(-1);
+					this.$Router.back(2)
 					// uni.navigateBack()
 					// this.$Router.push(this.$store.state.historyUrl)
 				}

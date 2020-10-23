@@ -249,7 +249,7 @@
 			<!-- 购物车详情popup -->
 		</view>
 		<view>
-			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+			<tabBar :pagePath="'/pages/shoppingMall/menu_naixue/menu/menu'"></tabBar>
 		</view>
 	</view>
 </template>
@@ -832,6 +832,9 @@
 
 <style lang="scss">
 	@import '@/pages/shoppingMall/menu_naixue/menu/menu.scss';
+	.container{
+		margin-bottom: 50px;
+	}
 	.specBox{
 		display: flex;
 		.static{

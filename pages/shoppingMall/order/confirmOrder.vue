@@ -37,6 +37,10 @@
 					{{UserTime}}
 				</view>
 			</adCell>
+			<!-- {{TicketList}} -->
+			<!-- 可使用电子券 -->
+			<adCell :text="UserTicketName" @click="clickUserTicketName" v-if="TicketList.length>0">
+			</adCell>
 			<!-- 优惠方案 -->
 			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
 				<!-- <view>{{UserDiscount}}</view> -->
@@ -60,13 +64,16 @@
 				<span>{{freight=='0'?'免运费':'¥'+freight}}</span>
 			</adCell>
 			<adCell showArrow="false" showBottomLine="false">
-				优惠：<span class="total-style__color">¥{{DiscPrice}}</span>
+				方案已优惠：<span class="total-style__color">¥{{DiscPrice}}</span>
+			</adCell>
+			<adCell showArrow="false" showBottomLine="false">
+				电子券优惠：<span class="total-style__color">¥{{TicketPrice}}</span>
 			</adCell>
 			<div class="total-style">
 				<span>
 					小计：
 					<span class="total-style__color">
-						<span>{{total}}</span>
+						<span>￥{{total}}</span>
 						<!-- <span v-if="allData.ScoreTotal">{{allData.ScoreTotal|spliceNum}}积分</span>
 						<span v-if="totalCurrent>0 && radioModes === 1">¥{{ProdTotal |spliceNum}}</span>
 						<span v-else>{{totalCurrent>0&&allData.ScoreTotal?'+':''}}¥{{totalCurrent |spliceNum}}</span> -->
@@ -172,6 +179,19 @@
 				</div>
 			</radio-group>
 		</uni-popup>
+		<!-- 电子券弹窗 -->
+		<uni-popup ref="ticketProgram" type="bottom">
+			<radio-group @change="setTicketClick">
+				<ad-cell text="暂不使用" @click="ticketClick('undefined')" showArrow="false">
+					<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
+				</ad-cell>
+				<div v-for="(item,index) in TicketList" :key="index">
+					<adCell :text="item.TicketName" showArrow="false" showBottomLine="false" @click="ticketClick(item,1)">
+						<radio :value="item.TicketNo" :checked="item.TicketNo === radioTicket" />
+					</adCell>
+				</div>
+			</radio-group>
+		</uni-popup>
 	</div>
 </template>
 
@@ -208,6 +228,7 @@
 				UserTime: "",
 				UserDiscount: "",
 				UserDiscountName: "请选择方案",
+				UserTicketName:'请选择电子券',//电子券名称
 				// 当前选择的地址
 				currentArea: {},
 				radioModes: 2,
@@ -216,6 +237,7 @@
 				addEditArea: false,
 				selectTime: false,
 				discountProgram: false,
+				ticketProgram:false,//电子券ref
 				resultArea: "",
 				areaList: [], //弹出窗地址渲染列表
 				DeliveryAreaList: [],
@@ -243,7 +265,7 @@
 				ProdTotal: 0,
 				// 优惠方案id
 				radioDiscount: "",
-				DiscountList: [],
+				DiscountList: [],				
 				// 整天的时间段
 				allTimeSlot: [],
 				// 记录时间段
@@ -264,6 +286,10 @@
 				takeDeliveryTpey:'',
 				DiscPrice:'',//优惠价格
 				PrefNo:'',//点击优惠方案编号
+				TicketPrice:'',//电子券价格
+				TicketNo:'',//点击电子券编号
+				TicketList:[],//电子券列表
+				radioTicket:"",//选中电子券sid
 			};
 		},
 		async created() {
@@ -370,20 +396,32 @@
 								this.areaList = Data.AddressList
 							}
 							
-							this.currentItem.forEach(D => {
-								if (typeof D.PartsNo !== "string") {
-									D.PartsNo.forEach((data, index) => {
-										D.arr = [];
-										D.arr.push(data.ProdNo);
-									});
-									D.PartsNo = D.arr ? D.arr.join(",") : "";
-									delete D.arr;
-								}
-								if (D.PartsList) {
+							this.currentItem.forEach(D => {			
+								console.log(D,'222222')
+								if(D.PartsList){
 									D.PartsList = JSON.stringify(D.PartsList);
+									if (typeof D.PartsNo !== "string") {
+										D.PartsNo.forEach((data, index) => {
+											D.arr = [];
+											D.arr.push(data.ProdNo);
+										});
+										D.PartsNo = D.arr ? D.arr.join(",") : "";
+										delete D.arr;
+									}
 								}
+								// if (typeof D.PartsNo !== "string") {
+								// 	D.PartsNo.forEach((data, index) => {
+								// 		D.arr = [];
+								// 		D.arr.push(data.ProdNo);
+								// 	});
+								// 	D.PartsNo = D.arr ? D.arr.join(",") : "";
+								// 	delete D.arr;
+								// }
+								// if (D.PartsList) {
+								// 	D.PartsList = JSON.stringify(D.PartsList);
+								// }
 							});
-							this.currentItem = JSON.stringify(this.currentItem);
+							// this.currentItem = JSON.stringify(this.currentItem);
 							//提前预约时间
 							let advanceTime = 0;
 							if (this.prodList.length > 0) {
@@ -396,10 +434,16 @@
 									}
 								});
 							}
-
+						
 							this.freight = Data.Freight;//运费
 							this.DiscPrice = Data.DiscPrice;//优惠价格
+							this.TicketList =Data.TicketList || [];//电子券列表
+							this.TicketPrice = Data.TicketPrice;//电子券价格
 							this.DiscountList = Data.DiscList || [];//优惠方案列表
+							if(this.TicketList.length>0){
+								this.radioTicket = this.TicketList[0].TicketNo;
+								this.UserTicketName = this.TicketList[0].TicketName;
+							}
 							if (this.DiscountList.length > 0) {
 								this.radioDiscount = this.DiscountList[0].PrefNo;
 								// this.UserDiscount = "¥" + (this.DiscountList[0].DiscPrice || 0);
@@ -624,7 +668,6 @@
 			},
 			// 切换并选择地址  最后提交的时候把这个地方的经纬度传给后台
 			async changeArea(val,index){
-				console.log(val,index,'选择地址这一块')
 				this.showAreaList = true;
 				this.$refs.showAreaList.open()
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))				
@@ -649,14 +692,14 @@
 						Latitude: val.Latitude || "",
 						Longitude: val.Longitude || "",
 						ShopSID: this.radioModes === 1 ? val.SID : "",
-						PrefNo:this.PrefNo,
+						DiscPrice:this.DiscPrice,
+						ProdTotal:this.ProdTotal,
+						TicketPrice:this.TicketPrice,
 						// PayType: this.radioPayType,
-						// ProdList: JSON.stringify(this.currentItem)
-						ProdList:this.currentItem
+						ProdList: JSON.stringify(this.currentItem)
+						// ProdList:this.currentItem
 					}
-					// console.log(obj,'obj')
 					let { Data } = await vipCard(obj, "UProdOpera");
-					// console.log(Data,'deffffffff')
 					// 把选择的地址赋值到页面上
 					if (this.radioModes === 1) {
 						this.currentArea = val;
@@ -703,6 +746,11 @@
 			clickUserDiscount() {//优惠方案弹窗
 				this.discountProgram = true;
 				this.$refs.discountProgram.open()
+			},
+			clickUserTicketName(){//选择电子券弹窗
+				this.ticketProgram = true;
+				this.$refs.ticketProgram.open()
+				
 			},
 			clickTime() {},
 			async saveAreaSet() {
@@ -778,12 +826,12 @@
 			setDiscountClick(val) {
 				this.radioDiscount = val.detail.value
 			},
-			DiscountClick(item,type) {
+			DiscountClick(item,type) {//优惠券
 				this.PrefNo = item.PrefNo;
 				let PrefNo = item.PrefNo;				
 				if (item === "undefined") {
 					PrefNo = "";
-					this.UserDiscountName = "优惠券方案"
+					this.UserDiscountName = "优惠方案"
 				}else{
 					this.UserDiscountName = item.PrefName;
 				}
@@ -793,47 +841,73 @@
 			},
 			// 方案事件
 			async Discount(item,type){
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				let shopLong ="";
-				let shopLat = "";
+				// SelectDisc(优惠方案 type=1) SelectPay(支付方式 type=2) SelectTicket(电子券 type=3)
+				const SelectType = type === 1 ? "SelectDisc" : type === 2 ? "SelectPay" : type === 3 ? "SelectTicket" : "";				
+				// let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));//用来获取门店id
 				try{
 					let obj={
 						Action: "SelectDisc",
-						ProdList: this.currentItem,						
+						SelectType:SelectType,//按钮类型
+						ProdList: JSON.stringify(this.currentItem),						
 						PrefNo: type===1 ? item.PrefNo:'',
-						PayType:type === 2? item:1,
-						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
-						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
-						DeliveryType:this.takeDeliveryTpey,
-						ShopSID:currentStore.data.SID,
-					}
+						PayType:type === 2 ? item:1,
+						// DeliveryType:this.takeDeliveryTpey,
+						// ShopSID:currentStore.data.SID,
+						Freight:this.freight,//运费
+						ProdTotal:this.ProdTotal,//商品总价
+						TicketPrice:type!=3 ? this.TicketPrice:'',//type为1和2的时候传，电子券金额
+						DiscPrice:type === 3? this.DiscPrice:'',//type 为3的时候传,优惠金额
+						TicketNo:type != 1 ? this.radioTicket : ''//type不为1 的时候传电子券编号
+					}				
 					let { Data } =await vipCard(obj, "UProdOpera");
 					if(type === 2){
 						this.DiscountList = Data.DiscList || [];//优惠方案列表
-						this.freight = Data.Freight;//运费
-						this.DiscPrice = Data.DiscPrice;//优惠价格
 						if (this.DiscountList.length > 0) {
 							this.radioDiscount = this.DiscountList[0].PrefNo;
 							this.UserDiscountName = this.DiscountList[0].PrefName;
-						}
-						this.total = Data.SumTotal;//合计和小计
-						this.ProdTotal = Data.ProdTotal;//商品总价格
-						this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计				
-						
-						if (JSON.stringify(this.CardInfo) !== "{}") {
-							if (Number(Data.CardInfo.Balance) < Number(Data.SumTotal)) {
-								//余额不足默认微信支付
-								this.radioPayType = "2";
-							}
-						} else {
+						}						
+					}
+					this.freight = Data.Freight;//运费
+					this.DiscPrice = Data.DiscPrice;//优惠价格
+					this.TicketPrice = Data.TicketPrice;//电子券价格
+					this.total = Data.SumTotal;//合计和小计
+					this.ProdTotal = Data.ProdTotal;//商品总价格
+					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计				
+					
+					if (JSON.stringify(this.CardInfo) !== "{}") {
+						if (Number(Data.CardInfo.Balance) < Number(Data.SumTotal)) {
+							//余额不足默认微信支付
 							this.radioPayType = "2";
 						}
+					} else {
+						this.radioPayType = "2";
 					}
 				}catch(e){
 					console.log(e)
 					
 				}
 			},
+			// 电子券开始
+			setTicketClick(val){//电子券
+				this.radioTicket = val.detail.value
+			},
+			ticketClick(item,type){
+				this.TicketNo = item.TicketNo;
+				this.radioTicket = item.TicketNo;
+				let TicketNo = item.TicketNo;
+				this.TicketPrice = item.TicketPrice;
+				if (item === "undefined") {
+					TicketNo = "";
+					this.UserTicketName = "可用电子券"
+				}else{
+					this.UserTicketName = item.TicketName;
+				}
+				this.ticketProgram = false;
+				this.Discount(item,3);
+				this.$refs.ticketProgram.close();
+				
+			},
+			// 电子券结束
 			areaSet() {
 				this.areaInfo = {};
 				this.addEditArea = true;
@@ -865,7 +939,9 @@
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}
-
+				if(this.radioTicket === "undefined"){
+					this.radioTicket = "";
+				}
 				let DeliveryType = this.radioModes; //2、1       //获取当前配送方式
 				if (this.radioModes === 2) {
 					if (this.currentDeliveryType.indexOf("2") > -1) {
@@ -879,6 +955,7 @@
 
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
+					console.log(this.currentItem,'888888')
 				}
 				let shopLong ="";
 				let shopLat = "";
@@ -909,7 +986,8 @@
 					PickDate: this.sidebarList[this.RecordTime.index],
 					PickTime: this.RecordTime.radioTime,
 					CartSID: this.cardSids,
-					PrefNo: this.radioDiscount
+					PrefNo: this.radioDiscount,
+					TicketNo:this.radioTicket
 				};
 
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {

@@ -76,7 +76,7 @@
 			
 		</div>
 		<view>
-			<tabBar :pagePath="'/pages/tabBar/home/home'"></tabBar>
+			<tabBar :pagePath="'/pages/shoppingMall/index'"></tabBar>
 		</view>	
 	</div>
 </template>
