@@ -1,3 +1,5 @@
+<script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+<script>  var vConsole = new VConsole();  console.log('Hello world');</script>
 <script>
 	import Cookie from '@/config/cookie-my/index.js'
 	export default {

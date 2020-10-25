@@ -1,11 +1,20 @@
 <template>
 	<view>
-		此页面用来判断商城模式 1:商城模式， 2：自定义模式
+		<!-- 此页面用来判断商城模式 1:商城模式， 2：自定义模式 -->
 	</view>
 </template>
 
 <script>
+	import {
+		vipCard
+	} from '@/api/http.js';
+	// import Mixins from "./mixins.js";
+	import Cookie from '@/config/cookie-my/index.js';
+	import {
+		GetQueryString
+	} from "@/util/publicFunction";
 	export default {
+		// mixins: [Mixins],
 		data() {
 			return {
 				ShopRadio:sessionStorage.getItem("ShopRadio")

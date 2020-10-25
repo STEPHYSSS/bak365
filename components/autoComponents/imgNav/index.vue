@@ -79,7 +79,7 @@
 					this.propsObj.listNav &&
 					this.propsObj.listNav.length > 0
 				) {
-					return 'http://192.168.0.105:8001/' + val;
+					return this.$VUE_APP_PREFIX2 + val;
 				} else {
 					return val;
 				}

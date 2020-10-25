@@ -18,10 +18,10 @@
 
 							<div class="cap-image-ad__image-wrapper">
 								<!-- #ifndef H5-->
-								<image style="width:100%;" class="cap-image-ad__image" :src="item.img" alt="loaded" />
+								<image style="width:100%;" class="cap-image-ad__image" :src="item.img " alt="loaded" />
 								<!-- #endif -->
 								<!-- #ifdef H5 -->
-								<img style="width:100%;" class="cap-image-ad__image" :src="item.img" alt="loaded" />
+								<img style="width:100%;" class="cap-image-ad__image" :src="item.img " alt="loaded" />
 								<!-- #endif -->
 							</div>
 						</li>
@@ -34,7 +34,7 @@
 							<image :src="image.img" style="width:100%;" />
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
-							<img :src="image.img" style="width:100%;" />
+							<img :src="image.img " style="width:100%;" />
 							<!-- #endif -->
 							<h3 class="cap-image-ad__title" v-if="image.name&&image.name!==' '">{{image.name}}</h3>
 						</swiper-item>

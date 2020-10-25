@@ -29,13 +29,13 @@ const store = new Vuex.Store({
 		},
 		['SET_CURRENT_LOCATION'](state, data) {
 			state.currentLocation = data
-			console.log(state.currentLocation,'wx门店地址')
+			// console.log(state.currentLocation,'wx门店地址')
 			Cookies.set('currentLocation', data)
 		},
 		['SET_CURRENT_STORE'](state, data) {
 			state.currentStoreInfo = data
 			Cookies.set('currentStoreInfo', data)
-			console.log(state.currentStoreInfo,'地址改变了')
+			// console.log(state.currentStoreInfo,'地址改变了')
 		},
 		['SET_CURRENT_CARD'](state, data) {
 			state.currentCard = data
@@ -55,7 +55,7 @@ const store = new Vuex.Store({
 			commit
 		}, obj) {
 			return new Promise(async (resolve, reject) => {
-				try {
+				try {					
 					let response = await vipCard(obj, 'UserSign')
 					console.log(response,'查看Mac')
 					if (response.Data.hasOwnProperty('UserMAC')) {
@@ -67,6 +67,9 @@ const store = new Vuex.Store({
 					if(response.Data.hasOwnProperty('ShopRadio')){
 						// 1代表商城模式,2代表自定义模式
 						sessionStorage.setItem('ShopRadio', response.Data.ShopRadio)
+						// console.log()
+					}else{
+						sessionStorage.setItem('ShopRadio', 1)
 					}//缓存商城模式
 					if(response.Message == '未授权'){
 						this.$Router.push({

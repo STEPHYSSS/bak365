@@ -106,7 +106,7 @@ export function bottomScrollbar(_this, Dom, faDom, bottom = 0, top = 0) {
 
 export function setUrlDelCode() {
 	var url = document.location.toString();
-	console.log(url,'url---')
+	// console.log(url,'url---')
 	if (!url) {
 		return url
 	}

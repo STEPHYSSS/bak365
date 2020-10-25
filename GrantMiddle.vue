@@ -2,7 +2,8 @@
 	<div class>
 	</div>
 </template>
-
+<script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+<script>  var vConsole = new VConsole();  console.log('Hello world');</script>
 <script>
 	// import Cookie from "js-cookie";
 	import Cookie from '@/config/cookie-my/index.js'
@@ -23,6 +24,7 @@
 		created() {},
 		components: {},
 		async mounted() {
+			debugger
 			let url = Cookie.get("currentUrl");
 			let UserMACPhone = Cookie.get("UserMACPhone");
 			if (UserMACPhone) {
@@ -34,17 +36,15 @@
 			}
 			//   获取code
 			let newAppNo = Cookie.get("AppNo");
-			let code = this.setCode("code");
-			// let code = 'wxb7a2e9fc043daf1c';
-			this.myCode = code;
+			//let code = this.setCode("code");
+			
+			console.log(code,'shezhicode')
 			if (code && code !== "undefined") {
 				Cookie.remove("UserMACPhone");
 				try {
 					let abc = await this.$store.dispatch("get_user", {
-						// AppNo: newAppNo,
-						// Code:''
-						AppNo: '001',
-						Code:'11112222'
+						AppNo: newAppNo,
+						Code:''
 					});
 					// let seconds = 7200000;
 					// let expires = new Date(new Date() * 1 + seconds * 1000);
@@ -76,6 +76,7 @@
 		},
 		methods: {
 			setCode(name) {
+				console.log(name)
 				let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 				let r
 				// if (window.location.search) {

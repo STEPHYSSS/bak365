@@ -23,6 +23,7 @@ router.beforeEach((to, from, next) => {
 	uni.getProvider({
 		service: 'oauth',
 		success: async function(res) {
+			debugger
 			let providerNew = res.provider[0]
 			if (Cookie.get('mainColor')) {
 				// 保存主题色
@@ -45,7 +46,7 @@ router.beforeEach((to, from, next) => {
 				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
 				let newAppNo = ''
 				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				// let UserMACPhone = '989cc3df981aff801456a0c37ec3b220u';
+				// let UserMACPhone = '926fb63385232ec49043749cdb3145d0u';
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 
@@ -54,9 +55,8 @@ router.beforeEach((to, from, next) => {
 					let obj = {}
 					Object.assign(obj, to.query)
 					Object.assign(obj, {
-						//AppNo: '001',
-						// Code:'wxb7a2e9fc043daf1c',
-						//Code:'11112222'
+						AppNo: '001',
+						Code:'123'						
 					})
 					next({
 						path: to.path,
@@ -75,14 +75,17 @@ router.beforeEach((to, from, next) => {
 					newAppNo=domain.split('.')[0];
 				}
 				Cookie.set('AppNo', newAppNo)
+				
+				//let code = this.getCode("code");
 				 // let domain = window.location.host;
 				 // console.log(domain,'-----domain-----')
 				 // newAppNo = domain;//获取域名存放给AppNo,暂时注释
 				if (newAppNo) {
+					console.log()
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
-
+						console.log(currentUrl,'======')
 						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : dataConfig.BASE_URL_OnLine) +
 							'#/GrantMiddle?AppNo=' + newAppNo //调回到固定页面
 						if (UserMACPhone && UserMACPhone !== null && UserMACPhone !== undefined && UserMACPhone !== '') {
@@ -94,8 +97,8 @@ router.beforeEach((to, from, next) => {
 							try {
 								let appId = await store.dispatch('get_user', {
 									 AppNo: newAppNo,
-									// Code:'wxb7a2e9fc043daf1c'
-									Code:'11112222'
+									 Code:''
+									//Code:code//在这里把授权得到的code传给后台
 								})
 								if (appId) {
 									next({

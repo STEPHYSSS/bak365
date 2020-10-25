@@ -160,7 +160,7 @@
 					</div>
 					<div class="cardWei">
 						<div>
-							<adCell text="清除缓存" @click="clickClear" />
+							<adCell text="退出登录" @click="clickClear" />
 						</div>
 					</div>
 					<div style="text-align: center;margin-top:40px" class="callInfo">
@@ -306,6 +306,7 @@
 			clickClear() {//清除缓存
 				Cookie.remove("UserMACPhone");
 				sessionStorage.removeItem('takeOutAddress')
+				sessionStorage.removeItem('ShopRadio')
 				this.$toast.fail("清除成功");
 			},
 		}

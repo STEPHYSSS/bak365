@@ -280,8 +280,8 @@
 				currentIndex: 0,
 				// location:JSON.parse(sessionStorage.getItem('location')),
 				location:{
-					longitude: 30.47988,
-					latitude: 114.41739
+					// longitude: 30.47988,
+					// latitude: 114.41739
 				},
 				takeDeliveryTpey:'',
 				DiscPrice:'',//优惠价格
