@@ -6,7 +6,8 @@ import store from '../store/store.js'
 import Cookie from '@/config/cookie-my/index.js'
 import {
 	GetQueryString,
-	setUrlDelCode
+	setUrlDelCode,
+	GetAppNo 
 } from '../util/publicFunction'
 import dataConfig from '@/config/index'
 
@@ -23,7 +24,6 @@ router.beforeEach((to, from, next) => {
 	uni.getProvider({
 		service: 'oauth',
 		success: async function(res) {
-			debugger
 			let providerNew = res.provider[0]
 			if (Cookie.get('mainColor')) {
 				// 保存主题色
@@ -41,73 +41,34 @@ router.beforeEach((to, from, next) => {
 				}
 				getApp().globalData.mainStyle = 'theme2'
 				Cookie.set('mainStyle', 'theme2')
-
-				// let GetQuery = GetQueryString('AppNo')
-				// let newAppNo = GetQuery ? GetQuery : Cookie.get('AppNo')
-				let newAppNo = ''
-				let UserMACPhone = Cookie.get('UserMACPhone')//暂时注释
-				// let UserMACPhone = '926fb63385232ec49043749cdb3145d0u';
+                let Code = GetQueryString("code");
+				let newAppNo = GetAppNo();
+				let UserMACPhone = sessionStorage.getItem('UserMACPhone')
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
-
-				if (!to.query.hasOwnProperty('AppNo') && newAppNo && to.path !== '/GrantMiddle' && to.path !== '/Grant') {
-					// 给每个页面加?AppNo
-					let obj = {}
-					Object.assign(obj, to.query)
-					Object.assign(obj, {
-						AppNo: '001',
-						Code:'123'						
-					})
-					next({
-						path: to.path,
-						query: obj
-					})
-				}
-
 				let currentUrl = setUrlDelCode()
-				if(dataConfig.Bak365_Dev===0)
-				{
-					newAppNo='001';
-				}
-				else
-				{
-					let domain = window.location.host;
-					newAppNo=domain.split('.')[0];
-				}
-				Cookie.set('AppNo', newAppNo)
-				
-				//let code = this.getCode("code");
-				 // let domain = window.location.host;
-				 // console.log(domain,'-----domain-----')
-				 // newAppNo = domain;//获取域名存放给AppNo,暂时注释
 				if (newAppNo) {
-					console.log()
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
-						console.log(currentUrl,'======')
+
 						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : dataConfig.BASE_URL_OnLine) +
 							'#/GrantMiddle?AppNo=' + newAppNo //调回到固定页面
+
 						if (UserMACPhone && UserMACPhone !== null && UserMACPhone !== undefined && UserMACPhone !== '') {
 							next()
-						} else {
+						}else if( Code && Code !== null && Code !== undefined && Code !== '' ){
 							// uni.clearStorageSync();
 							//重新登录清除缓存
 							store.commit("SET_HISTORY_URL", {})
 							try {
 								let appId = await store.dispatch('get_user', {
-									 AppNo: newAppNo,
-									 Code:''
-									//Code:code//在这里把授权得到的code传给后台
+									AppNo: newAppNo,
+									Code:Code
 								})
+								
 								if (appId) {
-									next({
-										path: '/Grant',
-										query: {
-											appId: appId,
-											redirect_uri: headUrl
-										}
-									})
+									next()
 								} else {
 									uni.showToast({
 										title: '获取appId失败',
@@ -123,15 +84,23 @@ router.beforeEach((to, from, next) => {
 										path: '/pages/error/index',
 										query: {
 											redirect_uri: currentUrl,
-											title: '获取 appId 失败'
+											title: '获取appId 失败'
 										}
 									})
 								}
 							}
-						}
+						}else{
+							next({
+							 	path: '/Grant',
+							 	query: {
+							 		redirect_uri: headUrl
+							 	}
+							 })
+					    }
 					} else {
 						next()
 					}
+					
 				} else if (to.path === '/pages/error/index') {
 					next()
 				} else {
@@ -140,7 +109,7 @@ router.beforeEach((to, from, next) => {
 						path: '/pages/error/index',
 						query: {
 							redirect_uri: currentUrl,
-							title: '参数错误，请重新进入'
+							title: '商户编号为空'
 						}
 					})
 				}

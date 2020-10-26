@@ -1,5 +1,7 @@
 // 获取商户编号 获取 ?name='' 的值
+import Cookies from '@/config/cookie-my/index.js';
 export function GetQueryString(name) {
+	console.log(name,'huoz')
 	let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 	let r
 	// console.log(window.location.search)
@@ -9,7 +11,6 @@ export function GetQueryString(name) {
 		let a = window.location.href
 		if (a.indexOf('query') > -1) {
 			a = decodeA(a)
-			console.log(JSON.stringify(a)+'0000')
 			if (JSON.stringify(a) != '{}') return a[name]
 		} else {
 			let b = a.substr(a.indexOf(name), a.length - 1)
@@ -19,6 +20,21 @@ export function GetQueryString(name) {
 	}
 	return null;
 }
+
+export function GetAppNo() {
+	 if(window.location.hostname == "localhost" || window.location.hostname == "dingtalk.bak365.cn" ){
+		  let AppNo='001';
+		  Cookies.set(AppNo,'001')
+		  sessionStorage.setItem('AppNo',AppNo)
+		  return AppNo;
+	 }else{
+		 let AppNo=window.location.hostname.substr(0,window.location.hostname.indexOf('.'));
+		 sessionStorage.setItem('AppNo',AppNo)
+		  Cookies.set(AppNo,AppNo)
+         return  AppNo;
+	 }
+}
+
 
 function decodeA(a) {
 	if (a.indexOf('query') > -1) {

@@ -22,8 +22,6 @@ const store = new Vuex.Store({
 		historyUrl: Cookies.get('historyUrl') || {}
 	},
 	mutations: {
-		// :class = this.$store.state.status ? 'ziquClass' : 'waimaiClass'
-		// this.$store.commit(0);
 		['SET_ORDER_TYPE'](state, type) {
 			state.orderType = type
 		},
@@ -42,27 +40,26 @@ const store = new Vuex.Store({
 			Cookies.set('currentCard', data)
 		},
 		['SET_HISTORY_URL'](state, data) {
-			// this.$store.state.historyUrl
-			// this.$store.commit("SET_HISTORY_URL",{})
 			state.historyUrl = data
-			console.log(state.historyUrl,'url')
 			Cookies.set('historyUrl', data)
 		}
 	},
 	actions: {
+		
 		// 获取appId 和 保存UserMAC     obj={BusinNo:newBusinNo,code:code} 登录的时候获取
 		get_user({
 			commit
 		}, obj) {
 			return new Promise(async (resolve, reject) => {
-				try {					
+				try {
 					let response = await vipCard(obj, 'UserSign')
-					console.log(response,'查看Mac')
+					//console.log(response,'查看Mac')
 					if (response.Data.hasOwnProperty('UserMAC')) {
 						
 						// let seconds = 7200000 //两小时 秒
 						// let expires = new Date(new Date() * 1 + seconds * 1000)
-						Cookies.set('UserMACPhone', response.Data.UserMAC)
+						// Cookies.set('UserMACPhone', response.Data.UserMAC)
+							sessionStorage.setItem('UserMACPhone',response.Data.UserMAC)
 					}
 					if(response.Data.hasOwnProperty('ShopRadio')){
 						// 1代表商城模式,2代表自定义模式
@@ -71,6 +68,7 @@ const store = new Vuex.Store({
 					}else{
 						sessionStorage.setItem('ShopRadio', 1)
 					}//缓存商城模式
+					
 					if(response.Message == '未授权'){
 						this.$Router.push({
 							path: "/pages/error/index",

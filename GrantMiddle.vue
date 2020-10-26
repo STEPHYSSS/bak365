@@ -2,8 +2,7 @@
 	<div class>
 	</div>
 </template>
-<script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
-<script>  var vConsole = new VConsole();  console.log('Hello world');</script>
+
 <script>
 	// import Cookie from "js-cookie";
 	import Cookie from '@/config/cookie-my/index.js'
@@ -24,7 +23,6 @@
 		created() {},
 		components: {},
 		async mounted() {
-			debugger
 			let url = Cookie.get("currentUrl");
 			let UserMACPhone = Cookie.get("UserMACPhone");
 			if (UserMACPhone) {
@@ -35,29 +33,18 @@
 				return
 			}
 			//   获取code
-			let newAppNo = Cookie.get("AppNo");
-			//let code = this.setCode("code");
-			
-			console.log(code,'shezhicode')
+			let newAppNo = sessionStorage.getItem("AppNo");
+			let code = this.setCode("code");
 			if (code && code !== "undefined") {
 				Cookie.remove("UserMACPhone");
 				try {
-					let abc = await this.$store.dispatch("get_user", {
+					await this.$store.dispatch("get_user", {
 						AppNo: newAppNo,
-						Code:''
+						Code: code
 					});
-					// let seconds = 7200000;
-					// let expires = new Date(new Date() * 1 + seconds * 1000);
-					// Cookie.set("UserMACPhone", "89dbae1d8b6418f713efac7879550043", {
-					//   expires: expires
-					// });
-					// Cookie.set("isMember", '1');  //1 绑定了卡但是不知道绑定的是哪个卡；
-					// Cookie.set("CardType", '04');  //卡信息 04 申请卡 05绑定卡
-					
 					this.url = url;
 					window.location.href = url;
 				} catch (e) {
-					console.log(e,'失败信息打印')
 					// // 	//获取mac失败
 					this.$Router.push({
 						path: "/pages/error/index",
@@ -76,7 +63,6 @@
 		},
 		methods: {
 			setCode(name) {
-				console.log(name)
 				let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 				let r
 				// if (window.location.search) {

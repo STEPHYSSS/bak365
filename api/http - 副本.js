@@ -3,8 +3,8 @@ import store from '../store/store.js'
 import router from '../router/index.js'
 import dataConfig from '@/config/index'
 import Vue from 'vue' 
-
-export const vipCard = (data, ViewKay, AppNo) => {
+// 这是第一次加载的页面
+export const vipCard = (data, ViewKay, appNo) => {
 	return new Promise((resolve, reject) => {
 		uni.getProvider({
 			service: 'oauth',
@@ -15,28 +15,71 @@ export const vipCard = (data, ViewKay, AppNo) => {
 					return reject();
 				} else {
 					// h5
-					let UserMACPhone = sessionStorage.getItem('UserMACPhone')
+					// let UserMACPhone = Cookies.get('UserMACPhone')
+					// // let UserMACPhone = '926fb63385232ec49043749cdb3145d0u';
+					// let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : appNo;
+					// let urlaspx = 'RenderMobile.aspx'
+					// let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
+					// 	UserMACPhone
+					let UserMACPhone = Cookies.get('UserMACPhone')
 					// let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : AppNo
-					let AppNo = sessionStorage.getItem('AppNo')
-					
+					let AppNo = '001'
 					let urlaspx = 'RenderMobile.aspx'
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
-
-					uni.showLoading({
-						title: '加载中'
-					});
+					// uni.showLoading({
+					// 	title: '加载中'
+					// });
 					uni.request({
 						url: url,
 						data: data,
 						method: 'POST',
+						// headers: {
+						// 	// 跨域请求 这个配置不能少
+						// 	"Content-Type": "application/x-www-form-urlencoded",
+						// 	'Accept': 'application/json',
+						// 	'Access-Control-Allow-Origin':'*',
+						// 	'dataType':'json'
+						// },
 						success: function(response) {
-							console.log(response, 'response')
 							if (response.data.Message === '请登录') {
-								
 								// return
-								NOMAC()
-								// response.data.Message
+								uni.clearStorageSync();
+								var url = document.location.toString();
+								var arrUrl = url.split("?");
+								var para = arrUrl[1];//viewkey
+								para = para.split("&"); //获取url的参数
+								para.forEach((D, index) => { //删除原本url上的code
+									if (D.indexOf('code') > -1) {
+										para.splice(index, 1)
+									}
+								})
+								
+								para = para.join(',')
+								let currentUrl = arrUrl[0] + '?' + para
+								// console.log(currentUrl,'打印截取后的')
+								Cookies.set('currentUrl', currentUrl)
+								// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?BusinNo=' + Cookies.get('BusinNo')
+								let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
+									'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
+								store.dispatch('get_user', {
+									AppNo: Cookies.get('AppNo'),//这个地方发送请求
+								}).then(appId => {
+									if (appId) {
+										router.push({
+											path: '/Grant',
+											query: {
+												appId: appId,
+												redirect_uri: headUrl
+											}
+										})
+									} else {
+										uni.showToast({
+											title: '获取appId失败!',
+											icon: 'none'
+										});
+									}
+								})
 							}
 							let success = response.data.Success
 							let isTip = response.data.hasOwnProperty('Success')
@@ -45,7 +88,6 @@ export const vipCard = (data, ViewKay, AppNo) => {
 									uni.hideLoading();
 									return resolve(response.data)
 								} else {
-									console.log(response.data.Message)
 									uni.showToast({
 										title: response.data.Message,
 										icon: 'none'
@@ -92,7 +134,7 @@ function NOMAC() {
 	uni.clearStorageSync();
 	var url = document.location.toString();
 	var arrUrl = url.split("?");
-	var para = arrUrl[1];
+	var para = arrUrl[1];//viewkey
 	para = para.split("&"); //获取url的参数
 	para.forEach((D, index) => { //删除原本url上的code
 		if (D.indexOf('code') > -1) {
@@ -102,14 +144,13 @@ function NOMAC() {
 
 	para = para.join(',')
 	let currentUrl = arrUrl[0] + '?' + para
+	// console.log(currentUrl,'打印截取后的')
 	Cookies.set('currentUrl', currentUrl)
-
-	// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
+	// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?BusinNo=' + Cookies.get('BusinNo')
 	let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
 		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
-
 	store.dispatch('get_user', {
-		AppNo: Cookies.get('AppNo')
+		AppNo: Cookies.get('AppNo'),//这个地方发送请求
 	}).then(appId => {
 		if (appId) {
 			router.push({
