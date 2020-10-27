@@ -24,7 +24,6 @@
 			//this.appId = 'wxb7a2e9fc043daf1c'
 		},
 		created() {
-			
 				
 			if( window.location.hostname == "localhost" ) 	{
 				window.location.href =this.redirect_uri + "&code=11111111"

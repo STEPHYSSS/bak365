@@ -1,24 +1,24 @@
 // 获取商户编号 获取 ?name='' 的值
 import Cookies from '@/config/cookie-my/index.js';
 export function GetQueryString(name) {
-	console.log(name,'huoz')
-	let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-	let r
-	// console.log(window.location.search)
-	if (window.location.search) {
-		r = window.location.search.substr(1).match(reg);
-	} else {
-		let a = window.location.href
-		if (a.indexOf('query') > -1) {
-			a = decodeA(a)
-			if (JSON.stringify(a) != '{}') return a[name]
-		} else {
-			let b = a.substr(a.indexOf(name), a.length - 1)
-			r = b.match(reg)
-			if (r != null) return unescape(r[2]);
-		}
-	}
-	return null;
+	// console.log(name,'huoz')
+	// let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	// let r
+	// console.log(window.location.search,'******')
+	// if (window.location.search) {
+	// 	r = window.location.search.substr(1).match(reg);
+	// } else {
+		// let a = window.location.href
+		// if (a.indexOf('query') > -1) {
+		// 	a = decodeA(a)
+		// 	if (JSON.stringify(a) != '{}') return a[name]
+		// } else {
+		// 	let b = a.substr(a.indexOf(name), a.length - 1)
+		// 	r = b.match(reg)
+		// 	if (r != null) return unescape(r[2]);
+		// }
+	// }
+	// return null;
 }
 
 export function GetAppNo() {
@@ -37,6 +37,7 @@ export function GetAppNo() {
 
 
 function decodeA(a) {
+	console.log(a,'5555')
 	if (a.indexOf('query') > -1) {
 		let queryObj = a.substr(a.indexOf('query') + 6, a.length - 1)
 		// console.log(queryObj)

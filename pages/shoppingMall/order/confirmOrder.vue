@@ -344,13 +344,14 @@
 				this.loading = true;
 				uni.showLoading()
 				try {
-					if (!this.location.longitude) {
-						uni.showToast({
-							title: '地址获取失败',
-							icon: 'none'
-						});
-						throw "地址获取失败";
-					}
+					console.log(this.$store.state.currentLocation.longitude)
+					// if (!this.location.longitude) {
+					// 	uni.showToast({
+					// 		title: '地址获取失败',
+					// 		icon: 'none'
+					// 	});
+					// 	throw "地址获取失败";
+					// }
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
 					let shopLong ="";

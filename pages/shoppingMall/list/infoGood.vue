@@ -19,8 +19,9 @@
 			return {
 				goodList: {},
 				skuDataInfo: {},
-				SID:'',
-				title:this.$Route.query.title
+				SID:'',//,
+				//title:this.$Route.query.title
+				title:''
 			};
 		},
 		onLoad(option) {

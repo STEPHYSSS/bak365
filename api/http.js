@@ -92,24 +92,37 @@ function NOMAC() {
 	uni.clearStorageSync();
 	var url = document.location.toString();
 	var arrUrl = url.split("?");
-	var para = arrUrl[1];
-	para = para.split("&"); //获取url的参数
-	para.forEach((D, index) => { //删除原本url上的code
-		if (D.indexOf('code') > -1) {
-			para.splice(index, 1)
-		}
-	})
+	if(arrUrl.length>1){
+		var para = arrUrl[1];
+		para = para.split("&"); //获取url的参数
+		para.forEach((D, index) => { //删除原本url上的code
+			if (D.indexOf('code') > -1) {
+				para.splice(index, 1)
+			}
+		})
+		
+		para = para.join(',')
+		let currentUrl = arrUrl[0] + '?' + para
+		Cookies.set('currentUrl', currentUrl)
+	}
+	// var para = arrUrl[1];
+	// para = para.split("&"); //获取url的参数
+	// para.forEach((D, index) => { //删除原本url上的code
+	// 	if (D.indexOf('code') > -1) {
+	// 		para.splice(index, 1)
+	// 	}
+	// })
 
-	para = para.join(',')
-	let currentUrl = arrUrl[0] + '?' + para
-	Cookies.set('currentUrl', currentUrl)
+	// para = para.join(',')
+	// let currentUrl = arrUrl[0] + '?' + para
+	// Cookies.set('currentUrl', currentUrl)
 
 	// let headUrl = window.location.protocol + "//" + window.location.host + '/#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
 	let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:8080/' : dataConfig.BASE_URL_OnLine) +
-		'#/GrantMiddle?AppNo=' + Cookies.get('AppNo')
+		'#/GrantMiddle?AppNo=' + sessionStorage.getItem('AppNo')
 
 	store.dispatch('get_user', {
-		AppNo: Cookies.get('AppNo')
+		AppNo: sessionStorage.getItem('AppNo')
 	}).then(appId => {
 		if (appId) {
 			router.push({

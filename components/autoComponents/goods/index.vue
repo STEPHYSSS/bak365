@@ -189,15 +189,14 @@
 
 				return !!_dataString ? '请选择商品' : '';
 			},
-			urlGoodClick(item) {
-				console.log(item)
+			urlGoodClick(item) {				
 				this.$Router.push({
 					path: '/pages/shoppingMall/list/infoGood',
 					query: {
-						SID: item.SID,
-						admin: true,
-						title:item.Name
-					}
+						SID: item.SID
+						// admin: true,
+						// title:item.Name
+					}					
 				})
 			}
 		},
