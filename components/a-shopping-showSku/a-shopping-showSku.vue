@@ -397,13 +397,14 @@
 					let arr = []
 					this.checkStatic.forEach(item => {
 						sumPrice += Number(item.Value.Price)
+						
 						if (item.Value.Name) {
 							arr.push(item.Value.Name)
 						}
-					});					
+					});		
+					
 					this.currentTastArr = arr.join(",");
-					this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
-					console.log(this.currentTastArr, '------')
+					this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 				}
 			},
 			skuTopChoiceParts(e, i) {//选择配件

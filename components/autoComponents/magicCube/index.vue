@@ -91,8 +91,10 @@
 			clickLink(item) {
 				// 点击跳转
 				if (item.urlObj && item.urlObj.url) {
+					let url = obj.urlObj.url.split('#');
+					let path = url[1];
 					uni.reLaunch({
-						url: item.urlObj.url
+						url: path
 					});
 				}
 			},

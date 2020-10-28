@@ -63,10 +63,10 @@
 			<adCell v-if="radioModes === 2" text="运费" showArrow="false" showBottomLine="false">
 				<span>{{freight=='0'?'免运费':'¥'+freight}}</span>
 			</adCell>
-			<adCell showArrow="false" showBottomLine="false">
+			<adCell showArrow="false" showBottomLine="false" v-if="DiscPrice!=0">
 				方案已优惠：<span class="total-style__color">¥{{DiscPrice}}</span>
 			</adCell>
-			<adCell showArrow="false" showBottomLine="false">
+			<adCell showArrow="false" showBottomLine="false" v-if="TicketPrice!=0">
 				电子券优惠：<span class="total-style__color">¥{{TicketPrice}}</span>
 			</adCell>
 			<div class="total-style">
@@ -209,7 +209,7 @@
 	import wx from 'weixin-js-sdk'
 	// import Mixins from "../mixins.js";
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-
+	import Cookies from '@/config/cookie-my/index.js';
 	export default {
 		name: "confirmOrder",
 		// mixins: [Mixins],
@@ -290,9 +290,11 @@
 				TicketNo:'',//点击电子券编号
 				TicketList:[],//电子券列表
 				radioTicket:"",//选中电子券sid
+				isMember :localStorage.getItem('isMember')				
 			};
 		},
 		async created() {
+			// console.log(Cookies.get('UserMAC'))
 			if (
 				!this.$store.state.currentCard ||
 				this.$store.state.currentCard.length === 0
@@ -301,6 +303,10 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
+			if(this.isMember === '0'){
+				this.radioPayType = "2"
+			}
+			// if(){}
 			// 获取授权地址
 			await this.getWxConfig();
 			let item = this.$store.state.currentCard || [];

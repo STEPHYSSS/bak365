@@ -11,7 +11,6 @@ import './config/vueFilter'
 import './assets/icon/iconfont.css'
 import tabBar from "@/components/AutoTabBar.vue"
 Vue.component('tabBar',tabBar)
-
 //挂载公用组件
 import shopInformation from "@/components/autoComponents/shopInformation/"
 import enterShops from "@/components/autoComponents/enterShops/"

@@ -85,7 +85,9 @@
 				</div>
 				<div class="wu-cell__value">
 					<div class="wu-cell__body">
-						<input class="wu-field__control" :readonly="true" v-model="fromData.CardNo" @click="chooes"/>
+						<!-- 卡号不能输入 -->
+						<text class="wu-field__control" @click="chooes">{{fromData.CardNo}}</text>
+						<!-- <input class="wu-field__control"  v-model="fromData.CardNo" @click="chooes" readonly="true"/> -->
 					</div>
 				</div>
 			</div>

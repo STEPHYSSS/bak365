@@ -160,7 +160,7 @@
 					</div>
 					<div class="cardWei">
 						<div>
-							<adCell text="退出登录" @click="clickClear" />
+							<adCell text="清除缓存" @click="clickClear" />
 						</div>
 					</div>
 					<div style="text-align: center;margin-top:40px" class="callInfo">
@@ -303,12 +303,24 @@
 					}
 				})
 			},
-			clickClear() {//清除缓存
+			clickClear() {//清除缓存		
+				this.remove();
 				Cookie.remove("UserMACPhone");
+				Cookie.remove("isMember");
+				Cookie.remove("CardType");
+				// sessionStorage.removeItem("UserMACPhone")
 				sessionStorage.removeItem('takeOutAddress')
 				sessionStorage.removeItem('ShopRadio')
-				this.$toast.fail("清除成功");
+				
 			},
+			async remove() {
+				try {
+					let { Data } =  await vipCard({}, "ClearCache");
+					this.$toast.fail("清除成功");
+				} catch (e) {
+					console.log(e);
+				}
+			}
 		}
 	};
 </script>

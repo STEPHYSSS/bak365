@@ -105,8 +105,10 @@
 			clickUrl(item) {
 				if (item.urlObj && item.urlObj.url) {
 					// 跳转只能跳到内部链接，不能跳到外部链接
+					let url = obj.urlObj.url.split('#');
+					let path = url[1];
 					uni.reLaunch({
-						url: item.urlObj.url
+						url: path
 					});
 				}
 			}

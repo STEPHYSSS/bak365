@@ -58,8 +58,8 @@ const store = new Vuex.Store({
 						
 						// let seconds = 7200000 //两小时 秒
 						// let expires = new Date(new Date() * 1 + seconds * 1000)
-						// Cookies.set('UserMACPhone', response.Data.UserMAC)
-							sessionStorage.setItem('UserMACPhone',response.Data.UserMAC)
+						Cookies.set('UserMACPhone', response.Data.UserMAC)
+						// sessionStorage.setItem('UserMACPhone',response.Data.UserMAC)
 					}
 					if(response.Data.hasOwnProperty('ShopRadio')){
 						// 1代表商城模式,2代表自定义模式

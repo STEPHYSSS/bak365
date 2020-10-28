@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
 				Cookie.set('mainStyle', 'theme2')
                 let Code = GetQueryString("code");
 				let newAppNo = GetAppNo();
-				let UserMACPhone = sessionStorage.getItem('UserMACPhone')
+				let UserMACPhone = Cookie.get("UserMACPhone")
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 				let currentUrl = setUrlDelCode()

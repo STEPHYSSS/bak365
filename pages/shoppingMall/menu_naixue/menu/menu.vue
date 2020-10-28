@@ -69,7 +69,8 @@
 									<view class="items">
 										<!-- 商品 begin -->
 										<view class="good" v-for="(good, key) in item.children" :key="key">
-											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'"></image>											
+											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'" ></image>
+											<image src="../../../../static/img/shouqin.png" style="width: 100px;height: 100px;position: absolute;"v-if="good.ProdType == '0'"></image>
 											<view class="right" v-if="good.ProdType == '0'">
 												<text class="name">{{ good.Name }}</text>
 												<text class="tips">{{ good.Describe }}</text>

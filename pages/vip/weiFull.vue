@@ -1,9 +1,10 @@
 <template>
 	<div class="weiFull" :class="mainStyle">
-		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
-		<div class="surplusTop backgroundColor" v-if="!loading">
-			<div class="surplusD">余额(元)</div>
-			<div class="surplusTopM">{{Balance}}</div>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" title="微卡充值" :status-bar="true" :shadow="false"></uni-nav-bar>
+		<div class="surplusTop backgroundColor" v-if="!loading || MyCard.length>0">
+			<div class="surplusD">卡号：{{MyCard.CardNo}}</div>
+			<div class="surplusD">余额：{{MyCard.Balance}}元</div>
+			<div class="surplusD">积分：{{MyCard.Score}}</div>
 		</div>
 		<div class="weiFullCenter" v-if="!loading">
 			<div style="display: flex; flex-wrap:wrap">
@@ -82,6 +83,7 @@
 				searchFocus: false,
 				btnLoading: false,
 				testData: {},//微信支付接收
+				MyCard:{}
 			}
 		},
 		async created() {
@@ -101,8 +103,11 @@
 					let data = await vipCard({
 						Action: 'GetIncomeList'
 					}, 'UCardTransOpera')
-					// console.log(data.Data, 676676)
-					this.Balance = data.Data.Balance
+					if(data.Data.MyCard){
+						this.MyCard = data.Data.MyCard
+					}else{
+						this.$Router.push({path:'/pages/vip/bind/index'})
+					}
 					this.IncomeList = data.Data.IncomeList || []
 					this.loading = false
 				} catch (e) {

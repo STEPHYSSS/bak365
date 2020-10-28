@@ -30,13 +30,18 @@
 					<swiper v-if="currentObj.changeMode==2" class="cap-image-ad__image_swipe" :style="{'height':changeClientWidth+'px','width':changeClientWidth+'px'}"
 					 @change="onChange" :indicator-dots="currentObj.indicator==1&&currentObj.imgList.length>1">
 						<swiper-item v-for="(image, index) in currentObj.imgList" :key="index" @click="clickLink(image)">
+							 <!--  -->
+							<!-- <navigator v-for="(url,index2) in image.urlObj" :key="index2" :url = "url.url"> -->
+								
 							<!-- #ifndef H5-->
-							<image :src="image.img" style="width:100%;" />
+							<image :src="image.img" style="width:100%;"/>
+							<!-- <a :href = "image.urlObj.url"></a> -->
 							<!-- #endif -->
 							<!-- #ifdef H5 -->
 							<img :src="image.img " style="width:100%;" />
 							<!-- #endif -->
 							<h3 class="cap-image-ad__title" v-if="image.name&&image.name!==' '">{{image.name}}</h3>
+							<!-- </navigator> -->
 						</swiper-item>
 					</swiper>
 					<div v-if="currentObj.indicator!=1&&currentObj.imgList.length>1&&currentObj.changeMode==2">
@@ -166,8 +171,11 @@
 			},
 			clickLink(obj) {
 				if (obj.urlObj && obj.urlObj.url) {
-					uni.reLaunch({
-						url: obj.urlObj.url
+					let url = obj.urlObj.url.split('#');
+					let path = url[1];
+					// this.$Router.push({path:path})
+					uni.reLaunch({					
+						url: path
 					});
 				}
 			}

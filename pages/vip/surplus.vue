@@ -2,16 +2,17 @@
 	<div :class="classHome">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="交易记录" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<div class="surplusTop backgroundColor" v-if="!loading">
-			<div class="surplusD">余额(元)</div>
+			<!-- <div class="surplusD">余额(元)</div>
 			<div class="surplusTopM">
 				{{Balance}}
-				<!--                    <span>{{String(Balance).length>6?'+':''}}</span>-->
 			</div>
 			<div class="surplusD">积分</div>
 			<div class="surplusTopM">
 				{{Score}}
-				<!--                    <span>{{String(Score).length>6?'+':''}}</span>-->
-			</div>
+			</div> -->
+			<div class="surplusD">卡号：{{MyCard.CardNo}}</div>
+			<div class="surplusD">余额：{{MyCard.Balance}}元</div>
+			<div class="surplusD">积分：{{MyCard.Score}}</div>
 		</div>
 		<div class="surplusBottom" v-if="!loading">
 			<!-- <van-cell-group> -->
@@ -70,7 +71,8 @@
 				Balance: 0,
 				Score: 0,
 				DataList: [],
-				cardNo: ''
+				cardNo: '',
+				MyCard:{}
 			};
 		},
 		async onLoad(option) {
@@ -89,6 +91,9 @@
 					let data = await vipCard({
 						Action: "CardTransLog"
 					}, "UCardTransOpera");
+					if(data.Data.MyCard){
+						this.MyCard = data.Data.MyCard
+					}
 					this.DataList = data.Data.OrderList || [];
 					this.Balance = data.Data.Balance || 0;
 					this.Score = data.Data.Score || 0;

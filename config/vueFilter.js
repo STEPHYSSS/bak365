@@ -98,7 +98,7 @@ Vue.filter('setImgPrex', (val) => {
 })
 Vue.filter('fmtImgUrl', (val) => {
      if (val) {
-          return dataConfig.BASE_URL_OnLine + val
+          return dataConfig.BASE_URL_OnLine2 + val
      } else {
           return ''
      }
