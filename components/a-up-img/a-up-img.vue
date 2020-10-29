@@ -5,7 +5,7 @@
 		</cover-image>
 		<!-- #endif -->
 		<!-- #ifdef H5 -->
-		<img :src="dataIMg" :style="{width: width,height: height}" />
+		<img :src="dataIMg | imgFilter" :style="{width: width,height: height}" />
 		<!-- #endif -->
 	</div>
 </template>
@@ -31,6 +31,11 @@
 		data() {
 			return {
 				dataIMg: this.url
+			}
+		},
+		filters:{
+			imgFilter(val){
+				return `http://dingtalk.bak365.cn/WeixinNew/Dist/` + val
 			}
 		},
 		methods: {

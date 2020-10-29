@@ -32,6 +32,7 @@
 					<div v-if="isIntegral!='true'">
 						<div class="colorStyle">
 							<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
+							{{maxPrice}}
 							<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
 						</div>
 						<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
@@ -48,8 +49,8 @@
 				</div>
 			</div>
 			<div class="wu-cell goodCoupon-express lineTop">
-				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>
-				<div style="flex:1">剩余库存：{{ Number(goods.StoreQty)-Number(goods.SaleCnt) |setMoney}}</div>
+				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>				
+				<div style="flex:1"v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)-Number(goods.SaleCnt) |setMoney}}</div>
 				<!--                <div v-if="!isCouponPage">规格：</div>-->
 			</div>
 		</div>
@@ -96,11 +97,14 @@
 				</view>
 			</view>
 		</div>
-		<div class="goods-action" v-show="this.goods.ProdType == '0'">
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart">
-			</uni-goods-nav>			
+		<!-- ProdType==0代表普通商品 ProdType==1代表电子券商品-->
+		<div class="goods-action" v-show="goods.ProdType == '0'">
+			<!-- "goods.StockType != '0'&& item.StoreQty <= '0'" -->
+			<!-- 当状态等与0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" >
+			</uni-goods-nav>
 		</div>
-		<div class="goods-action" v-show="this.goods.ProdType =='1' ">
+		<div class="goods-action" v-show="goods.ProdType =='1' ">
 			<uni-view class="isProdType">
 				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>				
 			</uni-view>
@@ -196,7 +200,8 @@
 				}],
 				options: [],
 				buttonGroup: [],
-				activeTimeMy: {}
+				activeTimeMy: {},
+				maxPrice:''
 			};
 		},
 		created() {
@@ -209,15 +214,17 @@
 
 			//加图片 ../前缀
 			this.goods.Features = setfix(this.goods.Features, this);
-			this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
-
+			console.log(this.skuDataInfo,'----')
+			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
+			this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)})) 
 			this.tradeList()
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				this.buttonGroup.push({
 					text: '加入购物车',
 					backgroundColor: '#ffa200',
 					color: '#fff',
-					borderRadius: '25px 0 0 25px'
+					borderRadius: '25px 0 0 25px',
+					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
 				})
 				this.options.push({
 					icon: 'cart',
@@ -230,7 +237,8 @@
 					backgroundColor: getApp().globalData.mainColor,
 					color: '#fff',
 					borderRadius: '0 25px 25px 0',
-					disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0) ? true : false
+					// disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0) ? true : false
+					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
 				})
 			}
 			if (this.isIntegral == 'true' || this.isCouponPage || this.seckill) {

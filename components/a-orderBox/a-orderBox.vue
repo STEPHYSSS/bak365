@@ -21,7 +21,7 @@
 				<!-- <div :style="{color:mainColor}" style="width:100%" v-if="item.OrderType==='1'">微卡充值</div> -->
 				<div class="van-panel__footer van-hairline--top">
 					总价：
-					<span v-if="item.PayAmt>0">¥{{item.PayAmt}}</span>
+					<span>¥{{item.PayAmt}}</span>
 					<span v-if="item.PayAmt>0&&item.PayScore>0">&nbsp;+&nbsp;</span>
 					<span v-if="item.PayScore>0">{{item.PayScore}}积分</span>
 					<!--                如果是待付款,就显示 支付订单-->

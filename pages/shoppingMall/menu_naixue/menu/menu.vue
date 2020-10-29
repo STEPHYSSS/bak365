@@ -32,7 +32,9 @@
 							</view>
 						</view>
 					</view>
-					<!-- <input  @confirm="serch" v-model="name"/> -->
+					<view class="search">
+						<input placeholder="搜索" @confirm="serch" v-model="name"/>
+					</view>
 					<view class="coupon">
 						<text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
 						<view class="iconfont iconarrow-right"></view>
@@ -61,21 +63,27 @@
 								</swiper-item>
 							</swiper>
 							<view class="list">
-								<!-- category begin -->
+								<!-- category begin -->								
 								<view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.SID}`">
 									<view class="title">
 										<text>{{ item.Name }}</text>
 									</view>
 									<view class="items">
-										<!-- 商品 begin -->
+										<!-- 商品 begin -->										
 										<view class="good" v-for="(good, key) in item.children" :key="key">
 											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'" ></image>
-											<image src="../../../../static/img/shouqin.png" style="width: 100px;height: 100px;position: absolute;"v-if="good.ProdType == '0'"></image>
+											<image src="@/static/img/shouqin.png" @tap="showGoodDetailModal(item, good)" style="width: 80px;height: 80px;position: absolute;" v-if="good.StockType != '0'&& good.StoreQty <= '0'"></image>											
 											<view class="right" v-if="good.ProdType == '0'">
 												<text class="name">{{ good.Name }}</text>
 												<text class="tips">{{ good.Describe }}</text>
 												<view class="price_and_action">
-													<text class="price">￥{{ good.SalePrice }}</text>
+													<view class="" v-if="good.MemberPrice">
+														<text class="price" style="margin-right: 5px;">￥{{ good.MemberPrice }}</text>
+														<text class="price" style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">￥{{ good.SalePrice }}</text>
+													</view>
+													<view v-else>
+														<text class="price">￥{{ good.SalePrice }}</text>
+													</view>
 													<!-- 当SpecType等于2的时候是多规格商品 -->
 													<!-- 当库存type!=0的时候判断库存数量是否小于等于0，小于的话展示售罄-->
 													<view class="" v-if="good.StockType != '0'&& good.StoreQty <= '0'">
@@ -185,9 +193,20 @@
 					</view>
 				</scroll-view>
 				<view class="action">
-					<view class="left">						
-						<view class="price" v-if="norms.length >0 || goodsPrice">￥{{goodsPrice}}</view>
-						<view class="price" v-else>￥{{ good.SalePrice }}</view>
+					<view class="left">
+						<view v-if="good.MemberPrice&&good.SpecType=='1'">
+							<text class="price" style="margin-right: 5px;">￥{{ good.MemberPrice }}</text>
+							<text class="price" style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">￥{{ good.SalePrice }}</text>
+						</view>
+						<view class="" v-else>
+							<view v-if="norms.length >0 || goodsPrice">
+								<text class="price" style="margin-right: 5px;">￥{{ MemberPrice }}</text>
+								<text class="price" style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">￥{{ goodsPrice }}</text>
+							</view>
+						</view>
+						
+						<!-- <view class="price" v-if="norms.length >0 || goodsPrice">￥{{goodsPrice}}</view>
+						<view class="price" v-else>￥{{ good.SalePrice }}</view> -->
 						<view class="props">
 							<text v-if="cooName.length>0">已选：{{ cooName }}</text>
 							<!-- <text v-if="cooName.length>0">{{ cooName2 }}</text> -->
@@ -291,6 +310,7 @@
 				currentIndex2:-1,//默认配件
 				cooName:"",
 				cooName2:"",
+				MemberPrice:'',
 				sizeSID:"",//多规格时商品SID
 				sizeProdNo:"",//多规格时商品prodNo
 				checkStatic:{}, //选择的口味
@@ -480,7 +500,7 @@
 							ProdSID: good.ProdSID,
 							SpecSID:good.SID,//多规格的时候需要传规格里面商品sid
 							Name: good.Name,
-							SalePrice: good.SalePrice,
+							SalePrice: good.MemberPrice?good.MemberPrice:good.SalePrice,
 							Img: cate.Img,
 							ProdType: 0,//0是商品，1是电子券
 							PartsNo:this.PartsNoArr,//配件编号
@@ -496,7 +516,7 @@
 							PartsList: '',
 							ProdSID: good.SID,							
 							Name: good.Name,
-							SalePrice: good.SalePrice,
+							SalePrice: good.MemberPrice?good.MemberPrice:good.SalePrice,
 							Img: good.Img,
 							ProdType: 0,						
 						}
@@ -544,6 +564,7 @@
 						ShopSID:currentStore.data.SID
 					}, 
 					"UProdOpera");
+					
 					// console.log(good,'商品详情')
 					let goodsInfo = Data.ProdInfo;
 					if(goodsInfo.State !='1'){
@@ -556,7 +577,10 @@
 					if(Data.SpecList){ //规格
 						this.norms = Data.SpecList || [];
 						this.goodsPrice = this.norms[0].SalePrice;//默认第一个商品价格
+						this.MemberPrice = this.norms[0].MemberPrice;
 						this.cooName = this.norms[0].Name;//
+						// Math.max.apply(Math,this.norms.map(item => {return Number(item.SalePrice)}))
+						
 					};
 					if(Data.AttributeList){//商品属性
 						this.attribute = Data.AttributeList || [];
@@ -734,6 +758,7 @@
 			skuTopChoice(i, item) {
 				this.goodsPrice = item.SalePrice;
 				this.cooName= item.Name;
+				this.MemberPrice = item.MemberPrice;
 				this.sizeSID = item.SID;
 				this.sizeProdNo = item.ProdNo;
 				if (this.currentIndex === i) {
@@ -782,18 +807,10 @@
 		          });
 					
 		          this.currentTastArr = arr.join(",");
-		          this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
+		//           this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
+				  this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 		          console.log(this.currentTastArr,'------')
 		        }
-				// if (this.checkStatic.length > 0) {
-				// 	this.checkStatic.forEach(item => {
-				// 		this.currentTastArr.push(item.Value.Name+`￥`+item.Value.Price);
-				// 	});
-				// 	this.currentTastArr = this.currentTastArr.join(",");
-				// 	console.log(this.currentTastArr,'------')
-				// } else {
-				// 	this.currentTastArr = "";
-				// }
 			}
 		},
 		

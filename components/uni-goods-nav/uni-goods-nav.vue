@@ -85,6 +85,8 @@
 				type: Object,
 			}
 		},
+		mounted() {
+		},
 		methods: {
 			onClick(index, item) {
 				this.$emit('click', {

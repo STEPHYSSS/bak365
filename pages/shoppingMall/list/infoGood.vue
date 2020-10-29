@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :status-bar="true" :title="title" :shadow="false"></uni-nav-bar>
+		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :status-bar="true" title="商品详情":shadow="false"></uni-nav-bar>
 		<a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name" :isIntegral="isIntegral"
 		 :seckill="seckill" :isBrowse="isBrowse"></a-info-buyPage>
 	</div>

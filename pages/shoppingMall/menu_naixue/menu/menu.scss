@@ -18,6 +18,10 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		.search{
+			width: 90%;
+			margin: 0 auto;
+		}
 	}
 
 	.good-detail-modal {

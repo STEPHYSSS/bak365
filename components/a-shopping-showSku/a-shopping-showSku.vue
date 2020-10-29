@@ -18,7 +18,7 @@
 									<span class="skuTopInfoSurplus">剩余 {{goodsInfo.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
-										已选 {{goodsInfo.Name}}
+										已选 {{goodsInfo.Name}}<span style="margin-left: 5px;" v-if="shuxing!='￥NaN'">{{shuxing}}</span>
 										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
 									</div>
 								</div>
@@ -42,7 +42,7 @@
 									<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
-										已选 {{goodsInfo.Name}}{{currentNorms.Name}}
+										已选 {{goodsInfo.Name}}{{currentNorms.Name}}{{shuxing}}
 										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
 									</div>
 								</div>
@@ -55,7 +55,7 @@
 						</div>
 					</div>
 					<div class="skuBottom">
-						<div class="skuTopChoice" v-if="goodsInfo.SpecType!='1'">
+						<div class="skuTopChoice" >
 							<div v-if="normsList.length>0">
 								<span class="skuTopChoiceTitle">规格</span>
 								<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
@@ -108,6 +108,7 @@
 						</div>
 					</div>
 				</div>
+				<!-- 底部占位 -->
 				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
 				</uni-goods-nav>
 			</div>
@@ -183,7 +184,8 @@
 				currentNorms: {}, //用来默认存放规格选中的第一个数据
 				checkStatic: {}, //属性选中
 				currentParts: [],
-				currentTastArr:[]
+				currentTastArr:[],
+				shuxing:[]
 			};
 		},
 		created() {
@@ -219,7 +221,11 @@
 				// console.log(this.currentParts, 33);
 				// console.log(this.valueStepper, 44)
 				// console.log(this.skuDataInfo, 6666);
-				if (Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
+				// if (Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
+				// 	this.$toast("商品库存不足！");
+				// 	return;
+				// }
+				if (this.goodsInfo.StockType!='0' && Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;
 				}
@@ -310,7 +316,6 @@
 					// 		this.currentNorms.PromotionSID : ""
 					// };
 					obj.ProdList = JSON.stringify(paramsArr);
-					console.log(obj,'888888888');
 					// return;
 					if (bool.index === 0 && !this.seckill) {
 						// 加入购物车
@@ -403,8 +408,9 @@
 						}
 					});		
 					
-					this.currentTastArr = arr.join(",");
+					this.currentTastArr = arr.join(",");					
 					this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
+					this.shuxing = this.currentTastArr;
 				}
 			},
 			skuTopChoiceParts(e, i) {//选择配件
@@ -414,12 +420,15 @@
 					this.$set(this.PartsList[i], "isActive", false);
 				}
 				let arr = this.PartsList
+				let choose = []
 				arr.forEach(D => {
 					arr[i].Stepper = e.inputValue;
 				});
+				
 				let newarr = arr.filter(D => {
 					return Number(D.Stepper) !== 0;
 				});
+				
 				this.currentParts = sortArr("parts", newarr);
 			},
 			stepperMain(val) {
