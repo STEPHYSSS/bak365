@@ -41,13 +41,20 @@
 						"selectedIconPath": 'static/img/select-home1.png',
 						"fontIcon": "static/img/home.png"
 					},
-                    {
-                        "pagePath": "/pages/shoppingMall/shoppingCart/index",
-                        "text": '购物车',
-                        "iconPath": 'static/img/gouwuche.png',
-                        "selectedIconPath": 'static/img/select-gouwuche1.png',
-						"fontIcon": "icon-shouye"
-                    },
+					{
+						"pagePath": "/pages/shoppingMall/list/goodsList",
+						"text": '商品',
+						"iconPath": 'static/img/home.png',
+						"selectedIconPath": 'static/img/select-home1.png',
+						"fontIcon": "static/img/home.png"
+					},
+					{
+							"pagePath": "/pages/shoppingMall/shoppingCart/index",
+							"text": '购物车',
+							"iconPath": 'static/img/gouwuche.png',
+							"selectedIconPath": 'static/img/select-gouwuche1.png',
+							"fontIcon": "icon-shouye"
+					},
 					{
 					    "pagePath": "/pages/home",
 					    "iconPath": 'static/img/home.png',

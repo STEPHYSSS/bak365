@@ -2,7 +2,7 @@
 	<div class="goodCoupon" :class="classHome">
 		<div class="vanImage-style">
 			<swiper class="goodCouponSwipe" :style="classA">
-				<swiper-item v-for="thumb in goods.ImgList" :key="thumb">
+				<swiper-item v-for="(thumb,index) in goods.ImgList" :key="index">
 					<!-- #ifndef H5-->
 					<image :src="thumb |fmtImgUrl" />
 					<!-- #endif -->
@@ -31,6 +31,12 @@
 				<div class="goodCoupon-price ">
 					<div v-if="isIntegral!='true'">
 						<div class="colorStyle">
+							<span>¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
+						</div>
+						<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+							¥{{minPrice}}-{{maxPrice}}
+						</p>
+						<!-- <div class="colorStyle">
 							<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
 							{{maxPrice}}
 							<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
@@ -38,7 +44,7 @@
 						<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
 							<span>¥{{goods.OldPrice>0?goods.OldPrice:0}}</span>
 							<span v-if="goods.OldPriceMaxPrice">- ¥{{ goods.OldPriceMaxPrice }}</span>
-						</div>
+						</div> -->
 					</div>
 					<div v-else>
 						<span>{{goods.Score}}积分</span>
@@ -201,7 +207,10 @@
 				options: [],
 				buttonGroup: [],
 				activeTimeMy: {},
-				maxPrice:''
+				maxPrice:"",
+				minPrice:"",
+				maxMemberPrice:"",
+				minMemberPrice:""
 			};
 		},
 		created() {
@@ -216,7 +225,10 @@
 			this.goods.Features = setfix(this.goods.Features, this);
 			console.log(this.skuDataInfo,'----')
 			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
-			this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)})) 
+			this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
+			this.minPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
+			this.maxMemberPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
+			this.minMemberPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
 			this.tradeList()
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				this.buttonGroup.push({

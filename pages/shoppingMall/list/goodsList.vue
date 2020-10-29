@@ -26,6 +26,9 @@
 			<a-nodeData v-if="(sidebarList.length===0||list.length===0)"></a-nodeData>
 		</div>
 		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo"></a-shopping-showSku>
+		<view>
+			<tabBar :pagePath="'/pages/shoppingMall/list/goodsList'"></tabBar>
+		</view>
 	</div>
 </template>
 
