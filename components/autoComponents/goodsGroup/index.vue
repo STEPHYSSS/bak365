@@ -44,7 +44,9 @@
 										<div class="cap-goods__image-wrap" :style="{'padding-top':currentObj.imgScale+ '%'}">
 											<div data-lazy-log="1" :class="['cap-goods__img--'+currentObj.contain]" class="cap-goods__img" lazy="loaded"
 											 :style="{'background-image':`url(${setImgPrex(item.Img)})`}"></div>
+											 <image src="@/static/img/shouqin.png" style="width: 100%;height: 100%;position: absolute;top:0" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>
 										</div>
+										
 										<div v-if="currentObj.showContent.indexOf('5')>-1">
 											<i v-if="currentObj.typeSign!=='4'" class="van-icon cap-goods-layout__corner-mark" :class="['type-'+currentObj.typeSign,currentObj.typeSign==='0'?'van-icon-new-arrival ':
                 currentObj.typeSign==='1'?'van-icon-hot-sale':currentObj.typeSign==='2'?'van-icon-new':
@@ -60,6 +62,7 @@
 											 class="cap-goods-layout__corner-mark cap-goods-layout__corner-mark--custom" />
 										</div>
 									</div>
+									
 									<div class="cap-goods-layout__info" v-if="currentObj.showContent&&currentObj.showContent.length!==0">
 										<div class="cap-goods-layout__info-title has-title-1 has-subtitle-1" :class="[currentObj.listStyle]"
 										 goods-index="0" :style="{'text-align': currentObj.textCenter,'margin-top':'0'}">
@@ -80,7 +83,12 @@
                  'font-weight': currentObj.fontWeight}">
 												<span class="sale-price" v-if="currentObj.showContent.indexOf('3')>-1">
 													<div class="cap-theme-view" style="color: rgb(255, 68, 68);">
-														<span class="price-tag">¥</span>{{item.SalePrice}}
+														<!-- <span class="price-tag">¥</span>{{item.SalePrice}} -->
+														<span v-if="item.MemberPrice">
+															<span class="price-tag">¥{{item.MemberPrice}}</span>
+															<span style="text-decoration:line-through;color: #969799;font-size:8pt;padding-left: 6px;">¥{{item.SalePrice}}</span>
+														</span>
+														<span class="price-tag" v-else>¥{{item.SalePrice}}</span>
 													</div>
 												</span>
 											</div>

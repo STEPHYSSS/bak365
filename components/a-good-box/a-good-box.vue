@@ -3,6 +3,7 @@
 	<div :class="['goodBoxTwo',mainStyle]" @click.stop="goodBoxCoupon(itemData)" :style="{width:imgHeight}">
 		<div class="vanImage-style">
 			<a-up-img :key="itemData.Img" :url="itemData.Img|setImgPrex" :height="imgHeight" width="100%"></a-up-img>
+			<image src="@/static/img/shouqin.png" style="width: 100%;height: 100%;position: absolute;top: 0;" v-if="itemData.StockType != '0'&& itemData.StoreQty <= '0'"></image>
 			<div class="timer-style" style v-if="seckill">
 				<span class="timer-left">{{startIS?'距结束':'距开始'}}</span>
 				<span class="timer-right">
@@ -22,11 +23,15 @@
 		<div class="oneBoxMoney">
 			<span v-if="isIntegral">{{itemData.Score}}积分</span>
 			<span v-if="itemData.SalePrice>0&&isIntegral">+</span>
-			<div style="display: inline-block;" v-if="itemData.SalePrice>0">
+			<div style="display: inline-block;" v-if="itemData.MemberPrice>0">				
+				<span>¥</span>
+				<span>{{itemData.MemberPrice}}</span>
+				<div style="text-decoration:line-through;color: #969799;font-size:8pt">
+				<span>¥</span>{{itemData.SalePrice}}</div>
+			</div>
+			<div style="display: inline-block;" v-else>
 				<span>¥</span>
 				<span>{{itemData.SalePrice}}</span>
-				<div v-if="itemData.OldPrice" style="text-decoration:line-through;color: #969799;font-size:8pt">
-				<span>¥</span>{{itemData.OldPrice}}</div>
 			</div>
 			<span @click.stop="addCart">
 				<uni-icons v-if="!isIntegral&&!seckill" style="color:#fe5252" type="plus" class="addIcon"></uni-icons>

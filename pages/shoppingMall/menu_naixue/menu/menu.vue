@@ -32,9 +32,10 @@
 							</view>
 						</view>
 					</view>
-					<view class="search">
-						<input placeholder="搜索" @confirm="serch" v-model="name"/>
-					</view>
+					<div class="search" style="position: relative;">
+						<input type="text" placeholder="请输入搜索关键词..." v-model="name" placeholder-style="font-size:13px" @confirm="serch"/>
+						<!-- <view class="iconSty" @click="clear">取消</view> -->
+					</div>
 					<view class="coupon">
 						<text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
 						<view class="iconfont iconarrow-right"></view>
@@ -438,7 +439,12 @@
 				}
 			},
 			serch(val){
+				console.log(val)
 				this.name = val.detail.value;
+				this.getTreeGoods()
+			},
+			clear(){
+				this.name = "";
 				this.getTreeGoods()
 			},
 			handleMenuTap(id){//点击左侧菜单项事件
@@ -476,7 +482,7 @@
 				this.sizeCalcState = true
 			},			
 			handleAddToCart(cate,good,num){ // 单规格商品--加按钮 添加到购物车
-				console.log(cate,good,'添加按钮')
+				// console.log(cate,good,'添加按钮')
 				const Buy = {
 					BuyCnt: num
 				}
@@ -521,7 +527,7 @@
 							ProdType: 0,						
 						}
 					}
-					console.log(obj,'geuige')
+					// console.log(obj,'geuige')
 					if(this.cart.length === 0){
 						this.cart.push(obj);
 					}else{

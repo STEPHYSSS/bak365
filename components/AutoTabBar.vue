@@ -109,7 +109,7 @@
         width: 100%;
         display: flex;
         justify-content: space-around;
-        height: 98upx;
+        height: 50px;
         padding: 16upx 0;
         box-sizing: border-box;
         // border-top: solid 1upx #ccc;

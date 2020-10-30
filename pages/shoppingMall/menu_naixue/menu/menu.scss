@@ -19,9 +19,30 @@
 		display: flex;
 		flex-direction: column;
 		.search{
-			width: 90%;
-			margin: 0 auto;
+			width: 94%; 
+			margin: 5px auto;
+			display: flex;
+			position: relative;
+			/*border: 1px solid red;*/
 		}
+		input{
+			float: left;//左浮动
+			flex: 4;
+			height: 30px;
+			outline: none;
+			border: 1px solid #c6c6c6;
+			box-sizing: border-box;//盒子模型，怪异IE盒子模型，width=content+border*2+padding*2
+			padding-left: 10px;
+			border-radius: 20px;						
+		}
+		.iconSty{
+			position: absolute;
+			right: 22px;
+			top: 19%;
+			font-size: 16px;
+		}
+		
+		
 	}
 
 	.good-detail-modal {

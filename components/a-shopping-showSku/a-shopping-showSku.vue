@@ -18,8 +18,11 @@
 									<span class="skuTopInfoSurplus">剩余 {{goodsInfo.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
-										已选 {{goodsInfo.Name}}<span style="margin-left: 5px;" v-if="shuxing!='￥NaN'">{{shuxing}}</span>
-										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
+										已选 {{goodsInfo.Name}}
+										<text style="margin-left: 5px;" v-for="(item,index) in checkStatic" :key="index + 'a'">
+											<text v-if="index > 0"></text>{{item.Value.Name}}
+											<text v-if="item.Value.Price && item.Value.Price !=0">￥{{item.Value.Price}}</text>
+										</text>
 									</div>
 								</div>
 
@@ -42,8 +45,11 @@
 									<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
-										已选 {{goodsInfo.Name}}{{currentNorms.Name}}{{shuxing}}
-										<!-- <span v-for="data in currentTast" :key="data.Name">-{{data.Name}}</span> -->
+										已选 {{goodsInfo.Name}}{{currentNorms.Name}}
+										<text style="margin-left: 5px;" v-for="(item,index) in checkStatic" :key="index + 'a'">
+											<text v-if="index > 0"></text>{{item.Value.Name}}
+											<text v-if="item.Value.Price && item.Value.Price !=0">￥{{item.Value.Price}}</text>
+										</text>
 									</div>
 								</div>
 
@@ -55,22 +61,12 @@
 						</div>
 					</div>
 					<div class="skuBottom">
-						<div class="skuTopChoice" >
+						<div class="skuTopChoice" v-if="normsList.length>0 || PartsList.length!==0 || attributeList.length >0">
 							<div v-if="normsList.length>0">
 								<span class="skuTopChoiceTitle">规格</span>
 								<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
 								 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
 							</div>
-
-							<!-- <div v-for="(item, index) in flavorList" :key="index + 'a'">
-								<span class="skuTopChoiceTitle">{{item.Name}}</span>
-						
-								<div :class="{'isActive': item1.isActive, 'skuTopChoiceItem': true }"
-								v-for="(item1,index1) in item.Value" :key="index1"
-								 @click="skuTopChoiceFlavor(index, index1)">{{item1.Name}}
-									<span v-if="item1.Price && item1.Price != 0">￥{{item1.Price}}</span>
-								 </div>
-							 </div> -->
 							<div v-if="PartsList.length!==0">
 								<span class="skuTopChoiceTitle">配件(单独售价)</span>
 								<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
@@ -92,9 +88,9 @@
 									<view class="skuTopChoiceTitle">
 										<text class="name">{{ item.Name }}</text>
 									</view>
-									<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name" :class="isActiveName(value.Name)"
+									<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name"
 									 @click="clickStatic(item, value,index2)">
-										<view class="skuTopChoiceItem">
+										<view class="skuTopChoiceItem"  :class="isActiveName(value.Name)">
 											{{value.Name}}
 											<text v-if="value.Price !='0'">￥{{value.Price}}</text>
 										</view>
@@ -185,7 +181,6 @@
 				checkStatic: {}, //属性选中
 				currentParts: [],
 				currentTastArr:[],
-				shuxing:[]
 			};
 		},
 		created() {
@@ -410,7 +405,6 @@
 					
 					this.currentTastArr = arr.join(",");					
 					this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
-					this.shuxing = this.currentTastArr;
 				}
 			},
 			skuTopChoiceParts(e, i) {//选择配件

@@ -11,7 +11,15 @@
 				<div class="rightBox_tastName" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div>
 				<div class="rightBox_quota" v-if="isShoppingCard&&Number(itemData.MaxBuyCnt)>0&&!isOrder">限购{{itemData.MaxBuyCnt}}件</div>
 		
-				<div class="rightBoxBottom" v-if="!isOrder">¥{{itemData.SalePrice}}</div>
+				<div class="rightBoxBottom" v-if="!isOrder">
+					<span v-if="itemData.MemberPrice">
+						¥{{itemData.MemberPrice}}<br/>
+						<span style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+							¥{{itemData.SalePrice}}
+						</span>
+					</span>
+					<span v-else>¥{{itemData.SalePrice}}</span>
+				</div>
 				<div class="rightBoxBottomBuyCnt" v-if="isOrder">
 					<span style="vertical-align: middle;">x</span>
 					<span style="vertical-align: middle">{{itemData.BuyCnt}}</span>

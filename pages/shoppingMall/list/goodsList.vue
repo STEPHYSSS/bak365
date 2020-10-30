@@ -1,35 +1,37 @@
 <template>
-	<div class="backgroundFF">
-		<!--        横-->
-		<div v-if="!loading">
-			<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-				<uni-search-bar cancelButton="none" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词" :radius="50"></uni-search-bar>
-				<div slot="right">
-					<div class="headRight"></div>
-				</div>
-			</uni-nav-bar>
-			<div class="leftNavsidebar" v-if="sidebarList.length>0">
-				<view :class="['homepageLeftFixed']">
-					<view v-for="(item,index) in sidebarList" :key="index" :class="['homepageLeft',index===currentIndex?'activeCanteen':'']"
-					 @click="sidebarChange(index)">
-						{{item.Name}}
+	<view class="">
+		<div class="backgroundFF">
+			<!--        横-->
+			<div v-if="!loading">
+				<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
+					<uni-search-bar cancelButton="none" clearButton="none" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词"  :radius="50"></uni-search-bar>
+					<div slot="right">
+						<div class="headRight"></div>
+					</div>
+				</uni-nav-bar>
+				<div class="leftNavsidebar" v-if="sidebarList.length>0">
+					<view :class="['homepageLeftFixed']">
+						<view v-for="(item,index) in sidebarList" :key="index" :class="['homepageLeft',index===currentIndex?'activeCanteen':'']"
+						 @click="sidebarChange(index,item)">
+							{{item.Name}}
+						</view>
 					</view>
-				</view>
-			</div>
-			<div class="goodBox1" v-if="list.length>0">
-				<div class="goodBox-row" gutter="5">
-					<div class="goodBox-col" v-for="(item,index) in list" :key="index">
-						<a-good-box :itemData="item" :imgHeight="imgHeight" @goodBox="goodBox" @addCart="addCart(item)"></a-good-box>
+				</div>
+				<div class="goodBox1" v-if="list.length>0">
+					<div class="goodBox-row" gutter="5">
+						<div class="goodBox-col" v-for="(item,index) in list" :key="index">
+							<a-good-box :itemData="item" :imgHeight="imgHeight" @goodBox="goodBox" @addCart="addCart(item)"></a-good-box>
+						</div>
 					</div>
 				</div>
+				<a-nodeData v-if="(sidebarList.length===0||list.length===0)"></a-nodeData>
 			</div>
-			<a-nodeData v-if="(sidebarList.length===0||list.length===0)"></a-nodeData>
+			<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo"></a-shopping-showSku>		
 		</div>
-		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo"></a-shopping-showSku>
-		<view>
+		<view v-show="tabShow">
 			<tabBar :pagePath="'/pages/shoppingMall/list/goodsList'"></tabBar>
 		</view>
-	</div>
+	</view>
 </template>
 
 <script>
@@ -50,50 +52,64 @@
 			return {
 				activeKey: "",
 				show: false,
+				tabShow:true,
 				skuDataInfo: {},
 				currentIndex: 0,
 				imgHeight: '',
 				imgHeightLine: '',
 				loading:true,
-				name:''
+				name:this.$route.query.searchName?this.$route.query.searchName:'',
+				only:[]
 			};
 		},
 		async created() {
 			this.imgHeight = (uni.getSystemInfoSync().windowWidth- 22 - 85) / 2 + "px";
 			await this.getCouponList();
 			await this.getList();
-			
 			this.$store.commit("SET_HISTORY_URL", {path:'/pages/shoppingMall/list/goodsList'})
 		},
 		mounted() {},
 		methods: {
-			// async getCouponList() {
-			// 	try {
-			// 		let {
-			// 			Data
-			// 		} = await vipCard({
-			// 			Action: "GetCateList"
-			// 		}, "UProdOpera");
-			// 		this.sidebarList = Data.ProdCateList;
-			// 	} catch (e) {
-			// 		console.log(e);
-			// 	}
+			// serch(val){
+				// this.name = val.value;
+				// for (let cateSID of this.sidebarList) {
+				// 	for (let goodSID of cateSID.children) {
+				// 		if(cateSID.SID === goodSID.CateSID){
+				// 			console.log(goodSID.children)
+				// 		}
+				// 	}
+				// }
+				// this.getCouponList()
 			// },
-			serch(val){
-				this.name = val.value;
-				this.getCouponList()
-			},
+			serch (val) {
+			        let result = [] // 查询结果
+			        let temp = []// 存放查询到的商品
+			        for (const i of this.sidebarList) { // 遍历tree
+			          temp = [] // 先置空
+			          for (const y of i.children) {// 匹配到符合条件得商品后  push到temp     
+						   if(y.Name == val.value){
+							   temp.push(y)
+							   this.only.push(y)
+						   }
+			          }
+			          // 该children 下  有符合条件的商品  就将这个节点 push到result
+			          if (temp && temp.length) result.push(i)
+			        }
+					this.sidebarList = result
+					this.list= this.only;
+			      },
 			cancels(){
-				this.getCouponList()
+				this.name = "";
+				this.getCouponList()				
 			},
 			async getCouponList(){//获取商品树列表
 				try {
 					let { Data } = await vipCard({
 						Action: "GetTreeProdList",
-						// SID:this.currentStoreInfo.SID,//门店id
+						SID:this.$store.state.currentStoreInfo.SID,//门店id
 						Name:this.name
 					}, "UProdOpera");
-					this.sidebarList = Data.CateList;
+					this.sidebarList = Data.CateList;					
 				} catch (e) {
 					console.log(e);
 				}
@@ -106,7 +122,7 @@
 					});
 					this.loading = false;
 				} catch (e) {
-					console.log(e);
+					this.$toast(e)
 					this.loading = false;
 				}
 			},
@@ -132,7 +148,8 @@
 						path: "/pages/shoppingMall/list/infoGood",
 						query:{SID:item.SID,isGoodList:true,title:item.Name}
 					});
-				}else{								
+				}else{
+					this.tabShow = false;
 					try {
 						let obj = {
 							Action: "GetProdInfo"
@@ -150,6 +167,7 @@
 				}
 			},
 			hideShow() {
+				this.tabShow = true;
 				this.show = false;
 			},
 			vanOnSearch() {}
@@ -162,6 +180,7 @@
 	.backgroundFF {
 		background: #ffffff;
 		height: 100vh;
+		margin-bottom: 50px;
 
 		/deep/.uni-navbar__header-btns-left {
 			width: 60rpx;

@@ -45,8 +45,14 @@
                  'font-weight': currentObj.fontWeight}">
 								<span class="sale-price" v-if="currentObj.showContent.indexOf('3')>-1">
 									<div class="cap-theme-view" style="color: rgb(255, 68, 68);">
-										<span class="price-tag">¥</span>
+										<span v-if="item.MemberPrice">
+											<span class="price-tag">¥{{item.MemberPrice}}</span>
+											<span style="text-decoration:line-through;color: #969799;font-size:8pt;padding-left: 6px;">¥{{item.SalePrice}}</span>
+										</span>
+										<span class="price-tag" v-else>¥{{item.SalePrice}}</span>
+										<!-- <span class="price-tag">¥</span>
 										{{item.SalePrice}}
+										 -->
 									</div>
 								</span>
 							</div>

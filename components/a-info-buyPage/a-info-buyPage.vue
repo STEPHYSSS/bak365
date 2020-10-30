@@ -29,22 +29,37 @@
 					<span style="color:#ee0a24;font-size:14px" v-if="goods.ActivityDate">{{goods.ActivityDate|setBuyTime}}</span>
 				</div>
 				<div class="goodCoupon-price ">
-					<div v-if="isIntegral!='true'">
-						<div class="colorStyle">
-							<span>¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
+					<div v-if="isIntegral!='true'">						
+						<!-- <div v-if="maxMemberPrice>0||minMemberPrice>0">
+							<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
+							<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+								¥{{minPrice}}-{{maxPrice}}
+							</p>
 						</div>
-						<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-							¥{{minPrice}}-{{maxPrice}}
-						</p>
-						<!-- <div class="colorStyle">
-							<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
-							{{maxPrice}}
-							<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
-						</div>
-						<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-							<span>¥{{goods.OldPrice>0?goods.OldPrice:0}}</span>
-							<span v-if="goods.OldPriceMaxPrice">- ¥{{ goods.OldPriceMaxPrice }}</span>
+						<div v-else>
+							<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
 						</div> -->
+						<div v-if="goods.SpecType!='1'">
+							<div v-if="maxMemberPrice>0||minMemberPrice>0">
+								<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
+								<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+									¥{{minPrice}}-{{maxPrice}}
+								</p>
+							</div>
+							<div v-else>
+								<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
+							</div>
+						</div>
+						<div v-else>
+							<div class="colorStyle">
+								<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
+								<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
+							</div>
+							<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+								<span>¥{{goods.OldPrice>0?goods.OldPrice:0}}</span>
+								<span v-if="goods.OldPriceMaxPrice">- ¥{{ goods.OldPriceMaxPrice }}</span>
+							</div>
+						</div>
 					</div>
 					<div v-else>
 						<span>{{goods.Score}}积分</span>
@@ -223,12 +238,16 @@
 
 			//加图片 ../前缀
 			this.goods.Features = setfix(this.goods.Features, this);
-			console.log(this.skuDataInfo,'----')
+			// console.log(this.skuDataInfo,'----')
 			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
-			this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-			this.minPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-			this.maxMemberPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
-			this.minMemberPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
+			if(this.isIntegral != 'true' && !this.isCouponPage && !this.seckill){
+				if(this.skuDataInfo.SpecList){					
+					this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
+					this.minPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
+					this.maxMemberPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
+					this.minMemberPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
+				}
+			}
 			this.tradeList()
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				this.buttonGroup.push({

@@ -154,8 +154,7 @@
 					console.log(currentItem,9999)
 					// return;
 					this.$store.commit("SET_CURRENT_CARD", currentItem);
-					this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
-					// this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom");
+					this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 				} else {}
 			},
 			async delButton() {
@@ -314,16 +313,24 @@
 	function countTotal(_this, newArr) {
 		let allMoney = 0;
 		let SalePriceAll = 0;
+		let Tast=0;
 		newArr.forEach(data => {
 			if (data.PartsList && data.PartsList.length > 0) {
 				data.PartsList.forEach(dataParts => {
 					SalePriceAll += Number(dataParts.SalePrice) * Number(dataParts.BuyCnt);
 				});
 			}
-
-			allMoney += Number(data.SalePrice) * Number(data.BuyCnt);
+			if(data.ParamInfo){
+				Tast += Number(data.ParamInfo.split('￥')[1]);
+			}
+			if(data.MemberPrice){
+				allMoney += Number(data.MemberPrice) * Number(data.BuyCnt);
+			}else{
+				allMoney += Number(data.SalePrice) * Number(data.BuyCnt);
+			}
+			
 		});
-		allMoney = allMoney + SalePriceAll;
+		allMoney = allMoney + SalePriceAll+Tast;
 		allMoney = parseFloat(allMoney.toFixed(2));
 		_this.allMoney = allMoney;
 	}
@@ -334,7 +341,7 @@
 		box-sizing: border-box;
 		// padding-bottom: 100px;
 		height: 100%;
-
+		margin-bottom: 50px;
 		.uni-popup {
 			z-index: 1000
 		}

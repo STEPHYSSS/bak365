@@ -4,13 +4,13 @@
 		<div class="cap-search-box__view" :style="{'padding-right': '15px','top': '0px','background': currentObj.backGColor}">
 			<div class="cap-search">
 				<div :class="['cap-search__filed',' cap-search__filed--'+currentObj.shape,currentObj.textCenter=='1'?'cap-search__filed--center':'']"
-				 :style="{'background-color': currentObj.inputBackGColor}" @click="clickInputBox">
-					<i class="iconfont icon-sousuo" :style="{'color':currentObj.inputColor}"></i>
+				 :style="{'background-color': currentObj.inputBackGColor}">
+					<i class="iconfont icon-sousuo" :style="{'color':currentObj.inputColor}" @click="clickInputBox"></i>
 					<div class="van-cell van-cell--borderless van-field" :style="{'height':currentObj.heightInput+'px','width':vanFieldWidth,'font-size':'14px','box-sizing': 'content-box'}">
 						<div class="van-cell__value van-cell__value--alone">
 							<div class="van-field__body">
 								<input class="van-field__control" slot="input" v-model="value" :style="{'color':currentObj.inputColor,'height':currentObj.heightInput+'px'}"
-								 placeholder="搜索商品" disabled/>
+								 placeholder="搜索商品"/>
 							</div>
 						</div>
 					</div>
@@ -18,12 +18,13 @@
 			</div>
 		</div>
 
-		<span class="sizeFont" style="position: fixed;left:-1000px;">搜索商品</span>
+		<!-- <span class="sizeFont" style="position: fixed;left:-1000px;">搜索商品</span> -->
 	</div>
 </template>
 
 <script>
 	import Mixins from "../public";
+	import { vipCard } from "@/api/http.js";
 	export default {
 		mixins: [Mixins],
 		props: {
@@ -44,8 +45,9 @@
 		},
 		data() {
 			return {
-				value: "搜索商品",
-				vanFieldWidth: ""
+				value: "",
+				vanFieldWidth: "",
+				currentStoreInfo:this.$store.state.currentStoreInfo
 				// currentObj: {
 				//   shape: this.propsObj.shape,
 				//   heightInput: this.propsObj.heightInput,
@@ -65,9 +67,27 @@
 					})
 				}
 			})
+			console.log(this.$store.state.currentStoreInfo)
 		},
 		methods: {
-			clickInputBox() {}
+			clickInputBox() {				
+				this.$router.push({path:'/pages/shoppingMall/list/goodsList',query:{
+					searchName:this.value
+				}})
+			},
+			// async clickInputBox(){//获取商品树列表
+			// 	try {
+			// 		let { Data } = await vipCard({
+			// 			Action: "GetTreeProdList",
+			// 			SID:this.currentStoreInfo.SID,//门店id
+			// 			Name:this.value
+			// 		}, "UProdOpera");
+			// 		this.$router.push({path:'/pages/shoppingMall/list/goodsList'})
+			// 		this.sidebarList = Data.CateList;
+			// 	} catch (e) {
+			// 		console.log(e);
+			// 	}
+			// },
 		}
 	};
 </script>
