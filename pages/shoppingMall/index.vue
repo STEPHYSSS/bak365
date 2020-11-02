@@ -124,11 +124,16 @@
 				loadding: true,
 				currentStoreInfo:{},//用来接收门店信息
 				addressName: {}, //地址名称
+				SID:''
 			};
 		},
 		async created() {
 			this.getWxConfig() // 获取授权地址
 			this.loadding = true
+			if(this.$route.query.query){
+				this.SID = JSON.parse(this.$route.query.query);
+			}
+			
 			uni.showLoading({
 				title: '加载中'
 			});
@@ -241,6 +246,7 @@
 					} = await vipCard({
 							Action: "GetDecorate",
 							Type:'0',//
+							SID:this.SID.SID ? this.SID.SID : ''
 						},
 						"UShopOpera"
 					);
@@ -250,7 +256,6 @@
 						this.loadding = false
 						this.listMode = Data.Decorate.HtmlInfo || [];
 					}, timeS)
-					console.log(this.listMode,888888)
 
 					// let arrVoice = []
 					// uni.getStorageSync('arrVoice');

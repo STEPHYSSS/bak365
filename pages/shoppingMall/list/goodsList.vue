@@ -59,10 +59,12 @@
 				imgHeightLine: '',
 				loading:true,
 				name:this.$route.query.searchName?this.$route.query.searchName:'',
-				only:[]
+				only:[],
+				CateSID:''
 			};
 		},
 		async created() {
+			this.CateSID = JSON.parse(this.$route.query.query);
 			this.imgHeight = (uni.getSystemInfoSync().windowWidth- 22 - 85) / 2 + "px";
 			await this.getCouponList();
 			await this.getList();
@@ -70,17 +72,6 @@
 		},
 		mounted() {},
 		methods: {
-			// serch(val){
-				// this.name = val.value;
-				// for (let cateSID of this.sidebarList) {
-				// 	for (let goodSID of cateSID.children) {
-				// 		if(cateSID.SID === goodSID.CateSID){
-				// 			console.log(goodSID.children)
-				// 		}
-				// 	}
-				// }
-				// this.getCouponList()
-			// },
 			serch (val) {
 			        let result = [] // 查询结果
 			        let temp = []// 存放查询到的商品
@@ -107,6 +98,7 @@
 					let { Data } = await vipCard({
 						Action: "GetTreeProdList",
 						SID:this.$store.state.currentStoreInfo.SID,//门店id
+						CateSID:this.CateSID.SID,
 						Name:this.name
 					}, "UProdOpera");
 					this.sidebarList = Data.CateList;					
