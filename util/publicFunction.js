@@ -4,7 +4,6 @@ export function GetQueryString(name) {
 	// console.log(name,'huoz')
 	let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 	let r
-	console.log(window.location.search,'******')
 	if (window.location.search) {
 		r = window.location.search.substr(1).match(reg);
 	} else {

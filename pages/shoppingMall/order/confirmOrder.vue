@@ -83,6 +83,11 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
+				<!-- <div>
+					<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
+					<span class="custom-title">可用{{CardInfo.Score}}积分，抵用200元</span>
+					<radio style="float: right;" slot="right-icon" value="2" checked="true" @change="change888"/>
+				</div> -->
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
@@ -192,6 +197,31 @@
 				</div>
 			</radio-group>
 		</uni-popup>
+		<uni-popup ref="payTypePop" type="center">
+			<view style="width: 300px;background-color: #FFFFFF;height: auto;border-radius: 5x;">
+				<div class="block block-form margin-bottom-normal">
+					<div class="block-item">
+						<div class="label" style="text-indent:10px;">微卡余额</div>
+						<span type="digit" style="padding-left:10px;" name="balance" disabled="true">{{CardInfo.Balance}}</span>
+					</div>
+					<div class="block-item" v-if="CardInfo.Score">
+						<div class="label" style="text-indent:10px;">积分余额</div>
+						<span type="digit" style="padding-left:10px;" name="payScore" disabled="true">{{CardInfo.Score}}</span>
+					</div>
+					<div class="block-item">
+						<div class="label" style="text-indent:10px;">本次支付</div>
+						<span style="padding-left:10px;">{{total}}</span>
+					</div>
+					<div class="block-item" v-if="CardInfo.IsPass==='1'">
+						<div class="label" style="text-indent:10px;">微卡密码</div>
+						<input type="password" style="padding-left:10px;width: 160px;" placeholder="请输入密码" name="password" v-model="password" />
+					</div>					
+				</div>
+				<div class="button-theme-big" style="padding-bottom: 20px;">
+					<button @click="OrderCardPay" :disabled="loading" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+				</div>
+			</view>
+		</uni-popup>
 	</div>
 </template>
 
@@ -238,6 +268,7 @@
 				selectTime: false,
 				discountProgram: false,
 				ticketProgram:false,//电子券ref
+				payTypePop:false,//微卡支付弹窗
 				resultArea: "",
 				areaList: [], //弹出窗地址渲染列表
 				DeliveryAreaList: [],
@@ -290,7 +321,9 @@
 				TicketNo:'',//点击电子券编号
 				TicketList:[],//电子券列表
 				radioTicket:"",//选中电子券sid
-				isMember :localStorage.getItem('isMember')				
+				isMember :localStorage.getItem('isMember'),
+				password: "",//微卡支付密码
+				IsPass: "",
 			};
 		},
 		async created() {
@@ -303,7 +336,7 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
-			if(this.isMember === '0'){
+			if(this.isMember === '0' || this.isMember == undefined || this.isMember == null){
 				this.radioPayType = "2"
 			}
 			// if(){}
@@ -375,7 +408,7 @@
 						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 						DeliveryType:this.takeDeliveryTpey,
 						ShopSID:currentStore.data.SID,
-						PayType:this.radioPayType
+						PayType:this.radioPayType//传给后台来判断优惠方案的
 						// DeliveryType: this.currentDeliveryType						
 					};
 
@@ -441,7 +474,8 @@
 									}
 								});
 							}
-						
+							this.IsPass= Data.CardInfo.IsPass,
+							this.CardInfo = Data.CardInfo;//卡信息
 							this.freight = Data.Freight;//运费
 							this.DiscPrice = Data.DiscPrice;//优惠价格
 							this.TicketList =Data.TicketList || [];//电子券列表
@@ -577,6 +611,7 @@
 					uni.hideLoading()
 				}
 			},
+			change888(){},
 			orderArea() {},
 			async getWxConfig(){
 				try {
@@ -920,8 +955,11 @@
 				this.addEditArea = true;
 				this.$refs.addEditArea.open()
 			},
-			async submitMoney() {
-				// 结算
+			submitMoney(){//点击结算按钮，展示弹窗
+				this.payTypePop = true;
+				this.$refs.payTypePop.open()
+			},
+			async OrderCardPay() {// 支付				
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
 					this.$toast("请选择地址");
 					return;
@@ -942,7 +980,10 @@
 						return;
 					}
 				}
-
+				if (this.password === "" && this.IsPass === "1") {
+					this.$toast("请填写密码");
+					return;
+				}
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}
@@ -962,7 +1003,6 @@
 
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
-					console.log(this.currentItem,'888888')
 				}
 				let shopLong ="";
 				let shopLat = "";
@@ -971,8 +1011,6 @@
 					shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
 				}
 				let currentStore = this.$store.state.currentStoreInfo || {}
-				// console.log(JSON.parse(localStorage.getItem('currentStoreInfo')),'jsonpa')
-				// console.log(currentStore,'*-*-*-*-')
 				let obj = {
 					Action: "OrderPay",
 					DeliveryType: DeliveryType,
@@ -981,8 +1019,6 @@
 					Address: this.radioModes === 2 ?
 						this.currentArea.Address + "  " + this.currentArea.House : "",
 					ProdList: this.currentItem,
-					// Latitude: this.currentArea.Latitude || "",
-					// Longitude: this.currentArea.Longitude || "",暂时注释
 					Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
 					Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 					Province: this.currentArea.Province || "",
@@ -994,7 +1030,8 @@
 					PickTime: this.RecordTime.radioTime,
 					CartSID: this.cardSids,
 					PrefNo: this.radioDiscount,
-					TicketNo:this.radioTicket
+					TicketNo:this.radioTicket,
+					PassWord:this.password?this.password:''
 				};
 
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
@@ -1017,9 +1054,6 @@
 				let Opera = this.$Route.query.isIntegral ?
 					"UIntOrderOpera" :
 					"UOrderOpera";
-
-				// console.log(JSON.stringify(obj), "objobj");
-				// return;
 				this.loading = true;
 				uni.showLoading();
 				try {
@@ -1033,18 +1067,12 @@
 					uni.removeStorageSync("alreadyPaid"); //清点之前标记的已经下单的字段
 					if (this.radioPayType === "1") {
 						//微卡支付
-						this.$Router.push({
-							path: "/pages/shoppingMall/order/confirmCard",
-							query: {
-								Balance: this.CardInfo.Balance,
-								Score: this.CardInfo.Score,
-								PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-								total: Data.SumTotal,
-								PayNo: Data.PayNo,
-								IsPass: Data.IsPass,
-								OrderType:Data.OrderType //订单类型
-							}
-						});
+						this.$toast.success("支付成功");
+						setTimeout(() => {
+							this.$Router.push("/pages/shoppingMall/order/paySuccess");
+						}, 600);
+						this.payTypePop = false;
+						this.$refs.payTypePop.close();
 					} else {
 						// 微信支付
 						this.testData = Data;
@@ -1057,7 +1085,7 @@
 						}
 					}
 				} catch (e) {
-					// that.$toast.fail("微信调起失败");
+					that.$toast.fail(e);
 					this.loading = false;
 					uni.hideLoading();
 				}
@@ -1380,6 +1408,154 @@
 				width: 100%;
 				height: 100%;
 			}
+		}
+		button {
+			height: auto;
+		}
+		
+		.content {
+			width: 100%;
+			margin: 0 auto;
+		}
+		
+		.account-form {
+			overflow: hidden;
+		}
+		
+		.container .content {
+			zoom: 1;
+		}
+		
+		.account-form .form-title {
+			margin: 50px 0 10px;
+			padding: 0 12px;
+			line-height: 24px;
+			font-size: 14px;
+			color: #7c7b83;
+			text-transform: uppercase;
+			text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+		}
+		
+		.account-form .big {
+			font-size: 20px;
+			text-align: center;
+			color: #7c7b83;
+		}
+		
+		.block {
+			overflow: hidden;
+			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			-moz-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			border-top: 2px solid #e5e5e5;
+			border-bottom: 2px solid #e5e5e5;
+			margin: 10px 0;
+			background-color: #fff;
+			display: block;
+			position: relative;
+			font-size: 14px;
+		}
+		
+		.block {
+			border-top-width: 1px;
+			border-bottom-width: 1px;
+		}
+		
+		.block.block-form {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			padding-left: 10px;
+			padding-right: 10px;
+			list-style: none;
+			font-size: 14px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		
+		.block.block-form.margin-bottom-normal {
+			margin-bottom: 20px;
+		}
+		
+		.block-item {
+			position: relative;
+			display: block;
+			padding: 10px;
+			line-height: 22px;
+			border: 0px none;
+			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			-moz-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			border-bottom: 2px solid #e5e5e5;
+			overflow: hidden;
+		}
+		
+		.block.block-form .block-item {
+			display: table;
+			width: 100%;
+			padding: 0;
+		}
+		
+		.block.block-form .block-item:last-child {
+			border-bottom: 0px none;
+		}
+		
+		.block.block-form .block-item .label {
+			display: table-cell;
+			width: 90px;
+			padding: 10px 0;
+			vertical-align: middle;
+		}
+		
+		.block.block-form .block-item textarea,
+		.block.block-form .block-item input,
+		.block.block-form .block-item select,
+		.block.block-form .block-item a,
+		.block.block-form .block-item span {
+			display: table-cell;
+			overflow: hidden;
+			padding: 10px 0;
+			min-height: 28px;
+			line-height: 28px;
+			font-size: 14px;
+		}
+		
+		.block.block-form .block-item textarea,
+		.block.block-form .block-item input,
+		.block.block-form .block-item select {
+			background-color: #fff;
+			border: 0px none;
+			outline: none;
+		}
+		
+		.action-container {
+			padding: 0 10px;
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		
+		.account-form button {
+			border: 1px solid #e5e5e5;
+		}
+		
+		.btn.btn-green {
+			color: #fff;
+			background-color: #06bf04;
+			border-color: #03b401;
+		}
+		
+		.btn.btn-block {
+			color: #fff;
+			text-align: center;
+			padding: 11px 10px;
+			font-size: 16px;
+			line-height: 16px;
+			border-radius: 4px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
 		}
 	}
 </style>

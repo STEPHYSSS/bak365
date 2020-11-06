@@ -39,7 +39,7 @@
 						<div v-else>
 							<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
 						</div> -->
-						<div v-if="goods.SpecType!='1'">
+						<div v-if="goods.SpecType==='2'">
 							<div v-if="maxMemberPrice>0||minMemberPrice>0">
 								<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
 								<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
@@ -50,16 +50,24 @@
 								<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
 							</div>
 						</div>
-						<div v-else>
+						<div v-if="goods.SpecType ==='1'">
+							<div class="colorStyle">
+								<div v-if="goods.MemberPrice">
+									¥{{goods.MemberPrice}}
+									<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+										¥{{goods.SalePrice}}
+									</p>
+								</div>
+								<div v-else>¥{{goods.SalePrice}}</div>
+							</div>
+						</div>
+						<!-- 电子券商品 -->
+						<div v-if="goods.ProdType==='1'&& goods.SpecType ==='0'">
 							<div class="colorStyle">
 								<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
 								<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
 							</div>
-							<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-								<span>¥{{goods.OldPrice>0?goods.OldPrice:0}}</span>
-								<span v-if="goods.OldPriceMaxPrice">- ¥{{ goods.OldPriceMaxPrice }}</span>
-							</div>
-						</div>
+						</div>						
 					</div>
 					<div v-else>
 						<span>{{goods.Score}}积分</span>

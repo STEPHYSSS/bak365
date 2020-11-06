@@ -31,7 +31,7 @@
 				<adCell detailColor="#969799" text="运费" showArrow="false" :detail="Number(OrderInfo.Freight)?'¥'+OrderInfo.Freight:'免运费'" />
 				<adCell detailColor="#969799" text="订单总价" showArrow="false" :detail="setScore(OrderInfo)" />
 				<div style="text-align: right;padding:10px" v-if="OrderInfo.State==='-1'">
-					<button type="main" size="mini" style="margin-right:10px" @click="payBtn">支付</button>
+					<button type="main" size="mini" style="margin-right:10px" @click="payBtnSubmit">微信支付</button>
 					<button type="default" size="mini" @click="cancelBtn">取消订单</button>
 				</div>
 				<div class="btn-fa-style" style="text-align: right;padding:10px" v-if="OrderInfo.State==='0'">
@@ -86,12 +86,12 @@
 				<iframe id="mapPage" width="100%" height="100%" frameborder="0" :src="`https://apis.map.qq.com/tools/poimarker?type=0&marker=coord:${currentArea.Latitude},${currentArea.Longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
 			</uni-popup>
 		</div>
-		<uni-popup type="bottom" ref="popupPay" style="padding:10px;width:70%;text-align: center">
+		<!-- <uni-popup type="bottom" ref="popupPay" style="padding:10px;width:70%;text-align: center">
 			<div style="background: #fff;padding: 20px;">
 				<button type="main" size="mini" style="margin-right:20px" @click="payBtnSubmit(1)">微卡支付</button>
 				<button size="mini" @click="payBtnSubmit(2)">微信支付</button>
 			</div>
-		</uni-popup>
+		</uni-popup> -->
 	</div>
 </template>
 
@@ -204,7 +204,7 @@
 			payBtn() {
 				this.$refs.popupPay.open()
 			},
-			async payBtnSubmit(num) {
+			async payBtnSubmit() {
 				let Opera =
 					this.OrderInfo.OrderType == "4" ? "UIntOrderOpera" : "UOrderOpera";
 				try {
@@ -212,40 +212,19 @@
 						Data
 					} = await vipCard({
 							Action: "PayMoney",
-							SID: this.OrderInfo.SID,
-							PayType: num,
-							OrderType:this.$Route.query.OrderType
+							SID: this.OrderInfo.SID,						
+							OrderType:this.OrderInfo.OrderType,
 						},
 						Opera
 					);
-					if (num === 1) {
-						this.$Router.push({
-							path: "/pages/shoppingMall/order/confirmCard"
-						})
-						// this.$Router.push({
-						// 	path: "/pages/shoppingMall/order/confirmCard",
-						// 	query: {
-						// 		Balance: this.CardInfo.Balance,
-						// 		Score: this.CardInfo.Score,
-						// 		OrderType:this.$Route.query.OrderType,
-						// 		PayScore: Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-						// 		total: Data.SumTotal,
-						// 		PayNo: Data.PayNo,
-						// 		sid: this.OrderInfo.SID,
-						// 		IsPass: Data.IsPass
-						// 	}
-						// });
-					} else {
-						try {
-							weChatPayment(this, Data, true);
-						} catch (e) {
-							// console.log(e);
-							uni.showToast({
-								title: '微信调起失败',
-								duration: 2000,
-								icon: 'none'
-							});
-						}
+					try {
+						weChatPayment(this, Data, true);
+					} catch (e) {
+						uni.showToast({
+							title: '微信调起失败',
+							duration: 2000,
+							icon: 'none'
+						});
 					}
 				} catch (e) {}
 			},

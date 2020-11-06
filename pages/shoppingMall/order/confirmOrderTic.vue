@@ -42,9 +42,32 @@
 				</radio-group>
 			</div>
 			<button @click="submitMoney">结算</button>
-			<!-- <a-bottomSubmit :isOrder="true" :allMoney="totalCurrent" :isType="radioModes" :ziquSumMoney="ProdTotal" :scoreTatal="totalCurrentScore"
-			 :cardInfo="allData.CardInfo" @submitMoney="submitMoney" :isIntegral="$Route.query.isIntegral"></a-bottomSubmit> -->
 		</div>
+		<uni-popup ref="payTypePop" type="center">
+			<view style="width: 300px;background-color: #FFFFFF;height: auto;border-radius: 5x;">
+				<div class="block block-form margin-bottom-normal">
+					<div class="block-item">
+						<div class="label" style="text-indent:10px;">微卡余额</div>
+						<span type="digit" style="padding-left:10px;" name="balance" disabled="true">{{CardInfo.Balance}}</span>
+					</div>
+					<div class="block-item" v-if="CardInfo.Score">
+						<div class="label" style="text-indent:10px;">积分余额</div>
+						<span type="digit" style="padding-left:10px;" name="payScore" disabled="true">{{CardInfo.Score}}</span>
+					</div>
+					<div class="block-item">
+						<div class="label" style="text-indent:10px;">本次支付</div>
+						<span style="padding-left:10px;">{{SumTotal}}</span>
+					</div>
+					<div class="block-item" v-if="CardInfo.IsPass==='1'">
+						<div class="label" style="text-indent:10px;">微卡密码</div>
+						<input type="password" style="padding-left:10px;width: 160px;" placeholder="请输入密码" name="password" v-model="password" />
+					</div>					
+				</div>
+				<div class="button-theme-big" style="padding-bottom: 20px;">
+					<button @click="OrderCardPay" :disabled="loading" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+				</div>
+			</view>
+		</uni-popup>
 	</div>
 </template>
 
@@ -75,52 +98,18 @@
 				currentItem: [],//用来接收下单商品
 				radioModes: 2,
 				prodList: [],
-				showAreaList: false,
-				addEditArea: false,
-				selectTime: false,
-				discountProgram: false,
-				resultArea: "",
-				areaList: [], //弹出窗地址渲染列表
-				DeliveryAreaList: [],
-				// 收货地址
-				takeOver: [],
-				// 运费
-				freight: 0,
-				// 总金额
-				total: 0,
 				totalCurrent: 0,
-				location: {},
-				activeKey: 0,
-				sidebarList: [],
-				rightTimeList: [],
-				radioTime: "",
 				radioPayType: "1",
 				// 卡信息
 				CardInfo: {},
-				// 自取时候用户电话
-				phone_user: "",
-				name_user: "",
-				orderId: "",
 				// 购物车列表sid
 				cardSids: [],
-				ProdTotal: 0,
-				// 优惠方案id
-				radioDiscount: "",
-				DiscountList: [],
-				// 整天的时间段
-				allTimeSlot: [],
-				// 记录时间段
-				RecordTime: {},
-				// 编辑的地址
-				areaInfo: {},
-				//当前的配送类型
-				currentDeliveryType: "",
 				testData: {},
 				allData: {},
-				totalCurrentScore: 0,
-				currentIndex: 0,
-				takeDeliveryTpey:'',
-				SumTotal:''
+				SumTotal:'',
+				password: "",//微卡支付密码
+				IsPass: "",
+				payTypePop:false,//微卡支付弹窗
 			};
 		},
 		async created() {
@@ -149,9 +138,7 @@
 					  }, "UProdOpera")
 					  this.prodList = data.Data.ProdList;
 					  this.SumTotal = data.Data.SumTotal;//总价
-					  this.CardInfo =data.Data.hasOwnProperty("CardInfo") ?
-					  	data.Data.CardInfo : {};
-					  
+					  this.CardInfo =data.Data.hasOwnProperty("CardInfo") ? data.Data.CardInfo : {};					  
 					  if (JSON.stringify(this.CardInfo) !== "{}") {
 					  	if (Number(data.Data.CardInfo.Balance) < Number(data.Data.SumTotal)) {
 					  		//余额不足默认微信支付
@@ -161,7 +148,7 @@
 					  	this.radioPayType = "2";
 					  }
 				} catch (e) {
-					console.log(e);
+					this.$toast(e)
 				}
 			},
 			// 支付方式点击按钮
@@ -239,7 +226,15 @@
 				}
 
 			},
-			async submitMoney() {
+			submitMoney(){//点击结算按钮，展示弹窗
+				this.payTypePop = true;
+				this.$refs.payTypePop.open()
+			},
+			async OrderCardPay() {
+				if (this.password === "" && this.IsPass === "1") {
+					this.$toast("请填写密码");
+					return;
+				}
 				try {
 					let Data = await vipCard(
 					  {
@@ -249,18 +244,24 @@
 					  }, "UOrderOpera")
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
-					  	this.$Router.push({
-					  		path: "/pages/shoppingMall/order/confirmCard",
-					  		query: {
-					  			Balance: this.CardInfo.Balance,
-					  			Score: this.CardInfo.Score,
-					  			PayScore: Data.Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-					  			total: Data.Data.SumTotal,
-					  			PayNo: Data.Data.PayNo,
-					  			IsPass: Data.Data.IsPass,
-								OrderType:Data.Data.OrderType //订单类型
-					  		}
-					  	});
+						this.$toast.success("支付成功");
+						setTimeout(() => {
+							this.$Router.push("/pages/shoppingMall/order/paySuccess");
+						}, 600);
+						this.payTypePop = false;
+						this.$refs.payTypePop.close();
+					  	// this.$Router.push({
+					  	// 	path: "/pages/shoppingMall/order/confirmCard",
+					  	// 	query: {
+					  	// 		Balance: this.CardInfo.Balance,
+					  	// 		Score: this.CardInfo.Score,
+					  	// 		PayScore: Data.Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
+					  	// 		total: Data.Data.SumTotal,
+					  	// 		PayNo: Data.Data.PayNo,
+					  	// 		IsPass: Data.Data.IsPass,
+								// OrderType:Data.Data.OrderType //订单类型
+					  	// 	}
+					  	// });
 					  } else {
 					  	// 微信支付
 					  	this.testData = Data;
@@ -588,6 +589,154 @@
 				width: 100%;
 				height: 100%;
 			}
+		}
+		button {
+			height: auto;
+		}
+		
+		.content {
+			width: 100%;
+			margin: 0 auto;
+		}
+		
+		.account-form {
+			overflow: hidden;
+		}
+		
+		.container .content {
+			zoom: 1;
+		}
+		
+		.account-form .form-title {
+			margin: 50px 0 10px;
+			padding: 0 12px;
+			line-height: 24px;
+			font-size: 14px;
+			color: #7c7b83;
+			text-transform: uppercase;
+			text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+		}
+		
+		.account-form .big {
+			font-size: 20px;
+			text-align: center;
+			color: #7c7b83;
+		}
+		
+		.block {
+			overflow: hidden;
+			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			-moz-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
+			border-top: 2px solid #e5e5e5;
+			border-bottom: 2px solid #e5e5e5;
+			margin: 10px 0;
+			background-color: #fff;
+			display: block;
+			position: relative;
+			font-size: 14px;
+		}
+		
+		.block {
+			border-top-width: 1px;
+			border-bottom-width: 1px;
+		}
+		
+		.block.block-form {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			padding-left: 10px;
+			padding-right: 10px;
+			list-style: none;
+			font-size: 14px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		
+		.block.block-form.margin-bottom-normal {
+			margin-bottom: 20px;
+		}
+		
+		.block-item {
+			position: relative;
+			display: block;
+			padding: 10px;
+			line-height: 22px;
+			border: 0px none;
+			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			-moz-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line.png) 2 stretch;
+			border-bottom: 2px solid #e5e5e5;
+			overflow: hidden;
+		}
+		
+		.block.block-form .block-item {
+			display: table;
+			width: 100%;
+			padding: 0;
+		}
+		
+		.block.block-form .block-item:last-child {
+			border-bottom: 0px none;
+		}
+		
+		.block.block-form .block-item .label {
+			display: table-cell;
+			width: 90px;
+			padding: 10px 0;
+			vertical-align: middle;
+		}
+		
+		.block.block-form .block-item textarea,
+		.block.block-form .block-item input,
+		.block.block-form .block-item select,
+		.block.block-form .block-item a,
+		.block.block-form .block-item span {
+			display: table-cell;
+			overflow: hidden;
+			padding: 10px 0;
+			min-height: 28px;
+			line-height: 28px;
+			font-size: 14px;
+		}
+		
+		.block.block-form .block-item textarea,
+		.block.block-form .block-item input,
+		.block.block-form .block-item select {
+			background-color: #fff;
+			border: 0px none;
+			outline: none;
+		}
+		
+		.action-container {
+			padding: 0 10px;
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		
+		.account-form button {
+			border: 1px solid #e5e5e5;
+		}
+		
+		.btn.btn-green {
+			color: #fff;
+			background-color: #06bf04;
+			border-color: #03b401;
+		}
+		
+		.btn.btn-block {
+			color: #fff;
+			text-align: center;
+			padding: 11px 10px;
+			font-size: 16px;
+			line-height: 16px;
+			border-radius: 4px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
 		}
 	}
 </style>
