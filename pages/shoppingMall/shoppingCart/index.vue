@@ -23,7 +23,7 @@
 		
 				<a-bottomSubmit :batchState="batchState" @checkAll="checkAll" @submitMoney="submitMoney" @delButton="delButton"
 				 :allMoney="allMoney" style="margin-bottom: 50px;" :allResult="allResult"></a-bottomSubmit>
-		
+				<!-- 配件弹窗 -->
 				<uni-popup class="uni-popupSku" ref="setParts" type="bottom" @change="setPartsChange">
 					<div class="uni-popupSku-box">
 						<div style="height: 33px;">
@@ -263,19 +263,20 @@
 				this.PartsList.forEach((D, index) => {
 					partsList[index] = {
 						BuyCnt: D.Stepper,
-						ProdNo: D.ProdNo
+						SID: D.SID
 					};
 				});
 				partsList = partsList.filter(D => Number(D.BuyCnt) !== 0);
 				let PartsNo = [];
 				partsList.forEach(D => {
-					PartsNo.push(D.ProdNo);
+					PartsNo.push(D.SID);
 				});
 				PartsNo = PartsNo.join(",");
 				try {
 					await vipCard({
 							Action: "SetShopCnt",
 							SID: dataParams.SID,
+							ProdSID:dataParams.ProdSID,
 							PartsList: JSON.stringify(partsList),
 							PartsNo: PartsNo
 						},

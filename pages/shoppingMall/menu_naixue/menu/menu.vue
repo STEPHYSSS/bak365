@@ -34,7 +34,7 @@
 					</view>
 					<div class="search" style="position: relative;">
 						<input type="text" placeholder="请输入搜索关键词..." v-model="name" placeholder-style="font-size:13px" @confirm="serch"/>
-						<!-- <view class="iconSty" @click="clear">取消</view> -->
+						<view @click="search2" style="display: inline-block;line-height: 29px;position: absolute;right: 12px;"><span class="iconfont icon-sousuo">搜索</span></view>
 					</div>
 					<view class="coupon">
 						<text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
@@ -439,8 +439,10 @@
 				}
 			},
 			serch(val){
-				console.log(val)
 				this.name = val.detail.value;
+				this.getTreeGoods()
+			},
+			search2(){
 				this.getTreeGoods()
 			},
 			clear(){

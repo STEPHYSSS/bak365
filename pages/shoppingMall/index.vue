@@ -250,12 +250,15 @@
 						},
 						"UShopOpera"
 					);
-					let timeS = this.location.longitude ? 0 : 1000
-					setTimeout(() => {
-						uni.hideLoading()
-						this.loadding = false
-						this.listMode = Data.Decorate.HtmlInfo || [];
-					}, timeS)
+					uni.hideLoading()
+					this.loadding = false
+					this.listMode = Data.Decorate.HtmlInfo || [];
+					// let timeS = this.location.longitude ? 0 : 1000
+					// setTimeout(() => {
+					// 	uni.hideLoading()
+					// 	this.loadding = false
+					// 	this.listMode = Data.Decorate.HtmlInfo || [];
+					// }, timeS)
 
 					// let arrVoice = []
 					// uni.getStorageSync('arrVoice');

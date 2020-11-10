@@ -236,39 +236,16 @@
 				if (this.currentParts.length > 0) {
 					this.currentParts.forEach(D => {
 						PartsArr.push({
-							ProdNo: D.ProdNo,
+							SID: D.SID,
 							BuyCnt: D.Stepper
 						});
-						PartsNoArr.push(D.ProdNo);
+						PartsNoArr.push(D.SID);
 					});
 					PartsNoArr = PartsNoArr.join(",");
 				} else {
 					PartsArr = "";
 					PartsNoArr = "";
 				}
-				// let currentTastArr = [];
-				// if (this.currentTast.length > 0) {
-				// 	// 口味
-				// 	for (let i of this.flavorList) {
-				// 		for (let y of i.Value) {
-				// 			if (y.isActive) {
-				// 				if (y.Price && y.Price != 0) {
-				// 					let name = y.Name + '￥' + y.Price
-				// 					currentTastArr.push(name)
-				// 				} else {
-				// 					currentTastArr.push(y.Name)
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// 	// this.currentTast.forEach(D => {
-				// 	// 	currentTastArr.push(D.Name);
-				// 	// });
-				// 	currentTastArr = currentTastArr.join(",");
-				// 	console.log(currentTastArr, '------')
-				// } else {
-				// 	currentTastArr = "";
-				// }
 				try {
 					let obj = {
 						ProdList: [],

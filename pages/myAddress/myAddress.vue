@@ -4,7 +4,8 @@
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
-		<view v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD' || $Route.query.flag == 'AutoWaimai'">
+		<!-- v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD' || $Route.query.flag == 'AutoWaimai'" -->
+		<view >
 			<view class="main">
 				<view v-if="!areaList.length" class="no-address-tips">
 					<view class="noAddressinfo">暂无地址信息</view>

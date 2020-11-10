@@ -26,11 +26,12 @@
 		created() {
 			if( window.location.hostname == "localhost" ) 	{
 				window.location.href =this.redirect_uri + "&code=11111111"
+			}else if(this.UserMACPhone){
+				uni.navigateTo({
+				   url: '/pages/homePage/homePage'
+				});
 			}else if( !this.appId ){
 			   this.AppIdoAuth()
-			}else if(this.UserMACPhone){
-				console.log('我的老天鹅~')
-				window.location.href =this.redirect_uri + "&code=11111111"
 			}else{
 			   this.redirect_uri = encodeURIComponent(this.redirect_uri);
 			   window.location.href =

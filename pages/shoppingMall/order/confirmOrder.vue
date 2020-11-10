@@ -436,18 +436,17 @@
 								this.areaList = Data.AddressList
 							}
 							
-							this.currentItem.forEach(D => {			
-								console.log(D,'222222')
+							this.currentItem.forEach(D => {
 								if(D.PartsList){
 									D.PartsList = JSON.stringify(D.PartsList);
-									if (typeof D.PartsNo !== "string") {
-										D.PartsNo.forEach((data, index) => {
-											D.arr = [];
-											D.arr.push(data.ProdNo);
-										});
-										D.PartsNo = D.arr ? D.arr.join(",") : "";
-										delete D.arr;
-									}
+									// if (typeof D.PartsNo !== "string") {
+									// 	D.PartsNo.forEach((data, index) => {
+									// 		D.arr = [];
+									// 		D.arr.push(data.ProdNo);
+									// 	});
+									// 	D.PartsNo = D.arr ? D.arr.join(",") : "";
+									// 	delete D.arr;
+									// }
 								}
 								// if (typeof D.PartsNo !== "string") {
 								// 	D.PartsNo.forEach((data, index) => {

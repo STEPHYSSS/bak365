@@ -4,7 +4,7 @@
 			<!--        横-->
 			<div v-if="!loading">
 				<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-					<uni-search-bar cancelButton="none" clearButton="none" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词"  :radius="50"></uni-search-bar>
+					<uni-search-bar cancelButton="none" clearButton="auto" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词"  :radius="50"></uni-search-bar>
 					<div slot="right">
 						<div class="headRight"></div>
 					</div>
@@ -64,7 +64,9 @@
 			};
 		},
 		async created() {
-			this.CateSID = JSON.parse(this.$route.query.query);
+			if(this.$route.query.query){
+				this.CateSID = JSON.parse(this.$route.query.query);
+			}
 			this.imgHeight = (uni.getSystemInfoSync().windowWidth- 22 - 85) / 2 + "px";
 			await this.getCouponList();
 			await this.getList();
@@ -73,22 +75,22 @@
 		mounted() {},
 		methods: {
 			serch (val) {
-			        let result = [] // 查询结果
-			        let temp = []// 存放查询到的商品
-			        for (const i of this.sidebarList) { // 遍历tree
-			          temp = [] // 先置空
-			          for (const y of i.children) {// 匹配到符合条件得商品后  push到temp     
-						   if(y.Name == val.value){
-							   temp.push(y)
-							   this.only.push(y)
-						   }
-			          }
-			          // 该children 下  有符合条件的商品  就将这个节点 push到result
-			          if (temp && temp.length) result.push(i)
-			        }
-					this.sidebarList = result
-					this.list= this.only;
-			      },
+		        let result = [] // 查询结果
+		        let temp = []// 存放查询到的商品
+		        for (const i of this.sidebarList) { // 遍历tree
+		          temp = [] // 先置空
+		          for (const y of i.children) {// 匹配到符合条件得商品后  push到temp     
+					   if(y.Name == val.value){
+						   temp.push(y)
+						   this.only.push(y)
+					   }
+		          }
+		          // 该children 下  有符合条件的商品  就将这个节点 push到result
+		          if (temp && temp.length) result.push(i)
+		        }
+				this.sidebarList = result
+				this.list= this.only;
+		    },
 			cancels(){
 				this.name = "";
 				this.getCouponList()				
@@ -103,7 +105,7 @@
 					}, "UProdOpera");
 					this.sidebarList = Data.CateList;					
 				} catch (e) {
-					console.log(e);
+					this.$toast(e)
 				}
 			},
 			async getList(val) {

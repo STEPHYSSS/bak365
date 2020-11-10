@@ -35,9 +35,10 @@
 					let data = await vipCard({
 						Action: "MyFans"
 					}, "UMemberOpera");
-					this.myFansList =data.Data.Fans;
+					this.myFansList = data.Data.Fans || [];
 					this.loading = false;
 				} catch (e) {
+					this.$toast(e)
 					this.loading = false;
 				}
 			},
