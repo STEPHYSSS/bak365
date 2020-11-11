@@ -37,14 +37,11 @@
 					{{UserTime}}
 				</view>
 			</adCell>
-			<!-- {{TicketList}} -->
 			<!-- 可使用电子券 -->
-			<adCell :text="UserTicketName" @click="clickUserTicketName" v-if="TicketList.length>0">
+			<adCell :text="UserTicketName" detail="可用电子券" @click="clickUserTicketName" v-if="TicketList.length>0">
 			</adCell>
 			<!-- 优惠方案 -->
-			<adCell :text="UserDiscountName" @click="clickUserDiscount" v-if="DiscountList.length>0">
-				<!-- <view>{{UserDiscount}}</view> -->
-			</adCell>			
+			<adCell :text="UserDiscountName" detail="优惠方案" @click="clickUserDiscount" v-if="DiscountList.length>0" />
 			<div class="setADcell">
 				<adCell text="备注留言" showArrow="false" showBottomLine="false">
 					<input type="text" placeholder="请输入留言" v-model="UserRemarks">
@@ -83,11 +80,18 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
-				<!-- <div>
+				<div>
 					<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
-					<span class="custom-title">可用{{CardInfo.Score}}积分，抵用200元</span>
-					<radio style="float: right;" slot="right-icon" value="2" checked="true" @change="change888"/>
-				</div> -->
+					<span class="custom-title">可用{{ScoreDeduction}}积分，抵用{{ScoreAmt}}元</span>
+					<view style="float: right;">
+						<checkbox-group >
+							<label>
+								<checkbox value="cb" checked="true" @change="checkChange(val)" color="#FFCC33" style="transform:scale(0.7)" />
+							</label>
+						</checkbox-group>
+					</view>
+					<!-- <radio style="float: right;" slot="right-icon" value="2" :checked="checked"/> -->
+				</div>
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
 					<div v-if="(allData.SalePriceTotal&&$Route.query.isIntegral)||!$Route.query.isIntegral">
@@ -197,6 +201,7 @@
 				</div>
 			</radio-group>
 		</uni-popup>
+		<!-- 微卡支付弹窗 -->
 		<uni-popup ref="payTypePop" type="center">
 			<view style="width: 300px;background-color: #FFFFFF;height: auto;border-radius: 5x;">
 				<div class="block block-form margin-bottom-normal">
@@ -324,6 +329,9 @@
 				isMember :localStorage.getItem('isMember'),
 				password: "",//微卡支付密码
 				IsPass: "",
+				ScoreDeduction:'',//可用积分
+				ScoreAmt:'',//抵扣金额
+				checked:false
 			};
 		},
 		async created() {
@@ -474,6 +482,8 @@
 								});
 							}
 							this.IsPass= Data.CardInfo.IsPass,
+							this.ScoreDeduction=Data.ScoreDeduction;//可用积分
+							this.ScoreAmt=Data.ScoreAmt;//抵扣金额
 							this.CardInfo = Data.CardInfo;//卡信息
 							this.freight = Data.Freight;//运费
 							this.DiscPrice = Data.DiscPrice;//优惠价格
@@ -610,7 +620,9 @@
 					uni.hideLoading()
 				}
 			},
-			change888(){},
+			checkChange(val){
+				console.log(val)
+			},
 			orderArea() {},
 			async getWxConfig(){
 				try {
@@ -775,9 +787,12 @@
 							flag: 'Deflocation'
 						}
 					})
-				} else {
-					this.$Router.push(this.$store.state.historyUrl)
-				}
+				}else{
+					window.history.back(-1)
+				} 
+				// else {
+				// 	this.$Router.push(this.$store.state.historyUrl)
+				// }
 
 			},
 			clickDataTime() {//选择时间弹窗
@@ -875,6 +890,7 @@
 					this.UserDiscountName = "优惠方案"
 				}else{
 					this.UserDiscountName = item.PrefName;
+					this.radioDiscount = item.PrefNo
 				}
 				this.discountProgram = false;
 				this.Discount(item,1);
@@ -913,10 +929,9 @@
 					this.TicketPrice = Data.TicketPrice;//电子券价格
 					this.total = Data.SumTotal;//合计和小计
 					this.ProdTotal = Data.ProdTotal;//商品总价格
-					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计				
-					
+					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计	
 					if (JSON.stringify(this.CardInfo) !== "{}") {
-						if (Number(Data.CardInfo.Balance) < Number(Data.SumTotal)) {
+						if (Number(this.CardInfo.Balance) < Number(Data.SumTotal)) {
 							//余额不足默认微信支付
 							this.radioPayType = "2";
 						}
@@ -942,6 +957,7 @@
 					this.UserTicketName = "可用电子券"
 				}else{
 					this.UserTicketName = item.TicketName;
+					this.radioTicket = item.TicketNo;
 				}
 				this.ticketProgram = false;
 				this.Discount(item,3);
@@ -955,8 +971,13 @@
 				this.$refs.addEditArea.open()
 			},
 			submitMoney(){//点击结算按钮，展示弹窗
-				this.payTypePop = true;
-				this.$refs.payTypePop.open()
+				if(this.radioPayType === 1){
+					this.payTypePop = true;
+					this.$refs.payTypePop.open()
+				}else{
+					this.OrderCardPay();
+				}
+				
 			},
 			async OrderCardPay() {// 支付				
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
@@ -1214,6 +1235,7 @@
 			align-items: center;
 			padding: 5px 24rpx;
 			margin-top: 5px;
+			margin-bottom: 25px;
 
 			.payStyle {
 				background: rgb(255, 255, 255);

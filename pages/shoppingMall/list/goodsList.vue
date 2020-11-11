@@ -4,7 +4,9 @@
 			<!--        横-->
 			<div v-if="!loading">
 				<uni-nav-bar :status-bar="true" @clickLeft="clickLeft" :shadow="false" :fixed="true" left-icon="back">
-					<uni-search-bar cancelButton="none" clearButton="auto" @cancel="cancels" @confirm="serch" v-model="name" style="width:100%" placeholder="请输入搜索关键词"  :radius="50"></uni-search-bar>
+					<!-- @cancel="cancels" @confirm="serch" v-model="name" -->
+					<uni-search-bar cancelButton="none" clearButton="none" style="width:100%" placeholder="请输入搜索关键词"
+					@confirm="sousuo" v-model="search" :radius="50"></uni-search-bar>
 					<div slot="right">
 						<div class="headRight"></div>
 					</div>
@@ -60,7 +62,8 @@
 				loading:true,
 				name:this.$route.query.searchName?this.$route.query.searchName:'',
 				only:[],
-				CateSID:''
+				CateSID:'',
+				search:'',//商品大类搜索
 			};
 		},
 		async created() {
@@ -94,6 +97,9 @@
 			cancels(){
 				this.name = "";
 				this.getCouponList()				
+			},
+			sousuo(){
+				this.getCouponList();
 			},
 			async getCouponList(){//获取商品树列表
 				try {

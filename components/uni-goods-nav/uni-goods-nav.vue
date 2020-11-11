@@ -22,6 +22,7 @@
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
 					<view class="disabled-style" v-if="item.disabled"></view>
 				</view>
+				
 				<!-- <view class="flex uni-tab__cart-button-right uni-tab__color-y " >立即购买</view> -->
 			</view>
 		</view>
@@ -97,7 +98,7 @@
 			},
 			buttonClick(index, item) {
 				if (item.disabled) {
-					return
+					return this.$toast('商品已售罄，无法购买')
 				}
 				if (uni.report) {
 					uni.report(item.text, item.text)
@@ -147,7 +148,7 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(255, 255, 255, .4);
+		/* background-color: rgba(255, 255, 255, .4); */
 	}
 
 	.uni-tab__right {

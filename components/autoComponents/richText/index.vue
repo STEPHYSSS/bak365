@@ -78,14 +78,14 @@
 		},
 		components: {},
 		mounted() {
-			let b = new Buffer(this.currentObj.contentRich, 'base64')
-			let s2 = b.toString('utf8')
+			// let b = new Buffer(this.currentObj.contentRich, 'base64')
+			// let s2 = b.toString('utf8')
 
-			let contentRichStr = s2.replace( //给富文本中的图片加../
-				/src="Files/g,
-				`src="${this.$VUE_APP_PREFIX}Files`
-			);
-			this.currentObj.contentRich = contentRichStr
+			// let contentRichStr = s2.replace( //给富文本中的图片加../
+			// 	/src="Files/g,
+			// 	`src="${this.$VUE_APP_PREFIX}Files`
+			// );
+			// this.currentObj.contentRich = contentRichStr
 		},
 		methods: {}
 	};
@@ -104,6 +104,9 @@
 			padding: 5px 10px;
 			border: 1px solid #DDD;
 		}
-
+		/deep/img{
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>

@@ -79,7 +79,7 @@
 			</div>
 			<div class="wu-cell goodCoupon-express lineTop">
 				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>				
-				<div style="flex:1"v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)-Number(goods.SaleCnt) |setMoney}}</div>
+				<div style="flex:1"v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)}}</div>
 				<!--                <div v-if="!isCouponPage">规格：</div>-->
 			</div>
 		</div>

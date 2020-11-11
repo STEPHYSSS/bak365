@@ -151,7 +151,7 @@
 					currentItem.forEach(D => {
 						D.PartsList = JSON.stringify(D.PartsList);
 					});
-					console.log(currentItem,9999)
+					// console.log(currentItem,9999)
 					// return;
 					this.$store.commit("SET_CURRENT_CARD", currentItem);
 					this.$Router.push("/pages/shoppingMall/order/confirmOrder");
@@ -331,7 +331,7 @@
 			}
 			
 		});
-		allMoney = allMoney + SalePriceAll+Tast;
+		allMoney = allMoney + SalePriceAll+Tast;	
 		allMoney = parseFloat(allMoney.toFixed(2));
 		_this.allMoney = allMoney;
 	}

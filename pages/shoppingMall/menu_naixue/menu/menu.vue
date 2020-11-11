@@ -79,7 +79,7 @@
 												<text class="tips">{{ good.Describe }}</text>
 												<view class="price_and_action">
 													<view class="" v-if="good.MemberPrice">
-														<text class="price" style="margin-right: 5px;">￥{{ good.MemberPrice }}</text>
+														<text class="price" style="margin-right: 2px;">￥{{ good.MemberPrice }}</text>
 														<text class="price" style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">￥{{ good.SalePrice }}</text>
 													</view>
 													<view v-else>
@@ -89,7 +89,7 @@
 													<!-- 当库存type!=0的时候判断库存数量是否小于等于0，小于的话展示售罄-->
 													<view class="" v-if="good.StockType != '0'&& good.StoreQty <= '0'">
 														<view class="btn-group">
-															<button class="btn property_btn" style="background-color: #ffdfb9;color: #fff;" hover-class="none" size="mini">
+															<button class="btn property_btn" style="background-color: #b1b1b1;color: #fff;" hover-class="none" size="mini">
 																已售罄
 															</button>
 														</view>
@@ -206,14 +206,8 @@
 							</view>
 						</view>
 						
-						<!-- <view class="price" v-if="norms.length >0 || goodsPrice">￥{{goodsPrice}}</view>
-						<view class="price" v-else>￥{{ good.SalePrice }}</view> -->
 						<view class="props">
 							<text v-if="cooName.length>0">已选：{{ cooName }}</text>
-							<!-- <text v-if="cooName.length>0">{{ cooName2 }}</text> -->
-							<!-- <text style="margin-left: 5px;" v-for="(item, index) in checkStatic" :key="index + 'a'">{{item.Value.Name}}
-								<text v-if="item.Value.Price !=0 " >{{item.Value.Price}}</text>
-							</text> -->
 							<text style="margin-left: 5px;" v-for="(item,index) in checkStatic" :key="index + 'a'">
 								<text v-if="index > 0"></text>{{item.Value.Name}}
 								<text v-if="item.Value.Price && item.Value.Price !=0">￥{{item.Value.Price}}</text>
@@ -225,12 +219,15 @@
 							<view class="iconfont icon-jianhao" style="font-size: 25px;"></view>
 						</div>
 						<view class="number">{{ good.number }}</view>
-						<div @tap="handlePropertyAdd">
+						<div v-if="isStock">
+							<view class="iconfont icon-add-fill" style="font-size: 22px;color: #b1b1b1;"></view>
+						</div>
+						<div @tap="handlePropertyAdd" v-else>
 							<view class="iconfont icon-add-fill" style="font-size: 22px;color: #ADB838;"></view>
 						</div>
 					</view>
 				</view>
-				<view class="add-to-cart-btn" v-if="isStock">					
+				<view class="add-to-cart-btn" v-if="isStock" style="background-color: #b1b1b1;color: #fff;">					
 					<view>{{isStock}}</view>
 				</view>
 				<view class="add-to-cart-btn" @tap="handleAddToCartInModal(good)" v-else>
@@ -556,8 +553,8 @@
 					}
 				}
 			},
-			handleReduceFromCart(item,good){//普通商品--减按钮
-				const index = this.cart.findIndex(item => item.SID === good.SID)
+			handleReduceFromCart(item,good){//普通商品--减按钮				
+				const index = this.cart.findIndex(item => item.ProdSID === good.SID)
 				this.cart[index].BuyCnt -= 1
 				if(this.cart[index].BuyCnt <= 0) {
 					this.cart.splice(index, 1)
@@ -573,7 +570,6 @@
 					}, 
 					"UProdOpera");
 					
-					// console.log(good,'商品详情')
 					let goodsInfo = Data.ProdInfo;
 					if(goodsInfo.State !='1'){
 						this.isStock = '已下架'

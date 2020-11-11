@@ -15,7 +15,7 @@
 									<span class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
 								</div>
 								<div>
-									<span class="skuTopInfoSurplus">剩余 {{goodsInfo.StoreQty}} 件</span>
+									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{goodsInfo.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
 										已选 {{goodsInfo.Name}}
@@ -42,7 +42,7 @@
 									<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
 								</div>
 								<div>
-									<span class="skuTopInfoSurplus">剩余 {{currentNorms.StoreQty}} 件</span>
+									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{currentNorms.StoreQty}} 件</span>
 									<span class="skuTopInfoLimit" v-if="goodsInfo.MaxBuyCnt&&goodsInfo.MaxBuyCnt>0">(每人限购{{goodsInfo.MaxBuyCnt}}件)</span>
 									<div class="skuTopInfoSurplus">
 										已选 {{goodsInfo.Name}}{{currentNorms.Name}}
@@ -371,17 +371,15 @@
 				if (this.checkStatic.length > 0) {
 					this.currentTastArr = "";
 					let sumPrice = 0 // 合计金额
-					let arr = []
 					this.checkStatic.forEach(item => {
-						sumPrice += Number(item.Value.Price)
-						
+						sumPrice = Number(item.Value.Price)
 						if (item.Value.Name) {
-							arr.push(item.Value.Name)
+							this.currentTastArr  += item.Value.Name + (sumPrice===0?'': `￥${sumPrice}`)+",";
+							// arr += item.Value.Name + `￥${sumPrice}`;
 						}
-					});		
-					
-					this.currentTastArr = arr.join(",");					
-					this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
+					});
+					this.currentTastArr = this.currentTastArr.substring(0, this.currentTastArr.length - 1)
+					//this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 				}
 			},
 			skuTopChoiceParts(e, i) {//选择配件
@@ -449,8 +447,8 @@
 					let skuDataInfo = this.skuDataInfo;
 					this.goodsInfo = skuDataInfo.ProdInfo; //商品详情
 					this.normsList = []; //规格
-					this.PartsList = []; //规格
-					this.attributeList = []; //规格
+					this.PartsList = []; //配件
+					this.attributeList = []; //属性
 					if (skuDataInfo.SpecList) {
 						this.normsList = skuDataInfo.SpecList || [];
 						this.currentNorms = this.normsList[0]
