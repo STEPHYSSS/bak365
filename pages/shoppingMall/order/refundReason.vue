@@ -105,7 +105,8 @@
 					}
 					let obj = {
 						Action: "ApplyRefund",
-						SID: this.$Route.query.SID
+						SID: this.$Route.query.SID,
+						OrderType:this.$Route.query.OrderType
 					};
 					obj = Object.assign(obj, this.refundTypeObj);
 					//    console.log(obj, "obj");

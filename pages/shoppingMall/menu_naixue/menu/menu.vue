@@ -796,25 +796,34 @@
 						}	
 					}
 				}
-				console.log(this.checkStatic)
-				if (this.checkStatic.length > 0) {
-		          this.currentTastArr = "";
-		          let sumPrice = 0 // 合计金额
-		          let arr = []
-		          this.checkStatic.forEach(item => {
-		            sumPrice += Number(item.Value.Price)
-					if (item.Value.Name) {
-						arr.push(item.Value.Name)
-					}
-		            
-		            // this.currentTastArr.push(item.Value.Name+`￥`+item.Value.Price);
-		          });
+				if (this.checkStatic.length > 0) {
+					this.currentTastArr = "";
+					let sumPrice = 0 // 合计金额
+					this.checkStatic.forEach(item => {
+						sumPrice = Number(item.Value.Price)
+						if (item.Value.Name) {
+							this.currentTastArr  += item.Value.Name + (sumPrice===0?'': `￥${sumPrice}`)+",";
+						}
+					});
+					this.currentTastArr = this.currentTastArr.substring(0, this.currentTastArr.length - 1)
+				}
+		// 		if (this.checkStatic.length > 0) {
+		//           this.currentTastArr = "";
+		//           let sumPrice = 0 // 合计金额
+		//           let arr = []
+		//           this.checkStatic.forEach(item => {
+		//             sumPrice += Number(item.Value.Price)
+		// 			if (item.Value.Name) {
+		// 				arr.push(item.Value.Name)
+		// 			}
+		//             
+		//             // this.currentTastArr.push(item.Value.Name+`￥`+item.Value.Price);
+		//           });
 					
-		          this.currentTastArr = arr.join(",");
-		//           this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
-				  this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
-		          console.log(this.currentTastArr,'------')
-		        }
+		//           this.currentTastArr = arr.join(",");
+		// //           this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
+		// 		  this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
+		//         }
 			}
 		},
 		

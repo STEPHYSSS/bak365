@@ -84,13 +84,12 @@
 					<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 					<span class="custom-title">可用{{ScoreDeduction}}积分，抵用{{ScoreAmt}}元</span>
 					<view style="float: right;">
-						<checkbox-group >
+						<checkbox-group @change="checkChange">
 							<label>
-								<checkbox value="cb" checked="true" @change="checkChange(val)" color="#FFCC33" style="transform:scale(0.7)" />
+								<checkbox value="0" :checked="allck"  color="#FFCC33" style="transform:scale(0.7)" />
 							</label>
 						</checkbox-group>
 					</view>
-					<!-- <radio style="float: right;" slot="right-icon" value="2" :checked="checked"/> -->
 				</div>
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
@@ -284,7 +283,6 @@
 				// 总金额
 				total: 0,
 				totalCurrent: 0,
-				location: {},
 				activeKey: 0,
 				sidebarList: [],
 				rightTimeList: [],
@@ -331,7 +329,7 @@
 				IsPass: "",
 				ScoreDeduction:'',//可用积分
 				ScoreAmt:'',//抵扣金额
-				checked:false
+				allck:true,//初始化选中
 			};
 		},
 		async created() {
@@ -391,7 +389,6 @@
 				this.loading = true;
 				uni.showLoading()
 				try {
-					console.log(this.$store.state.currentLocation.longitude)
 					// if (!this.location.longitude) {
 					// 	uni.showToast({
 					// 		title: '地址获取失败',
@@ -443,7 +440,11 @@
 							} else {
 								this.areaList = Data.AddressList
 							}
-							
+							// 自取时默认填写手机号
+							if(this.takeDeliveryTpey==='1'&& Data.AddressList.length>0){
+								this.name_user = Data.AddressList[0].Name;
+								this.phone_user = Data.AddressList[0].Mobile;
+							}
 							this.currentItem.forEach(D => {
 								if(D.PartsList){
 									D.PartsList = JSON.stringify(D.PartsList);
@@ -620,8 +621,16 @@
 					uni.hideLoading()
 				}
 			},
-			checkChange(val){
-				console.log(val)
+			checkChange(e){
+				//等于0 是选中，不等于0 就是没选中
+				if(e.detail.value =='0'){
+					this.allck = true;
+					this.total  = parseFloat((Number(this.total) -	 Number(this.ScoreAmt)).toFixed(2))
+				}else{
+					this.allck = false;
+					this.total = parseFloat((Number(this.total) + Number(this.ScoreAmt)).toFixed(2))
+				}
+				
 			},
 			orderArea() {},
 			async getWxConfig(){
@@ -675,7 +684,6 @@
 				let _this = this;
 				wx.openAddress({
 					success: function(res) {
-						console.log(JSON.stringify(res))
 						_this.name_user = res.userName;
 						_this.phone_user = res.telNumber;
 					},
@@ -749,7 +757,9 @@
 						ProdTotal:this.ProdTotal,
 						TicketPrice:this.TicketPrice,
 						// PayType: this.radioPayType,
-						ProdList: JSON.stringify(this.currentItem)
+						ProdList: JSON.stringify(this.currentItem),
+						ScoreAmt:this.allck === true ? this.ScoreAmt:''//判断积分抵扣是否选中
+						
 						// ProdList:this.currentItem
 					}
 					let { Data } = await vipCard(obj, "UProdOpera");
@@ -914,7 +924,8 @@
 						ProdTotal:this.ProdTotal,//商品总价
 						TicketPrice:type!=3 ? this.TicketPrice:'',//type为1和2的时候传，电子券金额
 						DiscPrice:type === 3? this.DiscPrice:'',//type 为3的时候传,优惠金额
-						TicketNo:type != 1 ? this.radioTicket : ''//type不为1 的时候传电子券编号
+						TicketNo:type != 1 ? this.radioTicket : '',//type不为1 的时候传电子券编号
+						ScoreAmt:this.allck === true ? this.ScoreAmt:''//判断积分抵扣是否选中
 					}				
 					let { Data } =await vipCard(obj, "UProdOpera");
 					if(type === 2){
@@ -971,7 +982,7 @@
 				this.$refs.addEditArea.open()
 			},
 			submitMoney(){//点击结算按钮，展示弹窗
-				if(this.radioPayType === 1){
+				if(this.radioPayType === "1"){
 					this.payTypePop = true;
 					this.$refs.payTypePop.open()
 				}else{
@@ -1030,6 +1041,10 @@
 					shopLong = this.$store.state.currentLocation.longitude?this.$store.state.currentLocation.longitude:'';
 					shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
 				}
+				// if(this.allck === true){//判断是否勾选积分抵扣
+				// 	// true代表选中，false代表未选中
+					
+				// }
 				let currentStore = this.$store.state.currentStoreInfo || {}
 				let obj = {
 					Action: "OrderPay",
@@ -1037,7 +1052,7 @@
 					UserName: this.radioModes === 2 ? this.currentArea.Name : this.name_user,
 					Mobile: this.radioModes === 1 ? this.phone_user : this.currentArea.Mobile,
 					Address: this.radioModes === 2 ?
-						this.currentArea.Address + "  " + this.currentArea.House : "",
+						this.currentArea.Address: "",
 					ProdList: this.currentItem,
 					Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
 					Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
@@ -1051,7 +1066,8 @@
 					CartSID: this.cardSids,
 					PrefNo: this.radioDiscount,
 					TicketNo:this.radioTicket,
-					PassWord:this.password?this.password:''
+					PassWord:this.password?this.password:'',
+					ScoreDeduction:this.allck === true ? this.ScoreDeduction:''
 				};
 
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
@@ -1099,13 +1115,13 @@
 						try {
 							weChatPayment(this, Data, false);
 						} catch (e) {
-							that.$toast.fail("微信调起失败");
+							this.$toast.fail("微信调起失败");
 							this.loading = false;
 							uni.hideLoading();
 						}
 					}
 				} catch (e) {
-					that.$toast.fail(e);
+					this.$toast.fail(e);
 					this.loading = false;
 					uni.hideLoading();
 				}

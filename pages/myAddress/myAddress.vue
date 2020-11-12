@@ -4,36 +4,7 @@
 		<!-- GetAddressList获取地址  SetAddress添加地址 -->
 		<!-- 外卖地址信息 -->
 		<!-- <view v-if="$Route.query.flag == 'towaimai'"> -->
-		<!-- v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD' || $Route.query.flag == 'AutoWaimai'" -->
-		<view >
-			<view class="main">
-				<view v-if="!areaList.length" class="no-address-tips">
-					<view class="noAddressinfo">暂无地址信息</view>
-					<view>请点击底部按钮添加地址信息</view>
-				</view>
-				<template v-else>
-					<!-- <view @click="func">请点击底部按钮添加地址信息</view> -->
-					<uni-swipe-action>
-						<uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(item.SID)" v-for="(item, index) in areaList"
-						 :key="index">
-							<view class="address" @tap="chooseAddress(item)">
-								<view class="left flex-fill overflow-hidden mr-20">
-									<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
-									{{item.Name}}
-									<span v-if="item.Sex">{{item.Sex | setSex2}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
-									<span v-if="item.Defaults == '1'">默认地址</span>
-								</view>
-								<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
-							</view>
-						</uni-swipe-action-item>
-					</uni-swipe-action>
-				</template>
-			</view>
-			<view class="btn-box">
-				<button type="primary" size="default" @tap="add">新增地址</button>
-			</view>
-		</view>
+		<!-- v-if="$Route.query.flag == 'towaimai' || $Route.query.flag == 'login' || $Route.query.flag == 'homeD' || $Route.query.flag == 'AutoWaimai'" -->		
 		<!-- 门店地址 -->
 		<view class="shopAddress" v-if="$Route.query.flag == 'shop' || $Route.query.flag == 'shopAuto' ">
 			<view class="search" style="width: 96%;">
@@ -60,15 +31,40 @@
 				</view>
 			</view>
 		</view>
-		<!-- 门店地址信息 -->
-
+		<view v-else>
+			<view class="main">
+				<view v-if="!areaList.length" class="no-address-tips">
+					<view class="noAddressinfo">暂无地址信息</view>
+					<view>请点击底部按钮添加地址信息</view>
+				</view>
+				<template v-else>
+					<uni-swipe-action>
+						<uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(item.SID)" v-for="(item, index) in areaList"
+						 :key="index">
+							<view class="address" @tap="chooseAddress(item)">
+								<view class="left flex-fill overflow-hidden mr-20">
+									<div class="areaName">{{item.Address}}&nbsp;{{item.House}}</div>
+									{{item.Name}}
+									<span v-if="item.Sex">{{item.Sex | setSex2}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<span>{{item.Mobile?item.Mobile:item.Tel}}</span>
+									<span v-if="item.Defaults == '1'">默认地址</span>
+								</view>
+								<image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(item)"></image>
+							</view>
+						</uni-swipe-action-item>
+					</uni-swipe-action>
+				</template>
+			</view>
+			<view class="btn-box">
+				<button type="primary" size="default" @tap="add">新增地址</button>
+			</view>
+		</view>		
 	</view>
 </template>
 
 <script>
-	import {
-		vipCard
-	} from "@/api/http.js";
+	import Cookies from '@/config/cookie-my/index.js';
+	import { vipCard } from "@/api/http.js";
 	import Mixins from "@/pages/shoppingMall/mixins.js";
 	export default {
 		mixins: [Mixins],
@@ -104,10 +100,13 @@
 				});
 			} else {
 				this.title = '我的地址'
+				this.getAddressList();
 			}
-			
+			// vuex缓存的数据经过刷新的时候数据就会回到默认
 			// 自取时调用门店接口，外卖时调用地址接口
-			if(this.$store.state.orderType === 'takeout' || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'){			
+			 //暂时注释 || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'			 
+			let orderType=Cookies.get("orderType")
+			if(	orderType === 'takeout'){			
 				this.getAddressList();
 			}else{
 				this.getShopList();
@@ -148,27 +147,13 @@
 					}
 					sessionStorage.setItem('takeOutAddress', JSON.stringify(currentStoreInfo));
 				}
-				// let abc;
-				//  this.areaList.forEach((item,index)=>{
-				// 	item.Defaults == '1' ? abc = item : ''
-				// })
-				// console.log(abc)
-				// sessionStorage.setItem('takeOutAddress',JSON.stringify(abc));
-				// let currentStoreInfo = {
-				// 	Name: this.areaList[0].Name,	
-				// 	Address: this.areaList[0].Address,
-				// 	SID: this.areaList[0].SID,
-				// 	Length:this.areaList[0].Length
-				// }
-				// sessionStorage.setItem('takeOutAddress',JSON.stringify(currentStoreInfo));
-				// this.$store.commit("SET_CURRENT_STORE",this.areaList)
 			},
 			// 
 			async chooseAddress(item) {
 				if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login' || this.$Route.query.flag == 'AutoWaimai') {
 					let currentStoreOut = {
 						Name: item.Name,
-						Address: item.Address,
+						Address: item.Address+item.House,
 						SID: item.SID,
 						Length: item.Length,
 						Mobile: item.Mobile,
@@ -201,7 +186,8 @@
 					url: '/pages/myAddress/add'
 				})
 			},
-			edit(val) {
+			edit(val) {//编辑地址
+				console.log(val)
 				this.$Router.push({
 					path: '/pages/myAddress/add',
 					query: {
@@ -236,15 +222,17 @@
 			addresses() {},
 			// 返回
 			clickLeft() {
-				if (this.$Route.query.flag == 'login') {
-					this.$Router.push('/pages/shoppingMall/login')
-				} else if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'shop') {
-					this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
-				}else if(this.$Route.query.flag == 'shopAuto' || this.$Route.query.flag == 'AutoWaimai'){					
-					this.$Router.push('/pages/shoppingMall/index')
-				}else {
-					this.$Router.push('/pages/home')
-				}
+				window.history.back(-1)
+				// if (this.$Route.query.flag == 'login') {
+				// 	this.$Router.push('/pages/shoppingMall/login')
+				// } else if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'shop') {
+				// 	this.$Router.push('/pages/shoppingMall/menu_naixue/menu/menu')
+				// }else if(this.$Route.query.flag == 'shopAuto' || this.$Route.query.flag == 'AutoWaimai'){					
+				// 	this.$Router.push('/pages/shoppingMall/index')
+				// }
+				// else {
+				// 	this.$Router.push('/pages/home')
+				// }
 
 			},
 			// 门店地址开始
@@ -253,7 +241,7 @@
 				this.Name = e.value;
 				this.getShopList();
 			},
-			// 获取地址
+			// 获取门店地址
 			async getShopList() {
 				let {
 					Data

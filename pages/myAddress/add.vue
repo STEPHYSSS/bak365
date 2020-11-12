@@ -27,8 +27,9 @@
 				<adCell text="门牌号" showArrow="false">
 					<div class="widthBox"><input type="text" v-model="form.House" placeholder="详细地址，例：15号楼5层301室"></div>
 				</adCell>
-				<adCell text="设置为默认地址" showArrow="false">
+				<adCell text="设置默认地址" showArrow="false">
 					<div class="widthBox" style="width: 40%;">
+						{{form.Defaults}}
 						<switch checked  @change="switchChange" v-model="form.Defaults" style="position: absolute;top: 7px;left: 33%; transform:scale(0.8)"/>
 					</div>
 				</adCell>
@@ -36,11 +37,15 @@
 			<div style="margin-top:50px;padding:0 20px;">
 				<button type="main" size="large" @click="saveArea" style="background-color: #ADB838;color: #fff;" :disabled="disabledLoad">保存</button>
 			</div>
+			
 		</view>
 		<!-- 地址popup -->
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
-			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0" :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
+			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0"
+			 :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=40.022964,116.319723&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
+			<!-- <iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0"
+			 :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe> -->
 			<!-- coord=40.022964,116.319723 -->
 			<!-- #endif -->
 			<!-- #ifndef H5 -->
@@ -81,7 +86,6 @@
 				disabledLoad: false,
 				specificAreaHead: false,
 				cityPickerValueDefault: [0, 0, 1],
-				edotAddress:this.$Route.query.areaInfo,
 				publicName:'',
 				publicMobile:''
 			}
@@ -90,7 +94,8 @@
 			this.getWxConfig();
 			this.DeliveryType = this.currentDeliveryType.indexOf("2") > -1 ? 2 : 3;
 			if(this.$Route.query.areaInfo){
-				this.areaInfo = this.edotAddress;
+				this.form = this.$Route.query.areaInfo;
+				this.form.Defaults = this.form.Defaults === "1" ? true : false;
 			}
 			if (JSON.stringify(this.areaInfo) !== "{}") {
 				this.form = JSON.parse(JSON.stringify(this.areaInfo));
@@ -102,6 +107,8 @@
 					longitude: this.areaInfo.Longitude
 				};
 			} else {
+				// this.location
+				// console.log(this.location.latitude)
 				this.location = this.$store.state.currentLocation; //当前的位置
 			}
 		
@@ -113,7 +120,7 @@
 				function(event) {
 					// 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
 					var loc = event.data;
-					if (loc && loc.module == "locationPicker") {
+					if (loc && loc.module == "locationPicker") {0
 						//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
 						if (_this.$refs.specificArea) {
 							_this.$refs.specificArea.close()
@@ -159,7 +166,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: false,
+						debug: true,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -174,7 +181,11 @@
 					      success: function(res) {
 					        _this.location.latitude = res.lat;// 纬度，浮点数，范围为90 ~ -90
 					        _this.location.longitude = res.lng;// 经度，浮点数，范围为180 ~ -180。
-									this.$store.commit("SET_CURRENT_LOCATION", this.location);
+							
+							sessionStorage.setItem("maplatitude",res.lat)
+							sessionStorage.setItem("maplongitude",res.lng)
+							this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+							this.$toast(res,'88888');
 					      },
 					      cancel: function(res) {
 					        this.$toast.fail(res);
@@ -210,9 +221,11 @@
 					this.$refs.specificArea.close()
 				} else {
 					// this.$emit("clickGo");
-					this.$Router.push({path:'/pages/myAddress/myAddress',query:{
-						flag:'towaimai'
-					}})
+					// this.$Router.push({path:'/pages/myAddress/myAddress',query:{
+					// 	flag:'towaimai'
+					// }})
+					window.history.back(-1)
+					
 				}
 			},
 			// 默认地址

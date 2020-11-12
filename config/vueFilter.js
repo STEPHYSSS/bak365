@@ -57,6 +57,7 @@ Vue.filter('orderType', (num) => {
 })
 
 Vue.filter('RefundState', (num) => {
+	console.log(num)
 	if (!num) {
 		return '--'
 	}

@@ -24,10 +24,10 @@ const store = new Vuex.Store({
 	mutations: {
 		['SET_ORDER_TYPE'](state, type) {
 			state.orderType = type
+			Cookies.set('orderType', type)
 		},
 		['SET_CURRENT_LOCATION'](state, data) {
 			state.currentLocation = data
-			// console.log(state.currentLocation,'wx门店地址')
 			Cookies.set('currentLocation', data)
 		},
 		['SET_CURRENT_STORE'](state, data) {

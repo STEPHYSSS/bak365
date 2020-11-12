@@ -27,19 +27,24 @@
 				</div>
 			</div>
 			<div style="background-color: #fff;">
-				<adCell detailColor="#969799" text="优惠" showArrow="false" :detail="'-'+OrderInfo.DiscAmt" v-if="Number(OrderInfo.DiscAmt)>0" />
+				<adCell detailColor="#969799" text="商品总价" showArrow="false" :detail="OrderInfo.ProdAmt" v-if="Number(OrderInfo.ProdAmt)>0" />
+				<adCell detailColor="#969799" text="方案优惠" showArrow="false" :detail="'-'+OrderInfo.DiscAmt" v-if="Number(OrderInfo.DiscAmt)>0" />
+				<adCell detailColor="#969799" text="电子券优惠" showArrow="false" :detail="'-'+OrderInfo.TicketAmt" v-if="Number(OrderInfo.TicketAmt)>0" />
+				<adCell detailColor="#969799" text="积分抵扣" showArrow="false" :detail="'-'+OrderInfo.ScoreAmt" v-if="Number(OrderInfo.ScoreAmt)>0"/>
 				<adCell detailColor="#969799" text="运费" showArrow="false" :detail="Number(OrderInfo.Freight)?'¥'+OrderInfo.Freight:'免运费'" />
-				<adCell detailColor="#969799" text="订单总价" showArrow="false" :detail="setScore(OrderInfo)" />
+				<!-- <adCell detailColor="#969799" text="实付金额" showArrow="false" :detail="setScore(OrderInfo)" /> -->
+				<adCell detailColor="#969799" text="实付金额" showArrow="false" :detail="OrderInfo.PayAmt" />
 				<div style="text-align: right;padding:10px" v-if="OrderInfo.State==='-1'">
 					<button type="main" size="mini" style="margin-right:10px" @click="payBtnSubmit">微信支付</button>
 					<button type="default" size="mini" @click="cancelBtn">取消订单</button>
 				</div>
 				<div class="btn-fa-style" style="text-align: right;padding:10px" v-if="OrderInfo.State==='0'">
 					<button type="main" v-if="OrderInfo.OrderType==='4'" size="mini" @click="pickCode">取货码</button>
-
 					<!-- 退款 -->
-					<button v-if="refundAllow!=='2'&&OrderInfo.OrderType!=='4'" type="default" size="mini" @click="cancelrefund(OrderInfo.RefundState)">{{OrderInfo.RefundState |RefundState}}</button>
-
+					  <!-- orderType 充值 = 1, 销售 = 2, 电子券 = 3, 积分兑换 = 4 -->
+					  <!-- refundAllow是否支持退款 -->
+					<button v-if="refundAllow!=='2'&&OrderInfo.OrderType!=='4'" type="default" size="mini" @click="cancelrefund(OrderInfo.RefundState)">
+					{{OrderInfo.RefundState |RefundState}}</button>
 					<!-- 已提货才能评价 -->
 					<button v-if="OrderInfo.OrderType==='3'" type="main" size="mini" @click="cancelEvaluate(OrderInfo)">评价</button>
 				</div>
@@ -157,7 +162,7 @@
 					this.OrderInfo = Data.OrderInfo;
 					this.CardInfo = Data.hasOwnProperty("CardInfo") ? Data.CardInfo : {};
 
-					this.refundAllow = Data.IsRefund;
+					this.refundAllow = Data.IsRefund;//状态等于3的时候才能申请退款
 
 					this.Refund = Data.Refund ? Data.Refund : Data.Refund;
 					this.loading = false;
@@ -255,7 +260,8 @@
 						SID: this.OrderInfo.SID,
 						RefundTime: this.OrderInfo.RefundTime,
 						RefCompleteTime: this.Refund ? this.Refund.UpTime : "",
-						Reply: this.Refund ? this.Refund.Reply : ""
+						Reply: this.Refund ? this.Refund.Reply : "",
+						OrderType:this.OrderInfo.OrderType
 					}
 				});
 			},
