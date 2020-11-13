@@ -5,18 +5,20 @@
 		<div v-if="prodList.length>0">
 			<!-- 商品信息 -->
 			<div class="good_card_box">
-				<div v-for="(item,index) in prodList" :key="index" style="margin-bottom:10px">
+				<div v-for="(item,index) in prodList" :key="index">
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
 				</div>
-			</div>
-			<div class="total-style">
-				<span>
-					小计：
-					<span class="total-style__color">
-						<span>¥{{SumTotal}}</span>
+				<div class="total-style">
+					<p>积分优惠：- ¥{{ScoreAmt}}</p>
+					<span>
+						小计：
+						<span class="total-style__color">
+							<span>¥{{SumTotal}}</span>
+						</span>
 					</span>
-				</span>
+				</div>
 			</div>
+			
 			<div class="radio-group-play">				
 				<view class="payStyle">支付方式</view>
 				<radio-group @change="radioPayChange">
@@ -40,8 +42,9 @@
 						</div>
 					</div>
 				</radio-group>
+				<button @click="submitMoney" class="submitMargin">结算</button>
 			</div>
-			<button @click="submitMoney">结算</button>
+			
 		</div>
 		<uni-popup ref="payTypePop" type="center">
 			<view style="width: 300px;background-color: #FFFFFF;height: auto;border-radius: 5x;">
@@ -64,7 +67,7 @@
 					</div>					
 				</div>
 				<div class="button-theme-big" style="padding-bottom: 20px;">
-					<button @click="OrderCardPay" :disabled="loading" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+					<button @click="OrderCardPay"  class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
 				</div>
 			</view>
 		</uni-popup>
@@ -107,6 +110,7 @@
 				testData: {},
 				allData: {},
 				SumTotal:'',
+				ScoreAmt:'',//积分优惠
 				password: "",//微卡支付密码
 				IsPass: "",
 				payTypePop:false,//微卡支付弹窗
@@ -138,6 +142,7 @@
 					  }, "UProdOpera")
 					  this.prodList = data.Data.ProdList;
 					  this.SumTotal = data.Data.SumTotal;//总价
+					  this.ScoreAmt = data.Data.ScoreAmt;//积分优惠
 					  this.CardInfo =data.Data.hasOwnProperty("CardInfo") ? data.Data.CardInfo : {};					  
 					  if (JSON.stringify(this.CardInfo) !== "{}") {
 					  	if (Number(data.Data.CardInfo.Balance) < Number(data.Data.SumTotal)) {
@@ -222,13 +227,17 @@
 						}
 					})
 				} else {
-					this.$Router.push(this.$store.state.historyUrl)
+					window.history.back(-1)
 				}
 
 			},
 			submitMoney(){//点击结算按钮，展示弹窗
-				this.payTypePop = true;
-				this.$refs.payTypePop.open()
+				if(this.radioPayType === "1"){
+					this.payTypePop = true;
+					this.$refs.payTypePop.open()
+				}else{
+					this.OrderCardPay();
+				}
 			},
 			async OrderCardPay() {
 				if (this.password === "" && this.IsPass === "1") {
@@ -244,24 +253,15 @@
 					  }, "UOrderOpera")
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
-						this.$toast.success("支付成功");
-						setTimeout(() => {
-							this.$Router.push("/pages/shoppingMall/order/paySuccess");
-						}, 600);
+						if(Data.Success==true){
+							this.$toast.success("支付成功");
+							setTimeout(() => {
+								this.$Router.push("/pages/shoppingMall/order/paySuccess");
+							}, 600);
+						}
+						
 						this.payTypePop = false;
 						this.$refs.payTypePop.close();
-					  	// this.$Router.push({
-					  	// 	path: "/pages/shoppingMall/order/confirmCard",
-					  	// 	query: {
-					  	// 		Balance: this.CardInfo.Balance,
-					  	// 		Score: this.CardInfo.Score,
-					  	// 		PayScore: Data.Data.hasOwnProperty("PayScore") ? Data.PayScore : "",
-					  	// 		total: Data.Data.SumTotal,
-					  	// 		PayNo: Data.Data.PayNo,
-					  	// 		IsPass: Data.Data.IsPass,
-								// OrderType:Data.Data.OrderType //订单类型
-					  	// 	}
-					  	// });
 					  } else {
 					  	// 微信支付
 					  	this.testData = Data;
@@ -413,14 +413,17 @@
 				vertical-align: middle;
 			}
 		}
-
+		.radio-group-play .submitMargin{
+			margin: 20px 0;
+			background-color: #adb838;
+			color: #fff;
+		}
 		.total-style {
 			background: #fff;
 			text-align: right;
-			line-height: 40px;
-			font-size: 16px;
+			line-height:25px;
+			font-size: 14px;
 			padding-right: 10px;
-			border-bottom: 1rpx solid #ebedf0;
 
 			&__color {
 				color: red;

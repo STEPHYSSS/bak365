@@ -23,8 +23,10 @@
 				<div class="rightBoxBottomBuyCnt" v-if="isOrder">
 					<span style="vertical-align: middle;">x</span>
 					<span style="vertical-align: middle">{{itemData.BuyCnt}}</span>
-					<span v-if="!isIntegral" style="float: right;color:#000;font-size: 14px;">¥{{Number(itemData.SalePrice)*Number(itemData.BuyCnt) | numSet}}</span>
-
+					<span v-if="!isIntegral" style="float: right;color:#000;font-size: 14px;">
+						<span v-if="itemData.OrderType==='3'">¥{{itemData.ProdAmt}}</span>
+						<span v-else>¥{{Number(itemData.SalePrice)*Number(itemData.BuyCnt) | numSet}}</span>
+					</span>
 					<span style="float: right;color:#000;font-size: 14px;" v-else>
 						<span v-if="itemData.Score">{{itemData.Score|spliceNum}}积分</span>
 						<span v-if="itemData.SalePrice>0">{{itemData.SalePrice>0&&itemData.Score?'+':''}}¥{{itemData.SalePrice |spliceNum}}</span>

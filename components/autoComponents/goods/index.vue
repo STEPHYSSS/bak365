@@ -11,7 +11,7 @@
 							<div data-lazy-log="1" :class="['cap-goods__img--'+currentObj.contain]" class="cap-goods__img" lazy="loaded"
 							 :style="{'background-image':`url(${setImgPrex(item.Img)})`}"></div>
 						</div>
-						<image src="@/static/img/shouqin.png" style="width: 100%;height: 100%;position: absolute;top:0" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>						
+						<image src="@/static/img/shouqin2.png" style="width: 100%;height: 100%;position: absolute;top:0" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>						
 						<div v-if="currentObj.showContent.indexOf('5')>-1">
 							<i v-if="currentObj.typeSign!=='4'" class="van-icon cap-goods-layout__corner-mark" :class="['type-'+currentObj.typeSign,currentObj.typeSign==='0'?'van-icon-new-arrival ':
                 currentObj.typeSign==='1'?'van-icon-hot-sale':currentObj.typeSign==='2'?'van-icon-new':

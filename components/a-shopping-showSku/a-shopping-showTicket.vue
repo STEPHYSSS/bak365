@@ -14,7 +14,7 @@
 								<span class="skuTopInfoMoneyNum">{{objProdInfo.SalePrice}}</span>
 							</div>
 							<div>
-								<span class="skuTopInfoSurplus">剩余 {{objProdInfo.StoreQty}} 件</span>
+								<span class="skuTopInfoSurplus" v-if="objProdInfo.StockType!=0&&objProdInfo.StoreQty>0">剩余 {{objProdInfo.StoreQty}} 件</span>
 								<span class="skuTopInfoLimit" v-if="objProdInfo.MaxBuyCnt&&objProdInfo.MaxBuyCnt>0">(每人限购{{objProdInfo.MaxBuyCnt}}件)</span>
 								<div class="skuTopInfoSurplus">
 									已选 {{objProdInfo.Name}}

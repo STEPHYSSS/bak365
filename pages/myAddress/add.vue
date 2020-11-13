@@ -29,8 +29,7 @@
 				</adCell>
 				<adCell text="设置默认地址" showArrow="false">
 					<div class="widthBox" style="width: 40%;">
-						{{form.Defaults}}
-						<switch checked  @change="switchChange" v-model="form.Defaults" style="position: absolute;top: 7px;left: 33%; transform:scale(0.8)"/>
+						<switch :checked="form.Defaults" @change="switchChange" style="position: absolute;top: 7px;left: 33%; transform:scale(0.8)"></switch>
 					</div>
 				</adCell>
 			</div>

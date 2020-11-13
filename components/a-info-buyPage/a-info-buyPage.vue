@@ -130,8 +130,9 @@
 		<div class="goods-action" v-show="goods.ProdType == '0'">
 			<!-- "goods.StockType != '0'&& item.StoreQty <= '0'" -->
 			<!-- 当状态等与0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" >
-			</uni-goods-nav>
+			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" v-if="goods.StockType != '0'&& goods.StoreQty <= '0'"></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
 		</div>
 		<div class="goods-action" v-show="goods.ProdType =='1' ">
 			<uni-view class="isProdType">
@@ -233,7 +234,7 @@
 				maxPrice:"",
 				minPrice:"",
 				maxMemberPrice:"",
-				minMemberPrice:""
+				minMemberPrice:"",				
 			};
 		},
 		created() {
@@ -260,7 +261,7 @@
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				this.buttonGroup.push({
 					text: '加入购物车',
-					backgroundColor: '#ffa200',
+					backgroundColor: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?'#FFC868':'#ffa200',
 					color: '#fff',
 					borderRadius: '25px 0 0 25px',
 					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="boxMargin">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :status-bar="true" title="商品详情":shadow="false"></uni-nav-bar>
 		<a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name" :isIntegral="isIntegral"
 		 :seckill="seckill" :isBrowse="isBrowse"></a-info-buyPage>
@@ -130,4 +130,7 @@
 </script>
 
 <style scoped>
+	.boxMargin{
+		padding-bottom: 45px;
+	}
 </style>

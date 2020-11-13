@@ -1,6 +1,7 @@
 <template>
 	<view class="uni-goods-nav">
 		<!-- 底部占位 -->
+		<p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
 		<view class="uni-tab__seat" />
 		<view class="uni-tab__cart-box flex">
 			<view class="flex uni-tab__cart-sub-left">
@@ -15,15 +16,19 @@
 					</view>
 				</view>
 			</view>
-			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right ">
-				<!-- border-radius: 25px 0 0 25px; -->
+			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right " v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'">
+				<view v-for="(item,index) in buttonGroup" :key="index" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
+				 class="flex uni-tab__cart-button-right2">
+					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
+				</view>
+			</view>
+			
+			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right" v-else>
 				<view v-for="(item,index) in buttonGroup" :key="index" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
 				 class="flex uni-tab__cart-button-right" @click="buttonClick(index,item)">
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
 					<view class="disabled-style" v-if="item.disabled"></view>
 				</view>
-				
-				<!-- <view class="flex uni-tab__cart-button-right uni-tab__color-y " >立即购买</view> -->
 			</view>
 		</view>
 	</view>
@@ -78,6 +83,12 @@
 					]
 				}
 			},
+			skuDataInfo: {
+				type: Object,
+				default () {
+					return {};
+				}
+			},
 			fill: {
 				type: Boolean,
 				default: false
@@ -87,6 +98,7 @@
 			}
 		},
 		mounted() {
+			console.log(this.buttonGroup)
 		},
 		methods: {
 			onClick(index, item) {
@@ -127,7 +139,16 @@
 		flex: 1;
 		flex-direction: row;
 	}
-
+	.xiajia{
+		    position: absolute;
+		    bottom: 50px;
+		    background: #929394;
+		    line-height: 34px;
+		    width: 100%;
+		    text-align: center;
+		    color: #ffffff;
+		    letter-spacing: 1px;
+	}
 	.uni-tab__cart-box {
 		flex: 1;
 		height: 40px;
@@ -198,7 +219,13 @@
 		align-items: center;
 		position: relative;
 	}
-
+	.uni-tab__cart-button-right2 {
+		background-color:rgb(255, 200, 104);
+		flex: 1;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+	}
 	.uni-tab__cart-button-right-text {
 		font-size: 28rpx;
 		color: #fff;

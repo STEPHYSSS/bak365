@@ -3,7 +3,7 @@
 		<uni-nav-bar v-if="!showArea" :fixed="true" left-icon="back" @clickLeft="clickGo" title="订单详情" :status-bar="true"
 		 :shadow="false"></uni-nav-bar>
 		<div v-if="!loading&&OrderInfo.SID">
-			<div class="order-area-fa" @click="clickAreaGo" v-if="JSON.stringify(currentArea) !== '{}'&&OrderInfo.OrderType!=='1'">
+			<div class="order-area-fa" @click="clickAreaGo" v-if="JSON.stringify(currentArea) !== '{}'&&OrderInfo.OrderType!=='1'&&OrderInfo.OrderType!='3'">
 				<div class="order-area-delivery" v-if="OrderInfo.DeliveryType === '1'&&JSON.stringify(currentArea) !== '{}'">
 					<span class="order-area-info iconfont icon-dianpu" />
 					<span style="vertical-align: middle;">提货门店</span>
@@ -21,19 +21,49 @@
 					</div>
 				</div>
 			</div>
-			<div class="good_card_box" style="margin-bottom:10px">
+			<div class="good_card_box" style="margin-bottom:10px" v-if="OrderInfo.OrderType=='2'">
 				<div v-for="(item,index) in prodList" :key="index">
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="OrderInfo.OrderType==4"></a-good-lineBox>
 				</div>
 			</div>
+			<div class="good_card_box" style="margin-bottom:10px" v-if="OrderInfo.OrderType=='3'">
+				<a-good-lineBox :itemData="OrderInfo" :isOrder="true" :isIntegral="OrderInfo.OrderType==4"></a-good-lineBox>
+			</div>
 			<div style="background-color: #fff;">
-				<adCell detailColor="#969799" text="商品总价" showArrow="false" :detail="OrderInfo.ProdAmt" v-if="Number(OrderInfo.ProdAmt)>0" />
+				<!-- <adCell detailColor="#969799" text="商品总价" showArrow="false" :detail="OrderInfo.ProdAmt" v-if="Number(OrderInfo.ProdAmt)>0" />
 				<adCell detailColor="#969799" text="方案优惠" showArrow="false" :detail="'-'+OrderInfo.DiscAmt" v-if="Number(OrderInfo.DiscAmt)>0" />
 				<adCell detailColor="#969799" text="电子券优惠" showArrow="false" :detail="'-'+OrderInfo.TicketAmt" v-if="Number(OrderInfo.TicketAmt)>0" />
 				<adCell detailColor="#969799" text="积分抵扣" showArrow="false" :detail="'-'+OrderInfo.ScoreAmt" v-if="Number(OrderInfo.ScoreAmt)>0"/>
 				<adCell detailColor="#969799" text="运费" showArrow="false" :detail="Number(OrderInfo.Freight)?'¥'+OrderInfo.Freight:'免运费'" />
+				<adCell detailColor="#969799" text="实付金额" showArrow="false" :detail="OrderInfo.PayAmt" /> -->
 				<!-- <adCell detailColor="#969799" text="实付金额" showArrow="false" :detail="setScore(OrderInfo)" /> -->
-				<adCell detailColor="#969799" text="实付金额" showArrow="false" :detail="OrderInfo.PayAmt" />
+				
+				<div class="orderData">
+					<div class="orderTime">
+						<div class="orderTime_label">商品总价</div>
+						<span class="priceSpan">¥{{OrderInfo.ProdAmt}}</span>
+					</div>
+					<div class="orderTime" v-if="Number(OrderInfo.DiscAmt)>0">
+						<div class="orderTime_label">方案优惠</div>
+						<span class="priceSpan">-¥{{OrderInfo.DiscAmt}}</span>
+					</div>
+					<div class="orderTime" v-if="Number(OrderInfo.TicketAmt)>0">
+						<div class="orderTime_label">电子券优惠</div>
+						<span class="priceSpan">-¥{{OrderInfo.TicketAmt}}</span>
+					</div>
+					<div class="orderTime" v-if="Number(OrderInfo.ScoreAmt)>0">
+						<div class="orderTime_label">积分抵扣</div>
+						<span class="priceSpan">-¥{{OrderInfo.ScoreAmt}}</span>
+					</div>
+					<div class="orderTime" >
+						<div class="orderTime_label">运费</div>
+						<span class="priceSpan">{{Number(OrderInfo.Freight)?'¥'+OrderInfo.Freight:'免运费'}}</span>
+					</div>
+					<div class="orderTime">
+						<div class="orderTime_label priceName">实付金额</div>
+						<span class="priceSpan priceColor">¥{{OrderInfo.PayAmt}}</span>
+					</div>
+				</div>
 				<div style="text-align: right;padding:10px" v-if="OrderInfo.State==='-1'">
 					<button type="main" size="mini" style="margin-right:10px" @click="payBtnSubmit">微信支付</button>
 					<button type="default" size="mini" @click="cancelBtn">取消订单</button>
@@ -48,7 +78,7 @@
 					<!-- 已提货才能评价 -->
 					<button v-if="OrderInfo.OrderType==='3'" type="main" size="mini" @click="cancelEvaluate(OrderInfo)">评价</button>
 				</div>
-			</div>
+			</div>			
 			<div class="orderData">
 				<div class="orderTime" v-if="OrderInfo.OrderType&&OrderInfo.OrderType>0&&OrderInfo.OrderType!=='2'">
 					<div class="orderTime_label">商品类型：</div>
@@ -68,7 +98,7 @@
 					<span class="copyText colorStyle" id="copyText" @click="copyTextFun(OrderInfo.SID)">复制</span>
 					<div id="NewsToolBox"></div>
 				</div>
-				<div class="orderTime" v-if="OrderInfo.DeliveryType!=='0'">
+				<div class="orderTime" v-if="OrderInfo.OrderType!=='3'">
 					<div class="orderTime_label">订单配送方式：</div>
 					<span>{{OrderInfo.DeliveryType |deliveryType}}</span>
 				</div>
@@ -316,6 +346,7 @@
 
 <style lang="less">
 	.order-info-style {
+		margin-bottom: 50px;
 		.btn-fa-style {
 			button {
 				margin-left: 5px;
@@ -368,13 +399,23 @@
 		.orderTime {
 			padding: 8px 8px 0px 16px;
 		}
-
+		.orderTime .priceSpan{
+			display: inline-block;
+			width: 67%;
+			text-align: right;
+		}
+		.orderTime .priceColor{
+			color: #f60;
+			font-size: 14px;
+		}
 		.orderTime .orderTime_label {
 			width: 105px;
 			text-align: left;
 			display: inline-block;
 		}
-
+		.orderTime .priceName{
+			font-size: 14px;
+		}
 		.copyText {
 			float: right;
 		}

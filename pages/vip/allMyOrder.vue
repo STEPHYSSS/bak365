@@ -33,7 +33,8 @@
 					{
 						title: '已取消'
 					}
-				]
+				],
+				State:''//tab栏状态
 			};
 		},
 		onLoad(option) {
@@ -49,6 +50,7 @@
 				setFilter(name, this);
 			},
 			async getList() {
+				console.log('rrr',this.State)
 				try {
 					let OrderType = ''
 					if(this.active == '3'){
@@ -58,20 +60,22 @@
 						Data
 					} = await vipCard({
 							Action: "GetOrderList",
-							OrderType:OrderType
+							OrderType:OrderType,
+							State:this.State
 						},
 						"UOrderOpera"
 					);
 					this.allfromData = Data.OrderList;
-					//    this.allfromData = [
-					//      { State: "-2" },
-					//      { State: "-1" },
-					//      { State: "0" },
-					//      { State: "1" },
-					//      { State: "2" },
-					//      { State: "3" },
-					//      { State: "4" }
-					//    ];
+					
+					   // this.allfromData = [
+					   //   { State: "-2" },
+					   //   { State: "-1" },
+					   //   { State: "0" },
+					   //   { State: "1" },
+					   //   { State: "2" },
+					   //   { State: "3" },
+					   //   { State: "4" }
+					   // ];
 					this.fromData = Data.OrderList;
 					setFilter(this.active, this);
 					this.loading = false;
@@ -88,7 +92,11 @@
 		watch: {
 			active(val){
 				setFilter(val, this);
-			}
+			},
+			// State(newVal,oldVal){
+			// 	this.State = newVal;
+			// 	console.log('tttt',newVal,oldVal)
+			// }
 		}
 	};
 
@@ -103,15 +111,20 @@
 		} else {
 			if (num == "1") {
 				arr = _this.allfromData.filter(item => item.State == "-1");
+				// _this.State = '-1';
 			} else if (num == "2") {
 				arr = _this.allfromData.filter(
 					item => item.State == "0" || item.State == "1" || item.State == "2"
 				);
+				// _this.State = '-2';
 			} else if (num == "3") {
 				arr = _this.allfromData.filter(item => item.State == "3");
+				// _this.State = '3';
 			}else if(num == '4'){
 				arr = _this.allfromData.filter(item => item.State == "-3");
+				// _this.State = '-3';
 			}
+			
 		}
 		_this.fromData = arr;
 	}

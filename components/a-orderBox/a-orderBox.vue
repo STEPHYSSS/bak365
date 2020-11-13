@@ -9,11 +9,18 @@
 					<span class="orderBoxState" :style="{color:mainColor}">{{item.State |orderState}}</span>
 				</div>
 				<!-- 状态等于3 代表订单超时或者已取消 -->
-				<div class="orderBoxCenter" v-if="item.OrderType!=='1'">
+				<!-- OrderType等于1代表充值，2代表普通商品，3代表电子券，4代表积分订单 -->
+				<div class="orderBoxCenter" v-if="item.OrderType=='2'">
 					<div class="boxImgSize">
 						<a-up-img :url="setImg(item.ProdList)" style="width: 100%;height: 100%"></a-up-img>
 					</div>
 					<div class="orderBoxTitle">{{setTitle(item.ProdList)}}</div>
+				</div>
+				<div class="orderBoxCenter" v-if="item.OrderType=='3'">
+					<div class="boxImgSize">
+						<a-up-img :url="`${$VUE_APP_PREFIX}`+item.Img" style="width: 100%;height: 100%"></a-up-img>
+					</div>
+					<div class="orderBoxTitle">{{item.Name}}</div>
 				</div>
 				<!-- <div class="boxAllNum" v-if="item.OrderType=='2'">
 					<span v-if="item.ProdList.length>0">共{{setGoodNum(item.ProdList)}}件商品</span>
