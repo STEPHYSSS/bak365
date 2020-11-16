@@ -42,7 +42,7 @@
 		<uni-popup ref="specificArea" class="confirm-area-popup" style="margin-top:50px">
 			<!-- #ifdef H5 -->
 			<iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0"
-			 :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=40.022964,116.319723&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
+			 :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=30.59035,114.310694&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe>
 			<!-- <iframe style="margin-top:50px" id="mapPage" width="100%" height="100%" frameborder="0"
 			 :src="`https://apis.map.qq.com/tools/locpicker?search=1&type=1&policy=1&coord=${location.latitude},${location.longitude}&key=IB5BZ-HF53W-5KLRH-R3VUL-35KO7-Y2BUT&referer=365商城管理`"></iframe> -->
 			<!-- coord=40.022964,116.319723 -->
@@ -165,7 +165,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: true,
+						debug: false,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
@@ -184,7 +184,7 @@
 							sessionStorage.setItem("maplatitude",res.lat)
 							sessionStorage.setItem("maplongitude",res.lng)
 							this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							this.$toast(res,'88888');
+							// this.$toast(res,'88888');
 					      },
 					      cancel: function(res) {
 					        this.$toast.fail(res);

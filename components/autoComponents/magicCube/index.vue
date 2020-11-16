@@ -91,11 +91,15 @@
 			clickLink(item) {
 				// 点击跳转
 				if (item.urlObj && item.urlObj.url) {
-					let url = obj.urlObj.url.split('#');
-					let path = url[1];
-					uni.reLaunch({
-						url: path
-					});
+					let url = item.urlObj.url.split('#');
+					if(url!="http://dingtalk.bak365.cn"){
+					   window.location.href = item.urlObj.url
+					}else{
+						let path = url[1];
+						uni.reLaunch({
+							url: path
+						})
+					}
 				}
 			},
 			changeBox() {

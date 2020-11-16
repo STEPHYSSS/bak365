@@ -40,7 +40,7 @@
 				try {
 					await this.$store.dispatch("get_user", {
 						AppNo: newAppNo,
-						Code: code
+						Code: code						
 					});
 					this.url = url;
 					window.location.href = url;

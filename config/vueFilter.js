@@ -24,11 +24,13 @@ Vue.filter('orderState', (num) => {
 	num = Number(num)
 	switch (num) {
 		case -3:
-			return '已取消';
+			return '已取消';		
+		case -2:
+			return '已付款';
 		case -1:
 			return '待付款';
 		case 0:
-			return '已付款';
+			return '已预订';
 		case 1:
 			return '生产中';
 		case 2:

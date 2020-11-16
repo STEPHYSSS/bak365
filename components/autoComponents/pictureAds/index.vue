@@ -172,11 +172,14 @@
 			clickLink(obj) {
 				if (obj.urlObj && obj.urlObj.url) {
 					let url = obj.urlObj.url.split('#');
-					let path = url[1];
-					// this.$Router.push({path:path})
-					uni.reLaunch({					
-						url: path
-					});
+					if(url!="http://dingtalk.bak365.cn"){
+						window.location.href = obj.urlObj.url
+					}else{
+						let path = url[1];
+						uni.reLaunch({					
+							url: path
+						});
+					}
 				}
 			}
 		},

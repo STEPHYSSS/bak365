@@ -1,10 +1,11 @@
 <template>
 	<div>
 		<!-- 文本 -->
-		<a :class="['cap-text',currentObj.bottomLine?'cap-text--has-line':'']" :href="currentObj.urlClick" :style="{'text-align': currentObj.textAlign,'color': currentObj.fontColor,'font-size': currentObj.fontSize+'px',
+		<a :class="['cap-text',currentObj.bottomLine?'cap-text--has-line':'']"  :style="{'text-align': currentObj.textAlign,'color': currentObj.fontColor,'font-size': currentObj.fontSize+'px',
       'background': currentObj.backGColor}" @click="clickUrl">
 			<div class="cap-text__content-wrap">
 				<p class="cap-text__content">{{currentObj.textContent}}</p>
+				<!-- :href="currentObj.urlClick" -->
 			</div>
 		</a>
 	</div>
@@ -51,11 +52,17 @@
 		mounted() {},
 		methods: {
 			clickUrl() {
-				// if (this.currentObj.urlClick) {
-				// 	uni.reLaunch({
-				// 		url: this.currentObj.urlClick
-				// 	});
-				// }
+				if (this.currentObj.urlClick) {
+					let url = this.currentObj.urlClick.split('#');
+					console.log(url)
+					if(url!="http://dingtalk.bak365.cn"){
+						window.location.href = this.currentObj.urlClick
+					}else{
+						uni.reLaunch({
+							url: this.currentObj.urlClick
+						})
+					}
+				}
 			}
 		},
 		watch: {}

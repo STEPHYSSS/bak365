@@ -34,7 +34,8 @@
 						title: '已取消'
 					}
 				],
-				State:''//tab栏状态
+				State:'',//tab栏状态
+				OrderType:'',//订单状态
 			};
 		},
 		onLoad(option) {
@@ -46,21 +47,32 @@
 			this.getList();
 		},
 		methods: {
+			activeIndex(val){
+				if (val == "1") {this.State = '-1';
+				this.getList()
+				} else if (val == "2") {this.State = '-2';
+				this.getList()
+				} else if (val == "3") {this.State = '3';this.OrderType = "2"
+				this.getList()
+				}else if(val == '4'){this.State = '-3';
+				this.getList()
+				}
+				
+			},
 			onClick(name, title) {
 				setFilter(name, this);
 			},
 			async getList() {
-				console.log('rrr',this.State)
 				try {
-					let OrderType = ''
-					if(this.active == '3'){
-						OrderType = 2
-					} 
+					// let OrderType = ''
+					// if(this.active == '3'){
+					// 	OrderType = 2
+					// } 
 					let {
 						Data
 					} = await vipCard({
 							Action: "GetOrderList",
-							OrderType:OrderType,
+							OrderType:this.OrderType?this.OrderType:'',
 							State:this.State
 						},
 						"UOrderOpera"
@@ -92,11 +104,7 @@
 		watch: {
 			active(val){
 				setFilter(val, this);
-			},
-			// State(newVal,oldVal){
-			// 	this.State = newVal;
-			// 	console.log('tttt',newVal,oldVal)
-			// }
+			}
 		}
 	};
 
@@ -111,18 +119,14 @@
 		} else {
 			if (num == "1") {
 				arr = _this.allfromData.filter(item => item.State == "-1");
-				// _this.State = '-1';
 			} else if (num == "2") {
 				arr = _this.allfromData.filter(
-					item => item.State == "0" || item.State == "1" || item.State == "2"
+					item => item.State == "0" || item.State == "1" || item.State == "-2"
 				);
-				// _this.State = '-2';
 			} else if (num == "3") {
 				arr = _this.allfromData.filter(item => item.State == "3");
-				// _this.State = '3';
 			}else if(num == '4'){
 				arr = _this.allfromData.filter(item => item.State == "-3");
-				// _this.State = '-3';
 			}
 			
 		}

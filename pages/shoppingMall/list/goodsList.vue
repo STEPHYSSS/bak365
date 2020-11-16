@@ -98,8 +98,23 @@
 				this.name = "";
 				this.getCouponList()				
 			},
-			sousuo(){
-				this.getCouponList();
+			sousuo(val){
+				this.search = val.value
+				this.getCouponList2();
+			},
+			async getCouponList2(){//获取商品树列表
+				try {
+					let { Data } = await vipCard({
+						Action: "GetTreeProdList",
+						SID:this.$store.state.currentStoreInfo.SID,//门店id
+						CateSID:this.CateSID.SID,
+						Name:this.search
+					}, "UProdOpera");
+					this.sidebarList = Data.CateList;
+					this.getList(this.sidebarList.children);
+				} catch (e) {
+					this.$toast(e)
+				}
 			},
 			async getCouponList(){//获取商品树列表
 				try {

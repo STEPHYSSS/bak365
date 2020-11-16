@@ -15,7 +15,8 @@
 			return {
 				redirect_uri: "",
 				appId: '',
-				UserMACPhone:Cookies.get("UserMACPhone")				
+				UserMACPhone:Cookies.get("UserMACPhone")	
+				// UserMACPhone:'8f6212fffb9654fa69cdd4f105c22574u'
 			};
 		},
 		onLoad(option) {
@@ -25,8 +26,9 @@
 		},
 		created() {
 			if( window.location.hostname == "localhost" ) 	{
-				window.location.href =this.redirect_uri + "&code=11111111"
-			}else if(this.UserMACPhone){
+				window.location.href =this.redirect_uri + "&code=11111"
+			}
+			else if(this.UserMACPhone){
 				uni.navigateTo({
 				   url: '/pages/homePage/homePage'
 				});

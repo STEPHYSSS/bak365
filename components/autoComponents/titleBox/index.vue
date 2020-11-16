@@ -1,13 +1,22 @@
 <template>
 	<div>
 		<div :class="['cap-title',currentObj.traditionStyle=='1'?'cap-title--wx':'cap-title--normal']" :style="{'background-color': currentObj.backGColor, 'text-align': currentObj.textAlign}">
-			<h2 class="cap-title__main">
+			<!-- <h2 class="cap-title__main">
 				{{currentObj.title?currentObj.title:'点击编辑『标题』'}}
 				<span class="cap-title__custom-link" v-if="currentObj.navName">
 					-&nbsp;
-					<a class="cap-title__link">{{currentObj.navName}}</a>
+					<a :href="currentObj.titleUrl" class="cap-title__link">{{currentObj.navName}}</a>
 				</span>
-			</h2>
+			</h2> -->
+			<a :href="currentObj.titleUrl">
+				<h2 class="cap-title__main">
+					{{currentObj.title?currentObj.title:'点击编辑『标题』'}}
+					<span class="cap-title__custom-link" v-if="currentObj.navName">
+						-&nbsp;
+						<a class="cap-title__link">{{currentObj.navName}}</a>
+					</span>
+				</h2>
+			 </a>
 			<p class="cap-title__sub" v-if="currentObj.traditionStyle=='0'&&currentObj.subtitle">
 				<span class="cap-title__sub-title">{{currentObj.subtitle}}</span>
 			</p>
@@ -83,10 +92,17 @@
 				}
 			},
 			clickUrl() {
-				if (this.currentObj.titleUrl) {
-					uni.reLaunch({
-						url: this.currentObj.titleUrl
-					});
+				if (this.currentObj.titleUrl) {					
+					let url = this.currentObj.titleUrl.split('#');
+					if(url!="http://dingtalk.bak365.cn"){
+						window.location.href = this.currentObj.titleUrl
+					}else{
+						let path = url[1];
+						uni.reLaunch({					
+							url: path
+						})
+					}
+					
 				}
 			}
 		}
@@ -94,6 +110,7 @@
 </script>
 
 <style scoped>
+	a,a:hover,a:active,a.visited{color:#000000}
 	.cap-title {
 		padding: 10px;
 		box-sizing: border-box;
@@ -101,7 +118,6 @@
 		word-break: break-all;
 		position: relative;
 	}
-
 	.cap-title:after {
 		content: "";
 		position: absolute;

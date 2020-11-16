@@ -11,7 +11,7 @@
 						<div v-if="currentObj.navStyle=='image'">
 							<div ref="imageWrapper" class="image-wrapper" :style="{'width':currentObj.isScroll==1?widthBox+'px':widthBoxHid,'margin-right': '0px'}"
 							 v-for="(item,index) in currentObj.listNav" :key="index">
-								<a href="javascript:;" :style="{'color':currentObj.fontColor}" class="cap-image-ad__link--image-nav cap-image-ad__link">
+								<a href="javascript:;"  @click="clickUrl(item)" :style="{'color':currentObj.fontColor}" class="cap-image-ad__link--image-nav cap-image-ad__link">
 									<!-- :href="item.urlObj?item.urlObj:''" -->
 									<div class="cap-image-ad__image" :style="{'height':currentObj.isScroll==1?widthBox+'px':HeightBoxHid+'px',
                     'width':currentObj.isScroll==1?widthBox+'px':'100%',
@@ -106,10 +106,14 @@
 				if (item.urlObj && item.urlObj.url) {
 					// 跳转只能跳到内部链接，不能跳到外部链接
 					let url = obj.urlObj.url.split('#');
-					let path = url[1];
-					uni.reLaunch({
-						url: path
-					});
+					if(url!="http://dingtalk.bak365.cn"){
+					   window.location.href = item.urlObj.url
+					}else{
+						let path = url[1];
+						uni.reLaunch({
+							url: path
+						});
+					}
 				}
 			}
 		},

@@ -10,8 +10,14 @@
 						<div class="cap-goods__image-wrap" :style="{'padding-top':currentObj.imgScale+ '%'}">
 							<div data-lazy-log="1" :class="['cap-goods__img--'+currentObj.contain]" class="cap-goods__img" lazy="loaded"
 							 :style="{'background-image':`url(${setImgPrex(item.Img)})`}"></div>
+						</div>						
+						<div v-if="currentObj.listStyle==='big'|| currentObj.listStyle==='hybrid'"><image :class="classObject" src="@/static/img/shouqin.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image></div>
+						<div v-else>
+							<div class="bgcopacity" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></div>
+							<image :class="classObject" src="@/static/img/shouqin2.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>
 						</div>
-						<image src="@/static/img/shouqin2.png" style="width: 100%;height: 100%;position: absolute;top:0" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>						
+						
+						<!-- <image :class="classObject" src="@/static/img/shouqin.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>						 -->
 						<div v-if="currentObj.showContent.indexOf('5')>-1">
 							<i v-if="currentObj.typeSign!=='4'" class="van-icon cap-goods-layout__corner-mark" :class="['type-'+currentObj.typeSign,currentObj.typeSign==='0'?'van-icon-new-arrival ':
                 currentObj.typeSign==='1'?'van-icon-hot-sale':currentObj.typeSign==='2'?'van-icon-new':
@@ -30,8 +36,8 @@
 						<div class="has-title-1 has-subtitle-1 cap-goods-layout__info-title" :class="[currentObj.listStyle]" goods-index="0"
 						 :style="{'text-align': currentObj.textCenter,'margin-top':'0'}">
 							<h3 class="title" :style="{'font-weight': currentObj.fontWeight,'margin-top':'10px'}" v-if="currentObj.showContent.indexOf('1')>-1">{{item.Name}}</h3>
-							<!-- <p v-if="currentObj.showContent.indexOf('2')>-1&&item.Describe" class="sub-title" style="margin-top:10px;">{{item.Describe}}</p> -->
-							<p v-if="currentObj.showContent.indexOf('2')>-1&&item.Describe" class="sub-title" style="margin-top:-16px;">{{item.Describe}}</p>
+							<p v-if="currentObj.showContent.indexOf('2')>-1&&item.Describe" class="sub-title" style="margin-top:10px;">{{item.Describe}}</p>
+							<!-- <p v-if="currentObj.showContent.indexOf('2')>-1&&item.Describe" class="sub-title" style="margin-top:-16px;">{{item.Describe}}</p> -->
 						</div>
 						<div v-if="currentObj.showContent&&currentObj.showContent.length!==0
               &&(currentObj.showContent.indexOf('4')>-1||currentObj.showContent.indexOf('3')>-1)"
@@ -119,7 +125,8 @@
 						// 商品角标 0 到 4
 						typeSign: "4",
 						// 商品角标 === 4时，自定义的图片
-						typeSignImg: ""
+						typeSignImg: "",
+						
 					};
 				}
 			}
@@ -221,13 +228,61 @@
 				this.currentObj._Prod_Data = [];
 				this.currentGoodList = this.fakeData;
 			}
+		},
+		computed: {
+		  classObject: function () {
+				if(this.currentObj.listStyle=='small'){
+					return 'isActive2'
+				}else if(this.currentObj.listStyle=='big'||this.currentObj.listStyle == 'hybrid'){
+					return 'isActiveBig'
+				}else if(this.currentObj.listStyle=='three'||this.currentObj.listStyle=='swipe'){
+					return 'isActivethree'
+				}else if(this.currentObj.listStyle=='list'){
+					return 'isActivelist'
+				}
+		    
+		  }
 		}
 	};
 </script>
 
 <style lang="less" scoped>
 	@import "../../../assets/css/autoComponents/goods.css";
-
+	.bgcopacity{
+		position: absolute;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		background-color: #5d5a5a;
+		opacity: 0.6;
+	}
+	.isActive2{
+		position: absolute;
+		top: 22%;
+		width: 100px;
+		height: 100px;
+		left: 27%;
+	}
+	.isActiveBig{
+		position: absolute;
+		top: 0%;
+		width: 100%;
+		height: 100%;
+	}
+	.isActivethree{
+		position: absolute;
+		top: 6%;
+		width: 100px;
+		height: 100px;
+		left: 13%;
+	}
+	.isActivelist{
+		position: absolute;
+		top: 17%;
+		width: 100px;
+		height: 100px;
+		left: 17%;
+	}
 	.cap-goods-layout {
 		.el-form-item__content {
 			line-height: 0;
