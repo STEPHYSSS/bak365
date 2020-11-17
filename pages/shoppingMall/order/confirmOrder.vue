@@ -80,7 +80,7 @@
 
 			<div class="radio-group-play">
 				<div style="padding-bottom: 4px" v-if="$Route.query.isIntegral&&allData.CardInfo">当前卡积分：{{allData.CardInfo.Score}}</div>
-				<div>
+				<div v-if="ScoreDeduction>0">
 					<img class="wechat" src="@/static/assets/img/moneyPay.png" slot="right-icon" />
 					<span class="custom-title">可用{{ScoreDeduction}}积分，抵用{{ScoreAmt}}元</span>
 					<view style="float: right;">

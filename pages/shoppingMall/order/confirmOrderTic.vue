@@ -9,7 +9,7 @@
 					<a-good-lineBox :itemData="item" :isOrder="true" :isIntegral="$Route.query.isIntegral?true:false"></a-good-lineBox>
 				</div>
 				<div class="total-style">
-					<p>积分优惠：- ¥{{ScoreAmt}}</p>
+					<p v-if="ScoreAmt>0">积分优惠：- ¥{{ScoreAmt}}</p>
 					<span>
 						小计：
 						<span class="total-style__color">

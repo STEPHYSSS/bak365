@@ -3,6 +3,7 @@
 		<!-- v-if="dataList&&dataList.length!==0" -->
 		<div class="orderBox" >
 			<div v-for="(item,index) in dataList" @click="panelOrder(item)" :key="index" class="van-panel van-hairline--top-bottom">
+				{{item}}
 				<div slot="header" class="orderBoxHead">
 					<span>订单：</span>
 					<span class="orderBoxNum" :style="{color:mainColor}">{{item.SID}}</span>

@@ -81,6 +81,7 @@
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/login'"></tabBar>
 		</view>
+		<ticketPop></ticketPop>
 	</view>
 </template>
 
@@ -93,6 +94,7 @@
 		vipCard
 	} from '@/api/http.js';
 	import wx from 'weixin-js-sdk'
+	import ticketPop from "@/components/ticketPopup/ticketPopup.vue"
 	// import wxAddress from '../wxAddress.js'
 	export default {
 		data() {
@@ -107,6 +109,9 @@
 		},
 		computed: {
 
+		},
+		components:{
+			ticketPop
 		},
 		async onLoad() {
 			await this.getWxConfig();

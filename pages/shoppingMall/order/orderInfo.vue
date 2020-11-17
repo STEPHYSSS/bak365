@@ -55,7 +55,7 @@
 						<div class="orderTime_label">积分抵扣</div>
 						<span class="priceSpan">-¥{{OrderInfo.ScoreAmt}}</span>
 					</div>
-					<div class="orderTime" >
+					<div class="orderTime" v-if="OrderInfo.OrderType =='2'">
 						<div class="orderTime_label">运费</div>
 						<span class="priceSpan">{{Number(OrderInfo.Freight)?'¥'+OrderInfo.Freight:'免运费'}}</span>
 					</div>

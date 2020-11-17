@@ -145,6 +145,7 @@
 					<image v-if="good.Img" :src="good.Img|imgFilter" class="image"></image>
 					<view class="btn-group2">
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
+						<span>分享按钮</span>
 					</view>
 				</view>
 				<scroll-view class="detail" scroll-y>
@@ -264,11 +265,11 @@
 					</scroll-view>
 				</template>
 			</popup-layer>
-			<!-- 购物车详情popup -->
+			<!-- 购物车详情popup -->			
 		</view>
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/menu_naixue/menu/menu'"></tabBar>
-		</view>
+		</view>		
 	</view>
 </template>
 
@@ -277,6 +278,7 @@
 	import popupLayer from '@/components/popup-layer/popup-layer'
 	import wx from 'weixin-js-sdk'
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
+
 	import {
 		vipCard
 	} from '@/api/http.js';
@@ -730,7 +732,6 @@
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');	
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				// console.log(currentStore.data.SID,'currentStoreInfo')
 				
 				this.currentStoreInfo = {
 					Name: currentStore.data.Name,

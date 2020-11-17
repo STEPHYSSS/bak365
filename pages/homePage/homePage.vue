@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view>		
 		<!-- 此页面用来判断商城模式 1:商城模式， 2：自定义模式 -->
 	</view>
 </template>

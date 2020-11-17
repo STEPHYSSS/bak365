@@ -118,32 +118,10 @@
 			},
 			overlimitParts(e) {},
 			setStepperMax() {//加号
-				if (
-					Number(this.objProdInfo.MaxBuyCnt) <
-					Number(this.objProdInfo.StoreQty) &&
-					Number(this.objProdInfo.MaxBuyCnt)
-				) {
-					return Number(this.objProdInfo.MaxBuyCnt);
-				} else {
-					return Number(this.objProdInfo.StoreQty);
-				}
 			},
 			overlimit(e) {//减号
 				if (e === "minus") {
 					this.$toast("至少选择一件");
-				}
-				if (e === "plus") {
-					let str = "";
-					if (
-						Number(this.objProdInfo.MaxBuyCnt) <
-						Number(this.objProdInfo.StoreQty) &&
-						Number(this.objProdInfo.MaxBuyCnt)
-					) {
-						str = "每人限购" + this.objProdInfo.MaxBuyCnt + "件";
-					} else {
-						str = "该规格商品库存不足";
-					}
-					this.$toast(str);
 				}
 			},
 			viewImg(img) {

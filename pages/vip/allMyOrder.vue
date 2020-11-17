@@ -72,8 +72,7 @@
 						Data
 					} = await vipCard({
 							Action: "GetOrderList",
-							OrderType:this.OrderType?this.OrderType:'',
-							State:this.State
+							OrderType:this.OrderType?this.OrderType:''
 						},
 						"UOrderOpera"
 					);
