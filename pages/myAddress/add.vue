@@ -154,8 +154,8 @@
 			//             // #endif
 		},
 		methods:{
-			async getWxConfig() {
-				// 获取当前地址
+			// 进入首页就获取微信地址
+			async getWxConfig(){
 				try {
 					let {
 						Data
@@ -172,32 +172,29 @@
 						signature: Data.SDK.signature,
 						jsApiList: ["getLocation","openAddress","scanQRCode"]
 					});
-					
 					wx.ready(res => {
 						let _this = this;
 					    wx.getLocation({
 					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 					      success: function(res) {
-					        _this.location.latitude = res.lat;// 纬度，浮点数，范围为90 ~ -90
-					        _this.location.longitude = res.lng;// 经度，浮点数，范围为180 ~ -180。
-							
-							sessionStorage.setItem("maplatitude",res.lat)
-							sessionStorage.setItem("maplongitude",res.lng)
-							this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							// this.$toast(res,'88888');
+							_this.location = {
+								longitude: res.longitude,
+								latitude: res.latitude
+							}
+							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+							sessionStorage.setItem('location',JSON.stringify(_this.location))							
 					      },
-					      cancel: function(res) {
-					        this.$toast.fail(res);
-					      }
+						  cancel: function(res) {
+							this.$toast.fail(res);
+						  }
 					    });
 					  wx.error(function(res) {
-					    this.$toast.fail(res);
-					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+					     this.$toast.fail('获取当前位置失败');
 					    console.log("调用微信接口获取当前位置失败", res);
 					  });
 					})
 				} catch (e) {
-					// console.log(e, "55555");
+					
 				}
 			},
 			getWxAddress(){

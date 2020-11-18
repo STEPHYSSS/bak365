@@ -124,43 +124,91 @@
 				loadding: true,
 				currentStoreInfo:{},//用来接收门店信息
 				addressName: {}, //地址名称
-				SID:''
+				SID:'',
+				location:{}
 			};
 		},
-		async created() {
-			this.getWxConfig() // 获取授权地址
-			this.loadding = true
-			if(this.$route.query.query){
-				this.SID = JSON.parse(this.$route.query.query);
-			}
-			
-			uni.showLoading({
-				title: '加载中'
-			});
-			if(!this.addresses){
-				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-			}else{
-				this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-			}
-			if(this.$Route.query.flag =='Deflocation'){
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				this.currentStoreInfo = {
-					Name: currentStore.data.Name,
-					Address: currentStore.data.Address,
-					SID: currentStore.data.SID,
-					Length:currentStore.data.Length
-				}
-			}else{
-				if(this.$store.state.orderType === 'takein'){
-					await this.getShopList();
-				}
-			}				
-			// await this.getShopList()
-			await this.getAutoMode();
+		created() {
+			this.init()
 		},
 		mounted() {},
 		
 		methods: {
+			 init(){
+				this.getWxConfig() // 获取授权地址
+				this.loadding = true
+				if(this.$route.query.query == "Deflocation"){
+					this.SID = JSON.parse(this.$route.query.query);
+				}
+				// if(this.$route.query.query){
+				// 	this.SID = JSON.parse(this.$route.query.query);
+				// }
+				uni.showLoading({
+					title: '加载中'
+				});
+				if(!this.addresses){
+					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				}else{
+					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				}
+				if(this.$Route.query.flag =='Deflocation'){
+					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+					this.currentStoreInfo = {
+						Name: currentStore.data.Name,
+						Address: currentStore.data.Address,
+						SID: currentStore.data.SID,
+						Length:currentStore.data.Length
+					}
+				}else{
+					if(this.$store.state.orderType === 'takein'){
+						 this.getShopList();
+					}
+				}				
+				 this.getAutoMode();
+			},
+			// 进入首页就获取微信地址
+			async getWxConfig(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: false,
+						appId: Data.SDK.appId,
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["getLocation","openAddress","scanQRCode"]
+					});
+					wx.ready(res => {
+						let _this = this;
+					    wx.getLocation({
+					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+					      success: function(res) {
+							_this.location = {
+								longitude: res.longitude,
+								latitude: res.latitude
+							}
+							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+							sessionStorage.setItem('location',JSON.stringify(_this.location))							
+					      },
+						  cancel: function(res) {
+							this.$toast.fail(res);
+						  }
+					    });
+					  wx.error(function(res) {
+					     this.$toast.fail('获取当前位置失败');
+					    console.log("调用微信接口获取当前位置失败", res);
+					  });
+					})
+				} catch (e) {
+					
+				}
+			},
 			async getShopList() {//获取门店
 				let {
 					Data

@@ -98,7 +98,6 @@
 			}
 		},
 		mounted() {
-			console.log(this.buttonGroup)
 		},
 		methods: {
 			onClick(index, item) {
@@ -109,6 +108,9 @@
 				})
 			},
 			buttonClick(index, item) {
+				if(item.isbuy=='0'){
+					return this.$toast('未到购买时间，无法购买')
+				}
 				if (item.disabled) {
 					return this.$toast('商品已售罄，无法购买')
 				}

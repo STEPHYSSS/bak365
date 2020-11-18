@@ -11,10 +11,9 @@
 							<div data-lazy-log="1" :class="['cap-goods__img--'+currentObj.contain]" class="cap-goods__img" lazy="loaded"
 							 :style="{'background-image':`url(${setImgPrex(item.Img)})`}"></div>
 						</div>						
-						<div v-if="currentObj.listStyle==='big'|| currentObj.listStyle==='hybrid'"><image :class="classObject" src="@/static/img/shouqin.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image></div>
-						<div v-else>
+						<div>
 							<div class="bgcopacity" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></div>
-							<image :class="classObject" src="@/static/img/shouqin2.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>
+							<image :class="classObject" src="@/static/img/yishouqin.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>
 						</div>
 						
 						<!-- <image :class="classObject" src="@/static/img/shouqin.png" v-if="item.StockType != '0'&& item.StoreQty <= '0'"></image>						 -->
@@ -265,16 +264,17 @@
 	}
 	.isActiveBig{
 		position: absolute;
-		top: 0%;
-		width: 100%;
-		height: 100%;
+		top: 17%;
+		left: 21%;
+		width:60%;
+		height: 60%;
 	}
 	.isActivethree{
 		position: absolute;
-		top: 6%;
+		top: 12%;
 		width: 100px;
 		height: 100px;
-		left: 13%;
+		left: 10%;
 	}
 	.isActivelist{
 		position: absolute;

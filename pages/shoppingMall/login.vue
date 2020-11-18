@@ -81,7 +81,7 @@
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/login'"></tabBar>
 		</view>
-		<ticketPop></ticketPop>
+		<!-- <ticketPop></ticketPop> -->
 	</view>
 </template>
 
@@ -104,7 +104,8 @@
 				location: {},
 				classHome: getApp().globalData.mainStyle,
 				loadding: true,
-				isMember : localStorage.getItem("isMember")
+				isMember : localStorage.getItem("isMember"),
+				payTypePop:true
 			}
 		},
 		computed: {

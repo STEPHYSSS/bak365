@@ -123,7 +123,9 @@
 			}
 		},
 		watch: {
-			dataList() {}
+			dataList() {
+				
+			}
 		}
 	};
 </script>

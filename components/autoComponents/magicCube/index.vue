@@ -115,166 +115,64 @@
 				if (m !== 8) {
 					let arr = [];
 					switch (m) {
-						case 1:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								}
-							];
-							break;
-						case 4:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 0,
-									pageY: 2,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 2,
-									pWidth: 2,
-									pHeight: 2
-								}
-							];
-							break;
-						case 5:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 4
-								},
-								{
-									pageX: 2,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 2,
-									pWidth: 2,
-									pHeight: 2
-								}
-							];
-							break;
-						case 6:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 4,
-									pHeight: 2
-								},
-								{
-									pageX: 0,
-									pageY: 2,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 2,
-									pWidth: 2,
-									pHeight: 2
-								}
-							];
-							break;
-						case 7:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 4
-								},
-								{
-									pageX: 2,
-									pageY: 0,
-									pWidth: 2,
-									pHeight: 2
-								},
-								{
-									pageX: 2,
-									pageY: 2,
-									pWidth: 1,
-									pHeight: 2
-								},
-								{
-									pageX: 3,
-									pageY: 2,
-									pWidth: 1,
-									pHeight: 2
-								}
-							];
-							break;
-						case 2:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 1.33,
-									pHeight: 1.33
-								},
-								{
-									pageX: 1.33,
-									pageY: 0,
-									pWidth: 1.33,
-									pHeight: 1.33
-								},
-								{
-									pageX: 2.66,
-									pageY: 0,
-									pWidth: 1.33,
-									pHeight: 1.33
-								}
-							];
-							break;
-						case 3:
-							arr = [{
-									pageX: 0,
-									pageY: 0,
-									pWidth: 1,
-									pHeight: 1
-								},
-								{
-									pageX: 1,
-									pageY: 0,
-									pWidth: 1,
-									pHeight: 1
-								},
-								{
-									pageX: 2,
-									pageY: 0,
-									pWidth: 1,
-									pHeight: 1
-								},
-								{
-									pageX: 3,
-									pageY: 0,
-									pWidth: 1,
-									pHeight: 1
-								}
-							];
-							break;
-					}
+					           case 1:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 4, pHeight: 4 },
+					              { pageX: 0, pageY: 0, pWidth: 0, pHeight: 0 }
+					            ];
+					            break;
+					          case 2:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 0, pWidth: 2, pHeight: 2 }
+					            ];
+					            break;
+					          case 3:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 1.33, pHeight: 1.33 },
+					              { pageX: 1.33, pageY: 0, pWidth: 1.33, pHeight: 1.33 },
+					              { pageX: 2.66, pageY: 0, pWidth: 1.33, pHeight: 1.33 }
+					            ];
+					            break;
+					          case 4:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 1, pHeight: 1 },
+					              { pageX: 1, pageY: 0, pWidth: 1, pHeight: 1 },
+					              { pageX: 2, pageY: 0, pWidth: 1, pHeight: 1 },
+					              { pageX: 3, pageY: 0, pWidth: 1, pHeight: 1 }
+					            ];
+					            break;
+					          case 5:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 0, pWidth: 2, pHeight: 2 },
+					              { pageX: 0, pageY: 2, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 2, pWidth: 2, pHeight: 2 }
+					            ];
+					            break;
+					          case 6:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 2, pHeight: 4 },
+					              { pageX: 2, pageY: 0, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 2, pWidth: 2, pHeight: 2 }
+					            ];
+					            break;
+					          case 7:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 4, pHeight: 2 },
+					              { pageX: 0, pageY: 2, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 2, pWidth: 2, pHeight: 2 }
+					            ];
+					            break;
+					          case 8:
+					            arr = [
+					              { pageX: 0, pageY: 0, pWidth: 2, pHeight: 4 },
+					              { pageX: 2, pageY: 0, pWidth: 2, pHeight: 2 },
+					              { pageX: 2, pageY: 2, pWidth: 1, pHeight: 2 },
+					              { pageX: 3, pageY: 2, pWidth: 1, pHeight: 2 }
+					            ];
+					            break;
+					        }
 					this.listBox.forEach((D, index) => {
 						if (arr[index]) {
 							Object.assign(arr[index],D)

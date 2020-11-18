@@ -1,28 +1,103 @@
 <template>
 	<view>
-		<popup-layer type="center" :show-pop="cartPopupVisible">
+		<div v-show="true" class="popSty"></div>
+		<div class="activeBox">
+			<div class="ticketPart">
+				<h3 style="color: #fff;">进店送券</h3>
+				<div class="smallbox" v-for="(item,index) in ticketList" :key="index">
+					<span>¥{{item.price}}</span>
+					<div style="float: right;width: 61%;margin-top: 12px;">
+						<p>{{item.Name}}</p>
+						<p>{{item.disc}}</p>
+						<p>{{item.time}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- <popup-layer type="center" :show-pop="cartPopupVisible">
 			<template slot="content" type="center">
 				进店送券活动弹窗
 			</template>
-		</popup-layer>
+		</popup-layer> -->
 	</view>
 </template>
 
 <script>
-	import popupLayer from '@/components/popup-layer/popup-layer'
+	// import popupLayer from '@/components/popup-layer/popup-layer'
 	export default {
 		data() {
 			return {
-				cartPopupVisible: true,
+				ticketList:[{
+					ticketNo:'001',
+					Name:'进店有礼',
+					disc:'100元生日蛋糕券',
+					time:'2020.11.12-2020-11.30',
+					price:'100'					
+				},{
+					ticketNo:'001',
+					Name:'进店有礼',
+					disc:'100元生日蛋糕券',
+					time:'2020.11.12-2020-11.30',
+					price:'100'					
+				}]
 			};
 		},
 		components: {
-			popupLayer
+			// popupLayer
 		},
 	}
 </script>
 
 <style lang="less">
+	.popSty{
+		background-color: #4C4C4C;
+		z-index: 999;
+		display: block;
+		height: 100vh;
+		width: 100vw;
+		position: flex;
+		position: fixed;
+		top: 0;
+		opacity: 0.5;
+	}
+	.activeBox{
+		width: 100%;
+		height: 60%;
+		position: fixed;
+		top: 14%;
+		z-index: 1000;
+		background-image: url(../../static/img/ticketBoxS.png);
+		background-size: 100% 100%;
+	}
+	.ticketPart{
+		position: absolute;
+		top: 30%;
+		left: 10%;
+		width: 80%;
+	}
+	h3{
+		color: #ea7802;
+		font-size: 18px;
+		text-align: center;
+		letter-spacing: 4px;
+		margin-bottom: 18px;
+	}
+	.smallbox{
+		background-image: url(../../static/img/smallticket.png);
+		background-size: 100% 100%;
+		width: 90%;
+		height: 86px;
+		margin: 0 auto;
+		position: relative;
+		span{
+			position: absolute;
+			top: 25%;
+			left: 11%;
+			font-size: 15px;
+			font-weight: 600;
+			color: red;
+		}
+	}
 	/deep/.popup-layer{
 		z-index: 999 !important;
 	}

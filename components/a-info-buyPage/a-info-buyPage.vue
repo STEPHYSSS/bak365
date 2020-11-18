@@ -264,6 +264,7 @@
 					backgroundColor: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?'#FFC868':'#ffa200',
 					color: '#fff',
 					borderRadius: '25px 0 0 25px',
+					isbuy:this.skuDataInfo.IsBuy,
 					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
 				})
 				this.options.push({
@@ -277,6 +278,7 @@
 					backgroundColor: getApp().globalData.mainColor,
 					color: '#fff',
 					borderRadius: '0 25px 25px 0',
+					isbuy:this.skuDataInfo.IsBuy,
 					// disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0) ? true : false
 					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
 				})

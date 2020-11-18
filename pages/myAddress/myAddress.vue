@@ -88,7 +88,8 @@
 				currentDeliveryType: "", //当前的配送类型
 				ShopAddress: {}, //商家地址
 				Name: '', //门店搜索
-				location: JSON.parse(sessionStorage.getItem('location'))
+				location: JSON.parse(sessionStorage.getItem('location')),
+				ShopRadio:sessionStorage.getItem("ShopRadio")
 			}
 		},
 		created() {
@@ -150,7 +151,7 @@
 			},
 			// 
 			async chooseAddress(item) {
-				if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login' || this.$Route.query.flag == 'AutoWaimai') {
+				if (this.$Route.query.flag == 'towaimai' || this.$Route.query.flag == 'login' || this.$Route.query.flag == 'AutoWaimai'|| this.$Route.query.flag == 'homeD') {
 					let currentStoreOut = {
 						Name: item.Name,
 						Address: item.Address+item.House,
@@ -172,7 +173,7 @@
 					this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
 					sessionStorage.setItem('takeOutAddress', JSON.stringify(currentStoreOut));
 					this.$store.commit("SET_ORDER_TYPE", 'takeout');
-					if(this.$Route.query.flag == 'AutoWaimai'){
+					if(this.$Route.query.flag == 'AutoWaimai'|| this.ShopRadio ==='2'){
 						return this.$Router.push('/pages/shoppingMall/index')
 					}
 					this.$Router.push({path:'/pages/shoppingMall/menu_naixue/menu/menu'})
@@ -187,7 +188,6 @@
 				})
 			},
 			edit(val) {//编辑地址
-				console.log(val)
 				this.$Router.push({
 					path: '/pages/myAddress/add',
 					query: {
