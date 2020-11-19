@@ -145,7 +145,7 @@
 					<image v-if="good.Img" :src="good.Img|imgFilter" class="image"></image>
 					<view class="btn-group2">
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
-						<!-- <span>分享按钮</span> -->
+						<span @click="share">分享按钮</span>
 					</view>
 				</view>
 				<scroll-view class="detail" scroll-y>
@@ -396,7 +396,8 @@
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}else{
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-				}				
+				}
+				await this.getWxShare()
 			},
 			async getShopList() {// 获取门店
 				let { Data } = await vipCard({
@@ -533,7 +534,7 @@
 						this.cart.push(obj);
 					}else{
 						let isHave = this.cart.some(val => {
-							console.log(obj,val)
+							// console.log(obj,val)
 							// return obj.ProdSID === val.ProdSID;
 							if(obj.SpecType == '2'){
 								return obj.ProdNo === val.ProdNo
@@ -611,7 +612,8 @@
 					this.category = JSON.parse(JSON.stringify(item))
 					this.goodDetailModalVisible = true
 				} catch (e) {
-					console.log(e);
+					// console.log(e);
+					this.$toast(e)
 				}
 			},
 			closeGoodDetailModal() { //关闭饮品详情模态框
@@ -693,7 +695,8 @@
 					success: ({confirm}) =>  {
 						if(confirm) {
 							this.cartPopupVisible = false
-							this.cart = []
+							this.cart = [];
+							uni.removeStorageSync('cart')
 						}
 					}
 				})
@@ -709,7 +712,7 @@
 						Action: "SetShopCart"
 					};
 					obj.ProdList = JSON.parse(JSON.stringify(this.cart));
-					console.log(obj.ProdList)
+					// console.log(obj.ProdList)
 					let currentItem = this.cart;
 					if (currentItem.length > 0) {
 						this.$store.commit("SET_CURRENT_CARD", currentItem);
@@ -825,9 +828,58 @@
 		// //           this.currentTastArr = this.currentTastArr + `￥${sumPrice}`
 		// 		  this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 		//         }
+			},
+			async getWxShare(){
+				try {
+					let {
+						Data
+					} = await vipCard({
+						Action: "GetJSSDK",
+						Url: window.location.href
+					}, "UProdOpera");
+					
+					wx.config({
+						debug: true,
+						appId: 'wxb7a2e9fc043daf1c',
+						timestamp: Data.SDK.timestamp,
+						nonceStr: Data.SDK.noncestr,
+						signature: Data.SDK.signature,
+						jsApiList: ["onMenuShareAppMessage","onMenuShareTimeline"]
+					});
+					wx.ready(res => {
+						console.log(res)
+					})
+					wx.error(function(res) {
+						console.log(res)
+					});
+				} catch (e) {
+				}
+			},
+			share(){//配置分享内容
+				let urlLink = window.location.href;
+				window.share_config = {
+					share:{
+						title:'这个是分享展示卡片的标题',
+						dest:'这个是分享展示的说明',
+						link:urlLink,
+						imgUrl:'',
+						success:function(res){
+							console.log('成功'+JSON.stringify(res))
+						},
+						cancel:function(err){
+							console.log('失败'+JSON.stringify(err))
+						}
+					}					
+				};
+				wx.ready(function(){
+					wx.onMenuShareAppMessage(window.share_config.share);//微信好友
+					wx.onMenuShareTimeline(window.share_config.share)//微信朋友圈
+				});
+				wx.error(function(res){
+					console.log(res)
+				});
 			}
 		},
-		
 		filters:{
 			imgFilter(val){
 				let localUrl = window.location.href;
