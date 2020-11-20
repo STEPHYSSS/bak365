@@ -1,7 +1,9 @@
 <template>
 	<view>
-		<div v-show="true" class="popSty"></div>
-		<div class="activeBox">
+		<div v-show="showPopu" class="popSty"></div>
+		<div class="activeBox" v-show="showPopu">
+			<!-- <image src="../../static/img/ticketBoxS.png" style="width: 100%;height: 100%;"></image> -->
+			<image src="@/static/img/close.png" class="close" @click="close"></image>
 			<div class="ticketPart">
 				<h3 style="color: #fff;">进店送券</h3>
 				<div class="smallbox" v-for="(item,index) in ticketList" :key="index">
@@ -12,6 +14,7 @@
 						<p>{{item.time}}</p>
 					</div>
 				</div>
+				<p class="receive">立即领取</p>
 			</div>
 		</div>
 		<!-- <popup-layer type="center" :show-pop="cartPopupVisible">
@@ -27,6 +30,7 @@
 	export default {
 		data() {
 			return {
+				showPopu:true,
 				ticketList:[{
 					ticketNo:'001',
 					Name:'进店有礼',
@@ -45,6 +49,11 @@
 		components: {
 			// popupLayer
 		},
+		methods:{
+			close(){
+				this.showPopu = false;
+			}
+		}
 	}
 </script>
 
@@ -62,18 +71,38 @@
 	}
 	.activeBox{
 		width: 100%;
-		height: 60%;
+		height: 415px;
 		position: fixed;
 		top: 14%;
 		z-index: 1000;
 		background-image: url(../../static/img/ticketBoxS.png);
 		background-size: 100% 100%;
+		.close{
+			width: 35px;
+			height: 35px;
+			position: absolute;
+			right: 13px;
+			top: 60px;
+		}
 	}
 	.ticketPart{
 		position: absolute;
 		top: 30%;
 		left: 10%;
 		width: 80%;
+		.receive{
+			width: 150px;
+			height: 36px;
+			letter-spacing: 4px;
+			background-color: orange;
+			color: rgb(255, 255, 255);
+			margin: 10px auto;
+			text-align: center;
+			line-height: 36px;
+			font-size: 16px;
+			border-radius: 16px;
+			box-shadow: 0px 0px 4px 1px #f1a979;
+		}
 	}
 	h3{
 		color: #ea7802;

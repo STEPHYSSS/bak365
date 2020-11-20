@@ -81,7 +81,7 @@
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/login'"></tabBar>
 		</view>
-		<!-- <ticketPop></ticketPop> -->
+		<ticketPop></ticketPop>
 	</view>
 </template>
 

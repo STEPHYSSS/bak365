@@ -257,30 +257,30 @@
 	}
 	.isActive2{
 		position: absolute;
-		top: 22%;
+		top: 26%;
 		width: 100px;
-		height: 100px;
-		left: 27%;
+		height: 88px;
+		left: 23%;
 	}
 	.isActiveBig{
 		position: absolute;
-		top: 17%;
+		top: 21%;
 		left: 21%;
 		width:60%;
-		height: 60%;
+		height: 54%;
 	}
 	.isActivethree{
 		position: absolute;
-		top: 12%;
+		top: 14%;
 		width: 100px;
-		height: 100px;
+		height: 88px;
 		left: 10%;
 	}
 	.isActivelist{
 		position: absolute;
-		top: 17%;
+		top: 19%;
 		width: 100px;
-		height: 100px;
+		height: 88px;
 		left: 17%;
 	}
 	.cap-goods-layout {
