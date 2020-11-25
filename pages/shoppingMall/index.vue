@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<ticketPop :getCoupon="getCoupon"></ticketPop>
 		<div class="shoppingCart_style" :class="classHome">
 			<view class="header">
 				<view class="nav_left" v-if="$store.state.orderType == 'takein'">
@@ -78,7 +79,7 @@
 		</div>
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/index'"></tabBar>
-		</view>	
+		</view>			
 	</div>
 </template>
 
@@ -90,6 +91,7 @@
 	import Cookie from '@/config/cookie-my/index.js';
 	import msDropdownMenu from "@/components/ms-dropdown/dropdown-menu.vue"
 	import msDropdownItem from "@/components/ms-dropdown/dropdown-item.vue"
+	import ticketPop from "@/components/ticketPopup/ticketPopup.vue"
 	import {
 		GetQueryString
 	} from "@/util/publicFunction";
@@ -98,6 +100,7 @@
 		components: {
 			msDropdownMenu,
 			msDropdownItem,
+			ticketPop
 			// voice
 		},
 		data() {
@@ -105,6 +108,7 @@
 				classHome: getApp().globalData.mainStyle,
 				valueSearch: "",
 				value1: 0,
+				getCoupon:[],
 				list: [{
 						text: '全部门店',
 						value: 0
@@ -136,17 +140,19 @@
 		
 		methods: {
 			 init(){
-				this.getWxConfig() // 获取授权地址
-				this.loadding = true
-				if(this.$route.query.query == "Deflocation"){
-					this.SID = JSON.parse(this.$route.query.query);
-				}
-				// if(this.$route.query.query){
-				// 	this.SID = JSON.parse(this.$route.query.query);
-				// }
+				this.getCouponInfo();
+				this.getWxConfig() // 获取授权地址				
+				// this.loadding = true
 				uni.showLoading({
 					title: '加载中'
 				});
+				if(this.$route.query.query == "Deflocation"){
+					this.SID = JSON.parse(this.$route.query.query);
+				}				
+				// if(this.$route.query.query){
+				// 	this.SID = JSON.parse(this.$route.query.query);
+				// }
+				
 				if(!this.addresses){
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}else{
@@ -229,6 +235,16 @@
 				}
 				// console.log(currentStoreInfo)
 				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
+			},
+			async getCouponInfo(){
+				try {
+					let { Data } = await vipCard({
+						Action: "GiveCoupon"
+					}, "UPromotionOpera");
+					this.getCoupon = Data.TicketList;
+				} catch (e) {
+					console.log(e);
+				}
 			},
 			clickClear() {
 				Cookie.remove("UserMACPhone");

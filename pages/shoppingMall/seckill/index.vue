@@ -32,7 +32,7 @@
 			
 		},
 		methods: {
-			// 活动类型（1秒杀，2爆款，3套餐，4买赠，5团购，6满赠）
+			// 活动类型（1秒杀，2爆款，3套餐，4买赠，5团购，6满赠,7进店送礼）
 			async getlist() {
 				uni.showLoading()
 				try {
@@ -47,6 +47,7 @@
 				} catch (e) {}
 			},
 			goodBox(val) {
+				console.log(val,'haha')
 				this.$Router.push({
 					path: "/pages/shoppingMall/list/infoGood",
 					query: {

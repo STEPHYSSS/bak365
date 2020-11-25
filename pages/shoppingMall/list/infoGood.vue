@@ -1,8 +1,10 @@
 <template>
 	<div class="boxMargin">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" :status-bar="true" title="商品详情":shadow="false"></uni-nav-bar>
-		<a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name" :isIntegral="isIntegral"
-		 :seckill="seckill" :isBrowse="isBrowse"></a-info-buyPage>
+		<!-- <a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name" :isIntegral="isIntegral"
+		 :seckill="seckill" :isBrowse="isBrowse"></a-info-buyPage> -->
+		<a-info-buyPageSeckill :goods="goodList" :skuDataInfo="skuDataInfo" v-if="seckill&&this.goodList.Name" :seckill="seckill" ></a-info-buyPageSeckill>
+		<a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name&&!seckill" ></a-info-buyPage>
 	</div>
 </template>
 <!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script> -->

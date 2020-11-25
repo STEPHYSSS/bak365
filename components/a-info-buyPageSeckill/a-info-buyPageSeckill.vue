@@ -2,7 +2,7 @@
 	<div class="goodCoupon" :class="classHome">
 		<div class="vanImage-style">
 			<swiper class="goodCouponSwipe" :style="classA">
-				<swiper-item v-for="(thumb,index) in goods.ImgList" :key="index">
+				<swiper-item v-for="thumb in goods.ImgList" :key="thumb">
 					<!-- #ifndef H5-->
 					<image :src="thumb |fmtImgUrl" />
 					<!-- #endif -->
@@ -29,67 +29,28 @@
 					<span style="color:#ee0a24;font-size:14px" v-if="goods.ActivityDate">{{goods.ActivityDate|setBuyTime}}</span>
 				</div>
 				<div class="goodCoupon-price ">
-					<div v-if="isIntegral!='true'">						
-						<!-- <div v-if="maxMemberPrice>0||minMemberPrice>0">
-							<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
-							<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-								¥{{minPrice}}-{{maxPrice}}
-							</p>
+					<div>
+						<div class="colorStyle">
+							<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
+							<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
 						</div>
-						<div v-else>
-							<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
-						</div> -->
-						<div v-if="goods.SpecType==='2'">
-							<div v-if="maxMemberPrice>0||minMemberPrice>0">
-								<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
-								<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-									¥{{minPrice}}-{{maxPrice}}
-								</p>
-							</div>
-							<div v-else>
-								<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
-							</div>
+						<div style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
+							<span>¥{{goods.OldPrice>0?goods.OldPrice:0}}</span>
+							<span v-if="goods.OldPriceMaxPrice">- ¥{{ goods.OldPriceMaxPrice }}</span>
 						</div>
-						<div v-if="goods.SpecType ==='1'">
-							<div class="colorStyle">
-								<div v-if="goods.MemberPrice">
-									¥{{goods.MemberPrice}}
-									<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
-										¥{{goods.SalePrice}}
-									</p>
-								</div>
-								<div v-else>¥{{goods.SalePrice}}</div>
-							</div>
-						</div>
-						<!-- 电子券商品 -->
-						<div v-if="goods.ProdType==='1'&& goods.SpecType ==='0'">
-							<div class="colorStyle">
-								<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
-								<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
-							</div>
-						</div>						
-					</div>
-					<div v-else>
-						<span>{{goods.Score}}积分</span>
-						<span v-if="goods.SalePrice>0&&isIntegral">&nbsp;+&nbsp;</span>
-						<span v-if="goods.SalePrice>0">¥</span>
-						<span v-if="goods.SalePrice>0">{{goods.SalePrice}}</span>
 					</div>
 				</div>
 			</div>
-			<div class="wu-cell goodCoupon-express lineTop">
-				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>				
-				<div style="flex:1"v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)}}</div>
-				<!--                <div v-if="!isCouponPage">规格：</div>-->
+			<div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType!=0&&goods.StoreQty>0&&skuDataInfo.TotalSurplusQty>0">
+				<div style="flex:1">剩余库存：{{skuDataInfo.TotalSurplusQty}}</div>
 			</div>
 		</div>
-
 		<div>
 			<adCell text="商城" icon="/static/img/shangcheng1.png" @click="clickShop" detail="进入店铺" :showBottomLine="false">
 			</adCell>
 		</div>
 
-		<div class="ImportantNotes-cell-group" v-if="!isCouponPage&&(goods.ImportantNotes||goods.Tip)">
+		<div class="ImportantNotes-cell-group" v-if="(goods.ImportantNotes||goods.Tip)">
 			<div>
 				<span class="goodCoupon-notice-title" v-if="goods.ImportantNotes">重要提示</span>
 				<div class="goodCoupon-notice-content" v-if="goods.ImportantNotes">
@@ -99,11 +60,6 @@
 				<span class="goodCoupon-notice-title" v-if="goods.Tip">预定提示</span>
 				<div class="goodCoupon-notice-content" v-if="goods.Tip">{{goods.Tip}}</div>
 			</div>
-		</div>
-		<div v-if="!isIntegral&&!seckill">
-			<adCell detail="查看全部" :text="`用户评价(${goods.CommentCnt&&Number(goods.CommentCnt)!==0?goods.CommentCnt:0})`" @click="userEvaluation(goods)"
-			 :showBottomLine="false">
-			</adCell>
 		</div>
 		<div style="background-color: #fff" class="lineTop">
 			<view class="goodInfoNewsTitle">
@@ -126,23 +82,11 @@
 				</view>
 			</view>
 		</div>
-		<!-- ProdType==0代表普通商品 ProdType==1代表电子券商品-->
-		<div class="goods-action" v-show="goods.ProdType == '0'">
-			<!-- "goods.StockType != '0'&& item.StoreQty <= '0'" -->
-			<!-- 当状态等于0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
-			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" v-if="goods.StockType != '0'&& goods.StoreQty <= '0'"></uni-goods-nav>
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
+		<div class="goods-action">
+			<navSeckill :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart"></navSeckill>
 		</div>
-		<div class="goods-action" v-show="goods.ProdType =='1' ">
-			<uni-view class="isProdType">
-				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>				
-			</uni-view>
-		</div>
-		<!-- 购物车详情 -->
-		<a-shopping-showSku :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill" :isBrowse="isBrowse"></a-shopping-showSku>
-		<!-- 电子券弹窗 -->
-		<showTicket :show="showPop" @hideShow="hidePop" :skuDataInfo="skuDataInfo"></showTicket>
+		<!-- 商品弹窗 -->
+		<showSkuSeckill :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill"></showSkuSeckill>
 	</div>
 </template>
 
@@ -151,16 +95,19 @@
 	import {
 		vipCard
 	} from "@/api/http.js";
+	import showSkuSeckill from '@/components/a-shopping-showSku/a-shopping-showSkuSeckill';
+	 import navSeckill from '@/components/uni-goods-nav/uni-goods-navSeckill.vue';
 	import {
 		Base64
 	} from 'js-base64';
 	import adCell from '@/node_modules/adcell/ADCell.vue';
-	import showTicket from '@/components/a-shopping-showSku/a-shopping-showTicket'
+
 	export default {
 		name: "couponPage",
 		components: {
 			adCell,
-			showTicket
+			showSkuSeckill,
+			navSeckill
 		},
 		props: {
 			goods: {
@@ -178,30 +125,13 @@
 					};
 				}
 			},
-			// userList: {
-			//   type: Array,
-			//   default() {
-			//     return [{ name: "计划及粉底" }];
-			//   }
-			// },
-			skuDataInfo: {
+			skuDataInfo: {//skuDataInfo整个商品详情
 				type: Object,
 				default () {
 					return {};
 				}
 			},
-			isIntegral: {
-				type: String,
-				default: "false"
-			},
 			seckill: {
-				type: String,
-				default () {
-					return "";
-				}
-			},
-			// 是否是浏览页面
-			isBrowse: {
 				type: String,
 				default () {
 					return "";
@@ -214,7 +144,6 @@
 				classHome: getApp().globalData.mainStyle,
 				active: "",
 				show: false,
-				showPop:false,//电子券弹窗
 				// 点击的是购物车
 				isAddCart: true,
 				classA: "",
@@ -230,11 +159,7 @@
 				}],
 				options: [],
 				buttonGroup: [],
-				activeTimeMy: {},
-				maxPrice:"",
-				minPrice:"",
-				maxMemberPrice:"",
-				minMemberPrice:"",				
+				activeTimeMy: {}
 			};
 		},
 		created() {
@@ -247,46 +172,13 @@
 
 			//加图片 ../前缀
 			this.goods.Features = setfix(this.goods.Features, this);
-			// console.log(this.skuDataInfo,'----')
-			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
-			if(this.isIntegral != 'true' && !this.isCouponPage && !this.seckill){
-				if(this.skuDataInfo.SpecList){					
-					this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-					this.minPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-					this.maxMemberPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
-					this.minMemberPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
-				}
-			}
+			this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
+
 			this.tradeList()
-			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
-				this.buttonGroup.push({
-					text: '加入购物车',
-					backgroundColor: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?'#FFC868':'#ffa200',
-					color: '#fff',
-					borderRadius: '25px 0 0 25px',
-					isbuy:this.skuDataInfo.IsBuy,
-					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
-				})
-				this.options.push({
-					icon: 'cart',
-					text: '购物车'
-				})
-			}
-			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
-				this.buttonGroup.push({
-					text: '立即购买',
-					backgroundColor: getApp().globalData.mainColor,
-					color: '#fff',
-					borderRadius: '0 25px 25px 0',
-					isbuy:this.skuDataInfo.IsBuy,
-					// disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0) ? true : false
-					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
-				})
-			}
-			if (this.isIntegral == 'true' || this.isCouponPage || this.seckill) {
+			if (this.seckill) {
 				this.buttonGroup.push({
 					text: '立即抢购',
-					backgroundColor: getApp().globalData.mainColor,
+					backgroundColor: '#fe5252',
 					color: '#fff',
 					borderRadius: '25px',
 					disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
@@ -301,14 +193,6 @@
 			// #ifdef H5
 			document.title = this.goods.Name;
 			// #endif
-		},
-		computed: {
-			isCouponPage() {
-				// 是优惠券购买页面  //否则商品购买界面
-				return (
-					this.$route.matched[0].path === "/shoppingMall/couponPage/:id" || false
-				);
-			}
 		},
 		methods: {
 			clickShop() {
@@ -334,8 +218,8 @@
 					});
 				}
 			},
-			addCart(val) {	
-				if (val.content.text === '立即抢购' ) {
+			addCart(val) {
+				if (val.content.text === '立即抢购') {
 					this.orderNow()
 				} else {
 					// 点击购物车，出现弹框
@@ -352,44 +236,34 @@
 				});
 			},
 			orderNow() {
-				if (this.isCouponPage || this.isIntegral == "true") {
-					// 优惠券购买，直接 调取微信支付
-					let currentItem = [{
-						ProdSID: this.goods.SID,
-						ProdNo: this.goods.ProdNo,
-						BuyCnt: 1
-					}];
-					let bool = this.isIntegral ? {
-						isIntegral: "1"
-					} : {};
-					this.$store.commit("SET_CURRENT_CARD", currentItem);
-					this.$Router.push({
-						path: "/pages/shoppingMall/order/confirmOrder",
-						query: bool
-					});
-				} else {
+				// if (this.isCouponPage || this.isIntegral == "true") {
+				// 	// 优惠券购买，直接 调取微信支付
+				// 	let currentItem = [{
+				// 		ProdSID: this.goods.SID,
+				// 		ProdNo: this.goods.ProdNo,
+				// 		BuyCnt: 1
+				// 	}];
+				// 	let bool = this.isIntegral ? {
+				// 		isIntegral: "1"
+				// 	} : {};
+				// 	this.$store.commit("SET_CURRENT_CARD", currentItem);
+				// 	this.$Router.push({
+				// 		path: "/pages/shoppingMall/order/confirmOrder",
+				// 		query: bool
+				// 	});
+				// } else {
 					this.show = true;
 					this.isAddCart = false;
-				}
+				// }
 			},
-			
-			hideShow() {				
+			hideShow() {
 				this.show = false;
 			},
-			// 电子券相关的开始
-			buyNow(){
-				this.showPop = true;
-			},
-			hidePop(){
-				this.showPop = false;
-			},
-			// 电子券结束
 			finishTimer() {
 				setTimeout(() => {
 					this.getTimeout();
 				}, 1000)
 			},
-			// 商品成交记录
 			async tradeList() {
 				try {
 					let {
@@ -451,19 +325,7 @@
 			align-items: center;
 			height: 50px;
 			background-color: #fff;
-			display: flex;		
-			.isProdType{
-				background-color: rgb(173, 184, 56);
-				color: rgb(255, 255, 255);
-				border-radius: 25px;
-				width: 89%;
-				text-align: center;
-				height: 40px;
-				margin: 0 auto;
-				line-height: 40px;
-				font-size: 16px;
-				letter-spacing: 2px;
-			}
+			display: flex;
 		}
 
 		.wu-cell {

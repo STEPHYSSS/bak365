@@ -15,9 +15,9 @@
 		<!-- <div class="oneBoxTitle">{{seckill?itemData.PromName:itemData.Name}}</div> -->
 		<div class="oneBoxTitle">{{seckill?itemData.Name:itemData.Name}}</div>
 		<div v-if="startIS" class="progress-style">
+			<!-- 进度条展示 -->
 			<progress :percent="setProgress()" activeColor="#fe5252" active stroke-width="5" />
 		</div>
-
 		<div class="oneBoxTitleSell" v-if="seckill&&startIS">已抢{{Number(itemData.StoreQty)-Number(itemData.SurplusQty)}}件</div>
 		<div v-if="seckill&&!startIS" class="oneBoxTitleSell">总共{{itemData.StoreQty|setMoney}}件</div>
 		<div class="oneBoxMoney">
@@ -37,7 +37,7 @@
 				<uni-icons v-if="!isIntegral&&!seckill" style="color:#fe5252" type="plus" class="addIcon"></uni-icons>
 			</span>
 			<div class="addIconBtn" v-if="seckill">
-				<button type="main" size="mini">{{btnTitle}}</button>
+				<button style="background: #fe5252;bottom: 0;color: #fff;" size="mini">{{btnTitle}}</button>
 			</div>
 		</div>
 	</div>

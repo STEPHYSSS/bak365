@@ -5,16 +5,18 @@
 			<!-- <image src="../../static/img/ticketBoxS.png" style="width: 100%;height: 100%;"></image> -->
 			<image src="@/static/img/close.png" class="close" @click="close"></image>
 			<div class="ticketPart">
-				<h3 style="color: #fff;">进店送券</h3>
-				<div class="smallbox" v-for="(item,index) in ticketList" :key="index">
-					<span>¥{{item.price}}</span>
-					<div style="float: right;width: 61%;margin-top: 12px;">
-						<p>{{item.Name}}</p>
-						<p>{{item.disc}}</p>
-						<p>{{item.time}}</p>
+				<h3>进店送券</h3>
+				<div class="Box">
+					<div class="smallbox" v-for="(item,index) in getCoupon" :key="index">
+						<span>¥{{item.price}}</span>
+						<div style="float: right;width: 61%;margin-top: 12px;">
+							<p>{{item.TypeName}}</p>
+							<p>{{item.TakeDisc}}</p>
+							<p>{{item.time}}</p>
+						</div>
 					</div>
 				</div>
-				<p class="receive">立即领取</p>
+				<p class="receive" @click="close">立即使用</p>
 			</div>
 		</div>
 		<!-- <popup-layer type="center" :show-pop="cartPopupVisible">
@@ -26,33 +28,39 @@
 </template>
 
 <script>
-	// import popupLayer from '@/components/popup-layer/popup-layer'
+	import { vipCard } from '@/api/http.js';
 	export default {
 		data() {
 			return {
 				showPopu:true,
-				ticketList:[{
-					ticketNo:'001',
-					Name:'进店有礼',
-					disc:'100元生日蛋糕券',
-					time:'2020.11.12-2020-11.30',
-					price:'100'					
-				},{
-					ticketNo:'001',
-					Name:'进店有礼',
-					disc:'100元生日蛋糕券',
-					time:'2020.11.12-2020-11.30',
-					price:'100'					
-				}]
+				// getCoupon:[{
+				// 	ticketNo:'001',
+				// 	Name:'进店有礼',
+				// 	disc:'100元生日蛋糕券',
+				// 	time:'2020.11.12-2020-11.30',
+				// 	price:'100'					
+				// },{
+				// 	ticketNo:'001',
+				// 	Name:'进店有礼',
+				// 	disc:'100元生日蛋糕券',
+				// 	time:'2020.11.12-2020-11.30',
+				// 	price:'100'					
+				// },{
+				// 	ticketNo:'001',
+				// 	Name:'进店有礼',
+				// 	disc:'100元生日蛋糕券',
+				// 	time:'2020.11.12-2020-11.30',
+				// 	price:'100'					
+				// }]
 			};
 		},
 		components: {
-			// popupLayer
 		},
+		props:['getCoupon'],
 		methods:{
 			close(){
 				this.showPopu = false;
-			}
+			},
 		}
 	}
 </script>
@@ -105,11 +113,14 @@
 		}
 	}
 	h3{
-		color: #ea7802;
+		color: #fff;
 		font-size: 18px;
 		text-align: center;
 		letter-spacing: 4px;
 		margin-bottom: 18px;
+	}
+	.Box{
+		overflow-y: scroll;height: 172px;
 	}
 	.smallbox{
 		background-image: url(../../static/img/smallticket.png);

@@ -81,7 +81,7 @@
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/login'"></tabBar>
 		</view>
-		<ticketPop></ticketPop>
+		<ticketPop :getCoupon="getCoupon"></ticketPop>
 	</view>
 </template>
 
@@ -105,7 +105,8 @@
 				classHome: getApp().globalData.mainStyle,
 				loadding: true,
 				isMember : localStorage.getItem("isMember"),
-				payTypePop:true
+				payTypePop:true,
+				getCoupon:[]
 			}
 		},
 		computed: {
@@ -117,6 +118,7 @@
 		async onLoad() {
 			await this.getWxConfig();
 			this.loadding = true
+			this.getCouponInfo();
 			await this.getLunBoImg();
 			await this.getScore();
 		},
@@ -171,6 +173,16 @@
 					})
 				} catch (e) {
 					// console.log(e, "55555");
+				}
+			},
+			async getCouponInfo(){
+				try {
+					let { Data } = await vipCard({
+						Action: "GiveCoupon"
+					}, "UPromotionOpera");
+					this.getCoupon = Data.TicketList;
+				} catch (e) {
+					console.log(e);
 				}
 			},
 			// 轮播图
