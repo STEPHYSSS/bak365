@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view v-if="getCoupon.length>0">
 		<div v-show="showPopu" class="popSty"></div>
 		<div class="activeBox" v-show="showPopu">
 			<!-- <image src="../../static/img/ticketBoxS.png" style="width: 100%;height: 100%;"></image> -->
@@ -8,11 +8,11 @@
 				<h3>进店送券</h3>
 				<div class="Box">
 					<div class="smallbox" v-for="(item,index) in getCoupon" :key="index">
-						<span>¥{{item.price}}</span>
+						<span>¥{{item.TakeMoney}}</span>
 						<div style="float: right;width: 61%;margin-top: 12px;">
-							<p>{{item.TypeName}}</p>
-							<p>{{item.TakeDisc}}</p>
-							<p>{{item.time}}</p>
+							<p style="font-weight: 800;font-size: 14px;">{{item.TypeName}}</p>
+							<!-- <p>{{item.TakeDisc}}</p> -->
+							<p style="position: absolute;bottom: 15px;">{{item.StartTime|fomartData}}-{{item.ValidTime|fomartData}}</p>
 						</div>
 					</div>
 				</div>
@@ -61,6 +61,13 @@
 			close(){
 				this.showPopu = false;
 			},
+		},
+		filters:{
+			fomartData(value){
+				if (value) {
+				      return value.slice(0, 10)
+				    }
+			}
 		}
 	}
 </script>
@@ -136,6 +143,9 @@
 			font-size: 15px;
 			font-weight: 600;
 			color: red;
+			width: 38px;
+			/* border: 1px solid; */
+			text-align: center;
 		}
 	}
 	/deep/.popup-layer{

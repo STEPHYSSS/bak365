@@ -108,19 +108,19 @@
 						    </uni-grid-item>
 							<uni-grid-item :index="4">
 							    <view class="grid-item-box">
-							    	<div class="iconfont icon-zuji" style="color: #bbbcbd;"></div>
+							    	<div class="iconfont icon-wodezuji" ></div>
 							    	<div>足迹</div>
 							    </view>
 							</uni-grid-item>
 							<uni-grid-item :index="5">
 							    <view class="grid-item-box">
-							    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
+							    	<div class="iconfont icon-wodetuiguangyuan" style="color: #7F7F7F;"></div>
 							    	<div>我的推广</div>
 							    </view>
 							</uni-grid-item>
 							<uni-grid-item :index="6">
 							    <view class="grid-item-box">
-							    	<div class="iconfont icon-guanggaozhuhuodongtuiguang" style="color: #bbbcbd;"></div>
+							    	<div class="iconfont icon-youhuiquan1" style="font-size: 18px;"></div>
 							    	<div>优惠券</div>
 							    </view>
 							</uni-grid-item>

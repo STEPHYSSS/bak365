@@ -1,7 +1,8 @@
 <template>
 	<view class="uni-goods-nav">
 		<!-- 底部占位 -->
-		<p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
+		<!-- <p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'|| skuDataInfo.TotalSurplusQty<='0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
+		<p v-if="isStartIS!=true" class="xiajia">还未到开始时间~要不要瞧瞧别的~</p> -->
 		<view class="uni-tab__seat" />
 		<view class="uni-tab__cart-box flex">
 			<view class="flex uni-tab__cart-sub-left">
@@ -16,13 +17,12 @@
 					</view>
 				</view>
 			</view>
-			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right " v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'">
-				<view v-for="(item,index) in buttonGroup" :key="index" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
+			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right " v-if="isStartIS==false || IsSeckillTime == false  || (skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'|| skuDataInfo.TotalSurplusQty<='0')">
+				<view v-for="(item,index) in buttonGroup" :key="index" style="opacity: .8;" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
 				 class="flex uni-tab__cart-button-right2">
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
 				</view>
 			</view>
-			
 			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right" v-else>
 				<view v-for="(item,index) in buttonGroup" :key="index" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
 				 class="flex uni-tab__cart-button-right" @click="buttonClick(index,item)">
@@ -31,6 +31,10 @@
 				</view>
 			</view>
 		</view>
+		<p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'|| skuDataInfo.TotalSurplusQty<='0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
+		<p v-if="isStartIS==false" class="xiajia">活动还未开始~请稍后再来~</p>
+		<p v-if="IsSeckillTime == false" class="xiajia">不在活动时间范围内~</p>
+		<!-- <p v-if="IsSeckillTime == false" class="xiajia">不在活动时间范围内~</p> -->
 	</view>
 </template>
 
@@ -75,7 +79,7 @@
 							borderRadius: 0
 						},
 						{
-							text: '立即购买',
+							text: '立即抢购',
 							backgroundColor: '#ff0000',
 							color: '#fff',
 							borderRadius: 0
@@ -89,6 +93,18 @@
 					return {};
 				}
 			},
+			isStartIS: {
+				type: Boolean,
+				default: false
+			},
+			IsSeckillTime: {
+				type: Boolean,
+				default: false
+			},
+			IsGoodBuyTime: {
+				type: Boolean,
+				default: false
+			},
 			fill: {
 				type: Boolean,
 				default: false
@@ -98,6 +114,7 @@
 			}
 		},
 		mounted() {
+			console.log(this.buttonGroup)
 		},
 		methods: {
 			onClick(index, item) {
@@ -108,9 +125,9 @@
 				})
 			},
 			buttonClick(index, item) {
-				if(item.isbuy=='0'){
-					return this.$toast('未到购买时间，无法购买')
-				}
+				// if(item.isbuy=='0'){
+				// 	return this.$toast('未到购买时间，无法购买')
+				// }
 				if (uni.report) {
 					uni.report(item.text, item.text)
 				}

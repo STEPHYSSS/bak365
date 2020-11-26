@@ -47,10 +47,12 @@ export const vipCard = (data, ViewKay, AppNo) => {
 									return resolve(response.data)
 								} else {
 									console.log(response.data.Message)
-									uni.showToast({
-										title: response.data.Message,
-										icon: 'none'
-									});
+									if(response.data.Message!='暂无赠送信息'){
+										uni.showToast({
+											title: response.data.Message,
+											icon: 'none'
+										});
+									}
 									uni.hideLoading();
 									return reject(response.data.Message || '操作失败')
 								}

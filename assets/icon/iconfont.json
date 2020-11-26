@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3670659",
+      "name": "我的足迹",
+      "font_class": "wodezuji",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "4601985",
+      "name": "优惠券",
+      "font_class": "youhuiquan1",
+      "unicode": "e690",
+      "unicode_decimal": 59024
+    },
+    {
+      "icon_id": "15786088",
+      "name": "我的推广员",
+      "font_class": "wodetuiguangyuan",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
       "icon_id": "8581142",
       "name": "已售罄",
       "font_class": "yishouqing",
@@ -111,13 +132,6 @@
       "unicode_decimal": 58902
     },
     {
-      "icon_id": "1173",
-      "name": "广告主活动推广",
-      "font_class": "guanggaozhuhuodongtuiguang",
-      "unicode": "e602",
-      "unicode_decimal": 58882
-    },
-    {
       "icon_id": "579810",
       "name": "分享",
       "font_class": "fenxiang1",
@@ -158,13 +172,6 @@
       "font_class": "shenqingtuanchang",
       "unicode": "e643",
       "unicode_decimal": 58947
-    },
-    {
-      "icon_id": "6134092",
-      "name": "足迹",
-      "font_class": "zuji",
-      "unicode": "e613",
-      "unicode_decimal": 58899
     },
     {
       "icon_id": "1432",

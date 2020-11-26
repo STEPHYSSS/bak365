@@ -180,6 +180,7 @@
 					let { Data } = await vipCard({
 						Action: "GiveCoupon"
 					}, "UPromotionOpera");
+					console.log(Data)
 					this.getCoupon = Data.TicketList;
 				} catch (e) {
 					console.log(e);

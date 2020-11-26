@@ -145,7 +145,7 @@
 					<image v-if="good.Img" :src="good.Img|imgFilter" class="image"></image>
 					<view class="btn-group2">
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
-						<span @click="share">分享按钮</span>
+						<!-- <span @click="share">分享按钮</span> -->
 					</view>
 				</view>
 				<scroll-view class="detail" scroll-y>

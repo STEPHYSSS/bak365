@@ -73,9 +73,13 @@
 					</div>
 				</div>
 				<!-- 底部占位 -->
-				<navSeckill class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton"></navSeckill>
-				<!-- <uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
-				</uni-goods-nav> -->
+				<div class="goods-action">
+					<uni-view class="isProdType">
+						<uni-view class="uni-tab__seat" @click="onClickButton">立即抢购</uni-view>				
+					</uni-view>
+				</div>
+				<!-- <navSeckill class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
+				</navSeckill> -->
 			</div>
 		</uni-popup>
 
@@ -108,7 +112,7 @@
 					return "";
 				}
 			},
-			skuDataInfo: Object
+			skuDataInfo: Object,
 		},
 		data() {
 			return {
@@ -179,6 +183,7 @@
 		},
 		methods: {
 			async onClickButton(bool) {
+				console.log(bool)
 				if (this.isBrowse) {
 					return;
 				}
@@ -192,7 +197,8 @@
 				// 	this.$toast("商品库存不足！");
 				// 	return;
 				// }
-				if (this.goodsInfo.StockType!='0' && Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
+				
+				if (this.goodsInfo.StockType!='0' && Number(this.goodsInfo.StoreQty)  < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;
 				}
@@ -225,40 +231,20 @@
 					};
 					let paramsArr = []; //第一个为商品，后面的都是配件
 					let ProdNo = ''
-					// if(this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3'){
-					// 	ProdNo = this.currentNorms.ProdNo						
-					// }
 					paramsArr[0] = {
 						ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
 						SpecType:this.goodsInfo.SpecType,
 						BuyCnt: this.valueStepper,
 						ProdSID: this.goodsInfo.SID,
-						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.SID : "",
-						ProdType: 0,//0是商品，1是电子券
+						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.goodsInfo.SpecSID : "",
+						ProdType: this.goodsInfo.ProdType,//0是商品，1是电子券
 						PartsNo:PartsNoArr,//配件编号
 						PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
 						ParamInfo:this.currentTastArr, //商品口味
+						// PromotionItemSID:this.goodsInfo.PromotionItemSID,
 						// PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
 						// 	this.currentNorms.PromotionSID : ""
 					};
-					// paramsArr[0] = {
-					// 	ProdNo: this.currentNorms.ProdNo,
-					// 	ProdType: 0,
-					// 	SpecType: this.skuDataInfo.ProdInfo.SpecType,
-					// 	ParamInfo: currentTastArr, //商品口味
-					// 	BuyCnt: this.valueStepper,
-					// 	PartsList: PartsArr ? JSON.stringify(PartsArr) : "",
-					// 	PartsNo: PartsNoArr,
-					// 	ProdSID: this.skuDataInfo.ProdInfo.SID,
-					// 	DeliveryType: this.skuDataInfo.ProdInfo.DeliveryType,
-					// 	SpecSID: this.skuDataInfo.ProdInfo.SpecType !== "1" ?
-					// 		this.currentNorms.SpecSID ?
-					// 		this.currentNorms.SpecSID :
-					// 		this.currentNorms.SID : this.currentNorms.SpecSID || "",
-
-					// 	PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
-					// 		this.currentNorms.PromotionSID : ""
-					// };
 					obj.ProdList = JSON.stringify(paramsArr);
 					// return;
 					if (bool.index === 0 && !this.seckill) {
@@ -273,7 +259,7 @@
 						// 立即购买
 						if (this.seckill) {
 							//活动立即购买
-							paramsArr[0].PromotionItemSID = this.currentNorms.SID;
+							paramsArr[0].PromotionItemSID = this.goodsInfo.PromotionItemSID	;
 						}
 						let currentItem = [paramsArr[0]];
 						if (currentItem.length > 0) {
@@ -349,11 +335,7 @@
 			},
 			overlimitParts(e) {},
 			setStepperMax() { //加号
-				if (
-					Number(this.goodsInfo.MaxBuyCnt) <
-					Number(this.goodsInfo.StoreQty) &&
-					Number(this.goodsInfo.MaxBuyCnt)
-				) {
+				if (Number(this.goodsInfo.MaxBuyCnt) <Number(this.goodsInfo.StoreQty) &&Number(this.goodsInfo.MaxBuyCnt)) {
 					return Number(this.goodsInfo.MaxBuyCnt);
 				} else {
 					return Number(this.goodsInfo.StoreQty);
@@ -365,14 +347,12 @@
 				}
 				if (e === "plus") {
 					let str = "";
-					if (
-						Number(this.goodsInfo.MaxBuyCnt) <
-						Number(this.goodsInfo.StoreQty) &&
-						Number(this.goodsInfo.MaxBuyCnt)
-					) {
+					if(Number(this.goodsInfo.MaxBuyCnt)<=Number(this.valueStepper)){
 						str = "每人限购" + this.goodsInfo.MaxBuyCnt + "件";
-					} else {
-						str = "该规格商品库存不足";
+					}else if(this.goodsInfo.StockType!=0 &&Number(this.goodsInfo.StoreQty)<Number(this.valueStepper)){
+						str = "商品库存不足";
+					}else if(Number(this.skuDataInfo.TotalSurplusQty)==0||Number(this.skuDataInfo.TotalSurplusQty)<Number(this.valueStepper)){
+						str = "活动库存不足";
 					}
 					this.$toast(str);
 				}
@@ -393,10 +373,6 @@
 					this.normsList = []; //规格
 					this.PartsList = []; //配件
 					this.attributeList = []; //属性
-					if (skuDataInfo.SpecList) {
-						this.normsList = skuDataInfo.SpecList || [];
-						this.currentNorms = this.normsList[0]
-					}
 					if (skuDataInfo.PartsList) {
 						this.PartsList = skuDataInfo.PartsList || [];
 					}
@@ -489,7 +465,18 @@
 			padding: 0;
 		}
 	}
-
+	.isProdType{
+		background-color: #fe5252;
+		color: rgb(255, 255, 255);
+		border-radius: 25px;
+		width: 89%;
+		text-align: center;
+		height: 40px;
+		margin: 0 auto;
+		line-height: 40px;
+		font-size: 16px;
+		letter-spacing: 2px;
+	}
 	.van-popupSku {
 		font-size: 14px;
 

@@ -51,7 +51,7 @@
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
 				<button type="default" size="mini" @click="seckill">秒杀</button>
-				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
+				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>
 					<div v-for="(item,index) in listMode" :key="index">
 						<!-- <shopinfoma v-if="item.viewComponets === 'shopinfoma'" :propsObj="item.props"></shopinfoma> -->

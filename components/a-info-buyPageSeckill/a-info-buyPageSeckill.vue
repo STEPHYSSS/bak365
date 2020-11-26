@@ -26,7 +26,7 @@
 				<div class="goodCoupon-express" style="padding:0" v-if="skuDataInfo.IsBuy === '0'">
 					可购买时间：
 					<span style="color:#ee0a24;font-size:14px" v-if="goods.BuyTime">{{goods.BuyTime|setBuyTime}}</span>
-					<span style="color:#ee0a24;font-size:14px" v-if="goods.ActivityDate">{{goods.ActivityDate|setBuyTime}}</span>
+					<span style="color:#ee0a24;font-size:14px;padding-left: 5px;" v-if="goods.StartTime">{{goods.StartTime}}至{{goods.EndTime}}</span>
 				</div>
 				<div class="goodCoupon-price ">
 					<div>
@@ -42,6 +42,9 @@
 				</div>
 			</div>
 			<div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType!=0&&goods.StoreQty>0&&skuDataInfo.TotalSurplusQty>0">
+				<div style="flex:1">剩余库存：{{skuDataInfo.TotalSurplusQty}}</div>
+			</div>
+			<div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType == '0'&&skuDataInfo.TotalSurplusQty>0">
 				<div style="flex:1">剩余库存：{{skuDataInfo.TotalSurplusQty}}</div>
 			</div>
 		</div>
@@ -83,10 +86,18 @@
 			</view>
 		</div>
 		<div class="goods-action">
-			<navSeckill :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart"></navSeckill>
+			<!-- <navSeckill :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" :isStartIS="startIS" v-show="isBuyShow"></navSeckill> -->
+			<navSeckill :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" 
+			:isStartIS="startIS" :IsSeckillTime="IsSeckillTime" :IsGoodBuyTime="IsGoodBuyTime" @buttonClick="addCart" @click="jumpCart"></navSeckill>
+			<!-- <uni-view class="isProdType" :class="classObject" v-if="skuDataInfo.IsBuy=='1'">
+				<uni-view class="uni-tab__seat" @click="buyNow">立即抢购</uni-view>
+			</uni-view>
+			<uni-view class="isActive2" v-else>
+				<uni-view class="uni-tab__seat">立即抢购</uni-view>
+			</uni-view> -->
 		</div>
 		<!-- 商品弹窗 -->
-		<showSkuSeckill :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :seckill="seckill"></showSkuSeckill>
+		<showSkuSeckill :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :isStartIS="startIS" :IsSeckillTime="IsSeckillTime" :seckill="seckill"></showSkuSeckill>
 	</div>
 </template>
 
@@ -159,7 +170,9 @@
 				}],
 				options: [],
 				buttonGroup: [],
-				activeTimeMy: {}
+				activeTimeMy: {},
+				IsGoodBuyTime:false,
+				IsSeckillTime:false,
 			};
 		},
 		created() {
@@ -175,26 +188,80 @@
 			this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
 
 			this.tradeList()
+			if(this.goods.BuyTime!='' || this.goods.StartTime!=''||this.goods.EndTime!=''){
+				let BuyTime = this.goods.BuyTime.split(',')
+				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
+				this.IsSeckillTime = this.isDuringDate(this.goods.StartTime,this.goods.EndTime)
+			}
 			if (this.seckill) {
 				this.buttonGroup.push({
 					text: '立即抢购',
 					backgroundColor: '#fe5252',
 					color: '#fff',
 					borderRadius: '25px',
-					disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
+					// disabled: (this.skuDataInfo.IsBuy === '0' ||this.IsGoodBuyTime == false ||this.IsSeckillTime  == false ||
+					// this.goods.StockType != '0' && this.goods.StoreQty <= '0' || this.startIS !== true) ? true : false
 				})
 			}
 		},
-		mounted() {
+		mounted() {			
 			this.classA = {
 				// 图片和屏幕的width一样大
 				height: uni.getSystemInfoSync().windowWidth + "px"
 			};
 			// #ifdef H5
 			document.title = this.goods.Name;
-			// #endif
+			// #endif			
 		},
 		methods: {
+			isDuringDate(beginDateStr, endDateStr){
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				if (month < 10) {
+				    month = "0" + month;
+				}
+				if (day < 10) {
+				    day = "0" + day;
+				}
+				var nowDate = year + "-" + month + "-" + day;
+				var h = date.getHours();
+				h = h < 10 ? ('0' + h) : h;
+				var minute = date.getMinutes();
+				var second = date.getSeconds();
+				minute = minute < 10 ? ('0' + minute) : minute;
+				second = second < 10 ? ('0' + second) : second;
+				var nowddd =  year + "-" + month + "-" + day+' '+h+':'+minute+':'+second
+				let StartTime  = nowDate + ' ' +beginDateStr;
+				let endTime  = nowDate + ' ' + endDateStr;
+				if (nowddd >= StartTime && nowddd <= endTime) {
+					return true;
+				}
+				return false
+				
+			},
+			addCart(val) {
+				if (val.content.text === '立即抢购' ) {
+					this.show = true;
+					this.isAddCart = false;
+				} else {
+					// 点击购物车，出现弹框
+					this.show = true;
+					this.isAddCart = true;
+				}
+			},
+			jumpCart() {
+				if (this.isBrowse) {
+					return;
+				}
+				this.$Router.pushTab({
+					path: "/pages/shoppingMall/shoppingCart/index"
+				});
+			},
+			hideShow() {
+				this.show = false;
+			},
 			clickShop() {
 				if (this.isBrowse) {
 					return;
@@ -217,47 +284,6 @@
 						}
 					});
 				}
-			},
-			addCart(val) {
-				if (val.content.text === '立即抢购') {
-					this.orderNow()
-				} else {
-					// 点击购物车，出现弹框
-					this.show = true;
-					this.isAddCart = true;
-				}
-			},
-			jumpCart() {
-				if (this.isBrowse) {
-					return;
-				}
-				this.$Router.pushTab({
-					path: "/pages/shoppingMall/shoppingCart/index"
-				});
-			},
-			orderNow() {
-				// if (this.isCouponPage || this.isIntegral == "true") {
-				// 	// 优惠券购买，直接 调取微信支付
-				// 	let currentItem = [{
-				// 		ProdSID: this.goods.SID,
-				// 		ProdNo: this.goods.ProdNo,
-				// 		BuyCnt: 1
-				// 	}];
-				// 	let bool = this.isIntegral ? {
-				// 		isIntegral: "1"
-				// 	} : {};
-				// 	this.$store.commit("SET_CURRENT_CARD", currentItem);
-				// 	this.$Router.push({
-				// 		path: "/pages/shoppingMall/order/confirmOrder",
-				// 		query: bool
-				// 	});
-				// } else {
-					this.show = true;
-					this.isAddCart = false;
-				// }
-			},
-			hideShow() {
-				this.show = false;
 			},
 			finishTimer() {
 				setTimeout(() => {
@@ -282,7 +308,6 @@
 				let currentT = new Date().getTime()
 				let End = new Date(this.goods.EndDate.replace(/-/g, '/')).getTime()
 				let Start = new Date(this.goods.StartDate.replace(/-/g, '/')).getTime()
-				// let Start = new Date('2020-05-18 14:55:00').getTime()
 				// let End = new Date('2020-05-18 14:55:50').getTime()
 				// false 活动未开始 true 活动开始了 end为活动结束
 				this.startIS = Start - currentT >= 0 ? false : End - currentT > 0 ? true : 'end'
@@ -298,6 +323,8 @@
 				if (this.seckill) {
 					this.buttonGroup[0].disabled =
 						(this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
+					// this.isDefShow = false;
+					// this.isBuyShow = true;
 				}
 			},
 		}
@@ -519,6 +546,31 @@
 				text-align: center;
 				width: 45px;
 			}
+		}
+		.isProdType{
+			background-color: #fe5252;
+			color: rgb(255, 255, 255);
+			border-radius: 25px;
+			width: 89%;
+			text-align: center;
+			height: 40px;
+			margin: 0 auto;
+			line-height: 40px;
+			font-size: 16px;
+			letter-spacing: 2px;
+		}
+		.isActive2{
+			background-color: #fe5252;
+			color: rgb(255, 255, 255);
+			border-radius: 25px;
+			width: 89%;
+			text-align: center;
+			height: 40px;
+			margin: 0 auto;
+			line-height: 40px;
+			font-size: 16px;
+			letter-spacing: 2px;
+			opacity:0.7;
 		}
 	}
 </style>
