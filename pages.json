@@ -1,9 +1,9 @@
 {
 	"pages": [
-		{
-            "path" : "pages/homePage/homePage",
-            "style" : {}
-        },
+		// {
+  //           "path" : "pages/homePage/homePage",
+  //           "style" : {}
+  //       },
 		{
 		"path": "pages/shoppingMall/login",
 		"style": {

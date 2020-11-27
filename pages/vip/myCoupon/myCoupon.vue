@@ -5,8 +5,9 @@
 			<wuc-tab textFlex :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange" tab-class="'text-center','text-black','bg-white'"
 			 :select-class="'btnMy'+colorIndex"></wuc-tab>
 			<view>
-				<coupon-box v-if="dataList.length>0" :dataList="dataList" :activeUser="TabCur" @viewMore="viewMore"></coupon-box>
-				<no-data v-if="dataList.length===0"></no-data>
+				<coupon-box v-if="dataList.length>0" :dataList="fromData" :activeUser="TabCur" @viewMore="viewMore"></coupon-box>
+				<!-- <no-data v-if="dataList.length===0"></no-data> -->
+				<a-nodeData v-if="(dataList.length===0)"></a-nodeData>
 			</view>
 		</view>
 
@@ -54,28 +55,59 @@
 				// 查看详情
 				showInfo: false,
 				activeUser: 0,
-				dataList: [{
-					BackDate: "",
-					CodeNo: "BC273786384",
-					KindName: "5元优惠券",
-					Discount: "",					
-					KindNo: "ZQ1",
-					MinUseAmt: "20.00",//满多少可使用
-					PreValue: "50",//金额
-					SaleDate: "2020-09-21 22:30:12",//购买时间
-					StartDate: "2020-09-19 22:30:12",//开始时间
-					Type: "1",
-					ValidDate: "2020-10-08 22:30:12"}],//结束时间
+				dataList: [
+					// {
+					// BackDate: "",
+					// CodeNo: "BC273786384",
+					// KindName: "5元优惠券",
+					// Discount: "",					
+					// KindNo: "ZQ1",
+					// MinUseAmt: "20.00",//满多少可使用
+					// PreValue: "50",//金额
+					// SaleDate: "2020-09-21 22:30:12",//购买时间
+					// StartDate: "2020-09-19 22:30:12",//开始时间
+					// Type: "1",
+					// ValidDate: "2020-10-08 22:30:12"},
+					],//结束时间
+				fromData: [],
 				isOrder: false,
 				// 当前显示的详情弹框内容
 				currentShowStr: '',
 				disabledBtn: false,
-				colorIndex: getApp().globalData.colorIndex
+				colorIndex: getApp().globalData.colorIndex,
+				state:'2'
 			}
 		},
+		created() {
+			this.getGetTicketList();
+		},
 		methods: {
-			
+			async getGetTicketList(){
+				// uni.showLoading({
+				// 	title: '加载中'
+				// })
+				let Data = await vipCard({
+						Action: "GetTicketList",
+						State:this.state
+					},
+					"UMemberOpera"
+				);
+				this.dataList = Data.Data.TicketList;
+				this.fromData = Data.Data.TicketList;
+				// uni.hideLoading();
+				// GetTicketList
+			},
 			tabChange(index) {
+				if(index=='1'){
+					this.state = '3'
+					this.getGetTicketList()
+				}else if(index==2){
+					this.state = '1'
+					this.getGetTicketList()
+				}else{
+					this.state = '2'
+					this.getGetTicketList()
+				}
 				this.TabCur = index
 			},
 			onCloseInfo(e) {
@@ -84,7 +116,6 @@
 				}
 			},
 			viewMore(val) {
-				// console.log(val)
 				this.showInfo = true
 				this.currentShowStr = val
 			},
@@ -93,14 +124,38 @@
 				this.dataList = []
 				this.activeUser = e.detail.index
 			},
-			clickGo(){}
+			clickGo(){
+				this.$Router.push('/pages/home')
+			}
 		},
 		onReachBottom: function() {
 			if (this.dataList.length > 0) {
 				//获取订单列表
 			}
 		},
+		// watch: {
+		// 	TabCur(val){
+		// 		setFilter(val);
+		// 	}
+		// }
 	}
+	// function setFilter(num) {//过滤状态
+	// console.log(num)
+	// 	let arr = [];
+	// 	if(!this.dataList || this.dataList.length === 0){
+	// 		this.fromData = []
+	// 		return
+	// 	}
+	// 	if(num == '0'){
+	// 		arr = this.dataList.filter(item => item.State == "2");
+	// 		// arr = this.dataList;
+	// 	}else if(num == '1'){
+	// 		arr = this.dataList.filter(item => item.State == "3");
+	// 	}else{
+	// 		arr = this.dataList.filter(item => item.State == "1");
+	// 	}
+	// 	this.fromData = arr
+	// }
 </script>
 
 <style lang="scss">

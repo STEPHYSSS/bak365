@@ -6,19 +6,19 @@
 				<radio :value="0" class="custom-class-noradio" :checked="currentCodeNo === 0"></radio>
 				<text style="font-size: 10pt;">暂不使用券</text>
 			</view>
-			<view class="radio-couponFa-style" @click="onClickCoupon(item.CodeNo)" v-for="item in dataList" :key="item.CodeNo">
+			<view class="radio-couponFa-style" @click="onClickCoupon(item.TicketNo)" v-for="item in dataList" :key="item.CodeNo">
 				<view class="saleDateStyle">
-					{{item.SaleDate}}
+					{{item.TicketNo}}
 				</view>
 				<view class="radio-coupon-style">
 					<view class="radio-center-style">
-						<view class="radio-title-style">{{item.KindName}}</view>
-						<view class="radio-title-style">￥{{item.PreValue}}</view>
+						<view class="radio-title-style">{{item.TicketName}}</view>
+						<view class="radio-title-style">￥{{item.TakeDisc}}</view>
 						<view v-if="activeUser != 1" class="radio-time-style">
-							有效期 {{item.StartDate}}至{{item.ValidDate}}
+							有效期 {{item.StartTime|timeFil}}至{{item.ValidTime|timeFil}}
 						</view>
-						<view v-if="item.BackDate" class="radio-time-style">
-							使用时间 {{item.BackDate}}
+						<view v-if="activeUser=='1'" class="radio-time-style">
+							使用时间 {{item.SaleTime}}
 						</view>
 					</view>
 
@@ -27,9 +27,10 @@
 						 hover-class="none">
 							<button hover-class="btn-hover" class="user-coupon-btn">立即使用</button>
 						</navigator> -->
-						<button hover-class="btn-hover" class="user-coupon-btn">立即使用</button>
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='0'" @click="userCoupon(item.TicketNo)">立即使用</button>
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='1'">已使用</button>
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='2'">已过期</button>
 					</view>
-
 					<view style="flex:1;text-align: right;" v-if="isOrder">
 						<radio :value="item.CodeNo" class="custom-class-radio" :checked="item.CodeNo === currentCodeNo"></radio>
 					</view>
@@ -38,7 +39,8 @@
 				</view>
 			</view>
 		</radio-group>
-		<no-data v-if="dataList.length===0"></no-data>
+		<no-data v-if="dataList.length===0">
+		</no-data>
 	</view>
 </template>
 
@@ -68,10 +70,30 @@
 		created() {
 			this.currentCodeNo = this.currentId
 		},
+		filters:{
+			timeFil(value){
+				if (value) {
+				      return value.slice(0, 10)
+				    }
+			}
+		},
 		methods: {
 			onClickCoupon(e) {
 				this.currentCodeNo = e
 				this.$emit('onClickCoupon', e)
+			},
+			userCoupon(val){
+				let ShopRadio = sessionStorage.getItem("ShopRadio")
+				if(ShopRadio === '1'){
+					uni.navigateTo({
+					   url: '/pages/shoppingMall/login'
+					});
+				}else{				
+					uni.navigateTo({
+					   url: '/pages/shoppingMall/index'
+					});
+				}
+				console.log(val)
 			},
 			setCouponInfo(val) {
 				var newStr = val.replace(RegExp('~', 'g'), ';')
@@ -93,6 +115,7 @@
 			}
 		}
 	}
+	
 </script>
 
 <style lang="scss" scoped>
@@ -135,7 +158,7 @@
 	.radio-center-style {
 		color: rgb(148, 146, 146);
 		font-size: 8pt;
-		width: 50%;
+		width: 69%;
 	}
 
 	.radio-title-style {
@@ -190,7 +213,7 @@
 		background: #fdcc63 !important;
 		color: #fff !important;
 		border: 1px solid #fdcc63 !important;
-		margin-top: 29px;
+		// margin-top: 29px;
 	}
 
 	@media screen and (max-width: 320px) {

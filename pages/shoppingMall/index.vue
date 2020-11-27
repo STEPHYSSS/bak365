@@ -146,12 +146,11 @@
 				uni.showLoading({
 					title: '加载中'
 				});
-				if(this.$route.query.query == "Deflocation"){
+				if(this.$route.query.query){
 					this.SID = JSON.parse(this.$route.query.query);
+				}else{
+					
 				}				
-				// if(this.$route.query.query){
-				// 	this.SID = JSON.parse(this.$route.query.query);
-				// }
 				
 				if(!this.addresses){
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))

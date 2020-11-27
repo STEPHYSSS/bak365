@@ -53,7 +53,7 @@ const store = new Vuex.Store({
 			return new Promise(async (resolve, reject) => {
 				try {
 					let response = await vipCard(obj, 'UserSign')
-					//console.log(response,'查看Mac')
+					// console.log(response,'查看Mac')
 					if (response.Data.hasOwnProperty('UserMAC')) {
 						
 						// let seconds = 7200000 //两小时 秒
@@ -63,8 +63,15 @@ const store = new Vuex.Store({
 					}
 					if(response.Data.hasOwnProperty('ShopRadio')){
 						// 1代表商城模式,2代表自定义模式
+						Cookies.set('ShopRadio', response.Data.ShopRadio)
 						sessionStorage.setItem('ShopRadio', response.Data.ShopRadio)
-						// console.log()
+						let ShopRadio = response.Data.ShopRadio
+						if(ShopRadio === '1'){
+							uni.navigateTo({url: '/pages/shoppingMall/login'});
+						}
+						if(ShopRadio === '2'){				
+							uni.navigateTo({url: '/pages/shoppingMall/index'});
+						}
 					}else{
 						sessionStorage.setItem('ShopRadio', 1)
 					}

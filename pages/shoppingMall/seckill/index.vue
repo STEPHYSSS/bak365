@@ -22,8 +22,14 @@
 		data() {
 			return {
 				list: [],
-				loading: true
+				loading: true,
+				seckillSID:''
 			};
+		},
+		created() {
+			if(this.$route.query.SID){
+				this.seckillSID = this.$route.query.SID
+			}		
 		},
 		mounted() {
 			this.$store.commit("SET_HISTORY_URL", {path:'/pages/shoppingMall/seckill/index'})
@@ -39,7 +45,8 @@
 					let res = await Promise.all([
 						vipCard({
 							Action: "GetPromotionList",
-							Type: 1
+							Type: 1,
+							SID:this.seckillSID?this.seckillSID:''
 						}, "UPromotionOpera")
 					]);
 					this.list = res[0].Data.ProdList;
@@ -47,7 +54,6 @@
 				} catch (e) {}
 			},
 			goodBox(val) {
-				console.log(val,'haha')
 				this.$Router.push({
 					path: "/pages/shoppingMall/list/infoGood",
 					query: {
