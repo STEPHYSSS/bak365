@@ -134,10 +134,12 @@
 			async getInfo() {
 				this.loading = true;
 				uni.showLoading()
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				try {
 					let data = await vipCard(
 					  {
 						Action: "TicketBuy",
+						ShopSID:currentStore.data.SID,
 						ProdList:this.currentItem          
 					  }, "UProdOpera")
 					  this.prodList = data.Data.ProdList;
@@ -276,10 +278,10 @@
 				} catch (e) {
 					this.$toast.error(e)
 				}
-				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
-					// 活动
-					obj.PromotionItemSID = JSON.parse(this.currentItem)[0].PromotionItemSID;
-				}
+				// if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
+				// 	// 活动
+				// 	obj.PromotionItemSID = JSON.parse(this.currentItem)[0].PromotionItemSID;
+				// }
 			}	
 		}
 	};

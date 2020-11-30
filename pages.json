@@ -4,15 +4,16 @@
   //           "path" : "pages/homePage/homePage",
   //           "style" : {}
   //       },
+  {
+  	"path": "pages/shoppingMall/index",
+  	"style": {
+  		"navigationBarTitleText": "商城"
+  	}
+  },
 		{
 		"path": "pages/shoppingMall/login",
 		"style": {
 			"navigationBarTitleText": "首页"
-		}
-	},{
-		"path": "pages/shoppingMall/index",
-		"style": {
-			"navigationBarTitleText": "商城"
 		}
 	}, {
 		"path": "pages/error/index",

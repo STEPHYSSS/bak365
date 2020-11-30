@@ -65,16 +65,17 @@ const store = new Vuex.Store({
 						// 1代表商城模式,2代表自定义模式
 						Cookies.set('ShopRadio', response.Data.ShopRadio)
 						sessionStorage.setItem('ShopRadio', response.Data.ShopRadio)
-						let ShopRadio = response.Data.ShopRadio
-						if(ShopRadio === '1'){
-							uni.navigateTo({url: '/pages/shoppingMall/login'});
-						}
-						if(ShopRadio === '2'){				
-							uni.navigateTo({url: '/pages/shoppingMall/index'});
-						}
-					}else{
-						sessionStorage.setItem('ShopRadio', 1)
+						// let ShopRadio = response.Data.ShopRadio
+						// if(ShopRadio === '1'){
+						// 	uni.navigateTo({url: '/pages/shoppingMall/login'});
+						// }
+						// if(ShopRadio === '2'){				
+						// 	uni.navigateTo({url: '/pages/shoppingMall/index'});
+						// }
 					}
+					// else{
+					// 	sessionStorage.setItem('ShopRadio', 1)
+					// }
 					
 					if(response.Message == '未授权'){
 						this.$Router.push({
@@ -90,9 +91,9 @@ const store = new Vuex.Store({
 						// ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡
 						Cookies.set('isMember', response.Data.UserBind)
 					}
-					// if (response.Data.hasOwnProperty('CardType')) {
-					// 	Cookies.set('CardType', response.Data.CardType)
-					// }
+					if (response.Data.hasOwnProperty('CardType')) {
+						Cookies.set('CardType', response.Data.CardType)
+					}
 
 					//主题模板
 					getApp().globalData.mainStyle = 'theme2'

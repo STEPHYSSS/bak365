@@ -1,5 +1,5 @@
 <template>
-	<div class="confirm-order-style" :class="mainStyle">
+	<div class="confirm-order-style" style="padding-bottom: 50px;" :class="mainStyle">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="确认订单" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
 		<div v-if="prodList.length>0">
@@ -156,7 +156,7 @@
 		<uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
 			<div class="confirm-selectTime-popup">
 				<div class="leftNavsidebar">
-					<view :class="['homepageLeftFixed']" style="width:130px">
+					<view :class="['homepageLeftFixed']" style="width:130px;height: 300px;overflow-y: scroll;">
 						<view v-for="(item,index) in sidebarList" :key="index" :class="['homepageLeft',index===currentIndex?'activeCanteen':'']"
 						 @click="changeSider(index)">
 							{{item}}
@@ -333,7 +333,6 @@
 			};
 		},
 		async created() {
-			// console.log(Cookies.get('UserMAC'))
 			if (
 				!this.$store.state.currentCard ||
 				this.$store.state.currentCard.length === 0
@@ -345,7 +344,6 @@
 			if(this.isMember === '0' || this.isMember == undefined || this.isMember == null){
 				this.radioPayType = "2"
 			}
-			// if(){}
 			// 获取授权地址
 			await this.getWxConfig();
 			let item = this.$store.state.currentCard || [];
@@ -482,7 +480,9 @@
 									}
 								});
 							}
-							this.IsPass= Data.CardInfo.IsPass,
+							if (Data.hasOwnProperty('CardInfo')){
+								this.IsPass= Data.CardInfo.IsPass?Data.CardInfo.IsPass:''
+							}
 							this.ScoreDeduction=Data.ScoreDeduction;//可用积分
 							this.ScoreAmt=Data.ScoreAmt;//抵扣金额
 							this.CardInfo = Data.CardInfo;//卡信息
@@ -502,6 +502,7 @@
 							}
 							this.total = Data.SumTotal;
 							this.ProdTotal = Data.ProdTotal;
+							console.log(Data.SumTotal)
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 							this.CardInfo = Data.hasOwnProperty("CardInfo") ?
 								Data.CardInfo : {};
@@ -1120,6 +1121,12 @@
 					}
 				} catch (e) {
 					this.$toast.fail(e);
+					this.$toast.fail("支付失败");
+					this.payTypePop = false;
+					this.$refs.payTypePop.close();
+					// setTimeout(() => {
+					// 	this.$Router.push("/pages/shoppingMall/order/paySuccess");
+					// }, 600);
 					this.loading = false;
 					uni.hideLoading();
 				}

@@ -1,31 +1,44 @@
 <template>	
 	<!-- <wxs module="dateFr" src="../../../../filter/index.wxs"></wxs> -->
-	<view style="padding:0px 10px 10px;background-color:#fff;">
-		<div  @click="onClickCoupon(item.TicketNo)" v-for="item in dataList" :key="item.TicketNo" style="padding-top: 20px;">
-			<!--<div class="ticketSty">
-				 <p>{{item.TicketNo}}</p>
-				<p>{{item.TicketName}}</p>
-				<p>￥{{item.TakeDisc}}</p>
-				<view v-if="activeUser != 1" class="radio-time-style">
-					有效期 {{item.StartTime|timeFil}}至{{item.ValidTime|timeFil}}
+	<view style="padding:0px 10px 10px">
+		<radio-group :value="currentCodeNo">
+			<view v-if="isOrder" @click="onClickCoupon(0)">
+				<radio :value="0" class="custom-class-noradio" :checked="currentCodeNo === 0"></radio>
+				<text style="font-size: 10pt;">暂不使用券</text>
+			</view>
+			<view class="radio-couponFa-style" @click="onClickCoupon(item.TicketNo)" v-for="item in dataList" :key="item.CodeNo">
+				<view class="saleDateStyle">
+					{{item.TicketNo}}
 				</view>
-				<view v-if="activeUser=='1'" class="radio-time-style">
-					使用时间 {{item.SaleTime}}
-				</view> 
-			</div>-->
-			<div class='ticketSty'>
-			    <div class="left">
-			         <div class="flex1"><sub class="sign">￥</sub><span class="num">{{item.TakeDisc}}</span></div>
-					 <div class="ticketNo">{{item.TicketNo}}</div>
-			    </div>
-			    <div class="right">
-			          <div class="flex1 ticketName"><span>{{item.TicketName}}</span></div>
-			          <div class="date" v-if="activeUser != 1">有效期:{{item.StartTime|timeFil}} 至 {{item.ValidTime|timeFil}}</div>
-					  <div class="date" v-if="activeUser=='1'">使用时间:{{item.SaleTime}}</div>
-			    </div>
-			</div>
-			
-		</div>
+				<view class="radio-coupon-style">
+					<view class="radio-center-style">
+						<view class="radio-title-style">{{item.TicketName}}</view>
+						<view class="radio-title-style">￥{{item.TakeDisc}}</view>
+						<view v-if="activeUser != 1" class="radio-time-style">
+							有效期 {{item.StartTime|timeFil}}至{{item.ValidTime|timeFil}}
+						</view>
+						<view v-if="activeUser=='1'" class="radio-time-style">
+							使用时间 {{item.SaleTime}}
+						</view>
+					</view>
+
+					<view v-if="!isOrder" class="my-default-btn user-coupon-style">
+						<!-- <navigator :url="'/pages/indexVip/couponQRCode/index?item='+ encodeURIComponent(JSON.stringify(item))"
+						 hover-class="none">
+							<button hover-class="btn-hover" class="user-coupon-btn">立即使用</button>
+						</navigator> -->
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='0'" @click="userCoupon(item.TicketNo)">立即使用</button>
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='1'">已使用</button>
+						<button hover-class="btn-hover" class="user-coupon-btn" v-if="activeUser=='2'">已过期</button>
+					</view>
+					<view style="flex:1;text-align: right;" v-if="isOrder">
+						<radio :value="item.CodeNo" class="custom-class-radio" :checked="item.CodeNo === currentCodeNo"></radio>
+					</view>
+
+					<view class="mask-box-style" v-if="activeUser != 0"></view>
+				</view>
+			</view>
+		</radio-group>
 		<no-data v-if="dataList.length===0">
 		</no-data>
 	</view>
@@ -212,64 +225,4 @@
 			font-size: 24rpx;
 		}
 	}
-	.ticketSty{
-		width:95%;
-		box-sizing: border-box;
-		position: relative;
-		// background-color: #fc813b;
-		background-image: linear-gradient(to right,#FFA200, #fc813b);
-		margin: 0 auto;
-		display: flex;
-		color:#fff;
-		margin-bottom: 20px;
-		padding:10px;
-		box-sizing: border-box;
-	}
-	.ticketSty:before,
-	.ticketSty:after {
-	  content: '';
-	  display: block;
-	  width: 30px;
-	  height: 100%;
-	  background-size: 30px 30px;/* 一个repeat的大小 */
-	  background-repeat: repeat-y;
-	  background-image: radial-gradient(#fff 6px, transparent 6px);
-	  position: absolute;
-	  top: 0;
-	}
-	.ticketSty:before {
-	  left: -15px; /* 半圆，只显示一个repeat的一半 */
-	}
-	.ticketSty:after {
-	  right: -15px; 
-	}
-	.left{
-		display:flex;
-		flex-direction:column;
-		border-right: 1px dashed #fff;
-		padding-right: 10px;
-	}
-	.flex1{
-		flex:0 0 40px;
-	}
-	.ticketName{
-		font-size: 16px;
-	}
-	.sign{
-		 font-size:12px;
-	}
-	.num{
-		font-size: 18px;
-		font-weight: bold;
-	}
-	.ticketNo{
-		font-size: 12px;
-	}
-	.right{
-	    flex:2;
-		display: flex;
-		flex-direction: column;
-		padding-left: 10px;
-	}
-	
 </style>

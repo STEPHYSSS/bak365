@@ -46,6 +46,7 @@
 		},
 		methods: {
 			async getInfo() {
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				try {
 					let Opera =
 						this.$Route.query.isIntegral == "true" ?
@@ -58,7 +59,8 @@
 						Data
 					} = await vipCard({
 							Action: action,
-							SID: this.$Route.query.SID
+							SID: this.$Route.query.SID,
+							ShopSID:currentStore.data.SID
 						},
 						Opera
 					);

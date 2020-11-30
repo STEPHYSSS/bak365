@@ -231,22 +231,23 @@
 					};
 					let paramsArr = []; //第一个为商品，后面的都是配件
 					let ProdNo = ''
+					// if(this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3'){
+					// 	ProdNo = this.currentNorms.ProdNo						
+					// }
 					paramsArr[0] = {
 						ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
 						SpecType:this.goodsInfo.SpecType,
 						BuyCnt: this.valueStepper,
 						ProdSID: this.goodsInfo.SID,
-						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.goodsInfo.SpecSID : "",
+						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.SID : "",
 						ProdType: this.goodsInfo.ProdType,//0是商品，1是电子券
 						PartsNo:PartsNoArr,//配件编号
 						PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
 						ParamInfo:this.currentTastArr, //商品口味
-						// PromotionItemSID:this.goodsInfo.PromotionItemSID,
-						// PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
-						// 	this.currentNorms.PromotionSID : ""
+						PromotionItemSID: this.goodsInfo.PromotionItemSID
 					};
 					obj.ProdList = JSON.stringify(paramsArr);
-					// return;
+					let currentItemSeckill = obj.ProdList;
 					if (bool.index === 0 && !this.seckill) {
 						// 加入购物车
 						let data = await vipCard(obj, "UMemberOpera");
@@ -257,20 +258,61 @@
 						}
 					} else {
 						// 立即购买
-						if (this.seckill) {
-							//活动立即购买
-							paramsArr[0].PromotionItemSID = this.goodsInfo.PromotionItemSID	;
-						}
+						// if (this.seckill) {
+						// 	//活动立即购买
+						// 	paramsArr[0].PromotionItemSID = this.currentNorms.SID;
+						// }
 						let currentItem = [paramsArr[0]];
-						if (currentItem.length > 0) {
-							this.$store.commit("SET_CURRENT_CARD", currentItem);
-							this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
-							// this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom")
-						}
+						if(this.goodsInfo.ProdType==='1'){
+								if (currentItemSeckill.length > 0) {
+									this.$store.commit("SET_CURRENT_CARD", currentItemSeckill);
+									this.$Router.push("/pages/shoppingMall/order/confirmOrderTic");
+								}
+							}else{
+								if (currentItem.length > 0) {
+									this.$store.commit("SET_CURRENT_CARD", currentItem);
+									this.$Router.push("/pages/shoppingMall/order/confirmOrder");
+								}
+							}
 					}
 				} catch (e) {
 					this.$toast.error(e);
 				}
+				// try {
+				// 	let obj = {
+				// 		ProdList: [],
+				// 		Action: "SetShopCart"
+				// 	};
+				// 	let paramsArr = []; //第一个为商品，后面的都是配件
+				// 	let ProdNo = ''
+				// 	paramsArr[0] = {
+				// 		ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
+				// 		SpecType:this.goodsInfo.SpecType,
+				// 		BuyCnt: this.valueStepper,
+				// 		ProdSID: this.goodsInfo.SID,
+				// 		SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.goodsInfo.SpecSID : "",
+				// 		ProdType: this.goodsInfo.ProdType,//0是商品，1是电子券
+				// 		PartsNo:PartsNoArr,//配件编号
+				// 		PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
+				// 		ParamInfo:this.currentTastArr, //商品口味
+				// 		PromotionItemSID:this.goodsInfo.PromotionItemSID
+				// 	};
+				// 	obj.ProdList = JSON.stringify(paramsArr);
+				// 	let currentItem = obj.ProdList;
+				// 	if(this.goodsInfo.ProdType==='1'){
+				// 		if (currentItem.length > 0) {
+				// 			this.$store.commit("SET_CURRENT_CARD", currentItem);
+				// 			this.$Router.push("/pages/shoppingMall/order/confirmOrderTic");
+				// 		}
+				// 	}else{
+				// 		if (currentItem.length > 0) {
+				// 			this.$store.commit("SET_CURRENT_CARD", currentItem);
+				// 			this.$Router.push("/pages/shoppingMall/order/confirmOrder");
+				// 		}
+				// 	}
+				// } catch (e) {
+				// 	this.$toast.error(e);
+				// }
 			},
 			closePopup(bool) {
 				if (!bool.show) {

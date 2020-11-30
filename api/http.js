@@ -17,7 +17,7 @@ export const vipCard = (data, ViewKay, AppNo) => {
 					// h5
 					// let UserMACPhone = sessionStorage.getItem('UserMACPhone')
 					let UserMACPhone = Cookies.get("UserMACPhone")
-					// let UserMACPhone = '8f6212fffb9654fa69cdd4f105c22574u'
+					// let UserMACPhone = '28ccbefc1c89a64f1f6672669adc6891u'
 					// let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : AppNo
 					let AppNo = sessionStorage.getItem('AppNo')
 					

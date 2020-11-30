@@ -118,6 +118,7 @@
 		} else {
 			if (num == "1") {
 				arr = _this.allfromData.filter(item => item.State == "-1");
+				console.log(arr,'1111')
 			} else if (num == "2") {
 				arr = _this.allfromData.filter(
 					item => item.State == "0" || item.State == "1" || item.State == "-2"
@@ -130,6 +131,7 @@
 			
 		}
 		_this.fromData = arr;
+		console.log(_this.fromData,'kankantupian')
 	}
 </script>
 

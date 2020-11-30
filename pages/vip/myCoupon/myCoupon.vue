@@ -6,7 +6,6 @@
 			 :select-class="'btnMy'+colorIndex"></wuc-tab>
 			<view>
 				<coupon-box v-if="dataList.length>0" :dataList="fromData" :activeUser="TabCur" @viewMore="viewMore"></coupon-box>
-				<!-- <no-data v-if="dataList.length===0"></no-data> -->
 				<a-nodeData v-if="(dataList.length===0)"></a-nodeData>
 			</view>
 		</view>

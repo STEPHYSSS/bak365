@@ -24,9 +24,10 @@
 			<div class="wu-cell" style="display: block;">
 				<div class="goodCoupon-title">{{ goods.Name }}</div>
 				<div class="goodCoupon-express" style="padding:0" v-if="skuDataInfo.IsBuy === '0'">
-					可购买时间：
-					<span style="color:#ee0a24;font-size:14px" v-if="goods.BuyTime">{{goods.BuyTime|setBuyTime}}</span>
-					<span style="color:#ee0a24;font-size:14px;padding-left: 5px;" v-if="goods.StartTime">{{goods.StartTime}}至{{goods.EndTime}}</span>
+					商品可购买时间：
+					<span style="color:#ee0a24;font-size:14px" v-if="goods.BuyTime">{{goods.BuyTime|setBuyTime}}</span><br/>
+					活动可购买时间：
+					<span style="color:#ee0a24;font-size:14px;" v-if="goods.StartTime">{{goods.StartTime}}至{{goods.EndTime}}</span>
 				</div>
 				<div class="goodCoupon-price ">
 					<div>
@@ -41,12 +42,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType!=0&&goods.StoreQty>0&&skuDataInfo.TotalSurplusQty>0">
-				<div style="flex:1">剩余库存：{{skuDataInfo.TotalSurplusQty}}</div>
+			<div class="wu-cell goodCoupon-express lineTop">
+				<div style="flex:1">剩余库存：{{stockNum}}</div>
 			</div>
-			<div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType == '0'&&skuDataInfo.TotalSurplusQty>0">
+			<!-- <div class="wu-cell goodCoupon-express lineTop" v-if="goods.StockType == '0'&&skuDataInfo.TotalSurplusQty>0">
 				<div style="flex:1">剩余库存：{{skuDataInfo.TotalSurplusQty}}</div>
-			</div>
+			</div> -->
 		</div>
 		<div>
 			<adCell text="商城" icon="/static/img/shangcheng1.png" @click="clickShop" detail="进入店铺" :showBottomLine="false">
@@ -89,12 +90,6 @@
 			<!-- <navSeckill :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" :isStartIS="startIS" v-show="isBuyShow"></navSeckill> -->
 			<navSeckill :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" 
 			:isStartIS="startIS" :IsSeckillTime="IsSeckillTime" :IsGoodBuyTime="IsGoodBuyTime" @buttonClick="addCart" @click="jumpCart"></navSeckill>
-			<!-- <uni-view class="isProdType" :class="classObject" v-if="skuDataInfo.IsBuy=='1'">
-				<uni-view class="uni-tab__seat" @click="buyNow">立即抢购</uni-view>
-			</uni-view>
-			<uni-view class="isActive2" v-else>
-				<uni-view class="uni-tab__seat">立即抢购</uni-view>
-			</uni-view> -->
 		</div>
 		<!-- 商品弹窗 -->
 		<showSkuSeckill :show="show" @hideShow="hideShow" :skuDataInfo="skuDataInfo" :isStartIS="startIS" :IsSeckillTime="IsSeckillTime" :seckill="seckill"></showSkuSeckill>
@@ -173,6 +168,8 @@
 				activeTimeMy: {},
 				IsGoodBuyTime:false,
 				IsSeckillTime:false,
+				showStock:true,
+				stockNum:''
 			};
 		},
 		created() {
@@ -202,6 +199,17 @@
 					// disabled: (this.skuDataInfo.IsBuy === '0' ||this.IsGoodBuyTime == false ||this.IsSeckillTime  == false ||
 					// this.goods.StockType != '0' && this.goods.StoreQty <= '0' || this.startIS !== true) ? true : false
 				})
+			}
+			// if(goods.StockType!=0&&goods.StoreQty>0&&skuDataInfo.TotalSurplusQty>0){
+			// 	// stockNum
+			// }
+			// 判断当商品库存状态为0的时候同时判断活动库存是否大于0，大于的话就展示
+			if(this.goods.StockType == '0'&& this.skuDataInfo.TotalSurplusQty>=0){
+				this.stockNum = this.skuDataInfo.TotalSurplusQty;
+			}else if(this.goods.StockType == '1'&&this.goods.StoreQty<=0){
+				this.stockNum = this.goods.StoreQty;
+			}else if(this.goods.StockType == '1'&&this.goods.StoreQty>=0&&this.skuDataInfo.TotalSurplusQty>=0){
+				this.stockNum = this.skuDataInfo.TotalSurplusQty;
 			}
 		},
 		mounted() {			
@@ -311,6 +319,7 @@
 				// let End = new Date('2020-05-18 14:55:50').getTime()
 				// false 活动未开始 true 活动开始了 end为活动结束
 				this.startIS = Start - currentT >= 0 ? false : End - currentT > 0 ? true : 'end'
+				
 				let activeTimeMy = this.startIS ? End - currentT : Start - currentT
 				let myTime = activeTimeMy
 				this.activeTimeMy = {
@@ -319,13 +328,17 @@
 					minute: parseInt((myTime % (1000 * 60 * 60)) / (60 * 1000)),
 					second: parseInt((myTime % (1000 * 60)) / 1000)
 				}
-
-				if (this.seckill) {
-					this.buttonGroup[0].disabled =
-						(this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
-					// this.isDefShow = false;
-					// this.isBuyShow = true;
-				}
+				// if (this.seckill) {
+				// 	this.buttonGroup[0].disabled =
+				// 		(this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0 || this.startIS !== true) ? true : false
+				// 		if (!this.startIS) {
+				// 			//表示活动已经结束
+				// 			this.btnTitle = " 活动未开始";
+				// 		} else if (this.startIS === 'end') {
+				// 			this.btnTitle = "活动结束";
+				// 		} else {
+				// 			this.bt
+				// }
 			},
 		}
 	};

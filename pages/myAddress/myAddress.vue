@@ -266,6 +266,7 @@
 					Latitude: item.Latitude
 				}
 				this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
+				
 				if(this.$Route.query.flag == 'shopAuto'){
 					return this.$Router.push({path:"/pages/shoppingMall/index",query:{flag: 'Deflocation'}})
 				}

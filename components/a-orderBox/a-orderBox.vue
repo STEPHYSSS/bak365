@@ -12,6 +12,7 @@
 				<!-- OrderType等于1代表充值，2代表普通商品，3代表电子券，4代表积分订单 -->
 				<div class="orderBoxCenter" v-if="item.OrderType=='2'">
 					<div class="boxImgSize">
+					<!-- <a-up-img :url="urlImg" style="width: 100%;height: 100%"></a-up-img> -->
 						<a-up-img :url="setImg(item.ProdList)" style="width: 100%;height: 100%"></a-up-img>
 					</div>
 					<div class="orderBoxTitle">{{setTitle(item.ProdList)}}</div>
@@ -69,11 +70,12 @@
 			return {
 				mainColor: getApp().globalData.mainColor,
 				img: "",
+				urlImg:""
 				// loading: true
 			};
 		},
 		created() {
-			// console.log(this.dataList, 5555)
+			console.log(this.dataList, 5555)
 			// 获取接口返回的区分id
 		},
 		methods: {
@@ -122,9 +124,7 @@
 			}
 		},
 		watch: {
-			dataList() {
-				
-			}
+			dataList() {}
 		}
 	};
 </script>

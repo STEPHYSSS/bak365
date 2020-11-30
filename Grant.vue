@@ -16,7 +16,7 @@
 				redirect_uri: "",
 				appId: '',
 				UserMACPhone:Cookies.get("UserMACPhone")	
-				// UserMACPhone:'8f6212fffb9654fa69cdd4f105c22574u'
+				// UserMACPhone:'28ccbefc1c89a64f1f6672669adc6891u'
 			};
 		},
 		onLoad(option) {

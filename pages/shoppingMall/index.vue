@@ -7,10 +7,6 @@
 					<view class="store-name" @click="toShopAddress">
 						<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
 					</view>
-					<view class="store-location">
-						<!-- <image src='/static/images/order/location.png'></image> -->
-						<!-- <text style="color: #919293;">距离您 {{ currentStoreInfo.Length }}</text> -->
-					</view>
 				</view>
 				<view class="nav_left overflow-hidden" v-else>
 					<view class="nav_leftAdd">
@@ -136,8 +132,9 @@
 		created() {
 			this.init()
 		},
-		mounted() {},
-		
+		mounted() {
+			
+		},
 		methods: {
 			 init(){
 				this.getCouponInfo();
@@ -148,16 +145,7 @@
 				});
 				if(this.$route.query.query){
 					this.SID = JSON.parse(this.$route.query.query);
-				}else{
-					
-				}				
-				
-				if(!this.addresses){
-					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-				}else{
-					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-				}
-				if(this.$Route.query.flag =='Deflocation'){
+				}else if(this.$Route.query.flag =='Deflocation'){
 					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 					this.currentStoreInfo = {
 						Name: currentStore.data.Name,
@@ -167,10 +155,15 @@
 					}
 				}else{
 					if(this.$store.state.orderType === 'takein'){
-						 this.getShopList();
+					    this.getShopList();
 					}
-				}				
-				 this.getAutoMode();
+				}	
+				if(!this.addresses){
+					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				}else{
+					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				}
+				this.getAutoMode();
 			},
 			// 进入首页就获取微信地址
 			async getWxConfig(){
@@ -304,13 +297,15 @@
 				uni.showLoading({
 					title: '加载中'
 				});
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				try {
 					let {
 						Data
 					} = await vipCard({
 							Action: "GetDecorate",
 							Type:'0',//
-							SID:this.SID.SID ? this.SID.SID : ''
+							SID:this.SID.SID ? this.SID.SID : '',
+							ShopSID:currentStore.data.SID
 						},
 						"UShopOpera"
 					);
@@ -347,9 +342,7 @@
 			},
 			toziqu() {
 				this.$store.commit("SET_ORDER_TYPE", 'takein');	
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-				// console.log(currentStore.data.SID,'currentStoreInfo')
-				
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))				
 				this.currentStoreInfo = {
 					Name: currentStore.data.Name,
 					Address: currentStore.data.Address,

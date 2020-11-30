@@ -17,8 +17,10 @@
 					</view>
 				</view>
 			</view>
+			
+			<!-- 这一块是用来判断活动不能够购买的 isStartIS IsSeckillTime 到时候再传一个下架的状态来控制按钮不能点击-->
 			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right " v-if="isStartIS==false || IsSeckillTime == false  || (skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'|| skuDataInfo.TotalSurplusQty<='0')">
-				<view v-for="(item,index) in buttonGroup" :key="index" style="opacity: .8;" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
+				<view v-for="(item,index) in buttonGroup" :key="index" style="opacity: .3;" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
 				 class="flex uni-tab__cart-button-right2">
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
 				</view>
@@ -31,10 +33,11 @@
 				</view>
 			</view>
 		</view>
-		<p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'|| skuDataInfo.TotalSurplusQty<='0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
+		<p class="xiajia" v-show="hideTips">{{showTips}}</p>
+		<!-- <p v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'||
+		 skuDataInfo.TotalSurplusQty<='0'" class="xiajia">商品已经售罄啦~要不要瞧瞧别的~</p>
 		<p v-if="isStartIS==false" class="xiajia">活动还未开始~请稍后再来~</p>
-		<p v-if="IsSeckillTime == false" class="xiajia">不在活动时间范围内~</p>
-		<!-- <p v-if="IsSeckillTime == false" class="xiajia">不在活动时间范围内~</p> -->
+		<p v-if="IsSeckillTime == false" class="xiajia">不在活动时间范围内~</p> -->
 	</view>
 </template>
 
@@ -55,6 +58,12 @@
 		name: 'UniGoodsNav',
 		components: {
 			uniIcons
+		},
+		data(){
+			return{
+				showTips:"",
+				hideTips:false
+			}
 		},
 		props: {
 			options: {
@@ -113,8 +122,22 @@
 				type: Object,
 			}
 		},
-		mounted() {
-			console.log(this.buttonGroup)
+		created() {
+			// if(this.isStartIS==false){
+			// 	this.showTips = "活动还未开始~请稍后再来~"
+			// 	this.hideTips = true;
+			// }else 
+			if(this.skuDataInfo.StockType != '0'&& this.skuDataInfo.StoreQty <= '0'|| this.skuDataInfo.TotalSurplusQty<='0'){
+				this.showTips = "商品已经售罄啦~要不要瞧瞧别的~"
+				this.hideTips = true;
+			}else if(this.IsSeckillTime == false){
+				this.showTips = "不在活动时间范围内~"
+				this.hideTips = true;
+			}else if(this.skuDataInfo.State !='1'){
+				this.showTips = "此商品已下架~要不要瞧瞧别的~"
+				this.hideTips = true;
+			}
+			
 		},
 		methods: {
 			onClick(index, item) {
@@ -125,9 +148,6 @@
 				})
 			},
 			buttonClick(index, item) {
-				// if(item.isbuy=='0'){
-				// 	return this.$toast('未到购买时间，无法购买')
-				// }
 				if (uni.report) {
 					uni.report(item.text, item.text)
 				}

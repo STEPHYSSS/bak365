@@ -74,6 +74,7 @@
 					// 点击不可用的按钮时触发
 					this.$emit('overlimit', type)
 				}
+
 				if (type === "plus" && this.inputValue >= this.max) {
 					this.$emit('overlimit', type)
 				}

@@ -38,11 +38,11 @@
 					  Number(itemData.BuyCnt)>Number(itemData.StoreQty)?Number(itemData.BuyCnt):Number(itemData.StoreQty)"
 					 @overlimit="stepperOverlimit"
 					 :value="itemData.BuyCnt"></uni-number-box>
-				</div>
+				</div>				
 				<uni-icons v-if="!isShoppingCard&&!isOrder" type="plus" class="addIcon" @click.stop="addCart" />
 			</div>
 		</div>
-		<div class="goodsBox-parts" v-if="(isOrder||isShoppingCard)&&itemData.hasOwnProperty('PartsList')&&itemData.PartsList.length>0">
+		<div class="goodsBox-parts" v-if="(isOrder||isShoppingCard)&&itemData.hasOwnProperty('PartsList')&&itemData.PartsList.length>0 ">
 			<div class="parts-norms-style">配件：</div>
 			<div class="parts-norms-info">
 				<div class="parts-norms-info-one" v-for="(item,index) in itemData.PartsList" :key="index">

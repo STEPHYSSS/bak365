@@ -267,7 +267,8 @@
 				try {
 					await vipCard({
 							Action: "CancelOrder",
-							SID: this.OrderInfo.SID
+							SID: this.OrderInfo.SID,
+							OrderType:this.$Route.query.OrderType
 						},
 						"UOrderOpera"
 					);

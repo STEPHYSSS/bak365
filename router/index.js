@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
                 let Code = GetQueryString("code");
 				let newAppNo = GetAppNo();
 				let UserMACPhone = Cookie.get("UserMACPhone")
-				// let UserMACPhone = '8f6212fffb9654fa69cdd4f105c22574u'
+				// let UserMACPhone = '28ccbefc1c89a64f1f6672669adc6891u'
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
 				let currentUrl = setUrlDelCode()

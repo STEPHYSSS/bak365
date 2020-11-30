@@ -30,7 +30,7 @@ Vue.filter('orderState', (num) => {
 		case -1:
 			return '待付款';
 		case 0:
-			return '已预订';
+			return '已付款';
 		case 1:
 			return '生产中';
 		case 2:

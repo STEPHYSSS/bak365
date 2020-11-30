@@ -157,6 +157,7 @@
 				});
 			},
 			async addCart(item) {
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				if(item.ProdType == '1'){
 					// console.log('直接进入详情页')
 					this.$Router.push({
@@ -167,7 +168,8 @@
 					this.tabShow = false;
 					try {
 						let obj = {
-							Action: "GetProdInfo"
+							Action: "GetProdInfo",
+							ShopSID:currentStore.data.SID
 						};
 						Object.assign(obj, item);
 

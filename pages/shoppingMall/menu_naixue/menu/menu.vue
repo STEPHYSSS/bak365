@@ -397,7 +397,7 @@
 				}else{
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}
-				await this.getWxShare()
+				// await this.getWxShare()
 			},
 			async getShopList() {// 获取门店
 				let { Data } = await vipCard({
@@ -839,7 +839,7 @@
 					}, "UProdOpera");
 					
 					wx.config({
-						debug: true,
+						debug: false,
 						appId: 'wxb7a2e9fc043daf1c',
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
