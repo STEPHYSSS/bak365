@@ -129,6 +129,7 @@
 				}
 			},
 			async clickSubmit(bool) {
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				let customMoney = '' // 是否是自定义金额  1=>是  0=>不是
 				let obj = {}
 
@@ -154,7 +155,8 @@
 				}
 				try {
 					Object.assign(obj, {
-						Action: 'CardRecharge'
+						Action: 'CardRecharge',
+						ShopSID:currentStore.data.SID
 					})
 					Object.assign(obj, {
 						Type: customMoney

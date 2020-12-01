@@ -239,7 +239,7 @@
 						SpecType:this.goodsInfo.SpecType,
 						BuyCnt: this.valueStepper,
 						ProdSID: this.goodsInfo.SID,
-						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.SID : "",
+						SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.goodsInfo.SpecSID : "",
 						ProdType: this.goodsInfo.ProdType,//0是商品，1是电子券
 						PartsNo:PartsNoArr,//配件编号
 						PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组

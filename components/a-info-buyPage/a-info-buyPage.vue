@@ -128,10 +128,9 @@
 		</div>
 		<!-- ProdType==0代表普通商品 ProdType==1代表电子券商品-->
 		<div class="goods-action" v-show="goods.ProdType == '0'">
-			<!-- "goods.StockType != '0'&& item.StoreQty <= '0'" -->
 			<!-- 当状态等于0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
 			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :skuDataInfo = "skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'"></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo = "skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
 			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
 		</div>
 		<div class="goods-action" v-show="goods.ProdType =='1' ">
@@ -234,7 +233,8 @@
 				maxPrice:"",
 				minPrice:"",
 				maxMemberPrice:"",
-				minMemberPrice:"",				
+				minMemberPrice:"",	
+			    IsGoodBuyTime:false,
 			};
 		},
 		created() {
@@ -258,10 +258,17 @@
 				}
 			}
 			this.tradeList()
+			if(this.skuDataInfo.ProdInfo.BuyTime){
+				let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
+				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
+			}else{
+				this.IsGoodBuyTime = true
+			}
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				this.buttonGroup.push({
 					text: '加入购物车',
-					backgroundColor: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?'#FFC868':'#ffa200',
+					// backgroundColor: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?'#FFC868':'#ffa200',
+					backgroundColor: '#ffa200',
 					color: '#fff',
 					borderRadius: '25px 0 0 25px',
 					isbuy:this.skuDataInfo.IsBuy,
@@ -311,6 +318,33 @@
 			}
 		},
 		methods: {
+			isDuringDate(beginDateStr, endDateStr){
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				if (month < 10) {
+				    month = "0" + month;
+				}
+				if (day < 10) {
+				    day = "0" + day;
+				}
+				var nowDate = year + "-" + month + "-" + day;
+				var h = date.getHours();
+				h = h < 10 ? ('0' + h) : h;
+				var minute = date.getMinutes();
+				var second = date.getSeconds();
+				minute = minute < 10 ? ('0' + minute) : minute;
+				second = second < 10 ? ('0' + second) : second;
+				var nowddd =  year + "-" + month + "-" + day+' '+h+':'+minute+':'+second
+				let StartTime  = nowDate + ' ' +beginDateStr;
+				let endTime  = nowDate + ' ' + endDateStr;
+				if (nowddd >= StartTime && nowddd <= endTime) {
+					return true;
+				}
+				return false
+				
+			},
 			clickShop() {
 				if (this.isBrowse) {
 					return;

@@ -33,7 +33,7 @@
         mounted() {
             // true为判断条件，根据实际的需求替换即可
             if(this.ShopRadio === '2') {
-                this.tabbar.splice(1,0,
+				this.tabbar = [
 					{
 						"pagePath": "/pages/shoppingMall/index",
 						"text": '自定义首页',
@@ -41,8 +41,7 @@
 						"selectedIconPath": 'static/img/select-home1.png',
 						"fontIcon": "static/img/home.png"
 					},
-					{
-						"pagePath": "/pages/shoppingMall/list/goodsList",
+						{"pagePath": "/pages/shoppingMall/list/goodsList",
 						"text": '商品',
 						"iconPath": 'static/img/home.png',
 						"selectedIconPath": 'static/img/select-home1.png',
@@ -61,9 +60,39 @@
 					    "selectedIconPath": 'static/img/select-home1.png',
 					    "text": "个人中心",
 						"fontIcon": "icon-shouye"
-					}
-                )
-            }else{
+					}]
+     //            this.tabbar.splice(1,0,
+					// {
+					// 	"pagePath": "/pages/shoppingMall/index",
+					// 	"text": '自定义首页',
+					// 	"iconPath": 'static/img/home.png',
+					// 	"selectedIconPath": 'static/img/select-home1.png',
+					// 	"fontIcon": "static/img/home.png"
+					// },
+					// {
+					// 	"pagePath": "/pages/shoppingMall/list/goodsList",
+					// 	"text": '商品',
+					// 	"iconPath": 'static/img/home.png',
+					// 	"selectedIconPath": 'static/img/select-home1.png',
+					// 	"fontIcon": "static/img/home.png"
+					// },
+					// {
+					// 		"pagePath": "/pages/shoppingMall/shoppingCart/index",
+					// 		"text": '购物车',
+					// 		"iconPath": 'static/img/gouwuche.png',
+					// 		"selectedIconPath": 'static/img/select-gouwuche1.png',
+					// 		"fontIcon": "icon-shouye"
+					// },
+					// {
+					//     "pagePath": "/pages/home",
+					//     "iconPath": 'static/img/home.png',
+					//     "selectedIconPath": 'static/img/select-home1.png',
+					//     "text": "个人中心",
+					// 	"fontIcon": "icon-shouye"
+					// }
+     //            )
+            }
+			else{
 				this.tabbar = [{
 						"pagePath": "/pages/shoppingMall/login",
 						'text': '首页',

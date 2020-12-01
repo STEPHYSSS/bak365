@@ -17,7 +17,7 @@ export const vipCard = (data, ViewKay, AppNo) => {
 					// h5
 					// let UserMACPhone = sessionStorage.getItem('UserMACPhone')
 					let UserMACPhone = Cookies.get("UserMACPhone")
-					// let UserMACPhone = '28ccbefc1c89a64f1f6672669adc6891u'
+					// let UserMACPhone = '173c8e1b834d6a0836d7c97c8c88381fu'
 					// let AppNo = Cookies.get('AppNo') ? Cookies.get('AppNo') : AppNo
 					let AppNo = sessionStorage.getItem('AppNo')
 					
@@ -46,7 +46,7 @@ export const vipCard = (data, ViewKay, AppNo) => {
 									uni.hideLoading();
 									return resolve(response.data)
 								} else {
-									console.log(response.data.Message)
+									// alert(response.data.Message)
 									if(response.data.Message!='暂无赠送信息'){
 										uni.showToast({
 											title: response.data.Message,

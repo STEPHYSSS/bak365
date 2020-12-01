@@ -145,7 +145,8 @@
 				});
 				if(this.$route.query.query){
 					this.SID = JSON.parse(this.$route.query.query);
-				}else if(this.$Route.query.flag =='Deflocation'){
+				}else
+				if(this.$Route.query.flag =='Deflocation'){
 					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 					this.currentStoreInfo = {
 						Name: currentStore.data.Name,

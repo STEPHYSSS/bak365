@@ -105,7 +105,7 @@
 					</div>
 				</div>
 				<!-- 底部占位 -->
-				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" @buttonClick="onClickButton">
+				<uni-goods-nav class="goods-action" :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" @buttonClick="onClickButton">
 				</uni-goods-nav>
 			</div>
 		</uni-popup>
@@ -160,6 +160,7 @@
 				//是否让立即购买
 				disabledPay: false,
 				options: [],
+				IsGoodBuyTime:false,
 				buttonGroup: [{
 						text: '加入购物车',
 						backgroundColor: '#ffa200',
@@ -192,6 +193,12 @@
 					borderRadius: '25px'
 				}]
 			}
+			if(this.skuDataInfo.ProdInfo.BuyTime){
+				let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
+				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
+			}else{
+				this.IsGoodBuyTime = true
+			}
 		},
 		computed: {
 			isActiveName() {
@@ -206,6 +213,33 @@
 			},
 		},
 		methods: {
+			isDuringDate(beginDateStr, endDateStr){
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				if (month < 10) {
+				    month = "0" + month;
+				}
+				if (day < 10) {
+				    day = "0" + day;
+				}
+				var nowDate = year + "-" + month + "-" + day;
+				var h = date.getHours();
+				h = h < 10 ? ('0' + h) : h;
+				var minute = date.getMinutes();
+				var second = date.getSeconds();
+				minute = minute < 10 ? ('0' + minute) : minute;
+				second = second < 10 ? ('0' + second) : second;
+				var nowddd =  year + "-" + month + "-" + day+' '+h+':'+minute+':'+second
+				let StartTime  = nowDate + ' ' +beginDateStr;
+				let endTime  = nowDate + ' ' + endDateStr;
+				if (nowddd >= StartTime && nowddd <= endTime) {
+					return true;
+				}
+				return false
+				
+			},
 			async onClickButton(bool) {
 				if (this.isBrowse) {
 					return;
@@ -405,10 +439,9 @@
 			},
 			overlimitParts(e) {},
 			setStepperMax() { //加号
-				if (
-					Number(this.goodsInfo.MaxBuyCnt) <
-					Number(this.goodsInfo.StoreQty) &&
-					Number(this.goodsInfo.MaxBuyCnt)
+				if(this.goodsInfo.StockType === '0'){
+					return Number(this.goodsInfo.MaxBuyCnt='99')
+				}else if (Number(this.goodsInfo.MaxBuyCnt) < Number(this.goodsInfo.StoreQty) && Number(this.goodsInfo.MaxBuyCnt)
 				) {
 					return Number(this.goodsInfo.MaxBuyCnt);
 				} else {
@@ -428,7 +461,7 @@
 					) {
 						str = "每人限购" + this.goodsInfo.MaxBuyCnt + "件";
 					} else {
-						str = "该规格商品库存不足";
+						str = "该商品库存不足";
 					}
 					this.$toast(str);
 				}

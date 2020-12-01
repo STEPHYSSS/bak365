@@ -502,7 +502,6 @@
 							}
 							this.total = Data.SumTotal;
 							this.ProdTotal = Data.ProdTotal;
-							console.log(Data.SumTotal)
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 							this.CardInfo = Data.hasOwnProperty("CardInfo") ?
 								Data.CardInfo : {};
@@ -991,7 +990,7 @@
 				}
 				
 			},
-			async OrderCardPay() {// 支付				
+			async OrderCardPay() {// 支付
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
 					this.$toast("请选择地址");
 					return;
@@ -1094,11 +1093,10 @@
 				try {
 					let {
 						Data
-					} = await vipCard(obj, Opera);
+					} = vipCard(obj, Opera);
 					this.loading = false;
 					uni.hideLoading();
 					this.$store.commit("SET_CURRENT_CARD", []); //清掉购物车
-
 					uni.removeStorageSync("alreadyPaid"); //清点之前标记的已经下单的字段
 					if (this.radioPayType === "1") {
 						//微卡支付
@@ -1121,7 +1119,8 @@
 					}
 				} catch (e) {
 					this.$toast.fail(e);
-					this.$toast.fail("支付失败");
+					// this.$toast.fail("支付失败");
+					
 					this.payTypePop = false;
 					this.$refs.payTypePop.close();
 					// setTimeout(() => {

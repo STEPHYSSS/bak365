@@ -143,7 +143,8 @@
 							<adCell text="微卡充值" @click="$Router.push('/pages/vip/weiFull')" />
 						</div>
 						<div>
-							<adCell text="付款码" @click="$Router.push('/pages/vip/payCode')" />
+							<adCell text="付款码" @click="toPayMeng"></adCell>
+							<!-- <adCell text="付款码" @click="$Router.push('/pages/vip/payCode')" /> -->
 						</div>
 					</div>
 					<div class="cardWei">
@@ -296,12 +297,17 @@
 				}		
 			},
 			bindEntity(num){
-				this.$Router.push({
-					path: '/pages/vip/bind/index',
-					query: {
-						id: num
-					}
-				})
+				// http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=ApplyCard
+				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=ApplyCard"
+				// this.$Router.push({
+				// 	path: '/pages/vip/bind/index',
+				// 	query: {
+				// 		id: num
+				// 	}
+				// })
+			},
+			toPayMeng(){
+				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=PayCode"
 			},
 			clickClear() {//清除缓存		
 				this.remove();

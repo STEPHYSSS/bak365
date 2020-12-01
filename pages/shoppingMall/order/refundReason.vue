@@ -10,7 +10,7 @@
 					<span class="refund-money">¥{{$Route.query.PayAmt}}</span>
 				</adCell>
 			</div>
-			<div style="display: flex;padding:30rpx 24rpx;">
+			<div style="display: flex;padding:30rpx 24rpx;border-top:0;">
 				<div class="textView">退款说明</div>
 				<input style="flex:1;font-size: 14px;" v-model="refundTypeObj.UserRemark" placeholder="请输入退款说明" />
 			</div>
@@ -95,14 +95,14 @@
 						});
 						return;
 					}
-					if (!this.refundTypeObj.UserRemark) {
-						uni.showToast({
-							title: '请填写退款说明',
-							duration: 2000,
-							icon: 'none'
-						});
-						return;
-					}
+					// if (!this.refundTypeObj.UserRemark) {
+					// 	uni.showToast({
+					// 		title: '请填写退款说明',
+					// 		duration: 2000,
+					// 		icon: 'none'
+					// 	});
+					// 	return;
+					// }
 					let obj = {
 						Action: "ApplyRefund",
 						SID: this.$Route.query.SID,

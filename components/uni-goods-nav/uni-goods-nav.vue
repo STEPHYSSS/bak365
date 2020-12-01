@@ -18,7 +18,7 @@
 				</view>
 			</view>
 			<!-- v-if="skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'" -->
-			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right" v-if="skuDataInfo.State ==='0'||skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0'" >
+			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right" v-if="skuDataInfo.State ==='0'||skuDataInfo.StockType != '0'&& skuDataInfo.StoreQty <= '0' || IsGoodBuyTime==false" >
 				<view v-for="(item,index) in buttonGroup" :key="index" style="opacity: .3;" :style="{backgroundColor:item.backgroundColor,color:item.color,'border-radius':item.borderRadius}"
 				 class="flex uni-tab__cart-button-right2">
 					<text class="uni-tab__cart-button-right-text">{{ item.text }}</text>
@@ -84,6 +84,11 @@
 						}
 					]
 				}
+			},
+			IsGoodBuyTime: {
+				type: Boolean,
+				default:true
+				
 			},
 			skuDataInfo: {
 				type: Object,
