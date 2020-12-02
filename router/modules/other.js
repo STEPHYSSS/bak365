@@ -191,6 +191,12 @@ const other = [
 		meta: {
 			title: '活动助力',
 		}
+	},{ //login页面 买茶送包 
+		path: '/pages/autoIndex/autoIndex',
+		name: 'invite',
+		meta: {
+			title: '活动助力',
+		}
 	}
 ]
 export default other

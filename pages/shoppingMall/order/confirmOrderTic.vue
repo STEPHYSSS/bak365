@@ -133,7 +133,7 @@
 			// 电子券下单的信息
 			async getInfo() {
 				this.loading = true;
-				uni.showLoading()
+				// uni.showLoading()
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				try {
 					let data = await vipCard(
@@ -242,6 +242,8 @@
 				}
 			},
 			async OrderCardPay() {
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
+				// let currentStore = this.$store.state.currentStoreInfo || {}
 				if (this.password === "" && this.IsPass === "1") {
 					this.$toast("请填写密码");
 					return;
@@ -250,8 +252,10 @@
 					let Data = await vipCard(
 					  {
 						Action: "TicketPay",
-						ProdList:JSON.stringify(this.prodList),
-						PayType:this.radioPayType
+						ShopSID:currentStore.data.SID,
+						// ProdList:JSON.stringify(this.prodList),
+						ProdList:this.currentItem,
+						PayType:this.radioPayType,
 					  }, "UOrderOpera")
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
@@ -270,7 +274,7 @@
 					  	try {
 					  		weChatPayment(this, Data, false);
 					  	} catch (e) {
-					  		that.$toast.fail("微信调起失败");
+					  		that.$toast.fail(e);
 					  		this.loading = false;
 					  		uni.hideLoading();
 					  	}

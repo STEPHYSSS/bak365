@@ -11,7 +11,7 @@
 					</div>
 					<div v-if="currentArea&&JSON.stringify(currentArea) !== '{}'" style="flex: 1">
 						<div>
-							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>							
+							<span>{{currentArea.Name}}{{currentArea.Sex | setSex2}}</span>
 							<span class="order-area-phone">{{currentArea.Mobile?currentArea.Mobile:currentArea.Tel}}</span>
 						</div>
 						<div class="order-area-location">{{currentArea.Address}}&nbsp;{{currentArea.House}}&nbsp;</div>
@@ -86,7 +86,7 @@
 					<view style="float: right;">
 						<checkbox-group @change="checkChange">
 							<label>
-								<checkbox value="0" :checked="allck"  color="#FFCC33" style="transform:scale(0.7)" />
+								<checkbox value="0" :checked="allck" color="#FFCC33" style="transform:scale(0.7)" />
 							</label>
 						</checkbox-group>
 					</view>
@@ -219,10 +219,10 @@
 					<div class="block-item" v-if="CardInfo.IsPass==='1'">
 						<div class="label" style="text-indent:10px;">微卡密码</div>
 						<input type="password" style="padding-left:10px;width: 160px;" placeholder="请输入密码" name="password" v-model="password" />
-					</div>					
+					</div>
 				</div>
 				<div class="button-theme-big" style="padding-bottom: 20px;">
-					<button @click="OrderCardPay" :disabled="loading" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+					<button @click="OrderCardPay"  class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
 				</div>
 			</view>
 		</uni-popup>
@@ -262,7 +262,7 @@
 				UserTime: "",
 				UserDiscount: "",
 				UserDiscountName: "请选择方案",
-				UserTicketName:'请选择电子券',//电子券名称
+				UserTicketName: '请选择电子券', //电子券名称
 				// 当前选择的地址
 				currentArea: {},
 				radioModes: 2,
@@ -271,8 +271,8 @@
 				addEditArea: false,
 				selectTime: false,
 				discountProgram: false,
-				ticketProgram:false,//电子券ref
-				payTypePop:false,//微卡支付弹窗
+				ticketProgram: false, //电子券ref
+				payTypePop: false, //微卡支付弹窗
 				resultArea: "",
 				areaList: [], //弹出窗地址渲染列表
 				DeliveryAreaList: [],
@@ -299,7 +299,7 @@
 				ProdTotal: 0,
 				// 优惠方案id
 				radioDiscount: "",
-				DiscountList: [],				
+				DiscountList: [],
 				// 整天的时间段
 				allTimeSlot: [],
 				// 记录时间段
@@ -313,23 +313,23 @@
 				totalCurrentScore: 0,
 				currentIndex: 0,
 				// location:JSON.parse(sessionStorage.getItem('location')),
-				location:{
+				location: {
 					// longitude: 30.47988,
 					// latitude: 114.41739
 				},
-				takeDeliveryTpey:'',
-				DiscPrice:'',//优惠价格
-				PrefNo:'',//点击优惠方案编号
-				TicketPrice:'',//电子券价格
-				TicketNo:'',//点击电子券编号
-				TicketList:[],//电子券列表
-				radioTicket:"",//选中电子券sid
-				isMember :localStorage.getItem('isMember'),
-				password: "",//微卡支付密码
+				takeDeliveryTpey: '',
+				DiscPrice: '', //优惠价格
+				PrefNo: '', //点击优惠方案编号
+				TicketPrice: '', //电子券价格
+				TicketNo: '', //点击电子券编号
+				TicketList: [], //电子券列表
+				radioTicket: "", //选中电子券sid
+				isMember: localStorage.getItem('isMember'),
+				password: "", //微卡支付密码
 				IsPass: "",
-				ScoreDeduction:'',//可用积分
-				ScoreAmt:'',//抵扣金额
-				allck:true,//初始化选中
+				ScoreDeduction: '', //可用积分
+				ScoreAmt: '', //抵扣金额
+				allck: true, //初始化选中
 			};
 		},
 		async created() {
@@ -341,7 +341,7 @@
 				this.$Router.back(100)
 				// window.history.go(-1);
 			}
-			if(this.isMember === '0' || this.isMember == undefined || this.isMember == null){
+			if (this.isMember === '0' || this.isMember == undefined || this.isMember == null) {
 				this.radioPayType = "2"
 			}
 			// 获取授权地址
@@ -378,7 +378,7 @@
 				this.currentArea = currentStore.data;
 			} else {
 				this.takeDeliveryTpey = '2'
-				this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))	
+				this.currentArea = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 			}
 		},
 		methods: {
@@ -396,22 +396,22 @@
 					// }
 					let currentItems = JSON.parse(this.currentItem);
 					this.currentDeliveryType = currentItems[0].DeliveryType;
-					let shopLong ="";
+					let shopLong = "";
 					let shopLat = "";
-					if(this.$store.state.orderType === 'takein'){
-						shopLong = this.$store.state.currentLocation.longitude?this.$store.state.currentLocation.longitude:'';
-						shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
+					if (this.$store.state.orderType === 'takein') {
+						shopLong = this.$store.state.currentLocation.longitude ? this.$store.state.currentLocation.longitude : '';
+						shopLat = this.$store.state.currentLocation.latitude ? this.$store.state.currentLocation.latitude : '';
 					}
 					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 					// 自取的时候传递的经纬度是授权的经纬度，如果是外卖的时候传递的经纬度就是收货地址的经纬度
 					let obj = {
 						Action: "SettlePay",
 						ProdList: this.currentItem,
-						Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
-						Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
-						DeliveryType:this.takeDeliveryTpey,
-						ShopSID:currentStore.data.SID,
-						PayType:this.radioPayType//传给后台来判断优惠方案的
+						Longitude: this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
+						Latitude: this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
+						DeliveryType: this.takeDeliveryTpey,
+						ShopSID: currentStore.data.SID,
+						PayType: this.radioPayType //传给后台来判断优惠方案的
 						// DeliveryType: this.currentDeliveryType						
 					};
 
@@ -421,10 +421,10 @@
 					}
 					Promise.all([this.saveArea(true), vipCard(obj, "UProdOpera")])
 						.then(res => {
-							if(res[1].Success == false){
+							if (res[1].Success == false) {
 								uni.showToast({
 									title: res[1].message,
-									icon: 'none' 
+									icon: 'none'
 								});
 							}
 							this.takeOver = res[0];
@@ -433,18 +433,18 @@
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
-							if (this.radioModes === 1) {								
+							if (this.radioModes === 1) {
 								this.areaList = Data.ShopInfoList;
 							} else {
 								this.areaList = Data.AddressList
 							}
 							// 自取时默认填写手机号
-							if(this.takeDeliveryTpey==='1'&& Data.AddressList.length>0){
+							if (this.takeDeliveryTpey === '1' && Data.AddressList.length > 0) {
 								this.name_user = Data.AddressList[0].Name;
 								this.phone_user = Data.AddressList[0].Mobile;
 							}
 							this.currentItem.forEach(D => {
-								if(D.PartsList){
+								if (D.PartsList) {
 									D.PartsList = JSON.stringify(D.PartsList);
 									// if (typeof D.PartsNo !== "string") {
 									// 	D.PartsNo.forEach((data, index) => {
@@ -480,18 +480,18 @@
 									}
 								});
 							}
-							if (Data.hasOwnProperty('CardInfo')){
-								this.IsPass= Data.CardInfo.IsPass?Data.CardInfo.IsPass:''
+							if (Data.hasOwnProperty('CardInfo')) {
+								this.IsPass = Data.CardInfo.IsPass ? Data.CardInfo.IsPass : ''
 							}
-							this.ScoreDeduction=Data.ScoreDeduction;//可用积分
-							this.ScoreAmt=Data.ScoreAmt;//抵扣金额
-							this.CardInfo = Data.CardInfo;//卡信息
-							this.freight = Data.Freight;//运费
-							this.DiscPrice = Data.DiscPrice;//优惠价格
-							this.TicketList =Data.TicketList || [];//电子券列表
-							this.TicketPrice = Data.TicketPrice;//电子券价格
-							this.DiscountList = Data.DiscList || [];//优惠方案列表
-							if(this.TicketList.length>0){
+							this.ScoreDeduction = Data.ScoreDeduction; //可用积分
+							this.ScoreAmt = Data.ScoreAmt; //抵扣金额
+							this.CardInfo = Data.CardInfo; //卡信息
+							this.freight = Data.Freight; //运费
+							this.DiscPrice = Data.DiscPrice; //优惠价格
+							this.TicketList = Data.TicketList || []; //电子券列表
+							this.TicketPrice = Data.TicketPrice; //电子券价格
+							this.DiscountList = Data.DiscList || []; //优惠方案列表
+							if (this.TicketList.length > 0) {
 								this.radioTicket = this.TicketList[0].TicketNo;
 								this.UserTicketName = this.TicketList[0].TicketName;
 							}
@@ -594,7 +594,7 @@
 					uni.hideLoading()
 				}
 			},
-			async getInfoIntegral() {//积分活动商品信息
+			async getInfoIntegral() { //积分活动商品信息
 				try {
 					uni.showLoading()
 					let {
@@ -621,19 +621,19 @@
 					uni.hideLoading()
 				}
 			},
-			checkChange(e){
+			checkChange(e) {
 				//等于0 是选中，不等于0 就是没选中
-				if(e.detail.value =='0'){
+				if (e.detail.value == '0') {
 					this.allck = true;
-					this.total  = parseFloat((Number(this.total) -	 Number(this.ScoreAmt)).toFixed(2))
-				}else{
+					this.total = parseFloat((Number(this.total) - Number(this.ScoreAmt)).toFixed(2))
+				} else {
 					this.allck = false;
 					this.total = parseFloat((Number(this.total) + Number(this.ScoreAmt)).toFixed(2))
 				}
-				
+
 			},
 			orderArea() {},
-			async getWxConfig(){
+			async getWxConfig() {
 				try {
 					let {
 						Data
@@ -641,40 +641,40 @@
 						Action: "GetJSSDK",
 						Url: window.location.href
 					}, "UProdOpera");
-					
+
 					wx.config({
 						debug: false,
 						appId: Data.SDK.appId,
 						timestamp: Data.SDK.timestamp,
 						nonceStr: Data.SDK.noncestr,
 						signature: Data.SDK.signature,
-						jsApiList: ["getLocation","openAddress","scanQRCode"]
+						jsApiList: ["getLocation", "openAddress", "scanQRCode"]
 					});
 					// console.log(wx.config)
 					wx.ready(res => {
 						let _this = this;
-					    wx.getLocation({
-					       type: 'gcj02',  // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-					      success: function(res) {
-							  // alert(JSON.stringify(res))
-					        // _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
-					        // _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
-							_this.location = {
-								longitude: res.longitude,
-								latitude: res.latitude
+						wx.getLocation({
+							type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+							success: function(res) {
+								// alert(JSON.stringify(res))
+								// _this.location.latitude = res.latitude;// 纬度，浮点数，范围为90 ~ -90
+								// _this.location.longitude = res.longitude;// 经度，浮点数，范围为180 ~ -180。
+								_this.location = {
+									longitude: res.longitude,
+									latitude: res.latitude
+								}
+								_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
+								sessionStorage.setItem('location', JSON.stringify(_this.location))
+							},
+							cancel: function(res) {
+								this.$toast.fail(res);
 							}
-							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							sessionStorage.setItem('location',JSON.stringify(_this.location))							
-					      },
-					      cancel: function(res) {
-					       this.$toast.fail(res);
-					      }
-					    });
-					  wx.error(function(res) {
-					    this.$toast.fail(res);
-					    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-					    console.log("调用微信接口获取当前位置失败", res);
-					  });
+						});
+						wx.error(function(res) {
+							this.$toast.fail(res);
+							// config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+							console.log("调用微信接口获取当前位置失败", res);
+						});
 					})
 				} catch (e) {
 					// console.log(e, "55555");
@@ -728,10 +728,10 @@
 				this.resultArea = val.detail.value
 			},
 			// 切换并选择地址  最后提交的时候把这个地方的经纬度传给后台
-			async changeArea(val,index){
+			async changeArea(val, index) {
 				this.showAreaList = true;
 				this.$refs.showAreaList.open()
-				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))				
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				let api;
 				if (this.radioModes === 1) {
 					api = "IsPickShop";
@@ -744,25 +744,27 @@
 						api = "CalcLogistics";
 					}
 				}
-				
-				try{
+
+				try {
 					this.loading = true;
 					uni.showLoading()
 					let obj = {
-						Action:api,
+						Action: api,
 						Latitude: val.Latitude || "",
 						Longitude: val.Longitude || "",
 						ShopSID: this.radioModes === 1 ? val.SID : "",
-						DiscPrice:this.DiscPrice,
-						ProdTotal:this.ProdTotal,
-						TicketPrice:this.TicketPrice,
+						DiscPrice: this.DiscPrice,
+						ProdTotal: this.ProdTotal,
+						TicketPrice: this.TicketPrice,
 						// PayType: this.radioPayType,
 						ProdList: JSON.stringify(this.currentItem),
-						ScoreAmt:this.allck === true ? this.ScoreAmt:''//判断积分抵扣是否选中
-						
+						ScoreAmt: this.allck === true ? this.ScoreAmt : '' //判断积分抵扣是否选中
+
 						// ProdList:this.currentItem
 					}
-					let { Data } = await vipCard(obj, "UProdOpera");
+					let {
+						Data
+					} = await vipCard(obj, "UProdOpera");
 					// 把选择的地址赋值到页面上
 					if (this.radioModes === 1) {
 						this.currentArea = val;
@@ -775,10 +777,10 @@
 					}
 					this.showAreaList = false;
 					this.$refs.showAreaList.close()
-				}catch(e){
+				} catch (e) {
 					console.log(e)
 				}
-				
+
 			},
 			clickEdit(val) {
 				this.areaInfo = val;
@@ -797,26 +799,26 @@
 							flag: 'Deflocation'
 						}
 					})
-				}else{
+				} else {
 					window.history.back(-1)
-				} 
+				}
 				// else {
 				// 	this.$Router.push(this.$store.state.historyUrl)
 				// }
 
 			},
-			clickDataTime() {//选择时间弹窗
+			clickDataTime() { //选择时间弹窗
 				this.selectTime = true;
 				this.$refs.selectTime.open()
 			},
-			clickUserDiscount() {//优惠方案弹窗
+			clickUserDiscount() { //优惠方案弹窗
 				this.discountProgram = true;
 				this.$refs.discountProgram.open()
 			},
-			clickUserTicketName(){//选择电子券弹窗
+			clickUserTicketName() { //选择电子券弹窗
 				this.ticketProgram = true;
 				this.$refs.ticketProgram.open()
-				
+
 			},
 			clickTime() {},
 			async saveAreaSet() {
@@ -859,9 +861,9 @@
 					return;
 				}
 				this.radioPayType = item;
-				this.Discount(item,2)
+				this.Discount(item, 2)
 			},
-			
+
 			changeSider(index) {
 				this.currentIndex = index
 				this.activeKey = index
@@ -892,55 +894,57 @@
 			setDiscountClick(val) {
 				this.radioDiscount = val.detail.value
 			},
-			DiscountClick(item,type) {//优惠券
+			DiscountClick(item, type) { //优惠券
 				this.PrefNo = item.PrefNo;
-				let PrefNo = item.PrefNo;				
+				let PrefNo = item.PrefNo;
 				if (item === "undefined") {
 					PrefNo = "";
 					this.UserDiscountName = "优惠方案"
-				}else{
+				} else {
 					this.UserDiscountName = item.PrefName;
 					this.radioDiscount = item.PrefNo
 				}
 				this.discountProgram = false;
-				this.Discount(item,1);
+				this.Discount(item, 1);
 				this.$refs.discountProgram.close();
 			},
 			// 方案事件
-			async Discount(item,type){
+			async Discount(item, type) {
 				// SelectDisc(优惠方案 type=1) SelectPay(支付方式 type=2) SelectTicket(电子券 type=3)
-				const SelectType = type === 1 ? "SelectDisc" : type === 2 ? "SelectPay" : type === 3 ? "SelectTicket" : "";				
+				const SelectType = type === 1 ? "SelectDisc" : type === 2 ? "SelectPay" : type === 3 ? "SelectTicket" : "";
 				// let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));//用来获取门店id
-				try{
-					let obj={
+				try {
+					let obj = {
 						Action: "SelectDisc",
-						SelectType:SelectType,//按钮类型
-						ProdList: JSON.stringify(this.currentItem),						
-						PrefNo: type===1 ? item.PrefNo:'',
-						PayType:type === 2 ? item:1,
+						SelectType: SelectType, //按钮类型
+						ProdList: JSON.stringify(this.currentItem),
+						PrefNo: type === 1 ? item.PrefNo : '',
+						PayType: type === 2 ? item : 1,
 						// DeliveryType:this.takeDeliveryTpey,
 						// ShopSID:currentStore.data.SID,
-						Freight:this.freight,//运费
-						ProdTotal:this.ProdTotal,//商品总价
-						TicketPrice:type!=3 ? this.TicketPrice:'',//type为1和2的时候传，电子券金额
-						DiscPrice:type === 3? this.DiscPrice:'',//type 为3的时候传,优惠金额
-						TicketNo:type != 1 ? this.radioTicket : '',//type不为1 的时候传电子券编号
-						ScoreAmt:this.allck === true ? this.ScoreAmt:''//判断积分抵扣是否选中
-					}				
-					let { Data } =await vipCard(obj, "UProdOpera");
-					if(type === 2){
-						this.DiscountList = Data.DiscList || [];//优惠方案列表
+						Freight: this.freight, //运费
+						ProdTotal: this.ProdTotal, //商品总价
+						TicketPrice: type != 3 ? this.TicketPrice : '', //type为1和2的时候传，电子券金额
+						DiscPrice: type === 3 ? this.DiscPrice : '', //type 为3的时候传,优惠金额
+						TicketNo: type != 1 ? this.radioTicket : '', //type不为1 的时候传电子券编号
+						ScoreAmt: this.allck === true ? this.ScoreAmt : '' //判断积分抵扣是否选中
+					}
+					let {
+						Data
+					} = await vipCard(obj, "UProdOpera");
+					if (type === 2) {
+						this.DiscountList = Data.DiscList || []; //优惠方案列表
 						if (this.DiscountList.length > 0) {
 							this.radioDiscount = this.DiscountList[0].PrefNo;
 							this.UserDiscountName = this.DiscountList[0].PrefName;
-						}						
+						}
 					}
-					this.freight = Data.Freight;//运费
-					this.DiscPrice = Data.DiscPrice;//优惠价格
-					this.TicketPrice = Data.TicketPrice;//电子券价格
-					this.total = Data.SumTotal;//合计和小计
-					this.ProdTotal = Data.ProdTotal;//商品总价格
-					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));//合计和小计	
+					this.freight = Data.Freight; //运费
+					this.DiscPrice = Data.DiscPrice; //优惠价格
+					this.TicketPrice = Data.TicketPrice; //电子券价格
+					this.total = Data.SumTotal; //合计和小计
+					this.ProdTotal = Data.ProdTotal; //商品总价格
+					this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2)); //合计和小计	
 					if (JSON.stringify(this.CardInfo) !== "{}") {
 						if (Number(this.CardInfo.Balance) < Number(Data.SumTotal)) {
 							//余额不足默认微信支付
@@ -949,16 +953,16 @@
 					} else {
 						this.radioPayType = "2";
 					}
-				}catch(e){
+				} catch (e) {
 					console.log(e)
-					
+
 				}
 			},
 			// 电子券开始
-			setTicketClick(val){//电子券
+			setTicketClick(val) { //电子券
 				this.radioTicket = val.detail.value
 			},
-			ticketClick(item,type){
+			ticketClick(item, type) {
 				this.TicketNo = item.TicketNo;
 				this.radioTicket = item.TicketNo;
 				let TicketNo = item.TicketNo;
@@ -966,14 +970,14 @@
 				if (item === "undefined") {
 					TicketNo = "";
 					this.UserTicketName = "可用电子券"
-				}else{
+				} else {
 					this.UserTicketName = item.TicketName;
 					this.radioTicket = item.TicketNo;
 				}
 				this.ticketProgram = false;
-				this.Discount(item,3);
+				this.Discount(item, 3);
 				this.$refs.ticketProgram.close();
-				
+
 			},
 			// 电子券结束
 			areaSet() {
@@ -981,16 +985,17 @@
 				this.addEditArea = true;
 				this.$refs.addEditArea.open()
 			},
-			submitMoney(){//点击结算按钮，展示弹窗
-				if(this.radioPayType === "1"){
+			submitMoney() { //点击结算按钮，展示弹窗
+				console.log(this.radioPayType)
+				if (this.radioPayType === "1") {
 					this.payTypePop = true;
 					this.$refs.payTypePop.open()
-				}else{
+				} else {
 					this.OrderCardPay();
 				}
-				
+
 			},
-			async OrderCardPay() {// 支付
+			async OrderCardPay() { // 支付
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
 					this.$toast("请选择地址");
 					return;
@@ -1018,7 +1023,7 @@
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}
-				if(this.radioTicket === "undefined"){
+				if (this.radioTicket === "undefined") {
 					this.radioTicket = "";
 				}
 				let DeliveryType = this.radioModes; //2、1       //获取当前配送方式
@@ -1035,15 +1040,15 @@
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
 				}
-				let shopLong ="";
+				let shopLong = "";
 				let shopLat = "";
-				if(this.$store.state.orderType === 'takein'){
-					shopLong = this.$store.state.currentLocation.longitude?this.$store.state.currentLocation.longitude:'';
-					shopLat = this.$store.state.currentLocation.latitude?this.$store.state.currentLocation.latitude:'';
+				if (this.$store.state.orderType === 'takein') {
+					shopLong = this.$store.state.currentLocation.longitude ? this.$store.state.currentLocation.longitude : '';
+					shopLat = this.$store.state.currentLocation.latitude ? this.$store.state.currentLocation.latitude : '';
 				}
 				// if(this.allck === true){//判断是否勾选积分抵扣
 				// 	// true代表选中，false代表未选中
-					
+
 				// }
 				let currentStore = this.$store.state.currentStoreInfo || {}
 				let obj = {
@@ -1051,10 +1056,10 @@
 					DeliveryType: DeliveryType,
 					UserName: this.radioModes === 2 ? this.currentArea.Name : this.name_user,
 					Mobile: this.radioModes === 1 ? this.phone_user : this.currentArea.Mobile,
-					Address: this.radioModes === 2 ?this.currentArea.Address: "",
+					Address: this.radioModes === 2 ? this.currentArea.Address : "",
 					ProdList: this.currentItem,
-					Longitude:this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
-					Latitude:this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
+					Longitude: this.$store.state.orderType === 'takein' ? shopLong : this.currentArea.Longitude,
+					Latitude: this.$store.state.orderType === 'takein' ? shopLat : this.currentArea.Latitude,
 					Province: this.currentArea.Province || "",
 					ShopSID: this.radioModes === 1 ? currentStore.SID : "",
 					UserRemarks: this.UserRemarks,
@@ -1063,9 +1068,9 @@
 					PickTime: this.RecordTime.radioTime,
 					CartSID: this.cardSids,
 					PrefNo: this.radioDiscount,
-					TicketNo:this.radioTicket,
-					PassWord:this.password?this.password:'',
-					ScoreDeduction:this.allck === true ? this.ScoreDeduction:''
+					TicketNo: this.radioTicket,
+					PassWord: this.password ? this.password : '',
+					ScoreDeduction: this.allck === true ? this.ScoreDeduction : ''
 				};
 
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
@@ -1100,10 +1105,14 @@
 					uni.removeStorageSync("alreadyPaid"); //清点之前标记的已经下单的字段
 					if (this.radioPayType === "1") {
 						//微卡支付
-						this.$toast.success("支付成功");
+						// this.$toast.success("支付成功");
 						setTimeout(() => {
-							this.$Router.push("/pages/shoppingMall/order/paySuccess");
-						}, 600);
+							// this.$Router.push("/pages/shoppingMall/order/paySuccess");
+							this.$Router.push({path: "/pages/vip/allMyOrder",
+							query: {
+							  id: "0"
+							}})
+						}, 3000);
 						this.payTypePop = false;
 						this.$refs.payTypePop.close();
 					} else {
@@ -1112,7 +1121,8 @@
 						try {
 							weChatPayment(this, Data, false);
 						} catch (e) {
-							this.$toast.fail("微信调起失败");
+							this.$toast.fail(e)
+							// this.$toast.fail("微信调起失败");
 							this.loading = false;
 							uni.hideLoading();
 						}
@@ -1120,7 +1130,7 @@
 				} catch (e) {
 					this.$toast.fail(e);
 					// this.$toast.fail("支付失败");
-					
+
 					this.payTypePop = false;
 					this.$refs.payTypePop.close();
 					// setTimeout(() => {
@@ -1450,23 +1460,24 @@
 				height: 100%;
 			}
 		}
+
 		button {
 			height: auto;
 		}
-		
+
 		.content {
 			width: 100%;
 			margin: 0 auto;
 		}
-		
+
 		.account-form {
 			overflow: hidden;
 		}
-		
+
 		.container .content {
 			zoom: 1;
 		}
-		
+
 		.account-form .form-title {
 			margin: 50px 0 10px;
 			padding: 0 12px;
@@ -1476,13 +1487,13 @@
 			text-transform: uppercase;
 			text-shadow: 0 1px rgba(255, 255, 255, 0.2);
 		}
-		
+
 		.account-form .big {
 			font-size: 20px;
 			text-align: center;
 			color: #7c7b83;
 		}
-		
+
 		.block {
 			overflow: hidden;
 			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
@@ -1496,12 +1507,12 @@
 			position: relative;
 			font-size: 14px;
 		}
-		
+
 		.block {
 			border-top-width: 1px;
 			border-bottom-width: 1px;
 		}
-		
+
 		.block.block-form {
 			width: 100%;
 			margin: 0;
@@ -1514,11 +1525,11 @@
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
 		}
-		
+
 		.block.block-form.margin-bottom-normal {
 			margin-bottom: 20px;
 		}
-		
+
 		.block-item {
 			position: relative;
 			display: block;
@@ -1531,24 +1542,24 @@
 			border-bottom: 2px solid #e5e5e5;
 			overflow: hidden;
 		}
-		
+
 		.block.block-form .block-item {
 			display: table;
 			width: 100%;
 			padding: 0;
 		}
-		
+
 		.block.block-form .block-item:last-child {
 			border-bottom: 0px none;
 		}
-		
+
 		.block.block-form .block-item .label {
 			display: table-cell;
 			width: 90px;
 			padding: 10px 0;
 			vertical-align: middle;
 		}
-		
+
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select,
@@ -1561,7 +1572,7 @@
 			line-height: 28px;
 			font-size: 14px;
 		}
-		
+
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select {
@@ -1569,24 +1580,24 @@
 			border: 0px none;
 			outline: none;
 		}
-		
+
 		.action-container {
 			padding: 0 10px;
 			text-align: center;
 			margin-top: 20px;
 			margin-bottom: 20px;
 		}
-		
+
 		.account-form button {
 			border: 1px solid #e5e5e5;
 		}
-		
+
 		.btn.btn-green {
 			color: #fff;
 			background-color: #06bf04;
 			border-color: #03b401;
 		}
-		
+
 		.btn.btn-block {
 			color: #fff;
 			text-align: center;

@@ -8,7 +8,8 @@
     "js-base64": "^2.5.2",
     "jweixin-module": "^1.6.0",
     "moment": "^2.27.0",
-    "uni-simple-router": "^1.5.3"
+    "uni-simple-router": "^1.5.3",
+    "vconsole": "^3.3.4"
   },
   "devDependencies": {
     "weixin-js-sdk": "^1.6.0"

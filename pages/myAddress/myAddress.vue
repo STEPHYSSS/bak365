@@ -99,6 +99,7 @@
 				uni.setNavigationBarTitle({
 					title: '门店地址'
 				});
+				this.getShopList();
 			} else {
 				this.title = '我的地址'
 				this.getAddressList();
@@ -106,12 +107,14 @@
 			// vuex缓存的数据经过刷新的时候数据就会回到默认
 			// 自取时调用门店接口，外卖时调用地址接口
 			 //暂时注释 || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'			 
-			let orderType=Cookies.get("orderType")
-			if(	orderType === 'takeout'){			
-				this.getAddressList();
-			}else{
-				this.getShopList();
-			}
+			// let orderType=Cookies.get("orderType")
+			// console.log(orderType)
+			console.log(this.$store.state.orderType )
+			// if(	this.$store.state.orderType == 'takeout'){			
+			// 	this.getAddressList();
+			// }else{
+			// 	this.getShopList();
+			// }
 		},
 		filters: {
 			setSex2(val) {
@@ -268,7 +271,9 @@
 				this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
 				
 				if(this.$Route.query.flag == 'shopAuto'){
-					return this.$Router.push({path:"/pages/shoppingMall/index",query:{flag: 'Deflocation'}})
+					sessionStorage.setItem("flag","getLocalShop")
+					localStorage.setItem("localShop",JSON.stringify(currentStoreInfo))
+					return this.$Router.push({path:"/pages/shoppingMall/index"})
 				}
 				this.$Router.push({
 					path: '/pages/shoppingMall/menu_naixue/menu/menu',

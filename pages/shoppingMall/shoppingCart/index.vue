@@ -254,9 +254,10 @@
 				this.currentIndex = index;
 			},
 			async changeNumParts() {
-				console.log(this.PartsList,'PartsList')
-				console.log(this.dataList,'dataList')
-				console.log(this.currentIndex,'index')	
+				// console.log(this.PartsList,'PartsList')
+				// console.log(this.dataList,'dataList')
+				// console.log(this.currentIndex,'index')	
+				
 				let partsList = [];
 				let dataParams = this.dataList[this.currentIndex];
 				this.PartsList.forEach((D, index) => {
@@ -288,6 +289,8 @@
 					});
 					this.PartsList = this.PartsList.filter(D => Number(D.BuyCnt) !== 0);
 					this.dataList[this.currentIndex].PartsList = this.PartsList;
+					countTotal(this, this.dataList);
+					
 				} catch (e) {}
 			},
 			setPartsChange(bool) {
@@ -319,7 +322,6 @@
 			if (data.PartsList && data.PartsList.length > 0) {
 				data.PartsList.forEach(dataParts => {
 					SalePriceAll += Number(dataParts.SalePrice) * Number(dataParts.BuyCnt);
-					console.log(SalePriceAll,'SalePriceAll销售价格')
 				});
 			}
 			if(data.ParamInfo){

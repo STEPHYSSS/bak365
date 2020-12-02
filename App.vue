@@ -1,5 +1,7 @@
-<script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
-<script>  var vConsole = new VConsole();  console.log('Hello world');</script>
+<!-- <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script> -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+<!-- <script>  var vConsole = new VConsole();  console.log('Hello world');</script><-->
 <script>
 	import Cookie from '@/config/cookie-my/index.js'
 	export default {
@@ -73,6 +75,8 @@
 		},
 		onHide: function() {
 			// console.log('App Hide');
+		},
+		mounted() {
 		},
 		globalData: {
 			// getApp().globalData.mainStyle   主模板

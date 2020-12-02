@@ -170,7 +170,7 @@
 					try {
 						weChatPayment(this, this.testData.Data, false);
 					} catch (e) {
-						that.$toast.fail("微信调起失败");
+						that.$toast.fail(e);
 						this.loading = false;
 						uni.hideLoading();
 					}

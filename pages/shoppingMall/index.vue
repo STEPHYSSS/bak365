@@ -47,6 +47,7 @@
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
 				<button type="default" size="mini" @click="seckill">秒杀</button>
+				<!-- <button type="default" size="mini" @click="autoIndex">测试</button> -->
 				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>
 					<div v-for="(item,index) in listMode" :key="index">
@@ -123,11 +124,23 @@
 				innerAudio: null,
 				oldAudioObj: {},
 				loadding: true,
+				storeInfo:localStorage.getItem('currentStoreInfo'),
 				currentStoreInfo:{},//用来接收门店信息
 				addressName: {}, //地址名称
 				SID:'',
 				location:{}
 			};
+		},
+		watch:{
+			storeInfo:{
+				immediate:true,
+				deep:true,
+				handler(n,o){
+					console.log('---',n)
+				}
+				
+			}
+			
 		},
 		created() {
 			this.init()
@@ -138,31 +151,47 @@
 		methods: {
 			 init(){
 				this.getCouponInfo();
-				this.getWxConfig() // 获取授权地址				
-				// this.loadding = true
+				// if(this.$store.state.currentLocation){
+					
+				// }else{
+				// 	this.getWxConfig() // 获取授权地址	
+				// }
+				this.getWxConfig() // 获取授权地址		
 				uni.showLoading({
 					title: '加载中'
 				});
 				if(this.$route.query.query){
-					this.SID = JSON.parse(this.$route.query.query);
-				}else
-				if(this.$Route.query.flag =='Deflocation'){
-					let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
-					this.currentStoreInfo = {
-						Name: currentStore.data.Name,
-						Address: currentStore.data.Address,
-						SID: currentStore.data.SID,
-						Length:currentStore.data.Length
+					let abc = JSON.parse(this.$route.query.query)
+					let key = Object.keys(abc)
+					if(key=="SID"){
+						this.SID = Object.values(abc)
 					}
-				}else{
-					if(this.$store.state.orderType === 'takein'){
-					    this.getShopList();
-					}
-				}	
+				}
+				// if(this.$Route.query.flag =='Deflocation'){
+				// 	let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
+				// 	this.currentStoreInfo = {
+				// 		Name: currentStore.data.Name,
+				// 		Address: currentStore.data.Address,
+				// 		SID: currentStore.data.SID,
+				// 		Length:currentStore.data.Length
+				// 	}
+				// }else{
+				// 	if(this.$store.state.orderType === 'takein'){
+				// 	    this.getShopList();
+				// 	}
+				// }	
 				if(!this.addresses){
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}else{
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
+				}
+				if(localStorage.getItem("flag")){
+					this.currentStoreInfo.Name = JSON.parse(localStorage.getItem("localShop")).Name;
+				}
+				if(JSON.parse(localStorage.getItem("localShop"))){
+					this.currentStoreInfo.Name = JSON.parse(localStorage.getItem("localShop")).Name;
+				}else{
+					this.getShopList();
 				}
 				this.getAutoMode();
 			},
@@ -224,21 +253,27 @@
 				this.currentStoreInfo = {
 					Name: Data.ShopList[0].Name,
 					Address: Data.ShopList[0].Address,
-					SID: Data.ShopList[0].SID
+					SID: Data.ShopList[0].SID,
+					Latitude: Data.ShopList[0].Latitude,
+					Longitude: Data.ShopList[0].Longitude
 				}
 				// console.log(currentStoreInfo)
 				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
+				localStorage.setItem("localShop",JSON.stringify(this.currentStoreInfo))
 			},
 			async getCouponInfo(){
 				try {
 					let { Data } = await vipCard({
 						Action: "GiveCoupon"
 					}, "UPromotionOpera");
-					this.getCoupon = Data.TicketList;
+					this.getCoupon = Data.TicketList?Data.TicketList:[];
 				} catch (e) {
 					console.log(e);
 				}
 			},
+			// autoIndex(){
+			// 	this.$router.push("/pages/autoIndex/autoIndex");
+			// },
 			clickClear() {
 				Cookie.remove("UserMACPhone");
 			},
@@ -305,7 +340,7 @@
 					} = await vipCard({
 							Action: "GetDecorate",
 							Type:'0',//
-							SID:this.SID.SID ? this.SID.SID : '',
+							SID:this.SID.SID ? this.SID.SID : '',//通过手机二维码扫描的时候需要的SID
 							ShopSID:currentStore.data.SID
 						},
 						"UShopOpera"

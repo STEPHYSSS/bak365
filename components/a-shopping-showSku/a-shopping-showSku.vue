@@ -193,7 +193,7 @@
 					borderRadius: '25px'
 				}]
 			}
-			if(this.skuDataInfo.ProdInfo.BuyTime){
+			if(this.skuDataInfo.ProdInfo.BuyTime !=undefined){
 				let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
 				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
 			}else{

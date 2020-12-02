@@ -29,7 +29,7 @@
 					<span style="color:#ee0a24;font-size:14px" v-if="goods.ActivityDate">{{goods.ActivityDate|setBuyTime}}</span>
 				</div>
 				<div class="goodCoupon-price ">
-					<div v-if="isIntegral!='true'">						
+					<div v-if="isIntegral!='true'">
 						<!-- <div v-if="maxMemberPrice>0||minMemberPrice>0">
 							<span class="colorStyle">¥{{minMemberPrice}}-{{maxMemberPrice}}</span>
 							<p style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
@@ -67,7 +67,7 @@
 								<span>¥{{goods.SalePrice>0?goods.SalePrice:0}}</span>
 								<span v-if="goods.maxPrice">- ¥{{ goods.SalePriceMaxPrice }}</span>
 							</div>
-						</div>						
+						</div>
 					</div>
 					<div v-else>
 						<span>{{goods.Score}}积分</span>
@@ -78,8 +78,8 @@
 				</div>
 			</div>
 			<div class="wu-cell goodCoupon-express lineTop">
-				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>				
-				<div style="flex:1"v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)}}</div>
+				<div style="flex:1" v-if="isIntegral!=='true'">销量：{{ goods.SaleCnt |setMoney}}</div>
+				<div style="flex:1" v-if="goods.StockType != 0">剩余库存：{{ Number(goods.StoreQty)}}</div>
 				<!--                <div v-if="!isCouponPage">规格：</div>-->
 			</div>
 		</div>
@@ -130,12 +130,13 @@
 		<div class="goods-action" v-show="goods.ProdType == '0'">
 			<!-- 当状态等于0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
 			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo = "skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo="skuDataInfo.ProdInfo"
+			 v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
+			 <uni-goods-nav :options=" options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
 		</div>
 		<div class="goods-action" v-show="goods.ProdType =='1' ">
 			<uni-view class="isProdType">
-				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>				
+				<uni-view class="uni-tab__seat" @click="buyNow(goods)">立即购买</uni-view>
 			</uni-view>
 		</div>
 		<!-- 购物车详情 -->
@@ -213,7 +214,7 @@
 				classHome: getApp().globalData.mainStyle,
 				active: "",
 				show: false,
-				showPop:false,//电子券弹窗
+				showPop: false, //电子券弹窗
 				// 点击的是购物车
 				isAddCart: true,
 				classA: "",
@@ -230,16 +231,16 @@
 				options: [],
 				buttonGroup: [],
 				activeTimeMy: {},
-				maxPrice:"",
-				minPrice:"",
-				maxMemberPrice:"",
-				minMemberPrice:"",	
-			    IsGoodBuyTime:false,
+				maxPrice: "",
+				minPrice: "",
+				maxMemberPrice: "",
+				minMemberPrice: "",
+				IsGoodBuyTime: false,
 			};
 		},
 		created() {
 			// $.base64.atob(this.goods.Features, "utf8")
-			this.goods.ImgList = this.goods.Img ? this.goods.Img.split(",") : [];
+			this.goods.ImgList = this.goods.ImgList ? this.goods.ImgList.split(",") : [];
 			this.goods.Features = this.goods.Features ?
 				Base64.decode(this.goods.Features) : "";
 			this.goods.ImportantNotes = this.goods.ImportantNotes ?
@@ -247,21 +248,28 @@
 
 			//加图片 ../前缀
 			this.goods.Features = setfix(this.goods.Features, this);
-			// console.log(this.skuDataInfo,'----')
 			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
-			if(this.isIntegral != 'true' && !this.isCouponPage && !this.seckill){
-				if(this.skuDataInfo.SpecList){					
-					this.maxPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-					this.minPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.SalePrice)}))
-					this.maxMemberPrice = Math.max.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
-					this.minMemberPrice = Math.min.apply(Math,this.skuDataInfo.SpecList.map(item => {return Number(item.MemberPrice)})) 
+			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
+				if (this.skuDataInfo.SpecList) {
+					this.maxPrice = Math.max.apply(Math, this.skuDataInfo.SpecList.map(item => {
+						return Number(item.SalePrice)
+					}))
+					this.minPrice = Math.min.apply(Math, this.skuDataInfo.SpecList.map(item => {
+						return Number(item.SalePrice)
+					}))
+					this.maxMemberPrice = Math.max.apply(Math, this.skuDataInfo.SpecList.map(item => {
+						return Number(item.MemberPrice)
+					}))
+					this.minMemberPrice = Math.min.apply(Math, this.skuDataInfo.SpecList.map(item => {
+						return Number(item.MemberPrice)
+					}))
 				}
 			}
 			this.tradeList()
-			if(this.skuDataInfo.ProdInfo.BuyTime){
+			if (this.skuDataInfo.ProdInfo.BuyTime) {
 				let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
-				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
-			}else{
+				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0], BuyTime[1])
+			} else {
 				this.IsGoodBuyTime = true
 			}
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
@@ -271,8 +279,9 @@
 					backgroundColor: '#ffa200',
 					color: '#fff',
 					borderRadius: '25px 0 0 25px',
-					isbuy:this.skuDataInfo.IsBuy,
-					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
+					isbuy: this.skuDataInfo.IsBuy,
+					disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0' && this.goods.StoreQty <= '0') ? true :
+						false
 				})
 				this.options.push({
 					icon: 'cart',
@@ -285,9 +294,10 @@
 					backgroundColor: getApp().globalData.mainColor,
 					color: '#fff',
 					borderRadius: '0 25px 25px 0',
-					isbuy:this.skuDataInfo.IsBuy,
+					isbuy: this.skuDataInfo.IsBuy,
 					// disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StoreQty == 0) ? true : false
-					disabled:(this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0'&& this.goods.StoreQty <= '0')?true:false
+					disabled: (this.skuDataInfo.IsBuy === '0' || this.goods.StockType != '0' && this.goods.StoreQty <= '0') ? true :
+						false
 				})
 			}
 			if (this.isIntegral == 'true' || this.isCouponPage || this.seckill) {
@@ -318,16 +328,16 @@
 			}
 		},
 		methods: {
-			isDuringDate(beginDateStr, endDateStr){
+			isDuringDate(beginDateStr, endDateStr) {
 				var date = new Date();
 				var year = date.getFullYear();
 				var month = date.getMonth() + 1;
 				var day = date.getDate();
 				if (month < 10) {
-				    month = "0" + month;
+					month = "0" + month;
 				}
 				if (day < 10) {
-				    day = "0" + day;
+					day = "0" + day;
 				}
 				var nowDate = year + "-" + month + "-" + day;
 				var h = date.getHours();
@@ -336,14 +346,14 @@
 				var second = date.getSeconds();
 				minute = minute < 10 ? ('0' + minute) : minute;
 				second = second < 10 ? ('0' + second) : second;
-				var nowddd =  year + "-" + month + "-" + day+' '+h+':'+minute+':'+second
-				let StartTime  = nowDate + ' ' +beginDateStr;
-				let endTime  = nowDate + ' ' + endDateStr;
+				var nowddd = year + "-" + month + "-" + day + ' ' + h + ':' + minute + ':' + second
+				let StartTime = nowDate + ' ' + beginDateStr;
+				let endTime = nowDate + ' ' + endDateStr;
 				if (nowddd >= StartTime && nowddd <= endTime) {
 					return true;
 				}
 				return false
-				
+
 			},
 			clickShop() {
 				if (this.isBrowse) {
@@ -368,8 +378,8 @@
 					});
 				}
 			},
-			addCart(val) {	
-				if (val.content.text === '立即抢购' ) {
+			addCart(val) {
+				if (val.content.text === '立即抢购') {
 					this.orderNow()
 				} else {
 					// 点击购物车，出现弹框
@@ -406,15 +416,15 @@
 					this.isAddCart = false;
 				}
 			},
-			
-			hideShow() {				
+
+			hideShow() {
 				this.show = false;
 			},
 			// 电子券相关的开始
-			buyNow(){
+			buyNow() {
 				this.showPop = true;
 			},
-			hidePop(){
+			hidePop() {
 				this.showPop = false;
 			},
 			// 电子券结束
@@ -485,8 +495,9 @@
 			align-items: center;
 			height: 50px;
 			background-color: #fff;
-			display: flex;		
-			.isProdType{
+			display: flex;
+
+			.isProdType {
 				background-color: rgb(173, 184, 56);
 				color: rgb(255, 255, 255);
 				border-radius: 25px;

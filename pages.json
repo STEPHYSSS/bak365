@@ -194,6 +194,10 @@
             "path" : "pages/vip/myCoupon/myCoupon",
             "style" : {}
         }
+        ,{
+            "path" : "pages/autoIndex/autoIndex",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

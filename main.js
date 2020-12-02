@@ -28,6 +28,8 @@ import richText from "@/components/autoComponents/richText/"
 import goods from "@/components/autoComponents/goods/"
 import goodsGroup from "@/components/autoComponents/goodsGroup/"
 import titleBox from "@/components/autoComponents/titleBox/"
+import vconsole from 'vconsole' // 引入vconsole
+
 Vue.component('shopinfoma', shopInformation)
 Vue.component('enterShops', enterShops)
 Vue.component('searchBox', searchBox)
@@ -52,6 +54,7 @@ App.mpType = 'app'
 Vue.prototype.$store = store
 Vue.prototype.$VUE_APP_PREFIX = dataConfig.VUE_APP_PREFIX
 Vue.prototype.$VUE_APP_PREFIX2 = dataConfig.BASE_URL_OnLine2 //用于图片路径
+Vue.prototype.$vconsole = new vconsole() // 使用vconsole
 
 Vue.prototype.$toast = (val) => {
 	uni.showToast({

@@ -8,12 +8,12 @@
 				<!-- 商品名称 -->
 				<div class="rightBoxTitle">{{itemData.Name}}</div>
 				<!-- 商品口味：-->
-				<div class="rightBox_tastName" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div>
+				<!-- <div class="rightBox_tastName" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div> -->
 				<div class="rightBox_quota" v-if="isShoppingCard&&Number(itemData.MaxBuyCnt)>0&&!isOrder">限购{{itemData.MaxBuyCnt}}件</div>
-		
+
 				<div class="rightBoxBottom" v-if="!isOrder">
 					<span v-if="itemData.MemberPrice">
-						¥{{itemData.MemberPrice}}<br/>
+						¥{{itemData.MemberPrice}}<br />
 						<span style="text-decoration: line-through;font-size: 8pt;color:#999;line-height: 10px;font-weight: 100;">
 							¥{{itemData.SalePrice}}
 						</span>
@@ -21,11 +21,13 @@
 					<span v-else>¥{{itemData.SalePrice}}</span>
 				</div>
 				<div class="rightBoxBottomBuyCnt" v-if="isOrder">
-					<span style="vertical-align: middle;">x</span>
-					<span style="vertical-align: middle">{{itemData.BuyCnt}}</span>
+
 					<span v-if="!isIntegral" style="float: right;color:#000;font-size: 14px;">
 						<span v-if="itemData.OrderType==='3'">¥{{itemData.ProdAmt}}</span>
 						<span v-else>¥{{Number(itemData.SalePrice)*Number(itemData.BuyCnt) | numSet}}</span>
+						<br>
+						<span style="vertical-align: middle;">x</span>
+						<span style="vertical-align: middle">{{itemData.BuyCnt}}</span>
 					</span>
 					<span style="float: right;color:#000;font-size: 14px;" v-else>
 						<span v-if="itemData.Score">{{itemData.Score|spliceNum}}积分</span>
@@ -33,14 +35,17 @@
 					</span>
 				</div>
 				<div>
-					<uni-number-box class="rightBoxBottom-stepper" v-if="isShoppingCard" @change="changeStepper($event,itemData)"
-					 :min="1" :max="Number(itemData.MaxBuyCnt)>0?Number(itemData.MaxBuyCnt):Number(itemData.StockType)==0?999:
+					<uni-number-box class="rightBoxBottom-stepper" v-if="isShoppingCard" @change="changeStepper($event,itemData)" :min="1"
+					 :max="Number(itemData.MaxBuyCnt)>0?Number(itemData.MaxBuyCnt):Number(itemData.StockType)==0?999:
 					  Number(itemData.BuyCnt)>Number(itemData.StoreQty)?Number(itemData.BuyCnt):Number(itemData.StoreQty)"
-					 @overlimit="stepperOverlimit"
-					 :value="itemData.BuyCnt"></uni-number-box>
-				</div>				
+					 @overlimit="stepperOverlimit" :value="itemData.BuyCnt"></uni-number-box>
+				</div>
 				<uni-icons v-if="!isShoppingCard&&!isOrder" type="plus" class="addIcon" @click.stop="addCart" />
 			</div>
+		</div>
+		<div class="goodsBox-parts" style="margin-top: 10px;">
+			<div class="parts-norms-style" v-if="itemData.ParamInfo">属性：</div>
+			<div class="parts-norms-info" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div>
 		</div>
 		<div class="goodsBox-parts" v-if="(isOrder||isShoppingCard)&&itemData.hasOwnProperty('PartsList')&&itemData.PartsList.length>0 ">
 			<div class="parts-norms-style">配件：</div>
@@ -79,7 +84,7 @@
 				// stepperValue: ''
 				// itemDataNew:this.itemData
 				stepperNumOld: "",
-				kouwei:'',//多口味
+				kouwei: '', //多口味
 			};
 		},
 		created() {
@@ -134,11 +139,11 @@
 	.goodsBoxLine {
 		background: #fff;
 		margin-bottom: 6px;
-		padding:5px;
+		padding: 5px;
 
 		.goodsBox-parts {
 			display: flex;
-			margin: 6px 0;
+			// margin: 6px 0;
 		}
 
 		.parts-norms-style {
@@ -233,7 +238,7 @@
 			.rightBoxBottomBuyCnt {
 				font-size: 12px;
 				color: #707070;
-				margin-top: 10px;
+				// margin-top: 10px;
 			}
 
 			.rightBoxBottom-stepper {

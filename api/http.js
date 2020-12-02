@@ -25,9 +25,9 @@ export const vipCard = (data, ViewKay, AppNo) => {
 					let url = dataConfig.url + urlaspx + '?AppNo=' + AppNo + '&ViewKay=' + ViewKay + '&UserMAC=' +
 						UserMACPhone
 
-					uni.showLoading({
-						title: '加载中'
-					});
+					// uni.showLoading({
+					// 	title: '加载中'
+					// });
 					uni.request({
 						url: url,
 						data: data,
@@ -43,21 +43,21 @@ export const vipCard = (data, ViewKay, AppNo) => {
 							let isTip = response.data.hasOwnProperty('Success')
 							if (isTip) {
 								if (success) {
-									uni.hideLoading();
+									// uni.hideLoading();
 									return resolve(response.data)
 								} else {
-									// alert(response.data.Message)
+									// console(response.data.Message)
 									if(response.data.Message!='暂无赠送信息'){
 										uni.showToast({
 											title: response.data.Message,
 											icon: 'none'
 										});
 									}
-									uni.hideLoading();
+									// uni.hideLoading();
 									return reject(response.data.Message || '操作失败')
 								}
 							} else {
-								uni.hideLoading();
+								// uni.hideLoading();
 								return resolve(response.data)
 							}
 						},
@@ -77,7 +77,7 @@ export const vipCard = (data, ViewKay, AppNo) => {
 								title: errors,
 								icon: 'none' 
 							});
-							uni.hideLoading();
+							// uni.hideLoading();
 							return reject(errors);
 						},
 						complete: function() {
