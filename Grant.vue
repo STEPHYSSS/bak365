@@ -27,18 +27,18 @@
 		created() {
 			if( window.location.hostname == "localhost" ) 	{
 				window.location.href =this.redirect_uri + "&code=11111"
-			}
-			else if(this.UserMACPhone){
+			}else if(this.UserMACPhone){
 				uni.navigateTo({
 				   url: '/pages/homePage/homePage'
 				});
 			}else if( !this.appId ){
 			   this.AppIdoAuth()
-			}else{
+			}
+			else{
 			   this.redirect_uri = encodeURIComponent(this.redirect_uri);
 			   window.location.href =
 			   		`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&response_type=code&scope=snsapi_userinfo&connect_redirect=1&redirect_uri=${this.redirect_uri}&state=1#wechat_redirect`;
-		   }
+			}
 		},
 		mounted() {},
 		methods: {

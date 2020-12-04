@@ -4,12 +4,12 @@
   //           "path" : "pages/homePage/homePage",
   //           "style" : {}
   //       },
-  {
-  	"path": "pages/shoppingMall/index",
-  	"style": {
-  		"navigationBarTitleText": "商城"
-  	}
-  },
+	  {
+		"path": "pages/shoppingMall/index",
+		"style": {
+			"navigationBarTitleText": "商城"
+		}
+	  },
 		{
 		"path": "pages/shoppingMall/login",
 		"style": {
@@ -43,7 +43,7 @@
 	}, {
 		"path": "pages/vip/weiFull",
 		"style": {
-			"navigationBarTitleText": "微卡充值"
+			"navigationBarTitleText": "充值"
 		}
 	}, {
 		"path": "pages/vip/payCode",

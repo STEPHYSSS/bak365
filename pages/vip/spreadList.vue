@@ -5,7 +5,7 @@
 			<!-- 推广图片， 推广链接 商品名称 -->
 			<div class="good_card_box" style="margin-bottom:10px">
 				<div v-for="(item,index) in spreadArr" :key="index" class="shareImg">
-					<image :src="item.Img | imgFilter"></image>
+					<image :src="item.Img | fmtImgUrl"></image>
 					<p>{{item.Name}}</p>
 				</div>
 			</div>
@@ -31,13 +31,13 @@
 		async onLoad(option) {
 			await this.getList();
 		},
-		filters: {
-			imgFilter(val) {
-				let localUrl = window.location.href;
-				let localToken = localUrl.split("#")[0]
-				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
-			}
-		},
+		// filters: {
+		// 	imgFilter(val) {
+		// 		let localUrl = window.location.href;
+		// 		let localToken = localUrl.split("#")[0]
+		// 		return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+		// 	}
+		// },
 		methods: {
 			// 列表信息
 			async getList() {

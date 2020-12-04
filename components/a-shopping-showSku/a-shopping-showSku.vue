@@ -1,7 +1,7 @@
 <template>
 	<div :class="[mainStyle,'a-shopping-showSku']">
 		<uni-popup class="van-popupSku" ref="popupSku" v-model="isShow" type="bottom" @change="closePopup">
-			<div style="background-color: #fff;">
+			<div style="background-color: #fff;height: 70vh;">
 				<uni-icons type="closeempty" size="24" class="crossIcon" @click="crossIcon"></uni-icons>
 				<div>
 					<div class="skuTop">
@@ -61,47 +61,51 @@
 						</div>
 					</div>
 					<div class="skuBottom">
-						<div class="skuTopChoice" v-if="normsList.length>0 || PartsList.length!==0 || attributeList.length >0">
-							<div v-if="normsList.length>0">
-								<span class="skuTopChoiceTitle">规格</span>
-								<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
-								 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
-							</div>
-							<div v-if="PartsList.length!==0">
-								<span class="skuTopChoiceTitle">配件(单独售价)</span>
-								<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
-									<!-- @click="skuTopChoiceParts(index)" -->
-									<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-									<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
-									 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
-								</div>
-							</div>
-
-							<!-- 商品属性 -->
-							<div v-if="attributeList.length >0 ">
-								<!-- <div class="skuTopChoiceTitle" v-for="(item, index) in attributeList" :key="index">
-									{{ item.Name }}
-									<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(value, index2) in item.Value" :key="value.Name"
-									 @click="skuTopChoice(index)">{{value.Name}}<text v-if="value.Price !='0'">￥{{value.Price}}</text></div>
-								</div>			 -->
-								<view class="property" v-for="(item, index) in attributeList" :key="index">
-									<view class="skuTopChoiceTitle">
-										<text class="name">{{ item.Name }}</text>
-									</view>
-									<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name"
-									 @click="clickStatic(item, value,index2)">
-										<view class="skuTopChoiceItem"  :class="isActiveName(value.Name)">
-											{{value.Name}}
-											<text v-if="value.Price !='0'">￥{{value.Price}}</text>
+						<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
+							<view class="">
+								<div class="skuTopChoice" v-if="normsList.length>0 || PartsList.length!==0 || attributeList.length >0">
+									<div v-if="normsList.length>0">
+										<span class="skuTopChoiceTitle">规格</span>
+										<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
+										 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
+									</div>
+									<div v-if="PartsList.length!==0">
+										<span class="skuTopChoiceTitle">配件(单独售价)</span>
+										<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
+											<!-- @click="skuTopChoiceParts(index)" -->
+											<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
+											<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+											 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+										</div>
+									</div>
+								
+									<!-- 商品属性 -->
+									<div v-if="attributeList.length >0 ">
+										<!-- <div class="skuTopChoiceTitle" v-for="(item, index) in attributeList" :key="index">
+											{{ item.Name }}
+											<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(value, index2) in item.Value" :key="value.Name"
+											 @click="skuTopChoice(index)">{{value.Name}}<text v-if="value.Price !='0'">￥{{value.Price}}</text></div>
+										</div>			 -->
+										<view class="property" v-for="(item, index) in attributeList" :key="index">
+											<view class="skuTopChoiceTitle">
+												<text class="name">{{ item.Name }}</text>
+											</view>
+											<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name"
+											 @click="clickStatic(item, value,index2)">
+												<view class="skuTopChoiceItem"  :class="isActiveName(value.Name)">
+													{{value.Name}}
+													<text v-if="value.Price !='0'">￥{{value.Price}}</text>
+												</view>
+											</view>
 										</view>
-									</view>
-								</view>
-							</div>
-						</div>
-						<div class="skuStepper">
-							<uni-number-box class="skuStepperStyle" :value="valueStepper" @change="stepperMain" :min="1" :max="setStepperMax()"
-							 @overlimit="overlimit" />
-						</div>
+									</div>
+								</div>
+								<div class="skuStepper">
+									<uni-number-box class="skuStepperStyle" :value="valueStepper" @change="stepperMain" :min="1" :max="setStepperMax()"
+									 @overlimit="overlimit" />
+								</div>
+							</view>
+						</scroll-view>
 					</div>
 				</div>
 				<!-- 底部占位 -->
@@ -147,6 +151,7 @@
 				mainColor: getApp().globalData.mainColor,
 				isShow: false,
 				showImg: false,
+				menuScrollIntoView: '',
 				currentIndex: 0,
 				valueStepper: 1,
 				objProdInfo: {},
@@ -193,12 +198,13 @@
 					borderRadius: '25px'
 				}]
 			}
-			if(this.skuDataInfo.ProdInfo.BuyTime !=undefined){
-				let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
-				this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
-			}else{
-				this.IsGoodBuyTime = true
-			}
+			// if(this.skuDataInfo.ProdInfo.BuyTime !=undefined){
+			// 	let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
+			// 	this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
+			// 	console.log(this.IsGoodBuyTime)
+			// }else{
+			// 	this.IsGoodBuyTime = true
+			// }
 		},
 		computed: {
 			isActiveName() {
@@ -501,6 +507,13 @@
 							}
 						})
 					}
+					if(this.goodsInfo.BuyTime !=undefined){
+						let BuyTime = this.goodsInfo.BuyTime.split(',')
+						this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
+						// console.log(this.IsGoodBuyTime,'144')
+					}else{
+						this.IsGoodBuyTime = true
+					}
 					this.disabledPay = this.skuDataInfo.IsBuy === "0" ? true : false; //是否可以立即购买
 					this.PartsList = skuDataInfo.PartsList || [];
 					this.PartsList.forEach(D => {
@@ -573,7 +586,7 @@
 		.uni-popup {
 			z-index: 999;
 		}
-
+		
 		/deep/.uni-tab__cart-sub-left {
 			padding: 0;
 		}
@@ -581,7 +594,7 @@
 
 	.van-popupSku {
 		font-size: 14px;
-
+		height: 475px;
 		.goods-action {
 			background: #fff;
 			padding: 10px 15px;
@@ -700,8 +713,14 @@
 		}
 
 		.skuBottom {
-			overflow: scroll;
-			max-height: 50vh;
+			overflow: hidden;
+			height: 37vh;
+			// overflow-y: scroll !important;
+			// height: 40vh;
+			.menus {
+				height: 100%;
+				overflow: hidden;
+			}
 		}
 	}
 </style>

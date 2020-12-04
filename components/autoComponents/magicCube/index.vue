@@ -26,6 +26,7 @@
 
 <script>
 	import Mixins from "../public";
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default {
 		mixins: [Mixins],
 		props: {
@@ -82,7 +83,7 @@
 					this.listBox &&
 					this.listBox.length > 0
 				) {
-					return this.$VUE_APP_PREFIX2 + val;
+					return GetBaseImgUrl() + val;
 					// return 'http://192.168.0.105:8001/' + val;
 				} else {
 					return val;

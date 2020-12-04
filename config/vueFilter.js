@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import dataConfig from '@/config/index'
+import {GetBaseImgUrl} from "@/util/publicFunction";
 
 Vue.filter('setName', (val) => {
 	 // + String(val).slice(-1)
@@ -94,14 +95,17 @@ Vue.filter('setMoney', (val) => {
 })
 Vue.filter('setImgPrex', (val) => {
 	if (val) {
-		return dataConfig.VUE_APP_PREFIX + val
+		// return dataConfig.VUE_APP_PREFIX + val
+		console.log(GetBaseImgUrl() + val,'图片路径')
+		return GetBaseImgUrl() + val
 	} else {
 		return ''
 	}
 })
 Vue.filter('fmtImgUrl', (val) => {
      if (val) {
-          return dataConfig.BASE_URL_OnLine2 + val
+		console.log(GetBaseImgUrl() + val,'图片路径')
+          return GetBaseImgUrl() + val
      } else {
           return ''
      }

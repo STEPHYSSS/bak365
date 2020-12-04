@@ -18,7 +18,8 @@ const store = new Vuex.Store({
 		currentCard: Cookies.get('currentCard') || [],
 		// 当前定位的位置
 		currentLocation: Cookies.get('currentLocation') || {},
-		currentStoreInfo: Cookies.get('currentStoreInfo') || {},
+		currentStoreInfo: Cookies.get('currentStoreInfo') || {},//门店地址
+		addressInfo: Cookies.get('addressInfo') || {},//外卖地址
 		historyUrl: Cookies.get('historyUrl') || {}
 	},
 	mutations: {
@@ -33,7 +34,10 @@ const store = new Vuex.Store({
 		['SET_CURRENT_STORE'](state, data) {
 			state.currentStoreInfo = data
 			Cookies.set('currentStoreInfo', data)
-			// console.log(state.currentStoreInfo,'地址改变了')
+		},
+		['SET_CURRENT_ADDRESS'](state, data) {
+			state.addressInfo = data
+			Cookies.set('addressInfo', data)
 		},
 		['SET_CURRENT_CARD'](state, data) {
 			state.currentCard = data

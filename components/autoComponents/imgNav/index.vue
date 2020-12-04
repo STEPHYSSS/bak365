@@ -35,6 +35,7 @@
 
 <script>
 	import Mixins from "../public";
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default {
 		mixins: [Mixins],
 		props: {
@@ -79,7 +80,7 @@
 					this.propsObj.listNav &&
 					this.propsObj.listNav.length > 0
 				) {
-					return this.$VUE_APP_PREFIX2 + val;
+					return GetBaseImgUrl() + val;
 				} else {
 					return val;
 				}

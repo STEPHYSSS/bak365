@@ -43,7 +43,7 @@ export const vipCard = (data, ViewKay, AppNo) => {
 							let isTip = response.data.hasOwnProperty('Success')
 							if (isTip) {
 								if (success) {
-									// uni.hideLoading();
+									uni.hideLoading();
 									return resolve(response.data)
 								} else {
 									// console(response.data.Message)
@@ -52,12 +52,12 @@ export const vipCard = (data, ViewKay, AppNo) => {
 											title: response.data.Message,
 											icon: 'none'
 										});
-									}
-									// uni.hideLoading();
+									}									
+									uni.hideLoading();
 									return reject(response.data.Message || '操作失败')
 								}
 							} else {
-								// uni.hideLoading();
+								uni.hideLoading();
 								return resolve(response.data)
 							}
 						},
@@ -77,11 +77,11 @@ export const vipCard = (data, ViewKay, AppNo) => {
 								title: errors,
 								icon: 'none' 
 							});
-							// uni.hideLoading();
+							uni.hideLoading();
 							return reject(errors);
 						},
 						complete: function() {
-							// uni.hideLoading();
+							uni.hideLoading();
 						}
 					})
 				}

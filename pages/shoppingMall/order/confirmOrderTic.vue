@@ -249,7 +249,7 @@
 					return;
 				}
 				try {
-					let Data = await vipCard(
+					let {Data} = await vipCard(
 					  {
 						Action: "TicketPay",
 						ShopSID:currentStore.data.SID,
@@ -257,20 +257,31 @@
 						ProdList:this.currentItem,
 						PayType:this.radioPayType,
 					  }, "UOrderOpera")
+					  debugger
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
-						if(Data.Success==true){
-							this.$toast.success("支付成功");
-							setTimeout(() => {
-								this.$Router.push("/pages/shoppingMall/order/paySuccess");
-							}, 600);
-						}
-						
+						// if(Data.Success==true){
+						// 	this.$toast.success("支付成功");
+						// 	setTimeout(() => {
+						// 		this.$Router.push("/pages/shoppingMall/order/paySuccess");
+						// 	}, 600);
+						// }
+						this.$toast("订单正在处理中...");
+						setTimeout(() => {
+							// this.$Router.push("/pages/shoppingMall/order/paySuccess");
+							this.$Router.push({
+								path:"/pages/vip/allMyOrder",
+								query:{
+									id:'0'
+								}
+							})
+						}, 3000);
 						this.payTypePop = false;
 						this.$refs.payTypePop.close();
 					  } else {
 					  	// 微信支付
 					  	this.testData = Data;
+						// console.log('wexin',Data)
 					  	try {
 					  		weChatPayment(this, Data, false);
 					  	} catch (e) {

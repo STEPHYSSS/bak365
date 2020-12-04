@@ -27,39 +27,27 @@
                 showPage: false,
                 containerHeight: 400,
                 tabbar: [],
-				ShopRadio:sessionStorage.getItem("ShopRadio")
+				ShopRadio:localStorage.getItem("ShopRadio")
             };
         },
         mounted() {
             // true为判断条件，根据实际的需求替换即可
-            if(this.ShopRadio === '2') {
-				this.tabbar = [
-					{
-						"pagePath": "/pages/shoppingMall/index",
-						"text": '自定义首页',
-						"iconPath": 'static/img/home.png',
-						"selectedIconPath": 'static/img/select-home1.png',
-						"fontIcon": "static/img/home.png"
-					},
-						{"pagePath": "/pages/shoppingMall/list/goodsList",
-						"text": '商品',
-						"iconPath": 'static/img/home.png',
-						"selectedIconPath": 'static/img/select-home1.png',
-						"fontIcon": "static/img/home.png"
-					},
-					{
-							"pagePath": "/pages/shoppingMall/shoppingCart/index",
-							"text": '购物车',
-							"iconPath": 'static/img/gouwuche.png',
-							"selectedIconPath": 'static/img/select-gouwuche1.png',
-							"fontIcon": "icon-shouye"
-					},
-					{
-					    "pagePath": "/pages/home",
-					    "iconPath": 'static/img/home.png',
-					    "selectedIconPath": 'static/img/select-home1.png',
-					    "text": "个人中心",
-						"fontIcon": "icon-shouye"
+            if(this.ShopRadio === '1') {
+				this.tabbar = [{
+						"pagePath": "/pages/shoppingMall/login",
+						'text': '首页',
+						'iconPath': 'static/img/shangcheng1.png',
+						'selectedIconPath': 'static/img/select-shangcheng1.png'
+					}, {
+						"pagePath": "/pages/shoppingMall/menu_naixue/menu/menu",
+						'text': '点餐',
+						'iconPath': 'static/img/drink.png',
+						'selectedIconPath': 'static/img/drink_selected2.png'
+					}, {
+						"pagePath": "/pages/home",
+						'text': '个人中心',
+						'iconPath': 'static/img/home.png',
+						'selectedIconPath': 'static/img/select-home1.png'
 					}]
      //            this.tabbar.splice(1,0,
 					// {
@@ -93,21 +81,33 @@
      //            )
             }
 			else{
-				this.tabbar = [{
-						"pagePath": "/pages/shoppingMall/login",
-						'text': '首页',
-						'iconPath': 'static/img/shangcheng1.png',
-						'selectedIconPath': 'static/img/select-shangcheng1.png'
-					}, {
-						"pagePath": "/pages/shoppingMall/menu_naixue/menu/menu",
-						'text': '点餐',
-						'iconPath': 'static/img/drink.png',
-						'selectedIconPath': 'static/img/drink_selected2.png'
-					}, {
-						"pagePath": "/pages/home",
-						'text': '个人中心',
-						'iconPath': 'static/img/home.png',
-						'selectedIconPath': 'static/img/select-home1.png'
+				this.tabbar = [
+					{
+						"pagePath": "/pages/shoppingMall/index",
+						"text": '商城首页',
+						"iconPath": 'static/img/home.png',
+						"selectedIconPath": 'static/img/select-home1.png',
+						"fontIcon": "static/img/home.png"
+					},
+						{"pagePath": "/pages/shoppingMall/list/goodsList",
+						"text": '商品',
+						"iconPath": 'static/img/home.png',
+						"selectedIconPath": 'static/img/select-home1.png',
+						"fontIcon": "static/img/home.png"
+					},
+					{
+							"pagePath": "/pages/shoppingMall/shoppingCart/index",
+							"text": '购物车',
+							"iconPath": 'static/img/gouwuche.png',
+							"selectedIconPath": 'static/img/select-gouwuche1.png',
+							"fontIcon": "icon-shouye"
+					},
+					{
+					    "pagePath": "/pages/home",
+					    "iconPath": 'static/img/home.png',
+					    "selectedIconPath": 'static/img/select-home1.png',
+					    "text": "个人中心",
+						"fontIcon": "icon-shouye"
 					}]
 			}
         },

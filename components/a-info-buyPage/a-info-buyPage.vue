@@ -130,8 +130,7 @@
 		<div class="goods-action" v-show="goods.ProdType == '0'">
 			<!-- 当状态等于0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
 			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo="skuDataInfo.ProdInfo"
-			 v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo="skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
 			 <uni-goods-nav :options=" options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
 		</div>
 		<div class="goods-action" v-show="goods.ProdType =='1' ">
@@ -440,6 +439,7 @@
 						Data
 					} = await vipCard({
 						Action: 'GetNewDeal',
+						ProdType:this.goods.ProdType,
 						ProdSID: this.goods.SID
 					}, 'UProdOpera')
 					this.userList = Data.CommentList

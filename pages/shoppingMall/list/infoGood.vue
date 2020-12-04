@@ -89,7 +89,13 @@
 						this.skuDataInfo = Data || {};
 					}
 				} catch (e) {
-					console.log(e, 333)
+					if(e == '改商品不在此门店,请切换其他门店'){
+						// window.history.back(-1)
+						setTimeout(() => {
+							this.$Router.push({
+								path:"/pages/shoppingMall/index"})
+						}, 2000);
+					}
 				}
 			},
 			clickLeft() {

@@ -19,8 +19,7 @@
 						</div>
 					</checkbox-group>
 				</div>
-				<a-nodeData v-if="dataList.length===0" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
-		
+				
 				<a-bottomSubmit :batchState="batchState" @checkAll="checkAll" @submitMoney="submitMoney" @delButton="delButton"
 				 :allMoney="allMoney" style="margin-bottom: 50px;" :allResult="allResult"></a-bottomSubmit>
 				<!-- 配件弹窗 -->
@@ -42,6 +41,7 @@
 					</div>
 				</uni-popup>
 			</div>
+			<a-nodeData v-if="dataList.length===0" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
 		</div>
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/shoppingCart/index'"></tabBar>
@@ -84,6 +84,9 @@
 		},
 		methods: {
 			async getList() {
+				uni.showLoading({
+					title: '加载中'
+				})
 				try {
 					let {
 						Data
@@ -94,9 +97,11 @@
 					this.filterIsBuyList = Data.ShopCartList.filter(D => D.IsBuy !== "0"); //过滤不能购买选中的商品
 
 					this.loading = false;
+					uni.hideLoading();
 					uni.stopPullDownRefresh() //停止下拉刷新
 					uni.hideNavigationBarLoading() //隐藏导航条加载动画  
 				} catch (e) {
+					this.$toast.fail(e)
 					// console.log(e);
 					this.loading = false;
 					uni.stopPullDownRefresh() //停止下拉刷新
@@ -325,7 +330,15 @@
 				});
 			}
 			if(data.ParamInfo){
-				Tast += Number(data.ParamInfo.split('￥')[1]);
+				var list= data.ParamInfo.split(',')
+				if(list.length>0){
+					list.forEach(item=>{
+						var Param = item.split("￥")
+						if(Param.length>1){
+							Tast+=Number(Param[1])
+						}
+					})
+				}
 			}
 			if(data.MemberPrice){
 				allMoney += Number(data.MemberPrice) * Number(data.BuyCnt);

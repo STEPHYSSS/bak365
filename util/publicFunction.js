@@ -34,6 +34,28 @@ export function GetAppNo() {
 	 }
 }
 
+export function GetBaseUrl() {//获取当前url
+     
+	 if(window.location.hostname == "localhost" ){
+           return 'http://localhost/';
+	 }else if( window.location.hostname == "dingtalk.bak365.cn" ){
+		  return 'http://dingtalk.bak365.cn/WeixinNew/Dist/';
+	 }else{
+		  return 'http://'+window.location.hostname+'/WebApp/Mobile/';
+	 }
+}
+
+export function GetBaseImgUrl() {//获取当前图片url
+     
+	 if(window.location.hostname == "localhost" ){
+           return 'http://dingtalk.bak365.cn/WeixinNew/';
+	 }else if( window.location.hostname == "dingtalk.bak365.cn" ){
+		  return 'http://dingtalk.bak365.cn/WeixinNew/';
+	 }else{
+		  return 'http://'+window.location.hostname+'/WebApp/';
+	 }
+}
+
 
 function decodeA(a) {
 	// console.log(a,'5555')
@@ -173,6 +195,7 @@ export function weChatPayment(that, Data, bool) {
 	}
 
 	function onBridgeReady() {
+		console.log(Data.appId,'8888')
 		WeixinJSBridge.invoke(
 			"getBrandWCPayRequest", {
 				appId: Data.appId,

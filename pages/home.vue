@@ -189,7 +189,7 @@
 	import adCell from '@/node_modules/adcell/ADCell.vue';
 	import adCell2 from '@/node_modules/adcell/ADCell2.vue';
 	import {
-		bottomScrollbar
+		bottomScrollbar,GetAppNo
 	} from "@/util/publicFunction";
 
 	export default {
@@ -213,6 +213,7 @@
 				isMember: null,
 				// 绑定的类型
 				CardType: null
+				
 			};
 		},
 		async created() {
@@ -298,7 +299,7 @@
 			},
 			bindEntity(num){
 				// http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=ApplyCard
-				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=ApplyCard"
+				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?Type=ApplyCard&AppNo="+GetAppNo()
 				// this.$Router.push({
 				// 	path: '/pages/vip/bind/index',
 				// 	query: {
@@ -307,7 +308,7 @@
 				// })
 			},
 			toPayMeng(){
-				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?AppNo=001&Type=PayCode"
+				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?Type=PayCode&AppNo="+GetAppNo()
 			},
 			clickClear() {//清除缓存		
 				this.remove();

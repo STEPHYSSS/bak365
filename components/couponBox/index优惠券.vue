@@ -83,7 +83,7 @@
 				this.$emit('onClickCoupon', e)
 			},
 			userCoupon(val){
-				let ShopRadio = sessionStorage.getItem("ShopRadio")
+				let ShopRadio = localStorage.getItem("ShopRadio")
 				if(ShopRadio === '1'){
 					uni.navigateTo({
 					   url: '/pages/shoppingMall/login'

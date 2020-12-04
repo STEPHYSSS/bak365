@@ -216,13 +216,14 @@
 						<div class="label" style="text-indent:10px;">本次支付</div>
 						<span style="padding-left:10px;">{{total}}</span>
 					</div>
-					<div class="block-item" v-if="CardInfo.IsPass==='1'">
+					<div class="block-item" v-if="CardInfo.IsPass==='1'&&radioPayType==='1'">
 						<div class="label" style="text-indent:10px;">微卡密码</div>
 						<input type="password" style="padding-left:10px;width: 160px;" placeholder="请输入密码" name="password" v-model="password" />
 					</div>
 				</div>
 				<div class="button-theme-big" style="padding-bottom: 20px;">
-					<button @click="OrderCardPay"  class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+					 <!-- :disabled="isDisabled" -->
+					<button @click="OrderCardPay" :disabled="isDisabled" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
 				</div>
 			</view>
 		</uni-popup>
@@ -256,8 +257,10 @@
 			return {
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
+				isDisabled:false,
 				loading: true,
-				currentItem: [],
+				ProdJsonList:[],//用来存储商品数据
+				currentItem: [],//用来接收商品信息的ProdList
 				UserRemarks: "",
 				UserTime: "",
 				UserDiscount: "",
@@ -347,6 +350,7 @@
 			// 获取授权地址
 			await this.getWxConfig();
 			let item = this.$store.state.currentCard || [];
+			console.log(item,'created第一次商品信息')
 			item.forEach(D => {
 				if (D.SID) {
 					this.cardSids.push(D.SID);
@@ -360,7 +364,7 @@
 					D.PartsNo = arr.join(",");
 				}
 			});
-
+			this.ProdJsonList = JSON.stringify(item);
 			this.currentItem = JSON.stringify(item);
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
 
@@ -432,6 +436,7 @@
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
+							console.log(this.currentItem,'获取商品信息')
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
 							if (this.radioModes === 1) {
 								this.areaList = Data.ShopInfoList;
@@ -650,7 +655,6 @@
 						signature: Data.SDK.signature,
 						jsApiList: ["getLocation", "openAddress", "scanQRCode"]
 					});
-					// console.log(wx.config)
 					wx.ready(res => {
 						let _this = this;
 						wx.getLocation({
@@ -677,7 +681,7 @@
 						});
 					})
 				} catch (e) {
-					// console.log(e, "55555");
+					this.$toast.fail(e);
 				}
 			},
 			getAddress() { //获取共享地址
@@ -778,6 +782,7 @@
 					this.showAreaList = false;
 					this.$refs.showAreaList.close()
 				} catch (e) {
+					this.$toast.fail(e);
 					console.log(e)
 				}
 
@@ -912,7 +917,7 @@
 			async Discount(item, type) {
 				// SelectDisc(优惠方案 type=1) SelectPay(支付方式 type=2) SelectTicket(电子券 type=3)
 				const SelectType = type === 1 ? "SelectDisc" : type === 2 ? "SelectPay" : type === 3 ? "SelectTicket" : "";
-				// let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));//用来获取门店id
+				// let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));//用来获取门店id现在不用的
 				try {
 					let obj = {
 						Action: "SelectDisc",
@@ -954,6 +959,7 @@
 						this.radioPayType = "2";
 					}
 				} catch (e) {
+					this.$toast.fail(e);
 					console.log(e)
 
 				}
@@ -986,7 +992,7 @@
 				this.$refs.addEditArea.open()
 			},
 			submitMoney() { //点击结算按钮，展示弹窗
-				console.log(this.radioPayType)
+				// console.log(this.radioPayType)
 				if (this.radioPayType === "1") {
 					this.payTypePop = true;
 					this.$refs.payTypePop.open()
@@ -996,6 +1002,12 @@
 
 			},
 			async OrderCardPay() { // 支付
+				this.isDisabled = true;
+				setTimeout(() => {
+				  this.isDisabled = false;
+				  console.log('五秒之后才能点击')
+				}, 5000)
+				console.log(this.isDisabled)
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
 					this.$toast("请选择地址");
 					return;
@@ -1036,7 +1048,6 @@
 				} else {
 					DeliveryType = 1;
 				}
-
 				if (typeof this.currentItem !== "string") {
 					this.currentItem = JSON.stringify(this.currentItem);
 				}
@@ -1098,20 +1109,22 @@
 				try {
 					let {
 						Data
-					} = vipCard(obj, Opera);
+					} =await vipCard(obj, Opera);
 					this.loading = false;
 					uni.hideLoading();
 					this.$store.commit("SET_CURRENT_CARD", []); //清掉购物车
 					uni.removeStorageSync("alreadyPaid"); //清点之前标记的已经下单的字段
 					if (this.radioPayType === "1") {
 						//微卡支付
-						// this.$toast.success("支付成功");
+						this.$toast("订单正在处理中...");
 						setTimeout(() => {
 							// this.$Router.push("/pages/shoppingMall/order/paySuccess");
-							this.$Router.push({path: "/pages/vip/allMyOrder",
-							query: {
-							  id: "0"
-							}})
+							this.$Router.push({
+								path:"/pages/vip/allMyOrder",
+								query:{
+									id:'0'
+								}
+							})
 						}, 3000);
 						this.payTypePop = false;
 						this.$refs.payTypePop.close();

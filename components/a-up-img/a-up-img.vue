@@ -5,7 +5,7 @@
 		</cover-image>
 		<!-- #endif -->
 		<!-- #ifdef H5 -->
-		<img :src="dataIMg | imgFilter" :style="{width: width,height: height}" />
+		<img :src="dataIMg" :style="{width: width,height: height}" />
 		<!-- #endif -->
 	</div>
 </template>
@@ -27,17 +27,19 @@
 				}
 			}
 		},
-		created() {},
+		created() {
+			console.log(this.dataIMg,'-----')
+		},
 		data() {
 			return {
 				dataIMg: this.url
 			}
 		},
-		filters:{
-			imgFilter(val){
-				return `http://dingtalk.bak365.cn/WeixinNew/Dist/` + val
-			}
-		},
+		// filters:{
+		// 	imgFilter(val){
+		// 		return `http://dingtalk.bak365.cn/WeixinNew/Dist/` + val
+		// 	}
+		// },
 		methods: {
 			errorIMg() {
 				this.dataIMg = '/static/assets/img/defaultGood.png'

@@ -88,6 +88,7 @@
 
 <script>
 	import Mixins from "../public";
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default {
 		mixins: [Mixins],
 		name: "",
@@ -180,6 +181,10 @@
 				this.currentGoodList = this.fakeData;
 			}
 		},
+		created(){
+			// console.log(this.propsObj,'商品',GetBaseUrl())
+			
+		},
 		methods: {
 			setImgPrex(val) {
 				if (
@@ -187,7 +192,7 @@
 					this.currentObj._Prod_Data &&
 					this.currentObj._Prod_Data.length > 0
 				) {
-					return this.$VUE_APP_PREFIX2 + val;
+					return GetBaseImgUrl() + val;
 				} else {
 					return val;
 				}

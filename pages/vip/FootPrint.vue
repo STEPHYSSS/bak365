@@ -12,7 +12,7 @@
 		<div class="leaderBox" v-if="footPrintList.length>0">
 			<uni-grid :column="3">
 			    <uni-grid-item class="Imglist" v-for="(item,index) in footPrintList" :key="index" style="height: 145px;">
-			        <image :src="item.Img | imgFilter" style="margin: 0 auto;"></image>
+			        <image :src="item.Img | fmtImgUrl" style="margin: 0 auto;"></image>
 			        <span>{{item.Name}}</span>
 			    </uni-grid-item>
 			</uni-grid>
@@ -57,11 +57,11 @@
 			}
 		},
 		filters: {
-			imgFilter(val) {
-				let localUrl = window.location.href;
-				let localToken = localUrl.split("#")[0]
-				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
-			}
+			// imgFilter(val) {
+			// 	let localUrl = window.location.href;
+			// 	let localToken = localUrl.split("#")[0]
+			// 	return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+			// }
 		},
 	}
 </script>

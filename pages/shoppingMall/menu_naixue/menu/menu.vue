@@ -59,7 +59,7 @@
 							<swiper class="ads" id="ads" autoplay :interval="3000" indicator-dots>
 								<swiper-item v-for="(item, index) in ads" :key="index">
 									<view class="swiper-item">
-										<image :src="item.Img | imgFilter" mode="aspectFill" />
+										<image :src="item.Img | fmtImgUrl" mode="aspectFill" />
 									</view>
 								</swiper-item>
 							</swiper>
@@ -72,7 +72,7 @@
 									<view class="items">
 										<!-- 商品 begin -->										
 										<view class="good" v-for="(good, key) in item.children" :key="key">
-											<image :src="good.Img | imgFilter" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'" ></image>
+											<image :src="good.Img | fmtImgUrl" class="image" @tap="showGoodDetailModal(item, good)" v-if="good.ProdType == '0'" ></image>
 											<image src="@/static/img/shouqin.png" @tap="showGoodDetailModal(item, good)" style="width: 80px;height: 80px;position: absolute;" v-if="good.StockType != '0'&& good.StoreQty <= '0'"></image>											
 											<view class="right" v-if="good.ProdType == '0'">
 												<text class="name">{{ good.Name }}</text>
@@ -142,7 +142,7 @@
 			<modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" 
 					width="90%" custom padding="0rpx" radius="12rpx">
 				<view class="cover">
-					<image v-if="good.Img" :src="good.Img|imgFilter" class="image"></image>
+					<image v-if="good.Img" :src="good.Img|fmtImgUrl" class="image"></image>
 					<view class="btn-group2">
 						<image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
 						<!-- <span @click="share">分享按钮</span> -->
@@ -880,13 +880,13 @@
 				});
 			}
 		},
-		filters:{
-			imgFilter(val){
-				let localUrl = window.location.href;
-				let localToken =localUrl.split("#")[0]
-				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
-			}
-		}
+		// filters:{
+		// 	imgFilter(val){
+		// 		let localUrl = window.location.href;
+		// 		let localToken =localUrl.split("#")[0]
+		// 		return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+		// 	}
+		// }
 	}
 	function sortArr(type, Arr) {
 		function compare(type) {

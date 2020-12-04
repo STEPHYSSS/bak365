@@ -122,6 +122,7 @@
 
 <script>
 	import Mixins from "../public";
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	import {
 		vipCard
 	} from '@/api/http.js';
@@ -267,7 +268,7 @@
 				}
 			},
 			setImgPrex(val) {
-				return this.$VUE_APP_PREFIX2 + val;
+				return GetBaseImgUrl() + val;
 				// if (
 				// 	val &&
 				// 	this.currentObj._Prod_Data &&

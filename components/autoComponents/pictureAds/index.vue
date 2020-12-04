@@ -76,7 +76,7 @@
 
 <script>
 	import Mixins from "../public";
-
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default {
 		mixins: [Mixins],
 		props: {
@@ -129,7 +129,8 @@
 			this.currentObj.imgNum = Number(this.currentObj.imgNum);
 			this.currentObj.imgList.forEach(D => {
 				if (D.img) {
-					D.img = this.$VUE_APP_PREFIX2 + D.img
+					// D.img = this.$VUE_APP_PREFIX2 + D.img
+					D.img = GetBaseImgUrl() + D.img;
 					// D.img = 'http://192.168.0.105:8001/'+D.img
 				}
 

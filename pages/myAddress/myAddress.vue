@@ -89,7 +89,7 @@
 				ShopAddress: {}, //商家地址
 				Name: '', //门店搜索
 				location: JSON.parse(sessionStorage.getItem('location')),
-				ShopRadio:sessionStorage.getItem("ShopRadio")
+				ShopRadio:localStorage.getItem("ShopRadio")
 			}
 		},
 		created() {
@@ -109,7 +109,6 @@
 			 //暂时注释 || this.$Route.query.flag == 'homeD' || this.$Route.query.flag=='login'			 
 			// let orderType=Cookies.get("orderType")
 			// console.log(orderType)
-			console.log(this.$store.state.orderType )
 			// if(	this.$store.state.orderType == 'takeout'){			
 			// 	this.getAddressList();
 			// }else{
@@ -142,14 +141,17 @@
 					if (this.areaList[i].Defaults == '1') {
 						return sessionStorage.setItem('takeOutAddress', JSON.stringify(this.areaList[i]));
 					}
-					let currentStoreInfo = {
+					let addResses = {
 						Name: this.areaList[0].Name,
 						Address: this.areaList[0].Address,
 						SID: this.areaList[0].SID,
 						Length: this.areaList[0].Length,
-						House: this.areaList[0].House
+						House: this.areaList[0].House,
+						Latitude:this.areaList[0].Latitude,
+						Longitude:this.areaList[0].Longitude
 					}
-					sessionStorage.setItem('takeOutAddress', JSON.stringify(currentStoreInfo));
+					this.$store.commit("SET_CURRENT_ADDRESS",addResses)
+					sessionStorage.setItem('takeOutAddress', JSON.stringify(addResses));
 				}
 			},
 			// 
@@ -173,6 +175,8 @@
 						SID: Data.ShopInfo.SID,
 						Length:  Data.ShopInfo.Length
 					}
+					// console.log(currentStoreInfo,'距离外卖最近的店')
+					this.$store.commit("SET_CURRENT_ADDRESS",currentStoreOut)
 					this.$store.commit("SET_CURRENT_STORE",currentStoreInfo)
 					sessionStorage.setItem('takeOutAddress', JSON.stringify(currentStoreOut));
 					this.$store.commit("SET_ORDER_TYPE", 'takeout');
@@ -257,7 +261,25 @@
 					"UShopOpera"
 				);
 				this.ShopAddress = Data.ShopList;
+				
 				// this.$store.commit("SET_CURRENT_STORE",this.ShopAddress)
+				// this.ShopAddress = Data.ShopList || [];
+				// // 当没有选择地址的时候默认选择第一条
+				// for (let i = 0; i < this.ShopAddress.length; i++) {
+				// 	if (this.ShopAddress[i].Defaults == '1') {
+				// 		return sessionStorage.setItem('takeOutAddress', JSON.stringify(this.ShopAddress[i]));
+				// 	}
+				// 	let shop = {
+				// 		Name: this.ShopAddress[0].Name,
+				// 		Address: this.ShopAddress[0].Address,
+				// 		SID: this.ShopAddress[0].SID,
+				// 		Length: this.ShopAddress[0].Length,
+				// 		House: this.ShopAddress[0].House,
+				// 		Latitude:this.ShopAddress[0].Latitude,
+				// 		Longitude:this.ShopAddress[0].Longitude
+				// 	}
+				// 	this.$store.commit("SET_CURRENT_STORE",shop)
+				// }
 			},
 			toDownOrder(item) { //选择地址
 				let currentStoreInfo = {
@@ -269,9 +291,7 @@
 					Latitude: item.Latitude
 				}
 				this.$store.commit("SET_CURRENT_STORE", currentStoreInfo)
-				
 				if(this.$Route.query.flag == 'shopAuto'){
-					sessionStorage.setItem("flag","getLocalShop")
 					localStorage.setItem("localShop",JSON.stringify(currentStoreInfo))
 					return this.$Router.push({path:"/pages/shoppingMall/index"})
 				}

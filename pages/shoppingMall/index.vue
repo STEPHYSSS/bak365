@@ -5,14 +5,14 @@
 			<view class="header">
 				<view class="nav_left" v-if="$store.state.orderType == 'takein'">
 					<view class="store-name" @click="toShopAddress">
-						<text>{{ currentStoreInfo.Name }}<text class="iconfont icon-jiantou" v-show="currentStoreInfo.Address"></text></text>								
+						<text>{{ currentStore.Name }}<text class="iconfont icon-jiantou"></text></text>								
 					</view>
 				</view>
 				<view class="nav_left overflow-hidden" v-else>
 					<view class="nav_leftAdd">
 						<image src='/static/images/order/location.png' style="width: 30rpx; height: 30rpx;"></image>
 						<view class="addresName" @click="toAddress">
-							{{ addressName.Address }}{{addressName.House}}
+							{{ addressInfo.Address }}
 						</view>
 					</view>
 				</view>
@@ -46,7 +46,7 @@
 				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
-				<button type="default" size="mini" @click="seckill">秒杀</button>
+				<!-- <button type="default" size="mini" @click="seckill">秒杀</button> -->
 				<!-- <button type="default" size="mini" @click="autoIndex">测试</button> -->
 				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>
@@ -71,7 +71,9 @@
 				</div>
 			</div>
 			<!-- <div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div> -->
-			<div v-if="loadding&&JSON.stringify(location)==='{}'">数据加载中</div>
+			<div v-if="loadding&&JSON.stringify(location)==='{}'">
+				<a-nodeData v-if="listMode.length===0"></a-nodeData>
+			</div>
 			
 		</div>
 		<view>
@@ -124,26 +126,30 @@
 				innerAudio: null,
 				oldAudioObj: {},
 				loadding: true,
-				storeInfo:localStorage.getItem('currentStoreInfo'),
 				currentStoreInfo:{},//用来接收门店信息
 				addressName: {}, //地址名称
 				SID:'',
 				location:{}
 			};
 		},
-		watch:{
-			storeInfo:{
-				immediate:true,
-				deep:true,
-				handler(n,o){
-					console.log('---',n)
-				}
-				
-			}
-			
-		},
 		created() {
 			this.init()
+		},
+		computed:{
+			currentStore(){
+				return this.$store.state.currentStoreInfo				
+			},
+			addressInfo(){
+				return this.$store.state.addressInfo
+			}
+		},
+		watch:{
+			currentStore(val){
+				this.getAutoMode()//切换门店的时候重新获取一遍自定义页面商品
+			},
+			addressInfo(){
+				this.getAutoMode()
+			}
 		},
 		mounted() {
 			
@@ -151,11 +157,6 @@
 		methods: {
 			 init(){
 				this.getCouponInfo();
-				// if(this.$store.state.currentLocation){
-					
-				// }else{
-				// 	this.getWxConfig() // 获取授权地址	
-				// }
 				this.getWxConfig() // 获取授权地址		
 				uni.showLoading({
 					title: '加载中'
@@ -184,9 +185,6 @@
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
 				}else{
 					this.addressName = JSON.parse(sessionStorage.getItem('takeOutAddress'))
-				}
-				if(localStorage.getItem("flag")){
-					this.currentStoreInfo.Name = JSON.parse(localStorage.getItem("localShop")).Name;
 				}
 				if(JSON.parse(localStorage.getItem("localShop"))){
 					this.currentStoreInfo.Name = JSON.parse(localStorage.getItem("localShop")).Name;
@@ -257,7 +255,6 @@
 					Latitude: Data.ShopList[0].Latitude,
 					Longitude: Data.ShopList[0].Longitude
 				}
-				// console.log(currentStoreInfo)
 				this.$store.commit("SET_CURRENT_STORE",this.currentStoreInfo)
 				localStorage.setItem("localShop",JSON.stringify(this.currentStoreInfo))
 			},
@@ -347,7 +344,7 @@
 					);
 					uni.hideLoading()
 					this.loadding = false
-					this.listMode = Data.Decorate.HtmlInfo || [];
+					this.listMode = Data.Decorate.HtmlInfo?Data.Decorate.HtmlInfo : [];
 					// let timeS = this.location.longitude ? 0 : 1000
 					// setTimeout(() => {
 					// 	uni.hideLoading()

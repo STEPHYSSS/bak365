@@ -17,7 +17,7 @@
 		// mixins: [Mixins],
 		data() {
 			return {
-				ShopRadio:sessionStorage.getItem("ShopRadio")
+				ShopRadio:localStorage.getItem("ShopRadio")
 			}
 		},
 		created() {

@@ -15,7 +15,9 @@
 			</div>-->
 			<div class='ticketSty'>
 			    <div class="left">
-			         <div class="flex1"><sub class="sign">￥</sub><span class="num">{{item.TakeDisc}}</span></div>
+					<!-- {{parseFloat((money/10).toFixed(1))}}折 -->
+			         <div class="flex1" v-if="item.TakeDisc==='100'"><sub class="sign" >￥</sub><span class="num">{{item.TakeMoney}}</span></div>
+					 <div class="flex1" v-else><span class="num">{{parseFloat((item.TakeDisc/10).toFixed(1))}}折</span></div>
 					 <div class="ticketNo">{{item.TicketNo}}</div>
 			    </div>
 			    <div class="right">
@@ -70,7 +72,7 @@
 				this.$emit('onClickCoupon', e)
 			},
 			userCoupon(val){
-				let ShopRadio = sessionStorage.getItem("ShopRadio")
+				let ShopRadio = localStorage.getItem("ShopRadio")
 				if(ShopRadio === '1'){
 					uni.navigateTo({
 					   url: '/pages/shoppingMall/login'

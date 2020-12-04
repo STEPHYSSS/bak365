@@ -7,7 +7,8 @@ import Cookie from '@/config/cookie-my/index.js'
 import {
 	GetQueryString,
 	setUrlDelCode,
-	GetAppNo 
+	GetAppNo,
+	GetBaseUrl
 } from '../util/publicFunction'
 import dataConfig from '@/config/index'
 
@@ -43,6 +44,7 @@ router.beforeEach((to, from, next) => {
 				Cookie.set('mainStyle', 'theme2')
                 let Code = GetQueryString("code");
 				let newAppNo = GetAppNo();
+				let newAppUrl = GetBaseUrl();
 				let UserMACPhone = Cookie.get("UserMACPhone")
 				// let UserMACPhone = '173c8e1b834d6a0836d7c97c8c88381fu'
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
@@ -53,9 +55,8 @@ router.beforeEach((to, from, next) => {
 						currentUrl = setUrlDelCode()
 						Cookie.set('currentUrl', currentUrl)
 
-						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : dataConfig.BASE_URL_OnLine) +
+						let headUrl = (process.env.NODE_ENV === "development" ? 'http://localhost:9000/' : newAppUrl) +
 							'#/GrantMiddle?AppNo=' + newAppNo //调回到固定页面
-
 						if (UserMACPhone && UserMACPhone !== null && UserMACPhone !== undefined && UserMACPhone !== '') {
 							next()
 						}else if( Code && Code !== null && Code !== undefined && Code !== '' ){

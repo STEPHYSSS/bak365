@@ -41,15 +41,18 @@
 			// 活动类型（1秒杀，2爆款，3套餐，4买赠，5团购，6满赠,7进店送礼）
 			async getlist() {
 				uni.showLoading()
+				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				try {
 					let res = await Promise.all([
 						vipCard({
 							Action: "GetPromotionList",
 							Type: 1,
+							ShopSID:currentStore.data.SID,
 							SID:this.seckillSID?this.seckillSID:''
 						}, "UPromotionOpera")
 					]);
 					this.list = res[0].Data.ProdList;
+					uni.hideLoading();
 					this.loading = false;
 				} catch (e) {}
 			},

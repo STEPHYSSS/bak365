@@ -6,7 +6,7 @@
 				<swiper class="swiper-box" autoplay="true" circular="true" indicatorDots="true" indicator-active-color="#ffaa00">
 					<swiper-item v-for="(item, index) in homeSlide" :key="index">
 						<view class="swiper-item">
-							<image :src="item.Img | imgFilter" class="bg" mode="aspectFill" />
+							<image :src="item.Img | fmtImgUrl" class="bg" mode="aspectFill" />
 						</view>
 					</swiper-item>
 				</swiper>
@@ -122,13 +122,13 @@
 			await this.getLunBoImg();
 			await this.getScore();
 		},
-		filters: {
-			imgFilter(val) {
-				let localUrl = window.location.href;
-				let localToken = localUrl.split("#")[0]
-				return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
-			}
-		},
+		// filters: {
+		// 	imgFilter(val) {
+		// 		let localUrl = window.location.href;
+		// 		let localToken = localUrl.split("#")[0]
+		// 		return `http://dingtalk.bak365.cn/WeixinNew/Dist/../` + val
+		// 	}
+		// },
 		methods: {
 			// 进入首页就获取微信地址
 			async getWxConfig(){
