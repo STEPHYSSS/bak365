@@ -49,6 +49,7 @@ router.beforeEach((to, from, next) => {
 				// let UserMACPhone = '173c8e1b834d6a0836d7c97c8c88381fu'
 				UserMACPhone = UserMACPhone == 'undefined' ? '' : UserMACPhone
 				UserMACPhone = UserMACPhone == 'null' ? '' : UserMACPhone
+				
 				let currentUrl = setUrlDelCode()
 				if (newAppNo) {
 					if (to.path !== '/pages/error/index' && to.path !== '/Grant' && to.path !== '/GrantMiddle' && !UserMACPhone) {

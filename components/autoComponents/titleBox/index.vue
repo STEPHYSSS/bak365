@@ -94,14 +94,14 @@
 			clickUrl() {
 				if (this.currentObj.titleUrl) {					
 					let url = this.currentObj.titleUrl.split('#');
-					if(url!="http://dingtalk.bak365.cn"){
-						window.location.href = this.currentObj.titleUrl
-					}else{
+					// if(url!="http://dingtalk.bak365.cn"){
+					// 	window.location.href = this.currentObj.titleUrl
+					// }else{
 						let path = url[1];
 						uni.reLaunch({					
 							url: path
 						})
-					}
+					// }
 					
 				}
 			}

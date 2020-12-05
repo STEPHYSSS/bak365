@@ -107,14 +107,14 @@
 				if (item.urlObj && item.urlObj.url) {
 					// 跳转只能跳到内部链接，不能跳到外部链接
 					let url = item.urlObj.url.split('#');
-					if(url!="http://dingtalk.bak365.cn"){
-					   window.location.href = item.urlObj.url
-					}else{
+					// if(url!="http://dingtalk.bak365.cn"){
+					//    window.location.href = item.urlObj.url
+					// }else{
 						let path = url[1];
 						uni.reLaunch({
 							url: path
 						});
-					}
+					// }
 				}
 			}
 		},

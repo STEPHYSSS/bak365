@@ -72,7 +72,7 @@
 			</div>
 			<!-- <div v-if="loadding&&JSON.stringify(location)==='{}'">获取定位中</div> -->
 			<div v-if="loadding&&JSON.stringify(location)==='{}'">
-				<a-nodeData v-if="listMode.length===0"></a-nodeData>
+				<!-- <a-nodeData v-if="listMode.length===0"></a-nodeData> -->
 			</div>
 			
 		</div>
@@ -156,8 +156,12 @@
 		},
 		methods: {
 			 init(){
-				this.getCouponInfo();
-				this.getWxConfig() // 获取授权地址		
+				if(!sessionStorage.getItem("IsCoupon")){
+					 this.getCouponInfo();
+				}
+				if(!localStorage.getItem("currentLocation")){
+					this.getWxConfig() // 获取授权地址		
+				}
 				uni.showLoading({
 					title: '加载中'
 				});
@@ -168,6 +172,7 @@
 						this.SID = Object.values(abc)
 					}
 				}
+				
 				// if(this.$Route.query.flag =='Deflocation'){
 				// 	let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'))
 				// 	this.currentStoreInfo = {
@@ -221,7 +226,8 @@
 								latitude: res.latitude
 							}
 							_this.$store.commit("SET_CURRENT_LOCATION", _this.location);
-							sessionStorage.setItem('location',JSON.stringify(_this.location))							
+							sessionStorage.setItem('location',JSON.stringify(_this.location))	
+							console.log(JSON.stringify(_this.location),'经纬度')
 					      },
 						  cancel: function(res) {
 							this.$toast.fail(res);

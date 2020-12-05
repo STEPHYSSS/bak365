@@ -12,7 +12,8 @@
 							<div class="skuTopInfo">
 								<div class="skuTopInfoMoney">
 									¥
-									<span class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
+									<span v-if="goodsInfo.MemberPrice">{{goodsInfo.MemberPrice}}</span>
+									<span  v-else class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{goodsInfo.StoreQty}} 件</span>
@@ -39,7 +40,9 @@
 							<div class="skuTopInfo">
 								<div class="skuTopInfoMoney">
 									¥
-									<span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+									<span v-if="currentNorms.MemberPrice">{{currentNorms.MemberPrice}}</span>
+									<span  v-else class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+									<!-- <span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span> -->
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{currentNorms.StoreQty}} 件</span>
@@ -155,6 +158,10 @@
 				currentIndex: 0,
 				valueStepper: 1,
 				objProdInfo: {},
+				maxPrice: "",//最高价
+				minPrice: "",//最低价
+				maxMemberPrice: "",//最高会员价
+				minMemberPrice: "",//最低会员价
 				// normsList: [],
 				// flavorList: [],
 				// partsList: [],
@@ -490,7 +497,19 @@
 					this.attributeList = []; //属性
 					if (skuDataInfo.SpecList) {
 						this.normsList = skuDataInfo.SpecList || [];
-						this.currentNorms = this.normsList[0]
+						this.currentNorms = this.normsList[0];
+						this.maxPrice = Math.max.apply(Math, this.skuDataInfo.SpecList.map(item => {
+							return Number(item.SalePrice)
+						}))
+						this.minPrice = Math.min.apply(Math, this.skuDataInfo.SpecList.map(item => {
+							return Number(item.SalePrice)
+						}))
+						this.maxMemberPrice = Math.max.apply(Math, this.skuDataInfo.SpecList.map(item => {
+							return Number(item.MemberPrice)
+						}))
+						this.minMemberPrice = Math.min.apply(Math, this.skuDataInfo.SpecList.map(item => {
+							return Number(item.MemberPrice)
+						}))
 					}
 					if (skuDataInfo.PartsList) {
 						this.PartsList = skuDataInfo.PartsList || [];
@@ -514,6 +533,7 @@
 					}else{
 						this.IsGoodBuyTime = true
 					}
+					
 					this.disabledPay = this.skuDataInfo.IsBuy === "0" ? true : false; //是否可以立即购买
 					this.PartsList = skuDataInfo.PartsList || [];
 					this.PartsList.forEach(D => {

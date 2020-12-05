@@ -52,6 +52,8 @@ export const vipCard = (data, ViewKay, AppNo) => {
 											title: response.data.Message,
 											icon: 'none'
 										});
+									}else{
+										sessionStorage.setItem("IsCoupon",response.data.Message)
 									}									
 									uni.hideLoading();
 									return reject(response.data.Message || '操作失败')

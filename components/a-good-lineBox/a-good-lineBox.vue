@@ -10,7 +10,6 @@
 				<!-- 商品口味：-->
 				<!-- <div class="rightBox_tastName" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div> -->
 				<div class="rightBox_quota" v-if="isShoppingCard&&Number(itemData.MaxBuyCnt)>0&&!isOrder">限购{{itemData.MaxBuyCnt}}件</div>
-
 				<div class="rightBoxBottom" v-if="!isOrder">
 					<span v-if="itemData.MemberPrice">
 						¥{{itemData.MemberPrice}}<br />
@@ -22,7 +21,7 @@
 				</div>
 				<div class="rightBoxBottomBuyCnt" v-if="isOrder">
 
-					<span v-if="!isIntegral" style="float: right;color:#000;font-size: 14px;">
+					<!-- <span v-if="!isIntegral" style="float: right;color:#000;font-size: 14px;">
 						<span v-if="itemData.OrderType==='3'">¥{{itemData.ProdAmt}}</span>
 						<span v-else>¥{{Number(itemData.SalePrice)*Number(itemData.BuyCnt) | numSet}}</span>
 						<br>
@@ -32,7 +31,7 @@
 					<span style="float: right;color:#000;font-size: 14px;" v-else>
 						<span v-if="itemData.Score">{{itemData.Score|spliceNum}}积分</span>
 						<span v-if="itemData.SalePrice>0">{{itemData.SalePrice>0&&itemData.Score?'+':''}}¥{{itemData.SalePrice |spliceNum}}</span>
-					</span>
+					</span> -->
 				</div>
 				<div>
 					<uni-number-box class="rightBoxBottom-stepper" v-if="isShoppingCard" @change="changeStepper($event,itemData)" :min="1"
@@ -45,7 +44,9 @@
 		</div>
 		<div class="goodsBox-parts" style="margin-top: 10px;">
 			<div class="parts-norms-style" v-if="itemData.ParamInfo">属性：</div>
-			<div class="parts-norms-info" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}</div>
+			<div class="parts-norms-info" v-if="itemData.ParamInfo">{{itemData.ParamInfo}}
+			<div class="parts-norms-one-prodAmt" style="float: right; " v-if="isOrder">¥{{kouweiPrice}}</div>
+			</div>
 		</div>
 		<div class="goodsBox-parts" v-if="(isOrder||isShoppingCard)&&itemData.hasOwnProperty('PartsList')&&itemData.PartsList.length>0 ">
 			<div class="parts-norms-style">配件：</div>
@@ -84,11 +85,22 @@
 				// stepperValue: ''
 				// itemDataNew:this.itemData
 				stepperNumOld: "",
-				kouwei: '', //多口味
+				kouweiPrice: '', //多口味
 			};
 		},
 		created() {
 			this.stepperNumOld = this.itemData.BuyCnt;
+			if(this.itemData.ParamInfo){
+				var list= this.itemData.ParamInfo.split(',')
+				if(list.length>0){
+					list.forEach(item=>{
+						var Param = item.split("￥")
+						if(Param.length>1){
+							this.kouweiPrice+=Number(Param[1])
+						}
+					})
+				}
+			}
 		},
 		computed: {},
 		methods: {

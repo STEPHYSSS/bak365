@@ -93,14 +93,16 @@
 				// 点击跳转
 				if (item.urlObj && item.urlObj.url) {
 					let url = item.urlObj.url.split('#');
-					if(url!="http://dingtalk.bak365.cn"){
-					   window.location.href = item.urlObj.url
-					}else{
+					// if(url!=url[0]){
+					//    window.location.href = item.urlObj.url
+					//    console.log(item.urlObj.url,'888')
+					// }else
+					// {
 						let path = url[1];
 						uni.reLaunch({
 							url: path
 						})
-					}
+					// }
 				}
 			},
 			changeBox() {

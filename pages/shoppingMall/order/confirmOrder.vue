@@ -252,7 +252,11 @@
 			// receiveAddress
 			adCell
 		},
-
+		computed:{
+			computedSumTotal(){
+				return this.total
+			}
+		},
 		data() {
 			return {
 				mainStyle: getApp().globalData.mainStyle,
@@ -777,6 +781,8 @@
 					} else {
 						this.currentArea = val;
 						this.freight = Data.Freight;
+						this.total = Data.SumTotal;
+						this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 						sessionStorage.setItem('takeOutAddress', JSON.stringify(this.currentArea));
 					}
 					this.showAreaList = false;
@@ -993,21 +999,6 @@
 			},
 			submitMoney() { //点击结算按钮，展示弹窗
 				// console.log(this.radioPayType)
-				if (this.radioPayType === "1") {
-					this.payTypePop = true;
-					this.$refs.payTypePop.open()
-				} else {
-					this.OrderCardPay();
-				}
-
-			},
-			async OrderCardPay() { // 支付
-				this.isDisabled = true;
-				setTimeout(() => {
-				  this.isDisabled = false;
-				  console.log('五秒之后才能点击')
-				}, 5000)
-				console.log(this.isDisabled)
 				if (JSON.stringify(this.currentArea) === "{}" && !this.$Route.query.isIntegral) {
 					this.$toast("请选择地址");
 					return;
@@ -1022,7 +1013,7 @@
 							return;
 						}
 					}
-
+				
 					if (!this.name_user || this.name_user === "") {
 						this.$toast("请填写收件名字");
 						return;
@@ -1032,6 +1023,20 @@
 					this.$toast("请填写密码");
 					return;
 				}
+				if (this.radioPayType === "1") {
+					this.payTypePop = true;
+					this.$refs.payTypePop.open()
+				} else {
+					this.OrderCardPay();
+				}
+
+			},
+			async OrderCardPay() { // 支付
+				this.isDisabled = true;
+				setTimeout(() => {
+				  this.isDisabled = false;
+				}, 5000)
+				
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}

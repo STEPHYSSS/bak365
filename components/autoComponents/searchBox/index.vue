@@ -9,8 +9,9 @@
 					<div class="van-cell van-cell--borderless van-field" :style="{'height':currentObj.heightInput+'px','width':vanFieldWidth,'font-size':'14px','box-sizing': 'content-box'}">
 						<div class="van-cell__value van-cell__value--alone">
 							<div class="van-field__body">
-								<input class="van-field__control" slot="input" v-model="value" :style="{'color':currentObj.inputColor,'height':currentObj.heightInput+'px'}"
+								<input class="van-field__control" slot="input" type="serch" @confirm="clickInputBox" v-model="value" :style="{'color':currentObj.inputColor,'height':currentObj.heightInput+'px'}"
 								 placeholder="搜索商品"/>
+								
 							</div>
 						</div>
 					</div>

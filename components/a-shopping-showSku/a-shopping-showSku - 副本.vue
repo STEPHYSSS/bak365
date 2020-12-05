@@ -197,7 +197,7 @@
 					// 	currentTastArr.push(D.Name);
 					// });
 					currentTastArr = currentTastArr.join(",");
-					console.log(currentTastArr,'------')
+					// console.log(currentTastArr,'------')
 				} else {
 					currentTastArr = "";
 				}

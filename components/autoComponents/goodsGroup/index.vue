@@ -282,6 +282,7 @@
 			//根据系列SID查询商品并展示商品
 			// "GetProdInfoList"
 			async getList(val) {
+			
 			  this.loading = true;
 			  try {
 			    let data = await vipCard(

@@ -26,7 +26,6 @@
 							</div>
 						</li>
 					</ul>
-
 					<swiper v-if="currentObj.changeMode==2" class="cap-image-ad__image_swipe" :style="{'height':changeClientWidth+'px','width':changeClientWidth+'px'}"
 					 @change="onChange" :indicator-dots="currentObj.indicator==1&&currentObj.imgList.length>1">
 						<swiper-item v-for="(image, index) in currentObj.imgList" :key="index" @click="clickLink(image)">
@@ -173,14 +172,14 @@
 			clickLink(obj) {
 				if (obj.urlObj && obj.urlObj.url) {
 					let url = obj.urlObj.url.split('#');
-					if(url!="http://dingtalk.bak365.cn"){
-						window.location.href = obj.urlObj.url
-					}else{
+					// if(url!="http://dingtalk.bak365.cn"){
+					// 	window.location.href = obj.urlObj.url
+					// }else{
 						let path = url[1];
 						uni.reLaunch({					
 							url: path
 						});
-					}
+					// }
 				}
 			}
 		},
@@ -188,6 +187,17 @@
 			"currentObj.pageGap"(n) {
 				n = Number(n);
 				this.changeClientWidth = (this.clientWidth - n * 2).toFixed(2);
+			},
+			"currentObj.imgList"(){
+				this.currentObj.imgList.forEach(D => {
+					if (D.img) {
+						// D.img = this.$VUE_APP_PREFIX2 + D.img
+						D.img = GetBaseImgUrl() + D.img;
+						// D.img = 'http://192.168.0.105:8001/'+D.img
+					}
+				
+				})
+				console.log(this.currentObj.imgList)
 			}
 		}
 	};

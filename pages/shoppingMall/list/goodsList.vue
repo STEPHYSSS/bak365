@@ -20,11 +20,13 @@
 					</view>
 				</div>
 				<div class="goodBox1" v-if="list.length>0">
-					<div class="goodBox-row" gutter="5">
-						<div class="goodBox-col" v-for="(item,index) in list" :key="index">
-							<a-good-box :itemData="item" :imgHeight="imgHeight" @goodBox="goodBox" @addCart="addCart(item)"></a-good-box>
+					<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
+						<div class="goodBox-row" gutter="5">
+							<div class="goodBox-col" v-for="(item,index) in list" :key="index">
+								<a-good-box :itemData="item" :imgHeight="imgHeight" @goodBox="goodBox" @addCart="addCart(item)"></a-good-box>
+							</div>
 						</div>
-					</div>
+					</scroll-view>
 				</div>
 				<a-nodeData v-if="(sidebarList.length===0||list.length===0)"></a-nodeData>
 			</div>
@@ -64,11 +66,21 @@
 				only:[],
 				CateSID:'',
 				search:'',//商品大类搜索
+				menuScrollIntoView: '',
 			};
 		},
 		async created() {
-			if(this.$route.query.query){
-				this.CateSID = JSON.parse(this.$route.query.query);
+			// if(this.$route.query.query){
+			// 	this.CateSID = JSON.parse(this.$route.query.query);
+			// }
+			if(this.$route.query.query){				
+				let getDecode = decodeURIComponent(this.$route.query.query);
+				let getDQuery = JSON.parse(getDecode)
+				let getObj = JSON.parse(getDQuery.query)
+				let key = Object.keys(getObj)
+				if(key=="SID"){
+					this.SID = Object.values(getObj)
+				}
 			}
 			this.imgHeight = (uni.getSystemInfoSync().windowWidth- 22 - 85) / 2 + "px";
 			await this.getCouponList();
@@ -241,7 +253,7 @@
 				font-size: 28rpx;
 				padding: 20px 12px 20px 8px;
 			}
-
+			
 			.homepageLeft-info {
 				position: absolute;
 				top: 5px;
@@ -284,15 +296,21 @@
 			box-sizing: border-box;
 			margin-left: 85px;
 			background: #fff;
-
-			.goodBox-row {
-				display: flex;
-				flex-wrap:wrap;
-
-				:nth-child(2n).goodBox-col {
-					margin-left: 6px;
+			overflow: hidden;
+			height: 90vh;
+			.menus {
+				height: 100%;
+				overflow: hidden;
+				.goodBox-row {
+					display: flex;
+					flex-wrap:wrap;
+				
+					:nth-child(2n).goodBox-col {
+						margin-left: 6px;
+					}
 				}
 			}
+			
 		}
 	}
 </style>

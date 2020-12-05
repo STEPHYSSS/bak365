@@ -42,8 +42,15 @@
 						AppNo: newAppNo,
 						Code: code						
 					});
+					let getPath = url.split('#')
+					
 					this.url = url;
-					window.location.href = url;
+					
+					this.$Router.push({
+						path: getPath[1],
+					});
+					
+		
 				} catch (e) {
 					// // 	//获取mac失败
 					this.$Router.push({

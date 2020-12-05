@@ -398,7 +398,7 @@
 		}
 
 		.orderTime {
-			padding: 8px 8px 0px 16px;
+			padding: 8px 0px 0px 16px;
 		}
 		.orderTime .priceSpan{
 			display: inline-block;
@@ -418,7 +418,8 @@
 			font-size: 14px;
 		}
 		.copyText {
-			float: right;
+			margin-left: 20px;
+			// float: right;
 		}
 	}
 

@@ -29,7 +29,7 @@
 				window.location.href =this.redirect_uri + "&code=11111"
 			}else if(this.UserMACPhone){
 				uni.navigateTo({
-				   url: '/pages/homePage/homePage'
+				   url: '/pages/home'
 				});
 			}else if( !this.appId ){
 			   this.AppIdoAuth()

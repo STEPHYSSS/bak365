@@ -96,7 +96,6 @@ Vue.filter('setMoney', (val) => {
 Vue.filter('setImgPrex', (val) => {
 	if (val) {
 		// return dataConfig.VUE_APP_PREFIX + val
-		console.log(GetBaseImgUrl() + val,'图片路径')
 		return GetBaseImgUrl() + val
 	} else {
 		return ''
@@ -104,7 +103,6 @@ Vue.filter('setImgPrex', (val) => {
 })
 Vue.filter('fmtImgUrl', (val) => {
      if (val) {
-		console.log(GetBaseImgUrl() + val,'图片路径')
           return GetBaseImgUrl() + val
      } else {
           return ''

@@ -28,7 +28,6 @@
 			}
 		},
 		created() {
-			console.log(this.dataIMg,'-----')
 		},
 		data() {
 			return {
