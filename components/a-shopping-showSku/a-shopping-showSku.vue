@@ -71,16 +71,7 @@
 										<span class="skuTopChoiceTitle">规格</span>
 										<div :class="{'isActive': currentIndex === index, 'skuTopChoiceItem': true }" v-for="(item,index) in normsList"
 										 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
-									</div>
-									<div v-if="PartsList.length!==0">
-										<span class="skuTopChoiceTitle">配件(单独售价)</span>
-										<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
-											<!-- @click="skuTopChoiceParts(index)" -->
-											<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">售价¥{{item.SalePrice}} &nbsp;{{item.Name}}</div>
-											<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
-											 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
-										</div>
-									</div>
+									</div>									
 								
 									<!-- 商品属性 -->
 									<div v-if="attributeList.length >0 ">
@@ -97,10 +88,19 @@
 											 @click="clickStatic(item, value,index2)">
 												<view class="skuTopChoiceItem"  :class="isActiveName(value.Name)">
 													{{value.Name}}
-													<text v-if="value.Price !='0'">￥{{value.Price}}</text>
+													<text v-if="value.Price !='0'" style="color: red;">￥{{value.Price}}</text>
 												</view>
 											</view>
 										</view>
+									</div>
+									<div v-if="PartsList.length!==0">
+										<span class="skuTopChoiceTitle">配件(单独售价)</span>
+										<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
+											<!-- @click="skuTopChoiceParts(index)" -->
+											<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">{{item.Name}}<span style="color: red;padding-left: 5px;">¥{{item.SalePrice}}</span></div>
+											<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
+											 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
+										</div>
 									</div>
 								</div>
 								<div class="skuStepper">
@@ -162,6 +162,7 @@
 				minPrice: "",//最低价
 				maxMemberPrice: "",//最高会员价
 				minMemberPrice: "",//最低会员价
+				TastPrice:0,
 				// normsList: [],
 				// flavorList: [],
 				// partsList: [],
@@ -426,6 +427,18 @@
 						}
 					});
 					this.currentTastArr = this.currentTastArr.substring(0, this.currentTastArr.length - 1)
+				
+					if(this.currentTastArr){
+						var list= this.currentTastArr.split(',')
+						if(list.length>0){
+							list.forEach(item=>{
+								var Param = item.split("￥")
+								if(Param.length>1){
+									this.TastPrice+=Number(Param[1])
+								}
+							})
+						}
+					}
 					//this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 				}
 			},

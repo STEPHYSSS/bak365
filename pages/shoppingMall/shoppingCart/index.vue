@@ -8,7 +8,7 @@
 				<div class="top-cart backgroundColor">
 					<div class="top-cart__title">购物车</div>
 					<div class="top-cart__num">共{{dataList.length}}件宝贝</div>
-					<span class="top-cart__batch" @click="clickBatch">{{batchState?'完成':'管理'}}</span>
+					<span class="top-cart__batch" @click="clickBatch" style="font-size: 16px;">{{batchState?'完成':'管理'}}</span>
 				</div>
 				<div class="bottom-cart">
 					<checkbox-group @change="changeGroup">

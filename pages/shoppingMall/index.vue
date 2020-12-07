@@ -46,7 +46,7 @@
 				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
-				<!-- <button type="default" size="mini" @click="seckill">秒杀</button> -->
+				<button type="default" size="mini" @click="seckill">秒杀</button>
 				<!-- <button type="default" size="mini" @click="autoIndex">测试</button> -->
 				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>

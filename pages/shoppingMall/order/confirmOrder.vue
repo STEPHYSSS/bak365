@@ -354,7 +354,6 @@
 			// 获取授权地址
 			await this.getWxConfig();
 			let item = this.$store.state.currentCard || [];
-			console.log(item,'created第一次商品信息')
 			item.forEach(D => {
 				if (D.SID) {
 					this.cardSids.push(D.SID);
@@ -440,7 +439,6 @@
 							this.allData = Data;
 							this.prodList = Data.ProdList;
 							this.currentItem = JSON.parse(JSON.stringify(this.prodList));
-							console.log(this.currentItem,'获取商品信息')
 							this.currentDeliveryType = Data.ProdList[0].DeliveryType; //选择第一个商品的配送方式
 							if (this.radioModes === 1) {
 								this.areaList = Data.ShopInfoList;

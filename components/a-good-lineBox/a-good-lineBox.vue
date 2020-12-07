@@ -85,7 +85,7 @@
 				// stepperValue: ''
 				// itemDataNew:this.itemData
 				stepperNumOld: "",
-				kouweiPrice: '', //多口味
+				kouweiPrice: 0, //多口味
 			};
 		},
 		created() {

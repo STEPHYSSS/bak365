@@ -238,8 +238,9 @@
 			};
 		},
 		created() {
-			// $.base64.atob(this.goods.Features, "utf8")
+			// $.base64.atob(this.goods.Features, "utf8")			
 			this.goods.ImgList = this.goods.ImgList ? this.goods.ImgList.split(",") : [];
+			this.goods.ImgList.unshift(this.goods.Img)
 			this.goods.Features = this.goods.Features ?
 				Base64.decode(this.goods.Features) : "";
 			this.goods.ImportantNotes = this.goods.ImportantNotes ?
