@@ -41,7 +41,7 @@
 					</div>
 				</uni-popup>
 			</div>
-			<a-nodeData v-if="dataList.length===0" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
+			<a-nodeData v-if="dataList.length===0&&loading==false" stringVal="暂无宝贝,可前往商城选择哦～"></a-nodeData>
 		</div>
 		<view>
 			<tabBar :pagePath="'/pages/shoppingMall/shoppingCart/index'"></tabBar>
@@ -63,7 +63,7 @@
 				dataList: [],
 				batchState: false,
 				allMoney: 0,
-				loading: false,
+				loading: true,
 				allResult: false,
 				currentItem: [],
 				filterIsBuyList: [],

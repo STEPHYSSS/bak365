@@ -92,16 +92,16 @@
 			clickLink(item) {
 				// 点击跳转
 				if (item.urlObj && item.urlObj.url) {
-					let url = item.urlObj.url.split('#');
+					// let url = item.urlObj.url.split('#');
 					// if(url!=url[0]){
-					//    window.location.href = item.urlObj.url
+					   window.location.href = item.urlObj.url
 					//    console.log(item.urlObj.url,'888')
 					// }else
 					// {
-						let path = url[1];
-						uni.reLaunch({
-							url: path
-						})
+						// let path = url[1];
+						// uni.reLaunch({
+						// 	url: path
+						// })
 					// }
 				}
 			},
@@ -120,7 +120,7 @@
 					switch (m) {
 					           case 1:
 					            arr = [
-					              { pageX: 0, pageY: 0, pWidth: 4, pHeight: 4 },
+					              { pageX: 0, pageY: 0, pWidth: 4, pHeight: 2 },
 					              { pageX: 0, pageY: 0, pWidth: 0, pHeight: 0 }
 					            ];
 					            break;

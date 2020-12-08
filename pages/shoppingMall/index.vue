@@ -46,7 +46,7 @@
 				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
-				<button type="default" size="mini" @click="seckill">秒杀</button>
+				<!-- <button type="default" size="mini" @click="seckill">秒杀</button> -->
 				<!-- <button type="default" size="mini" @click="autoIndex">测试</button> -->
 				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>
@@ -165,6 +165,7 @@
 				uni.showLoading({
 					title: '加载中'
 				});
+				console.log(this.$route.query,'获取传参信息')
 				if(this.$route.query.query){
 					let abc = JSON.parse(this.$route.query.query)
 					let key = Object.keys(abc)
@@ -343,7 +344,7 @@
 					} = await vipCard({
 							Action: "GetDecorate",
 							Type:'0',//
-							SID:this.SID.SID ? this.SID.SID : '',//通过手机二维码扫描的时候需要的SID
+							SID:this.SID[0] ? this.SID[0] : '',//通过手机二维码扫描的时候需要的SID
 							ShopSID:currentStore.data.SID
 						},
 						"UShopOpera"

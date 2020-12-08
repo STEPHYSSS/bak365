@@ -73,14 +73,17 @@
 			// if(this.$route.query.query){
 			// 	this.CateSID = JSON.parse(this.$route.query.query);
 			// }
-			if(this.$route.query.query){				
+			if(this.$route.query.query){
 				let getDecode = decodeURIComponent(this.$route.query.query);
 				let getDQuery = JSON.parse(getDecode)
-				let getObj = JSON.parse(getDQuery.query)
-				let key = Object.keys(getObj)
-				if(key=="SID"){
-					this.SID = Object.values(getObj)
-				}
+				this.CateSID= getDQuery.SID
+				// let abc = JSON.parse(this.$route.query.query)
+				// let getDQuery = JSON.parse(getDecode)
+				// let getObj = JSON.parse(getDQuery.query)
+				// let key = Object.keys(getObj)
+				// if(key=="SID"){
+				// 	this.SID = Object.values(getObj)
+				// }
 			}
 			this.imgHeight = (uni.getSystemInfoSync().windowWidth- 22 - 85) / 2 + "px";
 			await this.getCouponList();
@@ -119,7 +122,7 @@
 					let { Data } = await vipCard({
 						Action: "GetTreeProdList",
 						SID:this.$store.state.currentStoreInfo.SID,//门店id
-						CateSID:this.CateSID.SID,
+						CateSID:this.CateSID,
 						Name:this.search
 					}, "UProdOpera");
 					this.sidebarList = Data.CateList;
@@ -133,7 +136,7 @@
 					let { Data } = await vipCard({
 						Action: "GetTreeProdList",
 						SID:this.$store.state.currentStoreInfo.SID,//门店id
-						CateSID:this.CateSID.SID,
+						CateSID:this.CateSID,
 						Name:this.name
 					}, "UProdOpera");
 					this.sidebarList = Data.CateList;					

@@ -12,8 +12,8 @@
 							<div class="skuTopInfo">
 								<div class="skuTopInfoMoney">
 									¥
-									<span v-if="goodsInfo.MemberPrice">{{goodsInfo.MemberPrice}}</span>
-									<span  v-else class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
+									<span v-if="goodsInfo.MemberPrice">{{sumPrice}}</span>
+									<span  v-else class="skuTopInfoMoneyNum">{{sumPrice}}</span>
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{goodsInfo.StoreQty}} 件</span>
@@ -42,7 +42,6 @@
 									¥
 									<span v-if="currentNorms.MemberPrice">{{currentNorms.MemberPrice}}</span>
 									<span  v-else class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
-									<!-- <span class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span> -->
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{currentNorms.StoreQty}} 件</span>
@@ -96,7 +95,6 @@
 									<div v-if="PartsList.length!==0">
 										<span class="skuTopChoiceTitle">配件(单独售价)</span>
 										<div class="partsStyle" v-for="(item,index) in PartsList" :key="item.SID">
-											<!-- @click="skuTopChoiceParts(index)" -->
 											<div :class="{'isActive': item.isActive, 'skuTopChoiceItem': true }">{{item.Name}}<span style="color: red;padding-left: 5px;">¥{{item.SalePrice}}</span></div>
 											<uni-number-box class="skuStepperStyle partsStepper" :value="item.Stepper" :min="0" :max="Number(item.StoreQty)"
 											 @overlimit="overlimitParts(item.Stepper,index)" @change="skuTopChoiceParts($event,index)" />
@@ -162,7 +160,7 @@
 				minPrice: "",//最低价
 				maxMemberPrice: "",//最高会员价
 				minMemberPrice: "",//最低会员价
-				TastPrice:0,
+				resultPrice:0,
 				// normsList: [],
 				// flavorList: [],
 				// partsList: [],
@@ -195,6 +193,7 @@
 				checkStatic: {}, //属性选中
 				currentParts: [],
 				currentTastArr:[],
+				SpecResultPrice:0
 			};
 		},
 		created() {
@@ -225,6 +224,38 @@
 					return ''
 				}
 			},
+			sumPrice () {
+				this.resultPrice = 0
+				let num = Number(this.goodsInfo.SalePrice)
+				if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
+					num = Number(this.goodsInfo.MemberPrice)
+				}
+				this.checkStatic.forEach(item => {
+					if (item.Value.Name) {
+						this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+					}
+				});
+				
+				this.resultPrice=(this.resultPrice + num)*this.valueStepper
+				this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
+				return this.resultPrice
+			},
+			specPrice(){
+				this.SpecResultPrice = 0;
+				let num = Number(this.currentNorms.SalePrice)
+				if (this.currentNorms.MemberPrice || this.currentNorms.MemberPrice == 0) {
+					num = Number(this.currentNorms.MemberPrice)
+				}
+				this.checkStatic.forEach(item => {
+					if (item.Value.Name) {
+						this.SpecResultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+					}
+				});
+				
+				this.SpecResultPrice=(this.SpecResultPrice + num)*this.valueStepper
+				this.SpecResultPrice = parseFloat(this.SpecResultPrice.toFixed(2))
+				return this.SpecResultPrice
+			}
 		},
 		methods: {
 			isDuringDate(beginDateStr, endDateStr){
@@ -355,7 +386,6 @@
 						if (currentItem.length > 0) {
 							this.$store.commit("SET_CURRENT_CARD", currentItem);
 							this.$Router.push("/pages/shoppingMall/order/confirmOrder");//暂时注释
-							// this.$Router.push("/pages/shoppingMall/order/confirmOrderCustom")
 						}
 					}
 				} catch (e) {
@@ -378,34 +408,6 @@
 				this.currentIndex = i;
 				this.currentNorms = this.normsList[i];
 			},
-			// skuTopChoiceFlavor(i, i1) {
-			// 	this.flavorList[i].Value.forEach((item, index) => {
-			// 		if (index === i1) {
-			// 			this.$set(item, 'isActive', true)
-			// 		} else {
-			// 			this.$set(item, 'isActive', false)
-			// 		}
-			// 	})
-			// 	// this.$set(this.flavorList[i].Value[i1], "isActive", !this.flavorList[i].Value[i1].isActive);
-			// 	this.currentTast = []
-			// 	for (let i of this.flavorList) {
-			// 		for (let y of i.Value) {
-			// 			if (y.isActive) {
-			// 				this.currentTast.push(y)
-			// 			}
-			// 		}
-			// 	}
-			// 	// if (this.flavorList[i].Value[i1].isActive) {
-			// 	// 	this.currentTast.push(this.flavorList[i].Value[i1].isActive);
-			// 	// } else {
-			// 	// 	this.currentTast.forEach((D, j) => {
-			// 	// 		if (!D.isActive) {
-			// 	// 			this.currentTast.splice(j, 1);
-			// 	// 		}
-			// 	// 	});
-			// 	// }
-			// 	this.currentTast = sortArr("flavor", this.currentTast);
-			// },
 			clickStatic(item, value, key) { //选择属性
 				for (let i of this.checkStatic) {
 					if (item.Name === i.Name) {
@@ -421,24 +423,13 @@
 					let sumPrice = 0 // 合计金额
 					this.checkStatic.forEach(item => {
 						sumPrice = Number(item.Value.Price)
+						
 						if (item.Value.Name) {
 							this.currentTastArr  += item.Value.Name + (sumPrice===0?'': `￥${sumPrice}`)+",";
 							// arr += item.Value.Name + `￥${sumPrice}`;
 						}
 					});
 					this.currentTastArr = this.currentTastArr.substring(0, this.currentTastArr.length - 1)
-				
-					if(this.currentTastArr){
-						var list= this.currentTastArr.split(',')
-						if(list.length>0){
-							list.forEach(item=>{
-								var Param = item.split("￥")
-								if(Param.length>1){
-									this.TastPrice+=Number(Param[1])
-								}
-							})
-						}
-					}
 					//this.currentTastArr = sumPrice===0?this.currentTastArr: this.currentTastArr + `￥${sumPrice}`
 				}
 			},

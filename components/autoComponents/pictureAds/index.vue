@@ -171,14 +171,14 @@
 			},
 			clickLink(obj) {
 				if (obj.urlObj && obj.urlObj.url) {
-					let url = obj.urlObj.url.split('#');
+					// let url = obj.urlObj.url.split('#');
 					// if(url!="http://dingtalk.bak365.cn"){
-					// 	window.location.href = obj.urlObj.url
+						window.location.href = obj.urlObj.url
 					// }else{
-						let path = url[1];
-						uni.reLaunch({					
-							url: path
-						});
+						// let path = url[1];
+						// uni.reLaunch({					
+						// 	url: path
+						// });
 					// }
 				}
 			}
