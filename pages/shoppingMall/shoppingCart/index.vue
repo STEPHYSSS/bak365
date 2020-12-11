@@ -335,7 +335,8 @@
 					list.forEach(item=>{
 						var Param = item.split("￥")
 						if(Param.length>1){
-							Tast+=Number(Param[1])
+							// Tast+=Number(Param[1])
+							Tast+=Number(Param[1])* Number(data.BuyCnt)
 						}
 					})
 				}

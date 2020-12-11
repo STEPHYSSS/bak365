@@ -1,5 +1,6 @@
 // let token = ''
 let  BASE_URL_OnL= window.location.host+'/WebApp/Mobile/'
+
 export default {
 	isMock: true,
 	AppNoMy: uni.getStorageSync('AppNo'),

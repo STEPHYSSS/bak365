@@ -5,24 +5,56 @@
 			<uni-nav-bar :status-bar="true" :shadow="false" title="会员中心"></uni-nav-bar>
 			<!-- #endif -->
 			<div v-if="!loading" class="homeFa">
-				<div class="homeImg" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
-					<span class="homeImgTitle">{{data.CardNo}}</span>
+				<!-- <div class="homeImg" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
+					<div class="imgFlex">
+						<image :src="UserPhoto"></image>
+						<p class="marFlex">
+							<span>{{CardBase.Name}}</span>
+						</p>
+						<p class="marFlex">
+							<span>{{CardBase.Name}}</span>
+						</p>
+					</div>
+					<p>
+						<span>{{data.CardNo}}</span>
+					</p>
+				</div> -->
+				<div class="surplusTop backgroundColor" v-if="!loading || data.length>0" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
+					<div class="imgFlex">
+						<image :src="UserPhoto"></image>
+						<p class="marFlex" style="flex:1">
+							{{data.CardNo}}
+							<span>{{CardBase.Name}}</span>
+						</p>
+						<p class="erweima" @click="toPayMeng">
+							<span class="iconfont icon-zhifuma"></span>
+						</p>
+					</div>
+					<p class="word">账户余额（元）</p>
+					<div class="imgFlex">
+						<div class="flexLeft">					
+							<span>{{data.Balance}}</span>
+						</div>
+						<div class="flexright">
+							<span>积分</span>
+							<p>{{data.Score}}</p>
+						</div>
+					</div>
 				</div>
 				<div class="homeInfo">
 					<div class="homeBalanceRow backgroundF">
-						<div class="homeBalance" style="width:50%">
+						<!-- <div class="homeBalance" style="width:50%">
 							<div @click="clickBalance">
 								<div class="homeBalanceM">
 									<span v-if="data.Balance&&Number(data.Balance)>0">
 										{{data.Balance}}
-										<!-- <span>{{String(data.Balance).length>6?'￥':''}}</span> -->
 									</span>
 									<span v-else>0</span>
 								</div>
 								<span class="homeBalanceB">余额</span>
 							</div>
-						</div>
-						<div class="homeBalance" style="width:50%">
+						</div> -->
+						<!-- <div class="homeBalance" style="width:50%">
 							<div @click="clickBalance">
 								<div class="homeBalanceM">
 									<span v-if="data.Score&&Number(data.Score)>0">
@@ -33,7 +65,7 @@
 								</div>
 								<span class="homeBalanceB">积分</span>
 							</div>
-						</div>
+						</div> -->
 						<!-- <van-col span="6" class="homeBalance" v-if="false">
 							<router-link to="/home/redPacket">
 								<div class="homeBalanceM">0.00</div>
@@ -53,6 +85,7 @@
 							<uni-grid-item :index="1">
 								<view class="grid-item-box">
 									<div class="iconfont icon-gerenzhongxindingdandaifukuan"></div>
+									<!-- <span>{{AwaitPayCnt}}</span>	 -->
 									<div>待付款</div>
 								</view>
 							</uni-grid-item>
@@ -131,10 +164,10 @@
 						<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
 						<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 						<div>
-							<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
+							<adCell v-if="isMember=='0'||(CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
 						</div>
 						<div>
-							<adCell v-if="isMember=='0'||(data.CardType!=='Manage'&&data.CardType!=='Shop' && data.CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
+							<adCell v-if="isMember=='0'||(CardType!=='Manage'&&CardType!=='Shop' &&CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
 						</div>
 					</div>
 					
@@ -212,7 +245,10 @@
 				// 判断是否绑定了卡
 				isMember: null,
 				// 绑定的类型
-				CardType: null
+				CardType: null,
+				UserPhoto:'',
+				CardBase:{},
+				AwaitPayCnt:'',//待支付数量
 				
 			};
 		},
@@ -221,13 +257,13 @@
 			// console.log(Cookie.get("isMember"), Cookie.get("CardType"))
 			// //1 绑定了卡但是不知道绑定的是哪个卡；
 			//this.isMember = Cookie.get("isMember");
-			// this.CardType = Cookie.get("CardType"); //卡信息 04 申请卡 05绑定卡
+			this.CardType = Cookie.get("CardType"); //卡信息 04 申请卡 05绑定卡
 
 			await this.getInfo();
-			this.CardType = this.data.CardType
-			sessionStorage.setItem('CardType',this.CardType)
+			// this.CardType = this.data.CardType
+			// sessionStorage.setItem('CardType',this.CardType)
 			this.isMember = Cookie.get("isMember");
-			// bottomScrollbar(this, ".callInfo", ".homeFa", 60);
+			// bottomScrollbar(this, ".callInfo", ".homeFa", 60);			
 		},
 		methods: {
 			clickBalance() {
@@ -239,10 +275,13 @@
 					let data = await vipCard({
 						Action: "MemberCenter"
 					}, "UMemberOpera");
-					this.ImgUrl =
-						this.$VUE_APP_PREFIX + data.Data.CardImg || this.ImgUrl;
-					this.data = data.Data|| {};
-					if(this.data.CartType != undefined ){						
+					
+					this.ImgUrl = 'http://192.168.0.114:8001/'+this.$VUE_APP_PREFIX + data.Data.CardBase.CardImg || this.ImgUrl;
+					this.UserPhoto = data.Data.Img;//头像
+					this.CardBase = data.Data.CardBase;//卡信息
+					this.data = data.Data.MyCard|| {};
+					this.AwaitPayCnt = data.Data.AwaitPayCnt;
+					if(this.data.IssueType != undefined ){						
 						Cookie.set("isMember",'1')
 					}
 					this.loading = false;
@@ -442,30 +481,124 @@
 			}
 		}
 	}
-
+	.surplusTop{
+		width: 95%;
+		color: #fff;
+		margin: 10px auto;
+		border-radius: 10px;
+		background-color: orange;
+		padding-bottom: 15px;
+		.word{
+			font-size: 16px;
+			box-sizing: border-box;
+			margin-left: 7%;
+			margin-bottom: 5px;
+			color: #e5e5e5;
+		}
+		.imgFlex{
+			display: flex;
+			.flexLeft,.flexright{
+				position: relative;
+				flex: 1;
+				margin-left:7%;
+				p{
+					height: 30px;
+					line-height: 30px;
+					font-size: 16px;
+				}
+			}
+			.flexLeft span{
+				position: absolute;
+				font-size: 30px;
+				font-weight: 800;
+				bottom: 0;
+			}
+			image{
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				border: 1px solid rgb(255, 255, 255);
+				margin: 24px;
+				box-sizing: border-box;
+			}
+			.marFlex{
+				font-size: 20px;
+				line-height: 28px;
+				padding-top: 24px;
+				flex: 1;
+				span{
+					display: block;
+					font-size: 14px;
+				}
+			}
+			.erweima{
+				width: 85px;line-height: 99px;text-align: center;
+				span{
+					font-size: 38px;
+				}
+			}
+		}
+	}
 	.homeImg {
 		width: 100%;
-		height: 190px;
+		margin: 0 auto;
+		border-radius: 5px;
+		height: 180px;
 		background-size: cover !important;
-		padding-top: 50px;
+		// padding-top: 50px;
 		box-sizing: border-box;
 		position: relative;
-
-		.homeImgTitle {
-			height: 40px;
-			background: #d6d8c3;
-			position: absolute;
-			bottom: 0;
-			width: 94%;
-			left: 3%;
-			border-radius: 10px 10px 0 0;
-			color: #000;
-			text-align: right;
-			padding-right: 15px;
-			line-height: 40px;
-			font-size: 14px;
-			box-sizing: border-box;
+		.imgFlex{
+			display: flex;
+			.flexLeft,.flexright{
+				position: relative;
+				flex: 1;
+				margin-left:7%;
+				p{
+					height: 30px;
+					line-height: 30px;
+					font-size: 16px;
+				}
+			}
+			.flexLeft span{
+				position: absolute;
+				font-size: 30px;
+				font-weight: 800;
+				bottom: 0;
+			}
+			image{
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				border: 1px solid rgb(255, 255, 255);
+				margin: 24px;
+				box-sizing: border-box;
+			}
+			.marFlex{
+				font-size: 20px;
+				line-height: 28px;
+				padding-top: 24px;
+				span{
+					display: block;
+					font-size: 14px;
+				}
+			}
 		}
+		// .homeImgTitle {
+		// 	height: 40px;
+		// 	background: #d6d8c3;
+		// 	position: absolute;
+		// 	bottom: 0;
+		// 	width: 94%;
+		// 	left: 3%;
+		// 	border-radius: 10px 10px 0 0;
+		// 	color: #000;
+		// 	text-align: right;
+		// 	padding-right: 15px;
+		// 	line-height: 40px;
+		// 	font-size: 14px;
+		// 	box-sizing: border-box;
+		// }
 	}
 
 	.headImg {

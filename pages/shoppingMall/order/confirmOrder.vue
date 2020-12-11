@@ -370,7 +370,6 @@
 			this.ProdJsonList = JSON.stringify(item);
 			this.currentItem = JSON.stringify(item);
 			this.cardSids = this.cardSids ? this.cardSids.join(",") : "";
-
 			if (this.$Route.query.isIntegral) {
 				await this.getInfoIntegral();
 			} else {
@@ -421,7 +420,6 @@
 						PayType: this.radioPayType //传给后台来判断优惠方案的
 						// DeliveryType: this.currentDeliveryType						
 					};
-
 					if (currentItems[0].hasOwnProperty("PromotionItemSID")) {
 						// 活动
 						obj.PromotionItemSID = currentItems[0].PromotionItemSID;
@@ -512,7 +510,6 @@
 							this.totalCurrent = parseFloat(Number(Data.SumTotal).toFixed(2));
 							this.CardInfo = Data.hasOwnProperty("CardInfo") ?
 								Data.CardInfo : {};
-
 							if (JSON.stringify(this.CardInfo) !== "{}") {
 								if (Number(Data.CardInfo.Balance) < Number(Data.SumTotal)) {
 									//余额不足默认微信支付
@@ -521,7 +518,6 @@
 							} else {
 								this.radioPayType = "2";
 							}
-
 							this.DeliveryAreaList = Data.ShopInfoList;
 							// AddressList
 							// if(this.$store.state.orderType === 'takein'){
@@ -544,9 +540,7 @@
 							// let DefaultsArea = this.areaList.filter(D => D.Defaults === '1')[0]
 							// this.currentArea = DefaultsArea ? DefaultsArea : {};
 							// this.resultArea = DefaultsArea ? DefaultsArea.SID : "";
-
 							let num = Number(Data.ShopBase.ScopeDay);
-
 							let dayAdvance = 0;
 							let tAdvance = 0;
 							if (Number(advanceTime) / 24 >= 1) {
@@ -558,7 +552,6 @@
 								let endTime = countDown(Data.ShopBase.EndTime);
 								let cutTime = countDown(getTime(false, false, true));
 								let acTime = Number(advanceTime) * 60 * 60;
-
 								if ((acTime + cutTime).toFixed(2) > endTime) {
 									// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
 									tAdvance = Number(advanceTime);
@@ -586,9 +579,7 @@
 								radioTime: arrToday[0],
 								index: 0
 							};
-
 							this.UserTime = this.sidebarList[this.activeKey] + " " + this.radioTime;
-
 							this.loading = false;
 							uni.hideLoading()
 						})
@@ -637,7 +628,6 @@
 					this.allck = false;
 					this.total = parseFloat((Number(this.total) + Number(this.ScoreAmt)).toFixed(2))
 				}
-
 			},
 			orderArea() {},
 			async getWxConfig() {
@@ -648,7 +638,6 @@
 						Action: "GetJSSDK",
 						Url: window.location.href
 					}, "UProdOpera");
-
 					wx.config({
 						debug: false,
 						appId: Data.SDK.appId,
@@ -706,7 +695,6 @@
 				// this.$store.state.orderType === 'takein'
 				this.areaList = val == 1 ? this.DeliveryAreaList : this.takeOver;
 				this.currentArea = this.areaList[0];
-
 				if (val === 1) {
 					this.totalCurrent = this.total - this.freight;
 					// this.currentArea = {};
@@ -750,7 +738,6 @@
 						api = "CalcLogistics";
 					}
 				}
-
 				try {
 					this.loading = true;
 					uni.showLoading()
@@ -765,7 +752,6 @@
 						// PayType: this.radioPayType,
 						ProdList: JSON.stringify(this.currentItem),
 						ScoreAmt: this.allck === true ? this.ScoreAmt : '' //判断积分抵扣是否选中
-
 						// ProdList:this.currentItem
 					}
 					let {
@@ -789,7 +775,6 @@
 					this.$toast.fail(e);
 					console.log(e)
 				}
-
 			},
 			clickEdit(val) {
 				this.areaInfo = val;
@@ -814,7 +799,6 @@
 				// else {
 				// 	this.$Router.push(this.$store.state.historyUrl)
 				// }
-
 			},
 			clickDataTime() { //选择时间弹窗
 				this.selectTime = true;
@@ -827,7 +811,6 @@
 			clickUserTicketName() { //选择电子券弹窗
 				this.ticketProgram = true;
 				this.$refs.ticketProgram.open()
-
 			},
 			clickTime() {},
 			async saveAreaSet() {
@@ -872,7 +855,6 @@
 				this.radioPayType = item;
 				this.Discount(item, 2)
 			},
-
 			changeSider(index) {
 				this.currentIndex = index
 				this.activeKey = index
@@ -965,7 +947,6 @@
 				} catch (e) {
 					this.$toast.fail(e);
 					console.log(e)
-
 				}
 			},
 			// 电子券开始
@@ -987,7 +968,6 @@
 				this.ticketProgram = false;
 				this.Discount(item, 3);
 				this.$refs.ticketProgram.close();
-
 			},
 			// 电子券结束
 			areaSet() {
@@ -1027,7 +1007,6 @@
 				} else {
 					this.OrderCardPay();
 				}
-
 			},
 			async OrderCardPay() { // 支付
 				this.isDisabled = true;
@@ -1062,7 +1041,6 @@
 				}
 				// if(this.allck === true){//判断是否勾选积分抵扣
 				// 	// true代表选中，false代表未选中
-
 				// }
 				let currentStore = this.$store.state.currentStoreInfo || {}
 				let obj = {
@@ -1086,7 +1064,6 @@
 					PassWord: this.password ? this.password : '',
 					ScoreDeduction: this.allck === true ? this.ScoreDeduction : ''
 				};
-
 				if (JSON.parse(this.currentItem)[0].hasOwnProperty("PromotionItemSID")) {
 					// 活动
 					obj.PromotionItemSID = JSON.parse(this.currentItem)[0].PromotionItemSID;
@@ -1146,7 +1123,6 @@
 				} catch (e) {
 					this.$toast.fail(e);
 					// this.$toast.fail("支付失败");
-
 					this.payTypePop = false;
 					this.$refs.payTypePop.close();
 					// setTimeout(() => {
@@ -1168,30 +1144,25 @@
 			}
 		},
 	};
-
 	function setChangeData(num, aceTime) {
 		let arrData = []; //日期
 		let toDay = "";
 		num = Number(num);
 		for (let i = 0; i < num; i++) {
 			let dayM = 24 * 60 * 60 * 1000; //一天的时间戳
-
 			let date =
 				aceTime > 1 ?
 				new Date().getTime() + aceTime * dayM :
 				new Date().getTime();
-
 			toDay = i * dayM + date;
 			arrData.push(getTime(toDay, true));
 		}
 		return arrData;
 	}
-
 	function setChangeTime(ShopBase, aceTime, dayAdvance) {
 		let dayM = 60 * 60; //秒值
 		let a = 60 * Number(ShopBase.IntervalMinute); //求秒值
 		let endTime = countDown(ShopBase.EndTime);
-
 		let startTime = Number(countDown(ShopBase.StartTime));
 		let arr = [];
 		let arrToday = [];
@@ -1212,13 +1183,11 @@
 		} else {
 			arrToday = arr;
 		}
-
 		return {
 			arr,
 			arrToday
 		};
 	}
-
 	function countDown(time) {
 		//20:08:90转换为秒
 		var s = 0;
@@ -1228,7 +1197,6 @@
 		s = Number(hour * 3600) + Number(min * 60) + Number(sec);
 		return s;
 	}
-
 	function changeCountDown(value) {
 		//秒转换为 20:08:90
 		var theTime = parseInt(value);
@@ -1253,53 +1221,43 @@
 
 <style lang="less">
 	@import "../../../assets/css/radioModes";
-
 	.setADcell {
 		margin: 5px 0;
 	}
-
 	.confirm-order-style {
 		margin-bottom: 80px;
-
 		.uni-popup {
 			z-index: 999
 		}
-
 		.setADcell {
 			/deep/.detailView1 {
 				flex: none;
 			}
-
 			/deep/.headView {
 				flex: none;
 				width: 90px;
 			}
 		}
-
 		.radio-group-play {
 			background-color: #fff;
 			align-items: center;
 			padding: 5px 24rpx;
 			margin-top: 5px;
 			margin-bottom: 25px;
-
 			.payStyle {
 				background: rgb(255, 255, 255);
 				font-size: 14px;
 				color: rgb(90, 91, 92);
 				padding: 13px 0px;
 			}
-
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
 			}
-
 			.custom-title {
 				vertical-align: middle;
 			}
 		}
-
 		.total-style {
 			background: #fff;
 			text-align: right;
@@ -1307,21 +1265,17 @@
 			font-size: 16px;
 			padding-right: 10px;
 			border-bottom: 1rpx solid #ebedf0;
-
 			&__color {
 				color: red;
 			}
 		}
-
 		.order-area {
 			background: #ffffff;
 			padding: 14px 6px;
 			display: flex;
 		}
-
 		.order-area-icon {
 			margin: auto;
-
 			img,
 			image {
 				margin: 0 10px;
@@ -1329,47 +1283,38 @@
 				height: 40px;
 			}
 		}
-
 		.order-area-phone {
 			font-size: 14px;
 			color: #909090;
 			margin-left: 8px;
 		}
-
 		.order-area-location {
 			font-size: 12px;
 			margin-top: 3px;
 		}
-
 		.good_card_box {
 			background: #ffffff;
 			margin: 5px 0 5px;
 			padding: 10px;
-
 			.boxShadow {
 				box-shadow: none;
 			}
-
 			.rightBox {
 				margin: 0 10px;
 			}
 		}
-
 		// .goodsBox-parts {
 		/*margin-left: 10px !important;*/
 		// }
-
 		.confirm-order-popup {
 			background-color: #fff;
 			max-height: 50%;
-
 			.top {
 				padding: 10px 20px 10px;
 				text-align: center;
 				border-bottom: 1px solid #eee;
 				position: relative;
 			}
-
 			.cancel {
 				font-size: 12px;
 				position: absolute;
@@ -1379,57 +1324,46 @@
 				color: #777;
 			}
 		}
-
 		.bottom-area {
 			max-height: 60vh;
 			overflow: scroll;
-
 			&__box {
 				display: flex;
 				padding: 8px 12px;
 				align-items: center;
 			}
-
 			&__info {
 				flex: 1;
 				font-size: 14px;
 			}
-
 			&__icon {
 				width: 30px;
 				text-align: center;
 				margin: auto;
 			}
-
 			&__phone {
 				color: #969799;
 				font-size: 12px;
 				margin-top: 5px;
 			}
-
 			&__add {
 				text-align: center;
 				padding: 10px;
 				border-top: 1px solid #eee;
 			}
-
 			.checkbox-my {
 				margin-right: 10px;
 			}
 		}
-
 		.confirm-area-popup {
 			height: 100%;
-
 			/deep/.uni-popup__wrapper-box {
 				height: 100%;
 				background: #fff;
 			}
 		}
-
 		.confirm-selectTime-popup {
 			// height: 50vh;
-
 			.leftNavsidebar {
 				width: 130px;
 				display: fixed;
@@ -1439,21 +1373,16 @@
 				background: #f8f8f8;
 				height: 100vh;
 			}
-
 			.leftNavsidebar {
 				.activeCanteen {
 					background: #fff;
 				}
-
 				.homepageLeft {
 					line-height: 60px;
 					padding-left: 6px;
 				}
 			}
 		}
-
-
-
 		.rightTime {
 			height: 50vh;
 			padding: 8px;
@@ -1462,7 +1391,6 @@
 			background: #fff;
 			overflow-y: scroll;
 		}
-
 		.wechat {
 			width: 18px;
 			height: 18px;
@@ -1470,30 +1398,24 @@
 			display: inline-block;
 			font-size: 18px;
 			vertical-align: middle;
-
 			image {
 				width: 100%;
 				height: 100%;
 			}
 		}
-
 		button {
 			height: auto;
 		}
-
 		.content {
 			width: 100%;
 			margin: 0 auto;
 		}
-
 		.account-form {
 			overflow: hidden;
 		}
-
 		.container .content {
 			zoom: 1;
 		}
-
 		.account-form .form-title {
 			margin: 50px 0 10px;
 			padding: 0 12px;
@@ -1503,13 +1425,11 @@
 			text-transform: uppercase;
 			text-shadow: 0 1px rgba(255, 255, 255, 0.2);
 		}
-
 		.account-form .big {
 			font-size: 20px;
 			text-align: center;
 			color: #7c7b83;
 		}
-
 		.block {
 			overflow: hidden;
 			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
@@ -1523,12 +1443,10 @@
 			position: relative;
 			font-size: 14px;
 		}
-
 		.block {
 			border-top-width: 1px;
 			border-bottom-width: 1px;
 		}
-
 		.block.block-form {
 			width: 100%;
 			margin: 0;
@@ -1541,11 +1459,9 @@
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
 		}
-
 		.block.block-form.margin-bottom-normal {
 			margin-bottom: 20px;
 		}
-
 		.block-item {
 			position: relative;
 			display: block;
@@ -1558,24 +1474,20 @@
 			border-bottom: 2px solid #e5e5e5;
 			overflow: hidden;
 		}
-
 		.block.block-form .block-item {
 			display: table;
 			width: 100%;
 			padding: 0;
 		}
-
 		.block.block-form .block-item:last-child {
 			border-bottom: 0px none;
 		}
-
 		.block.block-form .block-item .label {
 			display: table-cell;
 			width: 90px;
 			padding: 10px 0;
 			vertical-align: middle;
 		}
-
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select,
@@ -1588,7 +1500,6 @@
 			line-height: 28px;
 			font-size: 14px;
 		}
-
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select {
@@ -1596,24 +1507,20 @@
 			border: 0px none;
 			outline: none;
 		}
-
 		.action-container {
 			padding: 0 10px;
 			text-align: center;
 			margin-top: 20px;
 			margin-bottom: 20px;
 		}
-
 		.account-form button {
 			border: 1px solid #e5e5e5;
 		}
-
 		.btn.btn-green {
 			color: #fff;
 			background-color: #06bf04;
 			border-color: #03b401;
 		}
-
 		.btn.btn-block {
 			color: #fff;
 			text-align: center;

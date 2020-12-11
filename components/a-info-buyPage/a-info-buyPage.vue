@@ -47,7 +47,8 @@
 								</p>
 							</div>
 							<div v-else>
-								<span class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
+								<span class="colorStyle" v-if="minPrice==maxPrice">¥{{goods.SalePrice}}</span>
+								<span v-else class="colorStyle">¥{{minPrice}}-{{maxPrice}}</span>
 							</div>
 						</div>
 						<div v-if="goods.SpecType ==='1'">
@@ -111,7 +112,7 @@
 				 select-class="wuc-tab-select"></wuc-tab>
 			</view>
 			<view class="contentStyle" v-show="TabCur==0">
-				<div v-html="goods.Features"></div>
+				<div class="udStyle" v-html="goods.Features"></div>
 			</view>
 			<view class="DealList" v-show="TabCur==1&&userList.length>0">
 				<view class="tableStyle_head tableRow">
@@ -147,6 +148,7 @@
 
 <script>
 	// import "@/config/jquery.base64.js";
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	import {
 		vipCard
 	} from "@/api/http.js";
@@ -238,7 +240,7 @@
 			};
 		},
 		created() {
-			// $.base64.atob(this.goods.Features, "utf8")			
+			// $.base64.atob(this.goods.Features, "utf8")				
 			this.goods.ImgList = this.goods.ImgList ? this.goods.ImgList.split(",") : [];
 			this.goods.ImgList.unshift(this.goods.Img)
 			this.goods.Features = this.goods.Features ?
@@ -248,7 +250,7 @@
 
 			//加图片 ../前缀
 			this.goods.Features = setfix(this.goods.Features, this);
-			// this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
+			this.goods.ImportantNotes = setfix(this.goods.ImportantNotes, this);
 			if (this.isIntegral != 'true' && !this.isCouponPage && !this.seckill) {
 				if (this.skuDataInfo.SpecList) {
 					this.maxPrice = Math.max.apply(Math, this.skuDataInfo.SpecList.map(item => {
@@ -327,6 +329,7 @@
 				);
 			}
 		},
+		
 		methods: {
 			isDuringDate(beginDateStr, endDateStr) {
 				var date = new Date();
@@ -475,11 +478,15 @@
 	};
 
 	function setfix(val, _this) {
+		console.log(val,'url地址')
 		let str = "";
 		if (!val) {
 			return ''
 		}
-		str = val.replace(/src="/g, `src="${_this.$VUE_APP_PREFIX}`);
+		let abc = GetBaseImgUrl();	
+		str = val.replace(/src="Files/g,`src="${abc}../Files`)
+		console.log(str)
+		//str = val.replace(/src="/g, `src="${_this.$VUE_APP_PREFIX}`);
 		return str;
 	}
 </script>
@@ -702,7 +709,7 @@
 				height: 30px;
 				text-align: center;
 				width: 45px;
-			}
-		}
+			}			
+		}		
 	}
 </style>

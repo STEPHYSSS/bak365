@@ -2,7 +2,7 @@
 	<div class="weiFull" :class="mainStyle">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickGo" title="微卡充值" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<!--  -->
-		<div class="surplusTop backgroundColor" v-if="!loading || MyCard.length>0">
+		<div class="surplusTop" :style="{background:`url(${CardImg})`}" v-if="!loading || MyCard.length>0">
 			<div class="imgFlex">
 				<image :src="UserPhoto"></image>
 				<p class="marFlex">
@@ -29,13 +29,13 @@
 						<p >{{item.IncomeName}}</p>
 					</div>
 			    </uni-grid-item>
-				<div class="Imglist2" v-if="IsOpenRecharge=='1'">
+				<div class="Imglist2">
 					<div :class={weiFullBox:true,backColor:!showMoney,backBorder:!showMoney} @click="customMoney">
-						<div style="text-align: center;line-height: 60px;font-size: 16px;" v-if="showMoney">自定义充值</div>
-						<div v-if="!showMoney" style="display: flex;">
-							<span style="width: 20px;text-align: center;font-size: 15px;line-height: 59px;">¥</span>
-							<input v-model="inputVal" ref="moneyInput" :focus="searchFocus" type="number" autofocus="autofocus" style="display: inline-block;width: 65px;height: 4.5em;flex: 1;"
-								 @blur="blurInput" maxlength="5" >
+						<div style="text-align: center;line-height: 60px;font-size: 16px;" v-if="showMoney">自定义金额</div>
+						<div v-if="!showMoney" style="display: flex;margin-top: 20px">
+							<span style="width: 20px;text-align: center;font-size: 15px;">¥</span>
+							<input v-model="inputVal" ref="moneyInput" :focus="searchFocus" style="flex: 1;height: 20px;" type="text" autofocus="autofocus" 
+							 @blur="blurInput" maxlength="5">
 							<!-- <span style="font-size: 15px;position: absolute;left: 6px;top: 17px;">¥</span>
 							 -->
 						</div>
@@ -58,24 +58,24 @@
 			<div class="popup-income">
 				<div style="height: 223px;">
 					<div v-if="IncomeList[currentIndex]" style="padding: 15px 0 20px 15px;border-bottom: 1px solid #cccccc;font-size: 16px;letter-spacing: 1px;margin-bottom: 10px;">
-						<p style="display: inline-block;width: 50%;">充值送好礼<span class="iconfont icon-jiantou"></span></p>
-						<p style="display: inline-block;width: 50%;text-align: center;">充值金额<span style="font-weight: 800;color: #B2C119;font-size: 20px;padding: 0 5px;">{{IncomeList[currentIndex].IncomeAmt}}</span>元</p>
+						<p style="display: inline-block;width: 50%;">充值送好礼</p>
+						<p style="display: inline-block;width: 50%;text-align: center;">充值金额<span style="font-weight: 800;font-size: 20px;padding: 0 5px;">{{IncomeList[currentIndex].IncomeAmt}}</span>元</p>
 					</div>
 					<div style="width: 92%;margin: 0 auto;" v-if="IncomeList[currentIndex]">
 						<p v-if="Number(IncomeList[currentIndex].DonateAmt)">
-							<span style="display: inline-block;width: 7px;height: 7px;border-radius: 50%;border: 1px solid #B2C119;background: rgb(178, 193, 25);"></span>
+							<span style="display: inline-block;width: 12px;height: 12px;border-radius: 50%;border: 1px solid #B2C119;"></span>
 							<span style="font-size: 16px;padding-left: 8px;">赠送金额：<span style="font-size: 16px;color: #B2C119;font-weight: 800;">{{IncomeList[currentIndex].DonateAmt}}元</span></span>
 						</p>
 						<p v-if="Number(IncomeList[currentIndex].DonateMonth)">
-							<span style="display: inline-block;width: 7px;height: 7px;border-radius: 50%;border: 1px solid #B2C119;background: rgb(178, 193, 25);"></span>
+							<span style="display: inline-block;width: 12px;height: 12px;border-radius: 50%;border: 1px solid #B2C119;"></span>
 							<span style="font-size: 16px;padding-left: 8px;">赠送分月返还：<span style="font-size: 16px;color: #B2C119;font-weight: 800;">{{IncomeList[currentIndex].DonateMonth}}元</span></span>
 						</p>
 						<p v-if="Number(IncomeList[currentIndex].DonateScore)">
-							<span style="display: inline-block;width: 7px;height: 7px;border-radius: 50%;border: 1px solid #B2C119;background: rgb(178, 193, 25);"></span>
+							<span style="display: inline-block;width: 12px;height: 12px;border-radius: 50%;border: 1px solid #B2C119;"></span>
 							<span style="font-size: 16px;padding-left: 8px;">赠送积分：<span style="font-size: 16px;color: #B2C119;font-weight: 800;">{{IncomeList[currentIndex].DonateScore}}元</span></span>
 						</p>
 						<p v-if="Number(IncomeList[currentIndex].DonateProd)">
-							<span style="display: inline-block;width: 7px;height: 7px;border-radius: 50%;border: 1px solid #B2C119;background: rgb(178, 193, 25);"></span>
+							<span style="display: inline-block;width: 12px;height: 12px;border-radius: 50%;border: 1px solid #B2C119;"></span>
 							<span style="font-size: 16px;padding-left: 8px;">赠送商品：<span style="font-size: 16px;color: #B2C119;font-weight: 800;">{{IncomeList[currentIndex].DonateProd}}元</span></span>
 						</p>
 					</div>
@@ -178,7 +178,6 @@
 				hideMoney:true,
 				showMoneydd:false,
 				mainStyle: getApp().globalData.mainStyle,
-				ImgUrl: require("@/assets/img/defaule_back.jpg"),
 				loading: true,
 				currentIndex: '',
 				isBackBorder: false,
@@ -330,7 +329,7 @@
 	@import '../../assets/css/weiFull';
 
 	.weiFull {
-		margin-bottom: 65px;
+		// margin-bottom: 62px;
 		height: 100vh;
 		background-color: #fff;
 		.popup-income {
@@ -377,8 +376,7 @@
 		}
 	}
 	.surplusTop{
-		// width: 90%;
-		width: 95%;
+		width: 90%;
 		margin: 10px auto;
 		border-radius: 10px;
 		background-color: orange;
@@ -556,8 +554,7 @@
 		border:none !important;
 	}
 	.leaderBox{
-		// width: 90%;
-		width: 95%;
+		width: 90%;
 		margin: 10px auto;
 		background-color: #fff;	
 		.Imglist{

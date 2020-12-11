@@ -165,7 +165,6 @@
 				uni.showLoading({
 					title: '加载中'
 				});
-				console.log(this.$route.query,'获取传参信息')
 				if(this.$route.query.query){
 					let abc = JSON.parse(this.$route.query.query)
 					let key = Object.keys(abc)

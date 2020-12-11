@@ -52,6 +52,7 @@
 </template>
 
 <script>
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default { 
 		name: "orderBox",
 		props: {
@@ -78,6 +79,30 @@
 			console.log(this.dataList, 5555)
 			// 获取接口返回的区分id
 		},
+		computed: {
+			setImg() {
+				return function (arr) {
+					if (arr) {
+						let str = "";
+						arr.forEach(D => {
+							if (D.Img) {
+								str = D.Img;
+							}
+						});
+						if (str) {
+							// return this.$VUE_APP_PREFIX + str;
+							return GetBaseImgUrl() + str
+						} else {
+							return "";
+						}
+						return str;
+					} else {
+						return "";
+					}
+				}
+				
+			},
+		},
 		methods: {
 			panelOrder(val) {
 				this.$Router.push({
@@ -97,7 +122,8 @@
 						}
 					});
 					if (str) {
-						return this.$VUE_APP_PREFIX + str;
+						// return this.$VUE_APP_PREFIX + str;
+						return GetBaseImgUrl() + str
 					} else {
 						return "";
 					}

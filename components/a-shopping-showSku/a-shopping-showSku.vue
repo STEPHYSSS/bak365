@@ -40,8 +40,8 @@
 							<div class="skuTopInfo">
 								<div class="skuTopInfoMoney">
 									¥
-									<span v-if="currentNorms.MemberPrice">{{currentNorms.MemberPrice}}</span>
-									<span  v-else class="skuTopInfoMoneyNum">{{currentNorms.SalePrice}}</span>
+									<span v-if="currentNorms.MemberPrice">{{sumPrice}}</span>
+									<span  v-else class="skuTopInfoMoneyNum">{{sumPrice}}</span>
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StoreQty>0">剩余 {{currentNorms.StoreQty}} 件</span>
@@ -205,6 +205,7 @@
 					borderRadius: '25px'
 				}]
 			}
+			console.log(this.skuDataInfo)
 			// if(this.skuDataInfo.ProdInfo.BuyTime !=undefined){
 			// 	let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
 			// 	this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
@@ -225,20 +226,52 @@
 				}
 			},
 			sumPrice () {
-				this.resultPrice = 0
-				let num = Number(this.goodsInfo.SalePrice)
-				if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
-					num = Number(this.goodsInfo.MemberPrice)
-				}
-				this.checkStatic.forEach(item => {
-					if (item.Value.Name) {
-						this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+				if(this.goodsInfo.SpecType==='1'){
+					this.resultPrice = 0
+					let num = Number(this.goodsInfo.SalePrice)
+					if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
+						num = Number(this.goodsInfo.MemberPrice)
 					}
-				});
-				
-				this.resultPrice=(this.resultPrice + num)*this.valueStepper
-				this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
-				return this.resultPrice
+					if(this.skuDataInfo.AttributeList&&this.checkStatic.length>0){
+						this.checkStatic.forEach(item => {
+							if (item.Value.Name) {
+								this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+							}
+						});
+					}
+					this.resultPrice=(this.resultPrice + num)*this.valueStepper
+					this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
+					return this.resultPrice
+				}else{
+					this.SpecResultPrice = 0;
+					let num = Number(this.currentNorms.SalePrice)
+					if (this.currentNorms.MemberPrice || this.currentNorms.MemberPrice == 0) {
+						num = Number(this.currentNorms.MemberPrice)
+					}
+					if(this.skuDataInfo.AttributeList&&this.checkStatic.length>0){
+						this.checkStatic.forEach(item => {
+							if (item.Value.Name) {
+								this.SpecResultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+							}
+						});
+					}
+					this.SpecResultPrice=(this.SpecResultPrice + num)*this.valueStepper
+					this.SpecResultPrice = parseFloat(this.SpecResultPrice.toFixed(2))
+					return this.SpecResultPrice
+				}
+				// if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
+				// 	num = Number(this.goodsInfo.MemberPrice)
+				// }
+				// if(this.skuDataInfo.AttributeList){
+				// 	this.checkStatic.forEach(item => {
+				// 		if (item.Value.Name) {
+				// 			this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+				// 		}
+				// 	});
+				// }
+				// this.resultPrice=(this.resultPrice + num)*this.valueStepper
+				// this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
+				// return this.resultPrice
 			},
 			specPrice(){
 				this.SpecResultPrice = 0;
