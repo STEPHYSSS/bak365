@@ -72,7 +72,7 @@
 										 :key="item.SID" @click="skuTopChoice(index)">{{item.Name}}</div>
 									</div>									
 								
-									<!-- 商品属性 -->
+									<!-- 商品属性-->
 									<div v-if="attributeList.length >0 ">
 										<!-- <div class="skuTopChoiceTitle" v-for="(item, index) in attributeList" :key="index">
 											{{ item.Name }}
@@ -127,7 +127,7 @@
 	import {
 		vipCard
 	} from "@/api/http.js";
-
+	import {GetBaseImgUrl} from "@/util/publicFunction.js"
 	export default {
 		name: "showSku",
 		props: {
@@ -205,7 +205,6 @@
 					borderRadius: '25px'
 				}]
 			}
-			console.log(this.skuDataInfo)
 			// if(this.skuDataInfo.ProdInfo.BuyTime !=undefined){
 			// 	let BuyTime = this.skuDataInfo.ProdInfo.BuyTime.split(',')
 			// 	this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
@@ -259,36 +258,7 @@
 					this.SpecResultPrice = parseFloat(this.SpecResultPrice.toFixed(2))
 					return this.SpecResultPrice
 				}
-				// if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
-				// 	num = Number(this.goodsInfo.MemberPrice)
-				// }
-				// if(this.skuDataInfo.AttributeList){
-				// 	this.checkStatic.forEach(item => {
-				// 		if (item.Value.Name) {
-				// 			this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
-				// 		}
-				// 	});
-				// }
-				// this.resultPrice=(this.resultPrice + num)*this.valueStepper
-				// this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
-				// return this.resultPrice
 			},
-			specPrice(){
-				this.SpecResultPrice = 0;
-				let num = Number(this.currentNorms.SalePrice)
-				if (this.currentNorms.MemberPrice || this.currentNorms.MemberPrice == 0) {
-					num = Number(this.currentNorms.MemberPrice)
-				}
-				this.checkStatic.forEach(item => {
-					if (item.Value.Name) {
-						this.SpecResultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
-					}
-				});
-				
-				this.SpecResultPrice=(this.SpecResultPrice + num)*this.valueStepper
-				this.SpecResultPrice = parseFloat(this.SpecResultPrice.toFixed(2))
-				return this.SpecResultPrice
-			}
 		},
 		methods: {
 			isDuringDate(beginDateStr, endDateStr){
@@ -444,7 +414,7 @@
 			clickStatic(item, value, key) { //选择属性
 				for (let i of this.checkStatic) {
 					if (item.Name === i.Name) {
-						if (i.Value.Name === value.Name) {
+						if (i.Value.Name === value.Name && i.IsDefault == '0') {
 							i.Value = {}
 						} else {
 							i.Value = value;
@@ -519,7 +489,8 @@
 			viewImg(img) {
 				this.$refs.imgPopup.open()
 				this.showImg = true;
-				this.images = this.$VUE_APP_PREFIX + img;
+				// this.images = this.$VUE_APP_PREFIX + img;
+				this.images = GetBaseImgUrl()+img
 			}
 		},
 		watch: {
@@ -553,20 +524,35 @@
 					}
 					if (skuDataInfo.AttributeList) {
 						this.attributeList = skuDataInfo.AttributeList || [];
+						
+						// this.$nextTick(function(){
+						// 	this.checkStatic = []
+						// 	this.skuDataInfo.AttributeList.forEach((item, index) => {
+						// 		item.Value.forEach((item1, index1) => {
+						// 			if (item1.IsDefault == '1') {
+						// 				this.checkStatic.push(item)
+						// 			}
+						// 		})
+						// 	})
+						// 	console.log(this.checkStatic,1111)
+						// })
 						this.checkStatic = this.attributeList.map(item => {
+							let obj = item.Value.find(item => item.IsDefault == '1')
+							let IsDefault = 1
+							if (!obj) {
+								obj = { Name: "", Price: "" }
+								IsDefault = 0
+							}
 							return {
 								Name: item.Name,
-								Value: {
-									Name: "",
-									Price: ""
-								}
+								IsDefault,
+								Value: obj
 							}
 						})
 					}
 					if(this.goodsInfo.BuyTime !=undefined){
 						let BuyTime = this.goodsInfo.BuyTime.split(',')
 						this.IsGoodBuyTime = this.isDuringDate(BuyTime[0],BuyTime[1])
-						// console.log(this.IsGoodBuyTime,'144')
 					}else{
 						this.IsGoodBuyTime = true
 					}

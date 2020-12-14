@@ -19,7 +19,8 @@
 						<span>{{data.CardNo}}</span>
 					</p>
 				</div> -->
-				<div class="surplusTop backgroundColor" v-if="!loading || data.length>0" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
+				<div class="surplusTop backgroundColor" v-if="!loading || data.length>0" >
+					<!-- :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'" -->
 					<div class="imgFlex">
 						<image :src="UserPhoto"></image>
 						<p class="marFlex" style="flex:1">
@@ -33,11 +34,13 @@
 					<p class="word">账户余额（元）</p>
 					<div class="imgFlex">
 						<div class="flexLeft">					
-							<span>{{data.Balance}}</span>
+							<span v-if="data.Balance&&Number(data.Balance)>0">{{data.Balance}}</span>
+							<span v-else>0</span>
 						</div>
 						<div class="flexright">
 							<span>积分</span>
-							<p>{{data.Score}}</p>
+							<p v-if="data.Score&&Number(data.Score)>0">{{data.Score}}</p>
+							<p v-else>0</p>
 						</div>
 					</div>
 				</div>
@@ -224,7 +227,7 @@
 	import {
 		bottomScrollbar,GetAppNo
 	} from "@/util/publicFunction";
-
+	import {GetBaseImgUrl} from "@/util/publicFunction";
 	export default {
 		name: "home",
 		components: {
@@ -276,7 +279,7 @@
 						Action: "MemberCenter"
 					}, "UMemberOpera");
 					
-					this.ImgUrl = 'http://192.168.0.114:8001/'+this.$VUE_APP_PREFIX + data.Data.CardBase.CardImg || this.ImgUrl;
+					this.ImgUrl = this.$VUE_APP_PREFIX + data.Data.CardBase.CardImg || this.ImgUrl;
 					this.UserPhoto = data.Data.Img;//头像
 					this.CardBase = data.Data.CardBase;//卡信息
 					this.data = data.Data.MyCard|| {};

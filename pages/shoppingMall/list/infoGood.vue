@@ -4,7 +4,7 @@
 		<!-- <a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name" :isIntegral="isIntegral"
 		 :seckill="seckill" :isBrowse="isBrowse"></a-info-buyPage> -->
 		<a-info-buyPageSeckill :goods="goodList" :skuDataInfo="skuDataInfo" v-if="seckill&&this.goodList.Name" :seckill="seckill" ></a-info-buyPageSeckill>
-		<a-info-buyPage :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name&&!seckill" ></a-info-buyPage>
+		<a-info-buyPage ref="aInfoBuyPage" :goods="goodList" :skuDataInfo="skuDataInfo" v-if="this.goodList.Name&&!seckill" ></a-info-buyPage>
 	</div>
 </template>
 <!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script> -->
@@ -44,6 +44,7 @@
 			})
 			
 		},
+		//进入这个页面的时候调用的，然后通过props传值 
 		methods: {
 			async getInfo() {
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));

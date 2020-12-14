@@ -13,11 +13,13 @@
 			<p class="word">账户余额（元）</p>
 			<div class="imgFlex">
 				<div class="flexLeft">					
-					<span>{{MyCard.Balance}}</span>
+					<span v-if="MyCard.Balance&&Number(MyCard.Balance)>0">{{MyCard.Balance}}</span>
+					<span v-else>0</span>
 				</div>
 				<div class="flexright">
 					<span>积分</span>
-					<p>{{MyCard.Score}}</p>
+					<p v-if="MyCard.Score&&Number(MyCard.Score)>0">{{MyCard.Score}}</p>
+					<p v-else>0</p>
 				</div>
 			</div>
 		</div>
