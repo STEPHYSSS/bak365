@@ -47,27 +47,11 @@
 			this.getList();
 		},
 		methods: {
-			// activeIndex(val){
-			// 	if (val == "1") {this.State = '-1';
-			// 	this.getList()
-			// 	} else if (val == "2") {this.State = '-2';
-			// 	this.getList()
-			// 	} else if (val == "3") {this.State = '3';this.OrderType = "2"
-			// 	this.getList()
-			// 	}else if(val == '4'){this.State = '-3';
-			// 	this.getList()
-			// 	}
-				
-			// },这个是不要的
 			onClick(name, title) {
 				setFilter(name, this);
 			},
 			async getList() {
 				try {
-					// let OrderType = ''
-					// if(this.active == '3'){
-					// 	OrderType = 2
-					// } 
 					let {
 						Data
 					} = await vipCard({
@@ -102,7 +86,12 @@
 		},
 		watch: {
 			active(val){
-				setFilter(val, this);
+				this.loading = true;
+				setTimeout(()=>{
+					this.loading=false;
+					setFilter(val, this);
+				},200)
+				
 			}
 		}
 	};

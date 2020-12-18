@@ -82,6 +82,7 @@
 										<view class="property" v-for="(item, index) in attributeList" :key="index">
 											<view class="skuTopChoiceTitle">
 												<text class="name">{{ item.Name }}</text>
+												<text v-if="item.Radio == '1'">(必选)</text>
 											</view>
 											<view style="display: inline-block;" v-for="(value, index2) in item.Value" :key="value.Name"
 											 @click="clickStatic(item, value,index2)">
@@ -260,7 +261,7 @@
 				}
 			},
 		},
-		methods: {
+		methods: {			
 			isDuringDate(beginDateStr, endDateStr){
 				var date = new Date();
 				var year = date.getFullYear();
@@ -328,6 +329,7 @@
 					PartsArr = "";
 					PartsNoArr = "";
 				}
+				
 				try {
 					let obj = {
 						ProdList: [],
@@ -337,7 +339,17 @@
 					let ProdNo = ''
 					// if(this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3'){
 					// 	ProdNo = this.currentNorms.ProdNo						
-					// }
+					// }	
+					let defaultParamInfo = ""
+					if(this.checkStatic &&　this.checkStatic.length){
+						for (let i of this.checkStatic) {
+							if(i.Value.Name) {
+								defaultParamInfo += i.Value.Name+(i.Value.Price==='0'?'':'￥'+i.Value.Price)+"," 
+							}
+						}
+						defaultParamInfo= defaultParamInfo.substring(0, defaultParamInfo.length - 1)
+					}
+					// 当我吧上面的if注释掉之后,他就可以加入购物车了
 					paramsArr[0] = {
 						ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
 						SpecType:this.goodsInfo.SpecType,
@@ -347,9 +359,8 @@
 						ProdType: 0,//0是商品，1是电子券
 						PartsNo:PartsNoArr,//配件编号
 						PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
-						ParamInfo:this.currentTastArr, //商品口味
-						// PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?
-						// 	this.currentNorms.PromotionSID : ""
+						ParamInfo:this.currentTastArr.length>0?this.currentTastArr:defaultParamInfo, //商品口味
+						PromotionSID: this.currentNorms.hasOwnProperty("PromotionSID") ?this.currentNorms.PromotionSID : ""
 					};
 					// paramsArr[0] = {
 					// 	ProdNo: this.currentNorms.ProdNo,
@@ -414,7 +425,7 @@
 			clickStatic(item, value, key) { //选择属性
 				for (let i of this.checkStatic) {
 					if (item.Name === i.Name) {
-						if (i.Value.Name === value.Name && i.IsDefault == '0') {
+						if (i.Value.Name === value.Name && item.Radio == '0') {
 							i.Value = {}
 						} else {
 							i.Value = value;
@@ -538,6 +549,11 @@
 						// })
 						this.checkStatic = this.attributeList.map(item => {
 							let obj = item.Value.find(item => item.IsDefault == '1')
+							// 是否必选是radio，默认是的default
+							let Radio = 0
+							if (item.Radio == 1) {
+								Radio = 1
+							}
 							let IsDefault = 1
 							if (!obj) {
 								obj = { Name: "", Price: "" }
@@ -546,6 +562,7 @@
 							return {
 								Name: item.Name,
 								IsDefault,
+								Radio,
 								Value: obj
 							}
 						})
@@ -569,9 +586,12 @@
 					this.normsList = [];
 					this.PartsList = [];
 					this.attributeList = [];
-					this.partsList.forEach(D => {
-						this.$set(D, "isActive", false);
-					});
+					if (this.partsList && this.partsList.length) {
+						
+						this.partsList.forEach(D => {
+							this.$set(D, "isActive", false);
+						});
+					}
 				}
 			}
 		}

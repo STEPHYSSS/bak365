@@ -159,7 +159,7 @@
 	.goodsBoxLine {
 		background: #fff;
 		margin-bottom: 6px;
-		padding: 5px;
+		padding: 5px 0 5px 5px;
 
 		.goodsBox-parts {
 			display: flex;
@@ -198,7 +198,7 @@
 		}
 
 		.parts-norms-one-prodAmt {
-			margin-right: 11px;
+			margin-right: 2px;
 			min-width: 60px;
 			text-align: right;
 			color: #000;
@@ -220,7 +220,8 @@
 
 		.rightBox {
 			position: relative;
-			margin: 0 6px 10px;
+			// margin: 0 10px;
+			margin-left: 10px;
 			flex: 1;
 			margin-bottom: 0;
 

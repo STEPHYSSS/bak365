@@ -157,26 +157,22 @@
 		<uni-popup ref="selectTime" v-model="selectTime" type="bottom" style="max-height:50%">
 			<div class="confirm-selectTime-popup">
 				<div class="leftNavsidebar">
-					<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
-						<view :class="['homepageLeftFixed']">
-							<view v-for="(item,index) in sidebarList" :key="index" :class="['homepageLeft',index===currentIndex?'activeCanteen':'']"
-							 @click="changeSider(index)">
-								{{item}}
-							</view>
+					<view :class="['homepageLeftFixed']" style="width:130px;height: 300px;overflow-y: scroll;">
+						<view v-for="(item,index) in sidebarList" :key="index" :class="['homepageLeft',index===currentIndex?'activeCanteen':'']"
+						 @click="changeSider(index)">
+							{{item}}
 						</view>
-					</scroll-view>
+					</view>
 				</div>
 			</div>
 			<div class="rightTime" v-if="rightTimeList.length>0">
-				<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
-					<radio-group @change="radioTimeFun">
-						<div v-for="(item,index) in rightTimeList" :key="index" :border="false">
-							<ad-cell :text="item" @click="rightTimeClick(item)" showArrow="false" showBottomLine="false" style="width: 100%;">
-								<radio :value="item" :checked="radioTime == item"></radio>
-							</ad-cell>
-						</div>
-					</radio-group>
-				</scroll-view>
+				<radio-group @change="radioTimeFun">
+					<div v-for="(item,index) in rightTimeList" :key="index" :border="false">
+						<ad-cell :text="item" @click="rightTimeClick(item)" showArrow="false" showBottomLine="false" style="width: 100%;">
+							<radio :value="item" :checked="radioTime == item"></radio>
+						</ad-cell>
+					</div>
+				</radio-group>
 			</div>
 		</uni-popup>
 		<uni-popup ref="discountProgram" type="bottom">
@@ -194,20 +190,16 @@
 		</uni-popup>
 		<!-- 电子券弹窗 -->
 		<uni-popup ref="ticketProgram" type="bottom">
-			<div style="height: 50vh;">
-				<scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
-					<radio-group @change="setTicketClick">
-						<ad-cell text="暂不使用" @click="ticketClick('undefined')" showArrow="false">
-							<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
-						</ad-cell>
-						<div v-for="(item,index) in TicketList" :key="index">
-							<adCell :text="item.TicketName" showArrow="false" showBottomLine="false" @click="ticketClick(item,1)">
-								<radio :value="item.TicketNo" :checked="item.TicketNo === radioTicket" />
-							</adCell>
-						</div>
-					</radio-group>
-				</scroll-view>
-			</div>		
+			<radio-group @change="setTicketClick">
+				<ad-cell text="暂不使用" @click="ticketClick('undefined')" showArrow="false">
+					<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
+				</ad-cell>
+				<div v-for="(item,index) in TicketList" :key="index">
+					<adCell :text="item.TicketName" showArrow="false" showBottomLine="false" @click="ticketClick(item,1)">
+						<radio :value="item.TicketNo" :checked="item.TicketNo === radioTicket" />
+					</adCell>
+				</div>
+			</radio-group>
 		</uni-popup>
 		<!-- 微卡支付弹窗 -->
 		<uni-popup ref="payTypePop" type="center">
@@ -348,7 +340,6 @@
 				ScoreDeduction: '', //可用积分
 				ScoreAmt: '', //抵扣金额
 				allck: true, //初始化选中
-				menuScrollIntoView: '',
 			};
 		},
 		async created() {
@@ -548,31 +539,21 @@
 							let tAdvance = 0;//提前时间
 							let advanceTime = 0;//日期 当FinType==1&&FinHour>0就代表这有提前日期
 							//提前的时间+当前的时间>下班时间
-							let endTime = countDown(Data.ShopBase.EndTime);
-							let startTime = countDown(Data.ShopBase.StartTime);
-							let cutTime = countDown(getTime(false, false, true));
-							let acTime = Number(FinTypeHour) * 60 * 60;//提前小时
 							if(FinTypeCun==='2'){
-								
-								let dayTime = parseInt(Data.ShopBase.EndTime) - parseInt(Data.ShopBase.StartTime)//一天营业时间
-								let time = Number(FinTypeHour)/dayTime;
-								let time2 = Number(FinTypeHour)%dayTime;
-								let splitTime = Number(parseInt(time))
+								let endTime = countDown(Data.ShopBase.EndTime);
+								let startTime = countDown(Data.ShopBase.StartTime);
+								let cutTime = countDown(getTime(false, false, true));
+								let acTime = Number(FinTypeHour) * 60 * 60;//提前小时
 								
 								if ((acTime + cutTime).toFixed(2) > endTime) {
-									if(cutTime>endTime){
-										FinTypeDay = Number(FinTypeDay)+1
-									}
-									FinTypeDay = Number(FinTypeDay) + splitTime;
-									
+									// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
+								// 	let abc = Number(acTime-(endTime-cutTime)+startTime)/60/60
+								// console.log
+									FinTypeDay = Number(FinTypeDay) + 1;
 									tAdvance = Number(FinTypeHour);
 								} else {
 									tAdvance = Number(FinTypeHour);
 									FinTypeDay = 0;
-								}
-							}else {
-								if(cutTime>endTime){
-									FinTypeDay = Number(FinTypeDay)+1
 								}
 							}
 							this.sidebarList = setChangeData(num, FinTypeDay); //左侧的天数
@@ -876,12 +857,8 @@
 				} else {
 					this.radioTime = "";
 				}
-				let arrTime = [];
 				if (index !== 0) {
-					for (let i = 0; i < this.allTimeSlot.length - 1; i++) {
-						arrTime.push(this.allTimeSlot[i] + '-' + this.allTimeSlot[i + 1])
-					}
-					this.rightTimeList = arrTime;
+					this.rightTimeList = this.allTimeSlot;
 				} else {
 					this.rightTimeList = this.todayTimeSlot;
 				}
@@ -1060,7 +1037,6 @@
 				// 	// true代表选中，false代表未选中
 				// }
 				let currentStore = this.$store.state.currentStoreInfo || {}
-				let splitTime= this.RecordTime.radioTime.split("-")
 				let obj = {
 					Action: "OrderPay",
 					DeliveryType: DeliveryType,
@@ -1075,8 +1051,7 @@
 					UserRemarks: this.UserRemarks,
 					PayType: this.radioPayType,
 					PickDate: this.sidebarList[this.RecordTime.index],
-					// PickTime: this.RecordTime.radioTime,
-					PickTime:splitTime[0],
+					PickTime: this.RecordTime.radioTime,
 					CartSID: this.cardSids,
 					PrefNo: this.radioDiscount,
 					TicketNo: this.radioTicket,
@@ -1131,17 +1106,7 @@
 						// 微信支付
 						this.testData = Data;
 						try {
-							if(Data.PaySuccess){
-								this.$toast("订单正在处理中...");
-								setTimeout(() => {
-									this.$Router.push({
-										path: "/pages/vip/allMyOrder",
-										query: {id: '0'}
-									})
-								}, 3000);
-							}else{
-								weChatPayment(this, Data, false);
-							}
+							weChatPayment(this, Data, false);
 						} catch (e) {
 							this.$toast.fail(e)
 							// this.$toast.fail("微信调起失败");
@@ -1186,53 +1151,41 @@
 		return arrData;
 	}
 	function setChangeTime(ShopBase, aceTime, dayAdvance) {
-		let timeFather=aceTime
-		// console.log(ShopBase,aceTime, dayAdvance,'时间')
+		console.log(ShopBase,aceTime, dayAdvance,'时间')
 		let arr = [];
 		let arrToday = [];
 		let dayM = 60 * 60; //秒值
 		let a = 60 * Number(ShopBase.IntervalMinute); //求秒值 间隔时长
 		let endTime = countDown(ShopBase.EndTime);
-		let startTime = Number(countDown(ShopBase.StartTime));
+		let startTime2 = Number(countDown(ShopBase.StartTime));
 		let cutTime = countDown(getTime(false, false, true));//当前时间
 		let acTime = Number(aceTime) * 60 * 60;//提前小时
-		
-		
-		if((acTime + cutTime).toFixed(2) > endTime){
-			// let time = (acTime + cutTime).toFixed(2)-endTime;
-			
-			let dayTime = parseInt(ShopBase.EndTime) - parseInt(ShopBase.StartTime)//一天营业时间
-			let time = Number(timeFather)/dayTime;
-			let time2 = Number(timeFather)%dayTime;
-			let time3 = time2*60*60;
-			// console.log(time2,time3)
-			let buTime =  Number((acTime-(endTime-cutTime)+startTime));//往第二天补的时间
-			// 假如这里补2两个小时，那么就要从两个小时之后开始遍历
-			while (Number(startTime+time3) <= endTime) {
-				arr.push(changeCountDown(startTime+time3));
+		if ((acTime + cutTime).toFixed(2) > endTime){
+			let startTime = Number((acTime-(endTime-cutTime)+startTime2));//往第二天补的时间
+			while (startTime <= endTime) {
+				arr.push(changeCountDown(startTime));
 				startTime += a;
 			}
-			arrToday = arr;
 		}else{
 			while (startTime <= endTime) {
 				arr.push(changeCountDown(startTime));
 				startTime += a;
 			}
-			if (dayAdvance == 0) {
-				arr.forEach(DATA => {
-					DATA = countDown(DATA);
-					if (
-						dayAdvance == 0 &&
-						DATA > countDown(getTime(false, false, true)) + Number(aceTime) * dayM
-					) {
-						arrToday.push(changeCountDown(DATA));
-					}
-				});
-			} else {
-				arrToday = arr;
-			}
 		}
-			
+		
+		if (dayAdvance == 0) {
+			arr.forEach(DATA => {
+				DATA = countDown(DATA);
+				if (
+					dayAdvance == 0 &&
+					DATA > countDown(getTime(false, false, true)) + Number(aceTime) * dayM
+				) {
+					arrToday.push(changeCountDown(DATA));
+				}
+			});
+		} else {
+			arrToday = arr;
+		}
 		return {
 			arr,
 			arrToday
@@ -1244,8 +1197,7 @@
 		var hour = time.split(":")[0];
 		var min = time.split(":")[1];
 		var sec = time.split(":")[2];
-		// s = Number(hour * 3600) + Number(min * 60) + Number(sec);
-		s = Number(hour * 3600) + Number(min * 60) ;
+		s = Number(hour * 3600) + Number(min * 60) + Number(sec);
 		return s;
 	}
 	function changeCountDown(value) {
@@ -1265,8 +1217,7 @@
 		hour = hour < 10 ? "0" + hour : hour;
 		middle = middle < 10 ? "0" + middle : middle;
 		theTime = theTime < 10 ? "0" + theTime : theTime;
-		// result = hour + ":" + middle + ":" + theTime;
-		result = hour + ":" + middle ;
+		result = hour + ":" + middle + ":" + theTime;
 		return result;
 	}
 </script>
@@ -1421,10 +1372,10 @@
 				width: 98px;
 				display: fixed;
 				position: fixed;
-				bottom: 0;
+				top: 0;
 				overflow-y: scroll;
 				background: #f8f8f8;
-				height: 50vh;
+				height: 100vh;
 			}
 			.leftNavsidebar {
 				.activeCanteen {
@@ -1585,10 +1536,6 @@
 			-webkit-box-sizing: border-box;
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
-		}
-		.menus {
-			height: 100%;
-			overflow: hidden;
 		}
 	}
 </style>

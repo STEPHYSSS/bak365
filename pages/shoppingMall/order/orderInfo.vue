@@ -94,7 +94,7 @@
 				</div>
 				<div class="orderTime">
 					<div class="orderTime_label">订单编号：</div>
-					<span>{{OrderInfo.SID}}</span>
+					<span>{{OrderInfo.ExchNo}}</span>
 					<span class="copyText colorStyle" id="copyText" @click="copyTextFun(OrderInfo.SID)">复制</span>
 					<div id="NewsToolBox"></div>
 				</div>
@@ -155,11 +155,30 @@
 				showArea: false,
 				refundAllow: null, //是否支持退款
 				Refund: {}, //退款信息
-				infoData: {}
+				infoData: {},
+				orderId:'',
+				OrderType:''
 			};
 		},
 		created() {
-			this.getInfo();
+			if(this.$route.query.query){
+				console.log(this.$route.query.query)
+				let getDecode = decodeURIComponent(this.$route.query.query);
+				console.log(getDecode)
+				let getDQuery = JSON.parse(getDecode)
+				this.orderId=getDQuery.order_id;
+				this.OrderType = getDQuery.OrderType
+				this.getInfo();
+				// this.CateSID= getDQuery.order_id
+				// let abc = JSON.parse(this.$route.query.query)
+				// let getDQuery = JSON.parse(getDecode)
+				// let getObj = JSON.parse(getDQuery.query)
+				// let key = Object.keys(getObj)
+				// if(key=="SID"){
+				// 	this.SID = Object.values(getObj)
+				// }
+			}
+			
 			// this.$store.commit("SET_HISTORY_URL", {
 			// 	path: '/pages/shoppingMall/order/orderInfo',
 			// 	query: {
@@ -176,8 +195,10 @@
 						Data
 					} = await vipCard({
 							Action: "GetOrderInfo",
-							SID: this.$Route.query.order_id,
-							OrderType:this.$Route.query.OrderType
+							SID:this.orderId,
+							OrderType:this.OrderType
+							// SID: this.$Route.query.order_id,
+							// OrderType:this.$Route.query.OrderType
 						},
 						"UOrderOpera"
 					);

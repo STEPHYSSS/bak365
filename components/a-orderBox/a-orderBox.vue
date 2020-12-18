@@ -5,7 +5,7 @@
 			<div v-for="(item,index) in dataList" @click="panelOrder(item)" :key="index" class="van-panel van-hairline--top-bottom">
 				<div slot="header" class="orderBoxHead">
 					<span>订单：</span>
-					<span class="orderBoxNum" :style="{color:mainColor}">{{item.SID}}</span>
+					<span class="orderBoxNum" :style="{color:mainColor}">{{item.ExchNo}}</span>
 					<span class="orderBoxState" :style="{color:mainColor}">{{item.State |orderState}}</span>
 				</div>
 				<!-- 状态等于3 代表订单超时或者已取消 -->
@@ -76,32 +76,32 @@
 			};
 		},
 		created() {
-			console.log(this.dataList, 5555)
+			// console.log(this.dataList, 5555)
 			// 获取接口返回的区分id
 		},
 		computed: {
-			setImg() {
-				return function (arr) {
-					if (arr) {
-						let str = "";
-						arr.forEach(D => {
-							if (D.Img) {
-								str = D.Img;
-							}
-						});
-						if (str) {
-							// return this.$VUE_APP_PREFIX + str;
-							return GetBaseImgUrl() + str
-						} else {
-							return "";
-						}
-						return str;
-					} else {
-						return "";
-					}
-				}
+			// setImg() {
+			// 	return function (arr) {
+			// 		if (arr) {
+			// 			let str = "";
+			// 			arr.forEach(D => {
+			// 				if (D.Img) {
+			// 					str = D.Img;
+			// 				}
+			// 			});
+			// 			if (str) {
+			// 				// return this.$VUE_APP_PREFIX + str;
+			// 				return GetBaseImgUrl() + str
+			// 			} else {
+			// 				return "";
+			// 			}
+			// 			return str;
+			// 		} else {
+			// 			return "";
+			// 		}
+			// 	}
 				
-			},
+			// },
 		},
 		methods: {
 			panelOrder(val) {
@@ -109,7 +109,7 @@
 					path: "/pages/shoppingMall/order/orderInfo",
 					query: {
 						order_id: val.SID,
-						OrderType:val.OrderType						
+						OrderType:val.OrderType			
 					}
 				});
 			},

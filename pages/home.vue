@@ -19,7 +19,7 @@
 						<span>{{data.CardNo}}</span>
 					</p>
 				</div> -->
-				<div class="surplusTop backgroundColor" v-if="!loading || data.length>0" >
+				<div class="surplusTop backgroundColor" v-if="!loading || data.length>0" :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'">
 					<!-- :style="'background:url('+ ImgUrl +')  no-repeat center;background-size:cover;'" -->
 					<div class="imgFlex">
 						<image :src="UserPhoto"></image>
@@ -167,16 +167,16 @@
 						<!-- // ismenber:0 未绑定会员卡，1 绑定了会员卡  CardType :0 未绑定会员卡,net:微卡 ，mang||shop 实体卡 -->
 						<!-- 当cardType等于微卡的时候，就要展示实体卡按钮，如果绑定的是实体卡，那么两个按钮都不展示 -->
 						<div>
-							<adCell v-if="isMember=='0'||(CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
+							<adCell v-if="CardType=='0'||(CardType!=='Manage'&&CardType!=='Shop')" text="绑定实体会员卡"@click="bindEntity(1)"/>						
 						</div>
 						<div>
-							<adCell v-if="isMember=='0'||(CardType!=='Manage'&&CardType!=='Shop' &&CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
+							<adCell v-if="CardType=='0'||(CardType!=='Manage'&&CardType!=='Shop' &&CardType!=='Net')" text="申请会员卡" @click="bindEntity(2)"/>
 						</div>
 					</div>
 					
 					<div class="cardWei" v-if='isMember==="1"'>
 						<div>
-							<adCell text="微卡充值" @click="$Router.push('/pages/vip/weiFull')" />
+							<adCell text="微卡充值" @click="acWeFull" />
 						</div>
 						<div>
 							<adCell text="付款码" @click="toPayMeng"></adCell>
@@ -216,7 +216,6 @@
 		</view>	
 	</div>
 </template>
-
 <script>
 	import {
 		vipCard
@@ -284,7 +283,8 @@
 					this.CardBase = data.Data.CardBase;//卡信息
 					this.data = data.Data.MyCard|| {};
 					this.AwaitPayCnt = data.Data.AwaitPayCnt;
-					if(this.data.IssueType != undefined ){						
+					if(this.data.IssueType != undefined ){
+						Cookies.set('CardType', this.data.IssueType)
 						Cookie.set("isMember",'1')
 					}
 					this.loading = false;
@@ -351,6 +351,9 @@
 			},
 			toPayMeng(){
 				window.location.href = "http://manage.bak365.cn/WebApp/WXCard/?Type=PayCode&AppNo="+GetAppNo()
+			},
+			acWeFull(){
+				this.$router.push('/pages/vip/weiFull')
 			},
 			clickClear() {//清除缓存		
 				this.remove();

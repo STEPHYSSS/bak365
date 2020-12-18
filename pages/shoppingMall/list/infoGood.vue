@@ -44,7 +44,6 @@
 			})
 			
 		},
-		//进入这个页面的时候调用的，然后通过props传值 
 		methods: {
 			async getInfo() {
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
@@ -90,7 +89,7 @@
 						this.skuDataInfo = Data || {};
 					}
 				} catch (e) {
-					if(e == '改商品不在此门店,请切换其他门店'){
+					if(e == '该商品不在此门店,请切换其他门店'){
 						// window.history.back(-1)
 						setTimeout(() => {
 							this.$Router.push({

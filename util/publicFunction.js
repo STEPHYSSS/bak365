@@ -195,7 +195,6 @@ export function weChatPayment(that, Data, bool) {
 	}
 
 	function onBridgeReady() {
-		console.log(Data.appId,'8888')
 		WeixinJSBridge.invoke(
 			"getBrandWCPayRequest", {
 				appId: Data.appId,

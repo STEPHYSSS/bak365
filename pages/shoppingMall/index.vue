@@ -46,7 +46,11 @@
 				<button type="default" size="mini" @click="makeUpGroup">拼团</button>
 				<br>
 				<button @click="clickClear" size="mini">去除usermac</button> -->
-				<!-- <button type="default" size="mini" @click="seckill">秒杀</button> -->
+				<button type="default" size="mini" @click="seckill">秒杀</button>
+				<!-- <div class="cgwl-form" id="cgwl-kefu" >
+				  <i class="cgwl-icon"></i>
+				  <a href="http://cs365.bak365.net/index/index/home?visiter_id=&visiter_name=&avatar=&business_id=1&groupid=0&special=1">在线咨询</a>
+				</div> -->
 				<!-- <button type="default" size="mini" @click="autoIndex">测试</button> -->
 				<!-- <button type="default" size="mini" @click="makeUpGroup">拼团</button> -->
 				<div>
@@ -413,6 +417,7 @@
 </script>
 
 <style scoped lang="less" scoped>
+	@import '@/assets/css/cgwl_online.css';
 	.shoppingCart_style {
 		padding-bottom: 50px;
 

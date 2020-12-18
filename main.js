@@ -30,6 +30,10 @@ import goodsGroup from "@/components/autoComponents/goodsGroup/"
 import titleBox from "@/components/autoComponents/titleBox/"
 import vconsole from 'vconsole' // 引入vconsole
 
+
+	// import '@/config/kefu.js'
+	// Vue.use(wxKefu)
+
 Vue.component('shopinfoma', shopInformation)
 Vue.component('enterShops', enterShops)
 Vue.component('searchBox', searchBox)

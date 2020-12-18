@@ -127,12 +127,11 @@
 				</view>
 			</view>
 		</div>
-		<!-- ProdType==0代表普通商品 ProdType==1代表电子券商品-->
 		<div class="goods-action" v-show="goods.ProdType == '0'">
 			<!-- 当状态等于0下面的框是绿色，如果下面goods.StockType != '0'&& item.StoreQty <= '0'" 那么下面的框就是灰色不让点击 -->
 			<!-- <uni-goods-nav :options="options" :buttonGroup="buttonGroup"></uni-goods-nav> -->
-			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo="skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false""></uni-goods-nav>
-			 <uni-goods-nav :options=" options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" :IsGoodBuyTime="IsGoodBuyTime" :skuDataInfo="skuDataInfo.ProdInfo" v-if="goods.State==='0'||goods.StockType != '0'&& goods.StoreQty <= '0'|| IsGoodBuyTime==false"></uni-goods-nav>
+			<uni-goods-nav :options="options" :buttonGroup="buttonGroup" @buttonClick="addCart" @click="jumpCart" v-else></uni-goods-nav>
 		</div>
 		<div class="goods-action" v-show="goods.ProdType =='1' ">
 			<uni-view class="isProdType">
@@ -145,10 +144,11 @@
 		<showTicket :show="showPop" @hideShow="hidePop" :skuDataInfo="skuDataInfo"></showTicket>
 	</div>
 </template>
-
 <script>
 	// import "@/config/jquery.base64.js";
-	import {GetBaseImgUrl} from "@/util/publicFunction";
+	import {
+		GetBaseImgUrl
+	} from "@/util/publicFunction";
 	import {
 		vipCard
 	} from "@/api/http.js";
@@ -329,7 +329,7 @@
 				);
 			}
 		},
-		
+
 		methods: {
 			isDuringDate(beginDateStr, endDateStr) {
 				var date = new Date();
@@ -443,7 +443,7 @@
 						Data
 					} = await vipCard({
 						Action: 'GetNewDeal',
-						ProdType:this.goods.ProdType,
+						ProdType: this.goods.ProdType,
 						ProdSID: this.goods.SID
 					}, 'UProdOpera')
 					this.userList = Data.CommentList
@@ -478,13 +478,13 @@
 	};
 
 	function setfix(val, _this) {
-		console.log(val,'url地址')
+		//console.log(val,'url地址')
 		let str = "";
 		if (!val) {
 			return ''
 		}
-		let abc = GetBaseImgUrl();	
-		str = val.replace(/src="Files/g,`src="${abc}../Files`)
+		let abc = GetBaseImgUrl();
+		str = val.replace(/src="Files/g, `src="${abc}../Files`)
 		console.log(str)
 		//str = val.replace(/src="/g, `src="${_this.$VUE_APP_PREFIX}`);
 		return str;
@@ -709,7 +709,7 @@
 				height: 30px;
 				text-align: center;
 				width: 45px;
-			}			
-		}		
+			}
+		}
 	}
 </style>

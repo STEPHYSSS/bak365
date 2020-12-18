@@ -67,7 +67,7 @@
 					</div>					
 				</div>
 				<div class="button-theme-big" style="padding-bottom: 20px;">
-					<button @click="OrderCardPay"  class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
+					<button @click="OrderCardPay" :disabled="isDisabled" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
 				</div>
 			</view>
 		</uni-popup>
@@ -95,6 +95,7 @@
 		},
 		data() {
 			return {
+				isDisabled: false,
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
 				loading: true,
@@ -135,12 +136,15 @@
 				this.loading = true;
 				// uni.showLoading()
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
+				
+				let currentCard = JSON.parse(localStorage.getItem('currentCard'));
 				try {
 					let data = await vipCard(
 					  {
 						Action: "TicketBuy",
 						ShopSID:currentStore.data.SID,
-						ProdList:this.currentItem          
+						ProdList:this.currentItem,
+						PromotionItemSID:currentCard[0].PromotionItemSID
 					  }, "UProdOpera")
 					  this.prodList = data.Data.ProdList;
 					  this.SumTotal = data.Data.SumTotal;//总价
@@ -242,12 +246,17 @@
 				}
 			},
 			async OrderCardPay() {
+				this.isDisabled = true;
+				setTimeout(() => {
+					this.isDisabled = false;
+				}, 5000)
 				let currentStore = JSON.parse(localStorage.getItem('currentStoreInfo'));
 				// let currentStore = this.$store.state.currentStoreInfo || {}
 				if (this.password === "" && this.IsPass === "1") {
 					this.$toast("请填写密码");
 					return;
 				}
+				let currentCard = JSON.parse(localStorage.getItem('currentCard'));
 				try {
 					let {Data} = await vipCard(
 					  {
@@ -256,8 +265,8 @@
 						// ProdList:JSON.stringify(this.prodList),
 						ProdList:this.currentItem,
 						PayType:this.radioPayType,
+						PromotionItemSID:currentCard[0].PromotionItemSID
 					  }, "UOrderOpera")
-					  debugger
 					  if (this.radioPayType === "1") {
 					  	//微卡支付
 						// if(Data.Success==true){
@@ -281,7 +290,6 @@
 					  } else {
 					  	// 微信支付
 					  	this.testData = Data;
-						// console.log('wexin',Data)
 					  	try {
 					  		weChatPayment(this, Data, false);
 					  	} catch (e) {

@@ -12,7 +12,7 @@
 							<div class="skuTopInfo">
 								<div class="skuTopInfoMoney">
 									¥
-									<span class="skuTopInfoMoneyNum">{{goodsInfo.SalePrice}}</span>
+									<span class="skuTopInfoMoneyNum">{{sumPrice}}</span>
 								</div>
 								<div>
 									<span class="skuTopInfoSurplus" v-if="goodsInfo.StockType!=0&&goodsInfo.StoreQty>0&&skuDataInfo.TotalSurplusQty>0">剩余 {{skuDataInfo.TotalSurplusQty}} 件</span>
@@ -180,6 +180,41 @@
 					return ''
 				}
 			},
+			sumPrice () {
+				if(this.goodsInfo.SpecType==='1'){
+					this.resultPrice = 0
+					let num = Number(this.goodsInfo.SalePrice)
+					if (this.goodsInfo.MemberPrice || this.goodsInfo.MemberPrice == 0) {
+						num = Number(this.goodsInfo.MemberPrice)
+					}
+					if(this.skuDataInfo.AttributeList&&this.checkStatic.length>0){
+						this.checkStatic.forEach(item => {
+							if (item.Value.Name) {
+								this.resultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+							}
+						});
+					}
+					this.resultPrice=(this.resultPrice + num)*this.valueStepper
+					this.resultPrice = parseFloat(this.resultPrice.toFixed(2))
+					return this.resultPrice
+				}else{
+					this.SpecResultPrice = 0;
+					let num = Number(this.currentNorms.SalePrice)
+					if (this.currentNorms.MemberPrice || this.currentNorms.MemberPrice == 0) {
+						num = Number(this.currentNorms.MemberPrice)
+					}
+					if(this.skuDataInfo.AttributeList&&this.checkStatic.length>0){
+						this.checkStatic.forEach(item => {
+							if (item.Value.Name) {
+								this.SpecResultPrice += isNaN(Number(item.Value.Price)) ? 0 : Number(item.Value.Price)
+							}
+						});
+					}
+					this.SpecResultPrice=(this.SpecResultPrice + num)*this.valueStepper
+					this.SpecResultPrice = parseFloat(this.SpecResultPrice.toFixed(2))
+					return this.SpecResultPrice
+				}
+			},
 		},
 		methods: {
 			async onClickButton(bool) {
@@ -187,17 +222,6 @@
 				if (this.isBrowse) {
 					return;
 				}
-				// console.log(this.currentNorms, 11);
-				// console.log(this.normsList, 555);
-				// console.log(this.currentTast, 22)
-				// console.log(this.currentParts, 33);
-				// console.log(this.valueStepper, 44)
-				// console.log(this.skuDataInfo, 6666);
-				// if (Number(this.goodsInfo.StoreQty) < Number(this.valueStepper)) {
-				// 	this.$toast("商品库存不足！");
-				// 	return;
-				// }
-				
 				if (this.goodsInfo.StockType!='0' && Number(this.goodsInfo.StoreQty)  < Number(this.valueStepper)) {
 					this.$toast("商品库存不足！");
 					return;
@@ -231,9 +255,6 @@
 					};
 					let paramsArr = []; //第一个为商品，后面的都是配件
 					let ProdNo = ''
-					// if(this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3'){
-					// 	ProdNo = this.currentNorms.ProdNo						
-					// }
 					paramsArr[0] = {
 						ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
 						SpecType:this.goodsInfo.SpecType,
@@ -248,20 +269,16 @@
 					};
 					obj.ProdList = JSON.stringify(paramsArr);
 					let currentItemSeckill = obj.ProdList;
-					if (bool.index === 0 && !this.seckill) {
-						// 加入购物车
-						let data = await vipCard(obj, "UMemberOpera");
-						if (data.Message) {
-							this.$toast.success("成功加入购物车");
-							this.isShow = false;
-							this.$refs.popupSku.close()
-						}
-					} else {
+					// if (bool.index === 0 && !this.seckill) {
+					// 	// 加入购物车
+					// 	let data = await vipCard(obj, "UMemberOpera");
+					// 	if (data.Message) {
+					// 		this.$toast.success("成功加入购物车");
+					// 		this.isShow = false;
+					// 		this.$refs.popupSku.close()
+					// 	}
+					// } else {
 						// 立即购买
-						// if (this.seckill) {
-						// 	//活动立即购买
-						// 	paramsArr[0].PromotionItemSID = this.currentNorms.SID;
-						// }
 						let currentItem = [paramsArr[0]];
 						if(this.goodsInfo.ProdType==='1'){
 								if (currentItemSeckill.length > 0) {
@@ -274,45 +291,11 @@
 									this.$Router.push("/pages/shoppingMall/order/confirmOrder");
 								}
 							}
-					}
+					// }
 				} catch (e) {
 					this.$toast.error(e);
 				}
-				// try {
-				// 	let obj = {
-				// 		ProdList: [],
-				// 		Action: "SetShopCart"
-				// 	};
-				// 	let paramsArr = []; //第一个为商品，后面的都是配件
-				// 	let ProdNo = ''
-				// 	paramsArr[0] = {
-				// 		ProdNo:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.currentNorms.ProdNo : this.goodsInfo.ProdNo,
-				// 		SpecType:this.goodsInfo.SpecType,
-				// 		BuyCnt: this.valueStepper,
-				// 		ProdSID: this.goodsInfo.SID,
-				// 		SpecSID:this.goodsInfo.SpecType =='2' || this.goodsInfo.SpecType =='3' ? this.goodsInfo.SpecSID : "",
-				// 		ProdType: this.goodsInfo.ProdType,//0是商品，1是电子券
-				// 		PartsNo:PartsNoArr,//配件编号
-				// 		PartsList:PartsArr ? JSON.stringify(PartsArr) : "",//配件数组
-				// 		ParamInfo:this.currentTastArr, //商品口味
-				// 		PromotionItemSID:this.goodsInfo.PromotionItemSID
-				// 	};
-				// 	obj.ProdList = JSON.stringify(paramsArr);
-				// 	let currentItem = obj.ProdList;
-				// 	if(this.goodsInfo.ProdType==='1'){
-				// 		if (currentItem.length > 0) {
-				// 			this.$store.commit("SET_CURRENT_CARD", currentItem);
-				// 			this.$Router.push("/pages/shoppingMall/order/confirmOrderTic");
-				// 		}
-				// 	}else{
-				// 		if (currentItem.length > 0) {
-				// 			this.$store.commit("SET_CURRENT_CARD", currentItem);
-				// 			this.$Router.push("/pages/shoppingMall/order/confirmOrder");
-				// 		}
-				// 	}
-				// } catch (e) {
-				// 	this.$toast.error(e);
-				// }
+				
 			},
 			closePopup(bool) {
 				if (!bool.show) {

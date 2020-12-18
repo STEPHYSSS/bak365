@@ -2,7 +2,7 @@
 	<div class="confirm-order-style" style="padding-bottom: 50px;" :class="mainStyle">
 		<uni-nav-bar :fixed="true" left-icon="back" @clickLeft="clickLeft" title="确认订单" :status-bar="true" :shadow="false"></uni-nav-bar>
 		<a-nodeData stringVal="获取数据失败" v-if="!loading&&prodList.length===0"></a-nodeData>
-		<div v-if="prodList.length>0">
+		<div v-if="prodList.length>0" @touchmove.stop.prevent="moveHandle">
 			<!-- 展示地址的位置 -->
 			<div @click="radioChange" v-if="!$Route.query.isIntegral">
 				<div class="order-area">
@@ -207,7 +207,19 @@
 						</div>
 					</radio-group>
 				</scroll-view>
-			</div>		
+			</div>
+			<!-- <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
+				<radio-group @change="setTicketClick" style="height: 50vh;">
+					<ad-cell text="暂不使用" @click="ticketClick('undefined')" showArrow="false">
+						<radio style="display: inline-block;vertical-align: middle;margin-left:20px" value="undefined" :checked="'undefined' === radioDiscount" />
+					</ad-cell>
+					<div v-for="(item,index) in TicketList" :key="index">
+						<adCell :text="item.TicketName" showArrow="false" showBottomLine="false" @click="ticketClick(item,1)">
+							<radio :value="item.TicketNo" :checked="item.TicketNo === radioTicket" />
+						</adCell>
+					</div>
+				</radio-group>
+			</scroll-view> -->			
 		</uni-popup>
 		<!-- 微卡支付弹窗 -->
 		<uni-popup ref="payTypePop" type="center">
@@ -231,7 +243,7 @@
 					</div>
 				</div>
 				<div class="button-theme-big" style="padding-bottom: 20px;">
-					 <!-- :disabled="isDisabled" -->
+					<!-- :disabled="isDisabled" -->
 					<button @click="OrderCardPay" :disabled="isDisabled" class="btn-pay btn btn-block btn-large btn-codpay">确认支付</button>
 				</div>
 			</view>
@@ -263,8 +275,8 @@
 			adCell,
 			lineBoxConfirm
 		},
-		computed:{
-			computedSumTotal(){
+		computed: {
+			computedSumTotal() {
 				return this.total
 			}
 		},
@@ -272,10 +284,10 @@
 			return {
 				mainStyle: getApp().globalData.mainStyle,
 				mainColor: getApp().globalData.mainColor,
-				isDisabled:false,
+				isDisabled: false,
 				loading: true,
-				ProdJsonList:[],//用来存储商品数据
-				currentItem: [],//用来接收商品信息的ProdList
+				ProdJsonList: [], //用来存储商品数据
+				currentItem: [], //用来接收商品信息的ProdList
 				UserRemarks: "",
 				UserTime: "",
 				UserDiscount: "",
@@ -302,7 +314,7 @@
 				total: 0,
 				totalCurrent: 0,
 				activeKey: 0,
-				sidebarList: [],//左侧时间
+				sidebarList: [], //左侧时间
 				rightTimeList: [],
 				radioTime: "",
 				radioPayType: "1",
@@ -326,7 +338,7 @@
 				areaInfo: {},
 				//当前的配送类型
 				currentDeliveryType: "",
-				testData: {},
+				// testData: {},
 				allData: {},
 				totalCurrentScore: 0,
 				currentIndex: 0,
@@ -520,73 +532,74 @@
 							}
 							this.DeliveryAreaList = Data.ShopInfoList;
 							//提前预约时间
-							
-							let FinTypeDay = '';//时间 当FinType==2&&FinHour>0就代表这有提前时间
-							let FinTypeHour = '';//时间 当FinType==2&&FinHour>0就代表这有提前时间
-							let FinTypeCun =""
+							let FinTypeDay = '0'; //时间 当FinType==2&&FinHour>0就代表这有提前时间
+							let FinTypeHour = '0'; //时间 当FinType==2&&FinHour>0就代表这有提前时间
+							let FinTypeCun = ""
 							if (this.prodList.length > 0) {
 								this.prodList.forEach((D, index) => {
 									if (D.DeliveryType && D.DeliveryType !== "") {
 										D.DeliveryType = D.DeliveryType.split(",");
 									}
-									if(D.FinType==='1'&&D.FinHour>0){
+									if (D.FinType === '1' && D.FinHour > 0) {
 										FinTypeDay = Math.max.apply(Math, this.prodList.map(item => {
 											return Number(item.FinHour)
 										}))
-										 FinTypeCun = D.FinType
-									}else{
+										FinTypeCun = D.FinType
+									} else {
 										FinTypeHour = Math.max.apply(Math, this.prodList.map(item => {
 											return Number(item.FinHour)
 										}))
 										FinTypeCun = D.FinType
 									}
-									
+
 								});
 							}
-							let num = Number(Data.ShopBase.ScopeDay);//获取商城的提货期限
-							let dayAdvance = 0;//提前天数
-							let tAdvance = 0;//提前时间
-							let advanceTime = 0;//日期 当FinType==1&&FinHour>0就代表这有提前日期
-							//提前的时间+当前的时间>下班时间
+							let num = Number(Data.ShopBase.ScopeDay); //获取商城的提货期限
+							let dayAdvance = 0; //提前天数
+							let tAdvance = 0; //提前时间
+							let advanceTime = 0; //日期 当FinType==1&&FinHour>0就代表这有提前日期
+							// 提前的时间+当前的时间>下班时间
 							let endTime = countDown(Data.ShopBase.EndTime);
 							let startTime = countDown(Data.ShopBase.StartTime);
 							let cutTime = countDown(getTime(false, false, true));
-							let acTime = Number(FinTypeHour) * 60 * 60;//提前小时
-							if(FinTypeCun==='2'){
+							let acTime = Number(FinTypeHour) * 60 * 60; //提前小时
+
+							if (FinTypeCun === '2' && FinTypeHour > 0) {
 								
-								let dayTime = parseInt(Data.ShopBase.EndTime) - parseInt(Data.ShopBase.StartTime)//一天营业时间
-								let time = Number(FinTypeHour)/dayTime;
-								let time2 = Number(FinTypeHour)%dayTime;
-								let splitTime = Number(parseInt(time))
-								
-								if ((acTime + cutTime).toFixed(2) > endTime) {
-									if(cutTime>endTime){
-										FinTypeDay = Number(FinTypeDay)+1
-									}
-									FinTypeDay = Number(FinTypeDay) + splitTime;
-									
-									tAdvance = Number(FinTypeHour);
-								} else {
-									tAdvance = Number(FinTypeHour);
-									FinTypeDay = 0;
-								}
-							}else {
-								if(cutTime>endTime){
-									FinTypeDay = Number(FinTypeDay)+1
-								}
+								let cutTime = countDown(getTime(false, false, true));
+
+								// let endTime = countDown(Data.ShopBase.EndTime);
+								// let startTime = countDown(Data.ShopBase.StartTime);
+								// let cutTime = countDown(getTime(false, false, true));
+								// let acTime = Number(FinTypeHour) * 60 * 60; //提前小时
+
+								// if ((acTime + cutTime).toFixed(2) > endTime) {
+								// 	// 当提前预约时间大于下班时间后,重第二天0开始加预约时间
+								// 	// 	let abc = Number(acTime-(endTime-cutTime)+startTime)/60/60
+								// 	// console.log
+								// 	FinTypeDay = Number(FinTypeDay) + 1;
+								// 	tAdvance = Number(FinTypeHour);
+								// } else {
+								// 	tAdvance = Number(FinTypeHour);
+								// 	FinTypeDay = 0;
+								// }
 							}
+
 							this.sidebarList = setChangeData(num, FinTypeDay); //左侧的天数
-							let { arr, arrToday } = setChangeTime( Data.ShopBase, tAdvance, FinTypeDay );
+							let {
+								arr,
+								arrToday
+							} = setChangeTime(Data.ShopBase, FinTypeHour, FinTypeDay);
 							this.allTimeSlot = arr; //总的右侧时间间隔
 							let arrTime = [];
-							for (let i = 0; i < arrToday.length-1; i++) {
-								arrTime.push(arrToday[i]+'-'+arrToday[i+1])								
+							for (let i = 0; i < arrToday.length - 1; i++) {
+								arrTime.push(arrToday[i] + '-' + arrToday[i + 1])
 							}
 							this.rightTimeList = arrTime;
 							this.todayTimeSlot = arrTime; //今天的右侧时间间隔
-							
+
 							// this.rightTimeList = arrToday; //当前页面的右侧时间间隔 ///暂时注释
-							
+
 							this.radioTime = arrTime[0];
 							this.RecordTime = {
 								radioTime: arrTime[0],
@@ -861,16 +874,17 @@
 					return [];
 				}
 			},
-			PayTypeClick(item) {//支付方式
+			PayTypeClick(item) { //支付方式
 				if (this.CardInfo && Number(this.CardInfo.Balance) < this.totalCurrent) {
 					return;
 				}
 				this.radioPayType = item;
 				this.Discount(item, 2)
 			},
-			changeSider(index) {//左侧日期选择
+			changeSider(index) { //左侧日期选择
 				this.currentIndex = index
 				this.activeKey = index
+				
 				if (this.RecordTime.index === index) {
 					this.radioTime = this.RecordTime.radioTime;
 				} else {
@@ -886,7 +900,7 @@
 					this.rightTimeList = this.todayTimeSlot;
 				}
 			},
-			rightTimeClick(item) {//右侧时间选择
+			rightTimeClick(item) { //右侧时间选择
 				this.RecordTime = {
 					radioTime: item,
 					index: this.activeKey
@@ -1008,7 +1022,7 @@
 							return;
 						}
 					}
-				
+
 					if (!this.name_user || this.name_user === "") {
 						this.$toast("请填写收件名字");
 						return;
@@ -1028,9 +1042,9 @@
 			async OrderCardPay() { // 支付
 				this.isDisabled = true;
 				setTimeout(() => {
-				  this.isDisabled = false;
+					this.isDisabled = false;
 				}, 5000)
-				
+
 				if (this.radioDiscount === "undefined") {
 					this.radioDiscount = "";
 				}
@@ -1059,7 +1073,7 @@
 				// if(this.allck === true){//判断是否勾选积分抵扣
 				// 	// true代表选中，false代表未选中
 				// }
-				let currentStore = this.$store.state.currentStoreInfo || {}
+				let currentStore = this.$store.state.currentStoreInfo || {};
 				let splitTime= this.RecordTime.radioTime.split("-")
 				let obj = {
 					Action: "OrderPay",
@@ -1108,7 +1122,7 @@
 				try {
 					let {
 						Data
-					} =await vipCard(obj, Opera);
+					} = await vipCard(obj, Opera);
 					this.loading = false;
 					uni.hideLoading();
 					this.$store.commit("SET_CURRENT_CARD", []); //清掉购物车
@@ -1119,9 +1133,9 @@
 						setTimeout(() => {
 							// this.$Router.push("/pages/shoppingMall/order/paySuccess");
 							this.$Router.push({
-								path:"/pages/vip/allMyOrder",
-								query:{
-									id:'0'
+								path: "/pages/vip/allMyOrder",
+								query: {
+									id: '0'
 								}
 							})
 						}, 3000);
@@ -1129,7 +1143,8 @@
 						this.$refs.payTypePop.close();
 					} else {
 						// 微信支付
-						this.testData = Data;
+						// this.testData = Data;
+						console.log(Data,'微信支付部分')
 						try {
 							if(Data.PaySuccess){
 								this.$toast("订单正在处理中...");
@@ -1142,6 +1157,7 @@
 							}else{
 								weChatPayment(this, Data, false);
 							}
+							// 
 						} catch (e) {
 							this.$toast.fail(e)
 							// this.$toast.fail("微信调起失败");
@@ -1173,6 +1189,56 @@
 			}
 		},
 	};
+
+	/* @param {any}
+	 oneTime 开始时间 yyyy-mm-dd hh24:min:sec * 
+	 @param {any} twoTime 结束时间 yyyy-mm-dd hh24:min:sec * 
+	 @param {any} stype 返回类型: 1.SEC:相差秒数， 2.MIN:相差分钟数， 3.HH:相差小时数， 4.HH:MIN:SEC:相差 “时：分：秒” 数， 5.DD:相差天数， 6.MM:相差月数， 7.YY：相差年数。 */
+	function dateTimeDifference(oneTime, twoTime, stype) {
+		if (oneTime == null || oneTime == "") return 0;
+		if (twoTime == null || twoTime == "") return 0;
+		var myoneTime = new Date(oneTime.replace(/\-/g, "/"));
+		var mytwoTime = new Date(twoTime.replace(/\-/g, "/"));
+		if (myoneTime == null || myoneTime == "") return 0;
+		if (mytwoTime == null || mytwoTime == "") return 0;
+		if (myoneTime > mytwoTime) return 0;
+		if (stype == "SEC") {
+			return (mytwoTime - myoneTime) / 1000 + "sec";
+		} else if (stype == "MIN") {
+			return ((mytwoTime - myoneTime) / 1000) / 60 + "min";
+		} else if (stype == "HH") {
+			return (((mytwoTime - myoneTime) / 1000) / 60) / 60;
+		} else if (stype == "DD") {
+			return ((((mytwoTime - myoneTime) / 1000) / 60) / 60) / 24 + "D";
+		} else if (stype == "MM") {
+			return (((((mytwoTime - myoneTime) / 1000) / 60) / 60) / 24) / 31 + "M";
+		} else if (stype == "YY") {
+			return ((((((mytwoTime - myoneTime) / 1000) / 60) / 60) / 24) / 31) / 365 + "Y";
+		} else if (stype == "HH:MIN:SEC") {
+			var seconds = (mytwoTime - myoneTime) / 1000;
+			if (seconds <= 60) {
+				return seconds + "sec";
+			} else if (60 < seconds <= 3600) {
+				return Math.floor(seconds / 60) + ":" + (seconds % 60) + "min";
+			} else if (3600 < seconds <= 216000) {
+				return Math.floor(seconds / 3600) + ":" + Math.floor((seconds % 3600) / 60) + ":" + ((seconds % 3600) % 60) + "h";
+			}
+		} else {
+			return mytwoTime - myoneTime;
+		}
+	}
+	//时间戳转换方法    date:时间戳数字
+	function formatDate(date) {
+		var date = new Date(date);
+		var YY = date.getFullYear() + '-';
+		var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+		var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+		var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+		var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+		var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+		return YY + MM + DD + " " + hh + mm + ss;
+	}
+
 	function setChangeData(num, aceTime) {
 		let arrData = []; //日期
 		let toDay = "";
@@ -1185,59 +1251,112 @@
 		}
 		return arrData;
 	}
+
 	function setChangeTime(ShopBase, aceTime, dayAdvance) {
-		let timeFather=aceTime
-		// console.log(ShopBase,aceTime, dayAdvance,'时间')
+		aceTime = Number(aceTime)
+		dayAdvance = Number(dayAdvance)
 		let arr = [];
 		let arrToday = [];
 		let dayM = 60 * 60; //秒值
 		let a = 60 * Number(ShopBase.IntervalMinute); //求秒值 间隔时长
 		let endTime = countDown(ShopBase.EndTime);
 		let startTime = Number(countDown(ShopBase.StartTime));
-		let cutTime = countDown(getTime(false, false, true));//当前时间
-		let acTime = Number(aceTime) * 60 * 60;//提前小时
-		
-		
-		if((acTime + cutTime).toFixed(2) > endTime){
-			// let time = (acTime + cutTime).toFixed(2)-endTime;
+		let cutTime = countDown(getTime(false, false, true)); //当前时间
+		// let acTime = aceTime * 60 * 60; //提前小时
+		// if ((acTime + cutTime).toFixed(2) > endTime) {
+		// 	let startTime = Number((acTime - (endTime - cutTime) + startTime2)); //往第二天补的时间
+		// 	while (startTime <= endTime) {
+		// 		arr.push(changeCountDown(startTime));
+		// 		startTime += a;
+		// 	}
+		// } else {
+		// 	while (startTime <= endTime) {
+		// 		arr.push(changeCountDown(startTime));
+		// 		startTime += a;
+		// 	}
+		// }
+
+		while (startTime <= endTime) {
+			arr.push(changeCountDown(startTime));
+			startTime += a;
+		}
+		var date = countDown(getTime(false, false, true))
+		if (aceTime == 0 && dayAdvance == 0) {
+			arr.forEach(DATA => {
+				DATA = countDown(DATA);
+				if (DATA > countDown(getTime(false, false, true))) {
+					arrToday.push(changeCountDown(DATA));
+				}
+			});
+		} else if (aceTime > 0) {
 			
-			let dayTime = parseInt(ShopBase.EndTime) - parseInt(ShopBase.StartTime)//一天营业时间
-			let time = Number(timeFather)/dayTime;
-			let time2 = Number(timeFather)%dayTime;
-			let time3 = time2*60*60;
-			// console.log(time2,time3)
-			let buTime =  Number((acTime-(endTime-cutTime)+startTime));//往第二天补的时间
-			// 假如这里补2两个小时，那么就要从两个小时之后开始遍历
-			while (Number(startTime+time3) <= endTime) {
-				arr.push(changeCountDown(startTime+time3));
-				startTime += a;
+			let startTime = ShopBase.StartTime//商城营业开始时间
+			let endTime = ShopBase.EndTime//商城营业结束时间
+			let nowDate = new Date();
+			let date = {
+				year: nowDate.getFullYear(),
+				month: nowDate.getMonth() + 1,
+				date: nowDate.getDate(),
+				hours:nowDate.getHours(),            //获取当前小时数(0-23)
+				minutes:nowDate.getMinutes(),       //获取当前分钟数(0-59)
+				seconds:nowDate.getSeconds()
 			}
-			arrToday = arr;
-		}else{
-			while (startTime <= endTime) {
-				arr.push(changeCountDown(startTime));
-				startTime += a;
-			}
-			if (dayAdvance == 0) {
+			
+			var newDate = date.year + '-' + date.month + '-' + date.date;
+			var newDateTime=newDate+' '+date.hours+':'+date.minutes+':'+date.seconds
+			
+			let systemStartDate = newDate + " " + startTime;
+			let systemEndDate = newDate + " " + endTime;
+			// 商城营业时间（小时）
+			var yingYeHours = dateTimeDifference(systemStartDate, systemEndDate, "HH");
+			var addMinute = nowDate.setMinutes(nowDate.getMinutes() + aceTime*60 + Number(ShopBase.IntervalMinute))
+			
+			var ss=new Date(systemEndDate).getTime()
+			if(addMinute<ss)
+			{
 				arr.forEach(DATA => {
 					DATA = countDown(DATA);
-					if (
-						dayAdvance == 0 &&
-						DATA > countDown(getTime(false, false, true)) + Number(aceTime) * dayM
-					) {
+					if (DATA > countDown(getTime(false, false, true)) + aceTime * 60 * 60) {
 						arrToday.push(changeCountDown(DATA));
 					}
 				});
-			} else {
-				arrToday = arr;
+			}
+			else{
+				
+				let startTime = Number((acTime - endTime - cutTime + startTime)); //往第二天补的时间
+				while (startTime <= endTime) {
+					arr.push(changeCountDown(startTime));
+					startTime += a;
+				}
+				
+				arr.forEach(DATA => {
+					DATA = countDown(DATA);
+					if (DATA > countDown(getTime(false, false, true)) + aceTime * 60 * 60) {
+						arrToday.push(changeCountDown(DATA));
+					}
+				});
+			}
+			
+			
+		} else if (dayAdvance > 0) {
+			for (let i = 0; i < dayAdvance; i++) {
+				arr.forEach(DATA => {
+					DATA = countDown(DATA);
+					if (i == 0) {
+						if (DATA > countDown(getTime(false, false, true))) {
+							arrToday.push(changeCountDown(DATA));
+						}
+					}
+				});
 			}
 		}
-			
+
 		return {
 			arr,
 			arrToday
 		};
 	}
+
 	function countDown(time) {
 		//20:08:90转换为秒
 		var s = 0;
@@ -1248,6 +1367,7 @@
 		s = Number(hour * 3600) + Number(min * 60) ;
 		return s;
 	}
+
 	function changeCountDown(value) {
 		//秒转换为 20:08:90
 		var theTime = parseInt(value);
@@ -1273,43 +1393,53 @@
 
 <style lang="less">
 	@import "../../../assets/css/radioModes";
+
 	.setADcell {
 		margin: 5px 0;
 	}
+
 	.confirm-order-style {
 		margin-bottom: 80px;
+
 		.uni-popup {
 			z-index: 999
 		}
+
 		.setADcell {
 			/deep/.detailView1 {
 				flex: none;
 			}
+
 			/deep/.headView {
 				flex: none;
 				width: 90px;
 			}
 		}
+
 		.radio-group-play {
 			background-color: #fff;
 			align-items: center;
 			padding: 5px 24rpx;
 			margin-top: 5px;
 			margin-bottom: 25px;
+
 			.payStyle {
 				background: rgb(255, 255, 255);
 				font-size: 14px;
 				color: rgb(90, 91, 92);
 				padding: 13px 0px;
 			}
+
 			.radio-group-item {
 				padding: 6px 0;
 				display: flex;
 			}
+
 			.custom-title {
 				vertical-align: middle;
 			}
 		}
+
 		.total-style {
 			background: #fff;
 			text-align: right;
@@ -1317,17 +1447,21 @@
 			font-size: 16px;
 			padding-right: 10px;
 			border-bottom: 1rpx solid #ebedf0;
+
 			&__color {
 				color: red;
 			}
 		}
+
 		.order-area {
 			background: #ffffff;
 			padding: 14px 6px;
 			display: flex;
 		}
+
 		.order-area-icon {
 			margin: auto;
+
 			img,
 			image {
 				margin: 0 10px;
@@ -1335,38 +1469,46 @@
 				height: 40px;
 			}
 		}
+
 		.order-area-phone {
 			font-size: 14px;
 			color: #909090;
 			margin-left: 8px;
 		}
+
 		.order-area-location {
 			font-size: 12px;
 			margin-top: 3px;
 		}
+
 		.good_card_box {
 			background: #ffffff;
 			margin: 5px 0 5px;
 			padding: 10px;
+
 			.boxShadow {
 				box-shadow: none;
 			}
+
 			.rightBox {
 				margin: 0 10px;
 			}
 		}
+
 		// .goodsBox-parts {
 		/*margin-left: 10px !important;*/
 		// }
 		.confirm-order-popup {
 			background-color: #fff;
 			max-height: 50%;
+
 			.top {
 				padding: 10px 20px 10px;
 				text-align: center;
 				border-bottom: 1px solid #eee;
 				position: relative;
 			}
+
 			.cancel {
 				font-size: 12px;
 				position: absolute;
@@ -1376,44 +1518,54 @@
 				color: #777;
 			}
 		}
+
 		.bottom-area {
 			max-height: 60vh;
 			overflow: scroll;
+
 			&__box {
 				display: flex;
 				padding: 8px 12px;
 				align-items: center;
 			}
+
 			&__info {
 				flex: 1;
 				font-size: 14px;
 			}
+
 			&__icon {
 				width: 30px;
 				text-align: center;
 				margin: auto;
 			}
+
 			&__phone {
 				color: #969799;
 				font-size: 12px;
 				margin-top: 5px;
 			}
+
 			&__add {
 				text-align: center;
 				padding: 10px;
 				border-top: 1px solid #eee;
 			}
+
 			.checkbox-my {
 				margin-right: 10px;
 			}
 		}
+
 		.confirm-area-popup {
 			height: 100%;
+
 			/deep/.uni-popup__wrapper-box {
 				height: 100%;
 				background: #fff;
 			}
 		}
+
 		.confirm-selectTime-popup {
 			// height: 50vh;
 			.leftNavsidebar {
@@ -1426,16 +1578,19 @@
 				background: #f8f8f8;
 				height: 50vh;
 			}
+
 			.leftNavsidebar {
 				.activeCanteen {
 					background: #fff;
 				}
+
 				.homepageLeft {
 					line-height: 60px;
 					padding-left: 6px;
 				}
 			}
 		}
+
 		.rightTime {
 			height: 50vh;
 			padding: 8px;
@@ -1443,8 +1598,9 @@
 			// margin-left: 130px;
 			margin-left: 98px;
 			background: #fff;
-			overflow-y: scroll;
+			overflow: hidden;
 		}
+
 		.wechat {
 			width: 18px;
 			height: 18px;
@@ -1452,24 +1608,30 @@
 			display: inline-block;
 			font-size: 18px;
 			vertical-align: middle;
+
 			image {
 				width: 100%;
 				height: 100%;
 			}
 		}
+
 		button {
 			height: auto;
 		}
+
 		.content {
 			width: 100%;
 			margin: 0 auto;
 		}
+
 		.account-form {
 			overflow: hidden;
 		}
+
 		.container .content {
 			zoom: 1;
 		}
+
 		.account-form .form-title {
 			margin: 50px 0 10px;
 			padding: 0 12px;
@@ -1479,11 +1641,13 @@
 			text-transform: uppercase;
 			text-shadow: 0 1px rgba(255, 255, 255, 0.2);
 		}
+
 		.account-form .big {
 			font-size: 20px;
 			text-align: center;
 			color: #7c7b83;
 		}
+
 		.block {
 			overflow: hidden;
 			-webkit-border-image: url(http://wxd.bak365.net/wxcs/MobileHtml/PrePur5/img/border-line-2.png) 2 stretch;
@@ -1497,10 +1661,12 @@
 			position: relative;
 			font-size: 14px;
 		}
+
 		.block {
 			border-top-width: 1px;
 			border-bottom-width: 1px;
 		}
+
 		.block.block-form {
 			width: 100%;
 			margin: 0;
@@ -1513,9 +1679,11 @@
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
 		}
+
 		.block.block-form.margin-bottom-normal {
 			margin-bottom: 20px;
 		}
+
 		.block-item {
 			position: relative;
 			display: block;
@@ -1528,20 +1696,24 @@
 			border-bottom: 2px solid #e5e5e5;
 			overflow: hidden;
 		}
+
 		.block.block-form .block-item {
 			display: table;
 			width: 100%;
 			padding: 0;
 		}
+
 		.block.block-form .block-item:last-child {
 			border-bottom: 0px none;
 		}
+
 		.block.block-form .block-item .label {
 			display: table-cell;
 			width: 90px;
 			padding: 10px 0;
 			vertical-align: middle;
 		}
+
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select,
@@ -1554,6 +1726,7 @@
 			line-height: 28px;
 			font-size: 14px;
 		}
+
 		.block.block-form .block-item textarea,
 		.block.block-form .block-item input,
 		.block.block-form .block-item select {
@@ -1561,20 +1734,24 @@
 			border: 0px none;
 			outline: none;
 		}
+
 		.action-container {
 			padding: 0 10px;
 			text-align: center;
 			margin-top: 20px;
 			margin-bottom: 20px;
 		}
+
 		.account-form button {
 			border: 1px solid #e5e5e5;
 		}
+
 		.btn.btn-green {
 			color: #fff;
 			background-color: #06bf04;
 			border-color: #03b401;
 		}
+
 		.btn.btn-block {
 			color: #fff;
 			text-align: center;

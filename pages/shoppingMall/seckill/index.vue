@@ -27,6 +27,7 @@
 			};
 		},
 		created() {
+			console.log(this.$route.query.SID,'1111')
 			if(this.$route.query.SID){
 				this.seckillSID = this.$route.query.SID
 			}		
@@ -48,7 +49,7 @@
 							Action: "GetPromotionList",
 							Type: 1,
 							ShopSID:currentStore.data.SID,
-							SID:this.seckillSID?this.seckillSID:''
+							SID:this.$route.query.SID
 						}, "UPromotionOpera")
 					]);
 					this.list = res[0].Data.ProdList;

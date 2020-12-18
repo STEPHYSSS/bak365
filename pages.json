@@ -60,7 +60,8 @@
 		"style": {
 			"navigationBarTitleText": "绑定卡"
 		}
-	}, {
+	}, 
+	{
 		"path": "pages/shoppingMall/order/orderInfo",
 		"style": {
 			"navigationBarTitleText": "订单详情"

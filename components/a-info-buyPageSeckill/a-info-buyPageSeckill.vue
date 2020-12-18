@@ -11,7 +11,7 @@
 					<!-- #endif -->
 				</swiper-item>
 			</swiper>
-			<div class="timer-style" v-if="seckill">
+			<div class="timer-style">
 				<span class="timer-left">限时秒杀</span>
 				<div class="timer-right">
 					<span style="margin-right:4px">{{startIS==='end'?'活动结束':'距'+(startIS?'结束':'开始')+'仅剩'}}</span>
@@ -305,8 +305,9 @@
 						Data
 					} = await vipCard({
 						Action: 'GetNewDeal',
-						ProdSID: this.goods.SID
-					}, 'UProdOpera')
+						SID: this.goods.PromotionItemSID,
+						ProdType:this.goods.ProdType
+					}, 'UPromotionOpera')
 					this.userList = Data.CommentList
 					this.getTimeout()
 				} catch (e) {
